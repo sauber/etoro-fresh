@@ -4,6 +4,10 @@
     {
       "name": "rm -f deno.lock",
       "command": "rm -f deno.lock"
+    },
+    {
+      "name": "Cache dependencies",
+      "command": "deno cache dev.ts"
     }
   ],
 
