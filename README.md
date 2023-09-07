@@ -1,7 +1,16 @@
-# fresh-blogs
-Implementing a blog in fresh on codesandbox.io
+# Fresh project
 
-## References
+Your new Fresh project is ready to go. You can follow the Fresh "Getting
+Started" guide here: https://fresh.deno.dev/docs/getting-started
 
-* https://github.com/codesandbox/sandbox-templates/tree/main/deno-fresh
-* https://dev.to/shadid12/building-a-full-stack-app-with-deno-fresh-and-fauna-223p
+### Usage
+
+Make sure to install Deno: https://deno.land/manual/getting_started/installation
+
+Then start the project:
+
+```
+deno task start
+```
+
+This will watch the project directory and restart as necessary.
