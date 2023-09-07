@@ -1,4 +1,5 @@
 import { AppProps } from "$fresh/server.ts";
+import Navbar from "../components/Navbar.tsx";
 
 export default function App({ Component }: AppProps) {
   return (
@@ -9,6 +10,7 @@ export default function App({ Component }: AppProps) {
         <title>my-project</title>
       </head>
       <body>
+        <Navbar />
         <Component />
       </body>
     </html>
