@@ -11,7 +11,6 @@ import * as $5 from "./routes/posts/[id]/edit.tsx";
 import * as $6 from "./routes/posts/[id]/index.tsx";
 import * as $7 from "./routes/posts/new.tsx";
 import * as $$0 from "./islands/Counter.tsx";
-import * as $$1 from "./islands/PostForm.tsx";
 
 const manifest = {
   routes: {
@@ -26,7 +25,6 @@ const manifest = {
   },
   islands: {
     "./islands/Counter.tsx": $$0,
-    "./islands/PostForm.tsx": $$1,
   },
   baseUrl: import.meta.url,
 };
