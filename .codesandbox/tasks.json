@@ -12,7 +12,10 @@
     "start": {
       "name": "start",
       "command": "deno task start",
-      "runAtStart": true
+      "runAtStart": true,
+      "preview": {
+        "port": 8000
+      }
     },
     "bash": {
       "name": "bash",
