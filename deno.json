@@ -5,6 +5,7 @@
     "start": "deno run -A --watch=static/,routes/ dev.ts",
     "build": "deno run -A dev.ts build",
     "preview": "deno run -A main.ts",
+    "test": "deno test --allow-write=/tmp --allow-read=/tmp",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
   "lint": {
@@ -24,6 +25,9 @@
     ]
   },
   "imports": {
+    "/": "./",
+    "./": "./",
+
     "$fresh/": "https://deno.land/x/fresh@1.4.3/",
     "preact": "https://esm.sh/preact@10.15.1",
     "preact/": "https://esm.sh/preact@10.15.1/",
@@ -33,7 +37,14 @@
     "twind": "https://esm.sh/twind@0.16.19",
     "twind/": "https://esm.sh/twind@0.16.19/",
     "$std/": "https://deno.land/std@0.193.0/",
-    "dotenv": "https://deno.land/std@0.201.0/dotenv/mod.ts"
+
+    "dotenv": "https://deno.land/std@0.201.0/dotenv/mod.ts",
+    "assert": "https://deno.land/std@0.200.0/assert/mod.ts",
+    "difference": "https://deno.land/std@0.200.0/datetime/difference.ts",
+    "path": "https://deno.land/std@0.200.0/path/mod.ts",
+    "printf": "https://deno.land/std@0.200.0/fmt/printf.ts",
+    "yaml": "https://deno.land/std@0.200.0/yaml/mod.ts",
+
   },
   "compilerOptions": {
     "jsx": "react-jsx",
