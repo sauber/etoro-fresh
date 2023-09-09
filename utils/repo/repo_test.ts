@@ -1,29 +1,28 @@
 import { assert, assertEquals, assertInstanceOf } from "assert";
-import { Repo } from "/utils/repo.ts";
+import { Repo, Discover, DiscoverData } from "/utils/repo/repo.ts";
 
 Deno.test("blank initialization", async () => {
-  const tmp = await Deno.makeTempDir();
-  const repo = new Repo(tmp);
+  const repo: Repo = await Repo.tmp();
   assertInstanceOf(repo, Repo);
-  await Deno.remove(tmp, { recursive: true });
+  await repo.delete();
+});
+
+Deno.test("discover file", async (t) => {
+  const repo = await Repo.tmp();
+  const discover: Discover = repo.discover;
+
+  await t.step("missing", async () => {
+    const path = await discover.latest();
+    assertEquals(path, undefined);
+  });
+
+  await t.step("download", async () => {
+    const data: DiscoverData = await discover.recent();
+    assert(data.TotalRows >= 70 && data.TotalRows <= 140);
+  });
 });
 
 /*
-Deno.test("discover file", async (t) => {
-  // Setup temp repo dir
-  const tmpDir: string = await Deno.makeTempDir();
-  const repo = new Repo(tmpDir);
-  const discover: DiscoverFile = repo.discover();
-
-  await t.step("download", async () => {
-    await discover.download();
-  });
-
-  await t.step("age", async () => {
-    const age = await discover.age();
-    assertEquals(age, 0);
-  });
-
   await t.step("read", async () => {
     const data: DiscoverData = await discover.read();
     assert(data.TotalRows >= 70 && data.TotalRows <= 140);

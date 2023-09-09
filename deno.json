@@ -5,7 +5,7 @@
     "start": "deno run -A --watch=static/,routes/ dev.ts",
     "build": "deno run -A dev.ts build",
     "preview": "deno run -A main.ts",
-    "test": "deno test --allow-write=/tmp --allow-read=/tmp",
+    "test": "deno test --allow-write=/tmp --allow-read=/tmp --allow-net=www.etoro.com",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
   "lint": {
@@ -43,7 +43,7 @@
     "difference": "https://deno.land/std@0.200.0/datetime/difference.ts",
     "path": "https://deno.land/std@0.200.0/path/mod.ts",
     "printf": "https://deno.land/std@0.200.0/fmt/printf.ts",
-    "yaml": "https://deno.land/std@0.200.0/yaml/mod.ts",
+    "yaml": "https://deno.land/std@0.200.0/yaml/mod.ts"
 
   },
   "compilerOptions": {

@@ -1,4 +1,5 @@
 import { join } from "path";
+import { difference } from "difference";
 
 /** Wrapper for stat system call */
 function stat(path: string) {
@@ -22,7 +23,6 @@ async function mkdir(path: string) {
   } catch {
     await Deno.mkdir(path, { recursive: true });
   }
-
 }
 
 /** Get list of sub-directories */
@@ -38,9 +38,24 @@ async function dirs(path: string) {
   return dirNames.sort();
 }
 
+/** Create a temporary directory */
+function mktmpdir(): Promise<string> {
+  return Deno.makeTempDir();
+}
+
+/** Create a temporary file */
+function mktmpfile(): Promise<string> {
+  return Deno.makeTempFile();
+}
+
+/** Recursively remove directory */
+function rmdir(path: string): Promise<void> {
+  return Deno.remove(path, { recursive: true });
+}
+
 /** Direct file access */
 export default class Files {
-  constructor(private readonly path: string) {}
+  constructor(readonly path: string) {}
 
   /** Subdirectory */
   public sub(path: string): Files {
@@ -48,15 +63,20 @@ export default class Files {
   }
 
   /** Create directory */
-  private async create(): Promise<void> {
-    await mkdir(this.path);
+  private create(): Promise<void> {
+    return mkdir(this.path);
+  }
+
+  /** Delete directory */
+  public delete(): Promise<void> {
+    return rmdir(this.path);
   }
 
   /** Path to most recent file */
-  public async latest(filename: string): Promise<string|undefined> {
-    for ( const dir of await dirs(this.path) ) {
+  public async latest(filename: string): Promise<string | undefined> {
+    for (const dir of await dirs(this.path)) {
       const path = join(this.path, dir, filename);
-      if ( await stat(path) ) {
+      if (await stat(path)) {
         return path;
       }
     }
@@ -71,5 +91,47 @@ export default class Files {
   /** Read content of file */
   public read(filename: string): Promise<string> {
     return read(join(this.path, filename));
+  }
+
+  /** Create class setting path to temporary directory */
+  public static async tmp(): Promise<Files> {
+    const path: string = await mktmpdir();
+    //console.log('Creating temp dir: ', path);
+    return new Files(path);
+  }
+
+  /** Create temporary file */
+  private tmpfile(): Promise<string> {
+    return mktmpdir();
+  }
+
+  /** Download content from url */
+  public async download(url: string): Promise<string> {
+    console.log('download url: ', url);
+    const response = await fetch(url, {
+      headers: {
+        accept: "application/json",
+      },
+    });
+    const content = await response.text();
+    console.log('result: ', content);
+
+    return content;
+  }
+
+  /** Age of file in minutes */
+  public async age(filename: string): Promise<number | null> {
+    const fullPath = await this.latest(filename);
+    if (!fullPath) return null;
+
+    const file = await stat(fullPath);
+    const mtime: Date | null = file.mtime;
+    if (!mtime) throw new Error(`Cannot get mtime for ${fullPath}`);
+
+    const diff = difference(mtime, new Date(), { units: ["minutes"] });
+    if (diff.minutes != undefined) return diff.minutes;
+
+    //console.log("diff: ", diff);
+    throw new Error(`Age cannot be decided in minutes`);
   }
 }
