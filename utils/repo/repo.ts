@@ -1,4 +1,4 @@
-import { today } from "/utils/calendar.ts";
+//import { today } from "/utils/calendar.ts";
 import Files from "/utils/repo/files.ts";
 import { sprintf } from "printf";
 import { assert } from "assert";
@@ -7,8 +7,10 @@ import { assert } from "assert";
 // Generic File
 ///////////////////////////////////////////////////////////////////////
 
-abstract class Asset {
-  abstract filename: string;
+abstract class Asset<U> {
+  abstract readonly filename: string;
+  abstract latest(): Promise<U>; // Most recent file
+  abstract recent(): Promise<U>; // Refresh file if expired
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -21,8 +23,8 @@ export interface DiscoverData {
   Items: Record<string, string | never>[];
 }
 
-export class Discover {
-  static readonly filename = "discover.json";
+export class Discover implements Asset<DiscoverData> {
+  readonly filename = "discover.json";
   static readonly url =
     "https://www.etoro.com/sapi/rankings/rankings?client_request_id=%s&%s";
   static readonly expire = 3000; // Max age in miutes
@@ -47,23 +49,23 @@ export class Discover {
     return true;
   }
 
-  async latest(): Promise<DiscoverData | undefined> {
+  async latest(): Promise<DiscoverData> {
     const files = this.repo.files;
-    const latestPath = await files.latest(Discover.filename);
+    const latestPath = await files.latest(this.filename);
     //console.log("path: ", latestPath);
-    if (latestPath) {
-      const content = await files.read(latestPath);
-      const data = JSON.parse(content) as DiscoverData;
-      return data;
-    }
+    if(!latestPath) throw new Error(`File ${this.filename} not found`);
+    const content = await files.read(latestPath);
+    const data = JSON.parse(content) as DiscoverData;
+    return data;
   }
+    
 
   async recent(): Promise<DiscoverData> {
     const files = this.repo.files;
-    const age = await files.age(Discover.filename);
+    const age = await files.age(this.filename);
     if (!age || age > Discover.expire) {
       const data: DiscoverData = await this.download();
-      files.write(Discover.filename, JSON.stringify(data));
+      files.write(this.filename, JSON.stringify(data));
       return data;
     } else {
       const data = await this.latest();
@@ -91,7 +93,7 @@ export class Repo {
   }
 
   /** Delete repository */
-  async delete(): Promise<void> {
+  delete(): Promise<void> {
     return this.files.delete();
   }
 

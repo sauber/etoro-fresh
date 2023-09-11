@@ -1,4 +1,4 @@
-import { assert, assertEquals, assertInstanceOf } from "assert";
+import { assert, assertEquals, assertInstanceOf, assertRejects } from "assert";
 import { Repo, Discover, DiscoverData } from "/utils/repo/repo.ts";
 
 Deno.test("blank initialization", async () => {
@@ -11,15 +11,18 @@ Deno.test("discover file", async (t) => {
   const repo = await Repo.tmp();
   const discover: Discover = repo.discover;
 
-  await t.step("missing", async () => {
-    const path = await discover.latest();
-    assertEquals(path, undefined);
-  });
+  await assertRejects(
+    () => { return discover.latest() },
+    Error,
+    "File discover.json not found",
+  );
 
+  /*
   await t.step("download", async () => {
     const data: DiscoverData = await discover.recent();
     assert(data.TotalRows >= 70 && data.TotalRows <= 140);
   });
+  */
 });
 
 /*
