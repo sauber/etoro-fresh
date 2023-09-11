@@ -43,10 +43,6 @@ function mktmpdir(): Promise<string> {
   return Deno.makeTempDir();
 }
 
-/** Create a temporary file */
-function mktmpfile(): Promise<string> {
-  return Deno.makeTempFile();
-}
 
 /** Recursively remove directory */
 function rmdir(path: string): Promise<void> {
@@ -107,14 +103,14 @@ export default class Files {
 
   /** Download content from url */
   public async download(url: string): Promise<string> {
-    console.log('download url: ', url);
+    //console.log('download url: ', url);
     const response = await fetch(url, {
       headers: {
         accept: "application/json",
       },
     });
     const content = await response.text();
-    console.log('result: ', content);
+    //console.log('result: ', content);
 
     return content;
   }
