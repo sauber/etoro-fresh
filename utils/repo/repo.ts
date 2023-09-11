@@ -1,16 +1,81 @@
-//import { today } from "/utils/calendar.ts";
+import { today } from "/utils/calendar.ts";
 import Files from "/utils/repo/files.ts";
 import { sprintf } from "printf";
-import { assert } from "assert";
+import { assert, assertEquals } from "assert";
+import { join } from "https://deno.land/std@0.200.0/path/join.ts";
 
 ///////////////////////////////////////////////////////////////////////
 // Generic File
 ///////////////////////////////////////////////////////////////////////
 
-abstract class Asset<U> {
+export type JSONValue =
+  | string
+  | number
+  | boolean
+  | null
+  | JSONValue[]
+  | { [key: string]: JSONValue };
+
+interface JSONObject {
+  [k: string]: JSONValue;
+}
+
+abstract class Asset<AssetType> {
   abstract readonly filename: string;
-  abstract latest(): Promise<U>; // Most recent file
-  abstract recent(): Promise<U>; // Refresh file if expired
+  abstract recent(): Promise<AssetType>; // Refresh file if expired
+
+  constructor(protected readonly repo: Repo) {}
+
+  async latest(): Promise<AssetType> {
+    const fs: Files = this.repo.files;
+    const latestPath: string | undefined = await fs.latest(this.filename);
+    // console.log("latest path: ", latestPath);
+    if (!latestPath) throw new Error(`File ${this.filename} not found`);
+    const content: string = await fs.read(latestPath);
+    const data = JSON.parse(content) as AssetType;
+    return data;
+  }
+
+  /** Write content to todays directory */
+  write(content: AssetType): Promise<void> {
+    return this.repo.write(this.filename, JSON.stringify(content));
+  }
+}
+
+///////////////////////////////////////////////////////////////////////
+// Config
+///////////////////////////////////////////////////////////////////////
+
+export class Config extends Asset<JSONObject> {
+  readonly filename = "config.json";
+
+  recent(): Promise<JSONObject> {
+    return this.latest();
+  }
+
+  async get(key: string): Promise<JSONValue> {
+    try {
+      const latest: JSONObject = await this.latest();
+      return latest[key];
+    } catch (error) {
+      // console.log(`Cannot load latest config`);
+
+      return null;
+    }
+  }
+
+  async set(key: string, value: JSONValue): Promise<void> {
+    let data: JSONObject = {};
+    try {
+      const latest: JSONObject = await this.latest();
+      data = latest;
+    } catch (error) {
+      // console.log(`Cannot load previous config`);
+    }
+
+    data[key] = value;
+    return this.write(data);
+  }
 }
 
 ///////////////////////////////////////////////////////////////////////
@@ -23,13 +88,11 @@ export interface DiscoverData {
   Items: Record<string, string | never>[];
 }
 
-export class Discover implements Asset<DiscoverData> {
+export class Discover extends Asset<DiscoverData> {
   readonly filename = "discover.json";
   static readonly url =
     "https://www.etoro.com/sapi/rankings/rankings?client_request_id=%s&%s";
   static readonly expire = 3000; // Max age in miutes
-
-  constructor(protected readonly repo: Repo) {}
 
   private async download(): Promise<DiscoverData> {
     const daily = 4;
@@ -49,6 +112,7 @@ export class Discover implements Asset<DiscoverData> {
     return true;
   }
 
+  /*
   async latest(): Promise<DiscoverData> {
     const files = this.repo.files;
     const latestPath = await files.latest(this.filename);
@@ -58,7 +122,7 @@ export class Discover implements Asset<DiscoverData> {
     const data = JSON.parse(content) as DiscoverData;
     return data;
   }
-    
+    */
 
   async recent(): Promise<DiscoverData> {
     const files = this.repo.files;
@@ -69,7 +133,7 @@ export class Discover implements Asset<DiscoverData> {
       return data;
     } else {
       const data = await this.latest();
-      if ( data ) return data as DiscoverData;
+      if (data) return data as DiscoverData;
     }
     throw new Error("Discovery file not downloaded");
   }
@@ -95,6 +159,16 @@ export class Repo {
   /** Delete repository */
   delete(): Promise<void> {
     return this.files.delete();
+  }
+
+  /** Write in path of today */
+  async write(filename: string, content: string): Promise<void> {
+    const fs: Files = this.files.sub(today());
+    fs.write(filename, content);
+  }
+
+  get config(): Config {
+    return new Config(this);
   }
 
   /** Session ID */

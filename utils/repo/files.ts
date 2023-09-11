@@ -12,24 +12,28 @@ function read(path: string) {
 }
 
 /** Wrapper for writing file */
-function write(path: string, content: string) {
+function write(path: string, content: string): Promise<void> {
   return Deno.writeTextFile(path, content);
 }
 
 /** Wrapper for creating directory */
-async function mkdir(path: string) {
+async function mkdir(path: string): Promise<void> {
   try {
     await Deno.stat(path);
   } catch {
     await Deno.mkdir(path, { recursive: true });
+    await Deno.stat(path);
+    // console.log(`Created directory ${path}`);
   }
 }
 
 /** Get list of sub-directories */
 async function dirs(path: string) {
+  // console.log(`Scanning for subdirs in ${path}`);
   const dirNames: string[] = [];
 
   for await (const dirEntry of Deno.readDir(path)) {
+    // console.log('Direntry: ', dirEntry);
     if (dirEntry.isDirectory) {
       dirNames.push(dirEntry.name);
     }
@@ -72,6 +76,7 @@ export default class Files {
   public async latest(filename: string): Promise<string | undefined> {
     for (const dir of await dirs(this.path)) {
       const path = join(this.path, dir, filename);
+      // console.log(`Testing latest path: ${path}`);
       if (await stat(path)) {
         return path;
       }
