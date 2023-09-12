@@ -54,7 +54,7 @@ function rmdir(path: string): Promise<void> {
 }
 
 /** Direct file access */
-export default class Files {
+export class Files {
   constructor(readonly path: string) {}
 
   /** Subdirectory */

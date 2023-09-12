@@ -1,5 +1,5 @@
 import { assert, assertEquals, assertInstanceOf } from "assert";
-import Files from "./files.ts";
+import { Files } from "./files.ts";
 
 
 Deno.test("create and remove tmpdir", async () => {
