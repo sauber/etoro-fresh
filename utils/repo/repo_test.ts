@@ -1,5 +1,12 @@
-import { assert, assertEquals, assertInstanceOf, assertRejects } from "assert";
-import { Repo, Config, JSONValue, Discover, DiscoverData } from "/utils/repo/repo.ts";
+import { assert, assertEquals, assertInstanceOf, assertRejects, assertNotEquals } from "assert";
+import {
+  Repo,
+  Config,
+  JSONValue,
+  UUID,
+  Discover,
+  DiscoverData,
+} from "/utils/repo/repo.ts";
 import { join } from "https://deno.land/std@0.200.0/path/join.ts";
 import { today } from "/utils/calendar.ts";
 
@@ -36,6 +43,31 @@ Deno.test("Config", async (t) => {
 
   await repo.delete();
 });
+
+Deno.test("UUID", async (t) => {
+  const repo = await Repo.tmp();
+  const uuid: UUID = repo.uuid;
+
+  await t.step("get unknown value", async () => {
+    const value: JSONValue = await uuid.latest();
+    assertEquals(value, null);
+  });
+
+  let generated: string
+  await t.step("generate value", async () => {
+    const value: JSONValue = await uuid.recent();
+    assertNotEquals(value, null);
+    generated = value;
+  });
+
+  await t.step("confim value", async () => {
+    const value: JSONValue = await uuid.latest();
+    assertEquals(value, generated);
+  });
+
+  await repo.delete();
+});
+
 
 Deno.test("Discover", async (t) => {
   const repo = await Repo.tmp();

@@ -21,7 +21,7 @@ interface JSONObject {
 }
 
 abstract class Asset<AssetType> {
-  abstract readonly filename: string;
+  abstract filename: string;
   abstract recent(): Promise<AssetType>; // Refresh file if expired
 
   constructor(protected readonly repo: Repo) {}
@@ -81,6 +81,27 @@ export class Config extends Asset<JSONObject> {
 }
 
 ///////////////////////////////////////////////////////////////////////
+// UUID
+///////////////////////////////////////////////////////////////////////
+
+export class UUID extends Asset<string> {
+  readonly filename = '';
+
+  latest(): Promise<string> {
+    return this.repo.config.get('uuid') as Promise<string>;  
+  }
+
+  async recent(): Promise<string> {
+    const latest: string = await this.latest();
+    if ( latest ) return latest;
+    
+    const new_uuid: string = crypto.randomUUID();
+    this.repo.config.set('uuid', new_uuid);
+    return new_uuid;
+  }
+}
+
+///////////////////////////////////////////////////////////////////////
 // Discover
 ///////////////////////////////////////////////////////////////////////
 
@@ -101,7 +122,8 @@ export class Discover extends Asset<DiscoverData> {
     const weekly = 11;
     const risk = 4;
     const filter = `blocked=false&bonusonly=false&copyblock=false&istestaccount=false&optin=true&page=1&period=OneYearAgo&verified=true&isfund=false&copiersmin=1&dailyddmin=-${daily}&gainmin=11&gainmax=350&maxmonthlyriskscoremax=${risk}&maxmonthlyriskscoremin=2&pagesize=70&profitablemonthspctmin=60&sort=-weeklydd&weeklyddmin=-${weekly}&activeweeksmin=12&lastactivitymax=14`;
-    const url = sprintf(Discover.url, this.repo.uuid, filter);
+    const uuid = await this.repo.uuid.recent();
+    const url = sprintf(Discover.url, uuid, filter);
 
     const fs: Files = this.repo.files;
     const content: string = await fs.download(url);
@@ -174,9 +196,8 @@ export class Repo {
   }
 
   /** Session ID */
-  get uuid(): string {
-    // TODO: Read from config file
-    return "52eb50a8-90c6-4e64-832f-7a9d685164aa";
+  get uuid(): UUID {
+    return new UUID(this);
   }
 
   get discover(): Discover {
