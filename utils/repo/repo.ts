@@ -29,10 +29,13 @@ abstract class Asset<AssetType> {
   async latest(): Promise<AssetType> {
     const fs: Files = this.repo.files;
     const latestPath: string | undefined = await fs.latest(this.filename);
-    // console.log("latest path: ", latestPath);
+    //console.log("latest path: ", latestPath);
     if (!latestPath) throw new Error(`File ${this.filename} not found`);
-    const content: string = await fs.read(latestPath);
+    //console.log('Loading data from ', latestPath);
+    const content: string = await fs.sub(latestPath).read(this.filename);
+    //console.log('Loaded string: ', content);
     const data = JSON.parse(content) as AssetType;
+    //console.log('latest content: ', data);
     return data;
   }
 
@@ -58,8 +61,7 @@ export class Config extends Asset<JSONObject> {
       const latest: JSONObject = await this.latest();
       return latest[key];
     } catch (error) {
-      // console.log(`Cannot load latest config`);
-
+    //  console.log(`Cannot load latest config`);
       return null;
     }
   }
@@ -164,7 +166,7 @@ export class Repo {
   /** Write in path of today */
   async write(filename: string, content: string): Promise<void> {
     const fs: Files = this.files.sub(today());
-    fs.write(filename, content);
+    return await fs.write(filename, content);
   }
 
   get config(): Config {

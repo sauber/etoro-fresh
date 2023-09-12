@@ -7,7 +7,7 @@ function stat(path: string) {
 }
 
 /** Wrapper for reading file */
-function read(path: string) {
+function read(path: string): Promise<string> {
   return Deno.readTextFile(path);
 }
 
@@ -28,7 +28,7 @@ async function mkdir(path: string): Promise<void> {
 }
 
 /** Get list of sub-directories */
-async function dirs(path: string) {
+async function dirs(path: string): Promise<string[]> {
   // console.log(`Scanning for subdirs in ${path}`);
   const dirNames: string[] = [];
 
@@ -74,11 +74,12 @@ export default class Files {
 
   /** Path to most recent file */
   public async latest(filename: string): Promise<string | undefined> {
-    for (const dir of await dirs(this.path)) {
+    const list: string[] = await dirs(this.path);
+    for (const dir of list.reverse()) {
       const path = join(this.path, dir, filename);
       // console.log(`Testing latest path: ${path}`);
       if (await stat(path)) {
-        return path;
+        return dir;
       }
     }
   }

@@ -1,5 +1,7 @@
 import { assert, assertEquals, assertInstanceOf, assertRejects } from "assert";
 import { Repo, Config, JSONValue, Discover, DiscoverData } from "/utils/repo/repo.ts";
+import { join } from "https://deno.land/std@0.200.0/path/join.ts";
+import { today } from "/utils/calendar.ts";
 
 Deno.test("repo initialization", async () => {
   const repo: Repo = await Repo.tmp();
@@ -26,13 +28,11 @@ Deno.test("Config", async (t) => {
     assertEquals(value, null);
   });
 
-  /*
   await t.step("set and get value", async () => {
     await config.set("foo", "bar");
     const value: JSONValue = await config.get("foo");
     assertEquals(value, "bar");
   });
-  */
 
   await repo.delete();
 });
