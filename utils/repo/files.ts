@@ -23,21 +23,15 @@ async function mkdir(path: string): Promise<void> {
   } catch {
     await Deno.mkdir(path, { recursive: true });
     await Deno.stat(path);
-    // console.log(`Created directory ${path}`);
   }
 }
 
 /** Get list of sub-directories */
 async function dirs(path: string): Promise<string[]> {
-  // console.log(`Scanning for subdirs in ${path}`);
   const dirNames: string[] = [];
 
-  for await (const dirEntry of Deno.readDir(path)) {
-    // console.log('Direntry: ', dirEntry);
-    if (dirEntry.isDirectory) {
-      dirNames.push(dirEntry.name);
-    }
-  }
+  for await (const dirEntry of Deno.readDir(path))
+    if (dirEntry.isDirectory) dirNames.push(dirEntry.name);
 
   return dirNames.sort();
 }
@@ -46,7 +40,6 @@ async function dirs(path: string): Promise<string[]> {
 function mktmpdir(): Promise<string> {
   return Deno.makeTempDir();
 }
-
 
 /** Recursively remove directory */
 function rmdir(path: string): Promise<void> {
@@ -77,10 +70,7 @@ export class Files {
     const list: string[] = await dirs(this.path);
     for (const dir of list.reverse()) {
       const path = join(this.path, dir, filename);
-      // console.log(`Testing latest path: ${path}`);
-      if (await stat(path)) {
-        return dir;
-      }
+      if (await stat(path)) return dir;
     }
   }
 
@@ -98,7 +88,6 @@ export class Files {
   /** Create class setting path to temporary directory */
   public static async tmp(): Promise<Files> {
     const path: string = await mktmpdir();
-    //console.log('Creating temp dir: ', path);
     return new Files(path);
   }
 
@@ -109,15 +98,12 @@ export class Files {
 
   /** Download content from url */
   public async download(url: string): Promise<string> {
-    //console.log('download url: ', url);
     const response = await fetch(url, {
       headers: {
         accept: "application/json",
       },
     });
     const content = await response.text();
-    //console.log('result: ', content);
-
     return content;
   }
 
@@ -133,7 +119,6 @@ export class Files {
     const diff = difference(mtime, new Date(), { units: ["minutes"] });
     if (diff.minutes != undefined) return diff.minutes;
 
-    //console.log("diff: ", diff);
     throw new Error(`Age cannot be decided in minutes`);
   }
 }
