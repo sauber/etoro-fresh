@@ -6,7 +6,7 @@ import { UUID } from "./uuid.ts";
 
 Deno.test("UUID", async (t) => {
   const repo = await Repo.tmp();
-  const uuid: UUID = repo.uuid;
+  const uuid: UUID = new UUID(repo);
 
   await t.step("get unknown value", async () => {
     const value: JSONValue = await uuid.latest();

@@ -12,12 +12,8 @@ Deno.test("repo initialization", async (t) => {
   await t.step("delete", async () => {
     await repo.delete();
 
-    await assertRejects(
-      () => {
-        return repo.files.age(repo.files.path);
-      },
-      Error,
-    );
+    await assertRejects(() => {
+      return repo.files.age(repo.files.path);
+    }, Error);
   });
-
 });

@@ -3,6 +3,7 @@ import { Files } from "./files.ts";
 import { Config } from "./config.ts";
 import { UUID } from "./uuid.ts";
 import { Discover } from "./discover.ts";
+import { Investor } from "./investor.ts";
 
 export class Repo {
   readonly files: Files;
@@ -39,5 +40,9 @@ export class Repo {
 
   get discover(): Discover {
     return new Discover(this);
+  }
+
+  investor(name: string): Investor {
+    return new Investor(this, name);
   }
 }

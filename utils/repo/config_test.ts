@@ -6,7 +6,7 @@ import { Config } from "./config.ts";
 
 Deno.test("Config", async (t) => {
   const repo = await Repo.tmp();
-  const config: Config = repo.config;
+  const config: Config = new Config(repo);
 
   await t.step("latest", async () => {
     await assertRejects(
