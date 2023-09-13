@@ -1,7 +1,6 @@
 import { sprintf } from "printf";
 import { assert } from "assert";
-import { Files } from "./files.ts";
-import { Asset } from "./asset.ts";
+import { Downloadable } from "./asset.ts";
 import { Repo } from "./repo.ts";
 
 interface Position {
@@ -37,50 +36,27 @@ export interface PortfolioData {
   AggregatedPositionsByStockIndustryID: StockIndustry[];
 }
 
-export class Portfolio extends Asset<PortfolioData> {
-  readonly filename: string;
-  static readonly url =
+export class Portfolio extends Downloadable<PortfolioData> {
+  protected readonly filename: string;
+  private static readonly urlTemplate =
     "https://www.etoro.com/sapi/trade-data-real/live/public/portfolios?cid=%d&client_request_id=%s";
-  static readonly expire = 3000; // Max age in miutes
+  protected readonly expire = 40000; // Max age in miutes
 
   constructor(
     protected readonly repo: Repo,
-    private readonly name: string,
+    private readonly username: string,
     private readonly cis: number
   ) {
     super(repo);
-    this.filename = `${name}.portfolio.json`;
+    this.filename = `${username}.portfolio.json`;
   }
 
-  async download(): Promise<PortfolioData> {
-    const uuid = await this.repo.uuid.recent();
-    console.log(Portfolio.url);
-    console.log(uuid, this.cis);
-    const url = sprintf(Portfolio.url, this.cis, uuid);
-    console.log(url);
-
-    const fs: Files = this.repo.files;
-    const content: string = await fs.download(url);
-    const data = JSON.parse(content) as PortfolioData;
-    return data;
+  protected async url(): Promise<string> {
+     return sprintf(Portfolio.urlTemplate, this.cis, await this.uuid())
   }
 
-  private validate(data: PortfolioData): boolean {
-    assert(data.CreditByRealizedEquity > 70);
+  protected validate(data: PortfolioData): boolean {
+    assert(data.CreditByRealizedEquity > 0);
     return true;
-  }
-
-  async recent(): Promise<PortfolioData> {
-    const files = this.repo.files;
-    const age = await files.age(this.filename);
-    if (!age || age > Portfolio.expire) {
-      const data: PortfolioData = await this.download();
-      files.write(this.filename, JSON.stringify(data));
-      return data;
-    } else {
-      const data = await this.latest();
-      if (data) return data as PortfolioData;
-    }
-    throw new Error("Portfolio file not downloaded");
   }
 }

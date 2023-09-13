@@ -15,7 +15,7 @@ export interface JSONObject {
 
 /** Abstract Asset class */
 export abstract class Asset<AssetType> {
-  abstract filename: string;
+  protected abstract filename: string;
 
   /** Refresh file if expired */
   abstract recent(): Promise<AssetType>;
@@ -33,7 +33,40 @@ export abstract class Asset<AssetType> {
   }
 
   /** Write content to todays directory */
-  write(content: AssetType): Promise<void> {
+  protected write(content: AssetType): Promise<void> {
     return this.repo.write(this.filename, JSON.stringify(content));
+  }
+}
+
+export abstract class Downloadable<AssetType> extends Asset<AssetType> {
+  protected abstract expire: number;
+  protected abstract url(): Promise<string>;
+  protected abstract validate(data: AssetType): boolean;
+
+  protected uuid(): Promise<string> {
+    return this.repo.uuid.recent();
+  }
+
+  protected async download(): Promise<AssetType> {
+    const fs: Files = this.repo.files;
+    const url = await this.url();
+    const content: string = await fs.download(url);
+    const data = JSON.parse(content) as AssetType;
+    this.validate(data);
+    return data;
+  }
+
+  async recent(): Promise<AssetType> {
+    const files = this.repo.files;
+    const age = await files.age(this.filename);
+    if (!age || age > this.expire) {
+      const data: AssetType = await this.download();
+      await files.write(this.filename, JSON.stringify(data));
+      return data;
+    } else {
+      const data = await this.latest();
+      if (data) return data as AssetType;
+    }
+    throw new Error("File not downloaded");
   }
 }

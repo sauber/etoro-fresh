@@ -9,9 +9,9 @@ Deno.test("Portfolio", async (t) => {
   const portfolio: Portfolio = new Portfolio(repo, name, cis);
   assertInstanceOf(portfolio, Portfolio);
 
-  await t.step("download", async () => {
-    const value: PortfolioData = await portfolio.download();
-    assert(value.AggregatedPositions.length > 0);
+  await t.step("recent", async () => {
+    const data: PortfolioData = await portfolio.recent();
+    assert(data.AggregatedPositions.length > 0);
   });
 
   await repo.delete();
