@@ -1,11 +1,12 @@
 import { sprintf } from "printf";
 import { assert } from "assert";
 import { Downloadable } from "./asset.ts";
+import { Investors } from "./investors.ts";
 
 export interface DiscoverData {
   Status: string;
   TotalRows: number;
-  Items: Record<string, string | never>[];
+  Items: InvestorData[];
 }
 
 export class Discover extends Downloadable<DiscoverData> {
@@ -27,5 +28,14 @@ export class Discover extends Downloadable<DiscoverData> {
   protected validate(data: DiscoverData): boolean {
     assert(data.TotalRows >= 70 && data.TotalRows <= 140);
     return true;
+  }
+
+  async investors(): Promise<Investors> {
+    const investors = new Investors(this.repo);
+    const data = await this.recent();
+    for ( const investor of data.Items ) {
+      investors.add(investor.UserName, investor.CustomerId);
+    }
+    return investors;
   }
 }

@@ -1,7 +1,7 @@
 import { assertEquals, assertInstanceOf } from "assert";
 import { Repo } from "./repo.ts";
 import { Investors } from "./investors.ts";
-import { username, cis } from "./testdata.ts";
+import { username, cid } from "./testdata.ts";
 
 Deno.test("Investors", async (t) => {
   const repo = await Repo.tmp();
@@ -10,12 +10,12 @@ Deno.test("Investors", async (t) => {
   assertEquals(investors.length, 0)
 
   await t.step("add investor", () => {
-    investors.add(username, cis);
+    investors.add(username, cid);
     assertEquals(investors.length, 1);
   });
 
   await t.step("add same investor again", () => {
-    investors.add(username, cis);
+    investors.add(username, cid);
     assertEquals(investors.length, 1);
   });
 

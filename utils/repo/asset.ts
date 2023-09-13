@@ -61,7 +61,7 @@ export abstract class Downloadable<AssetType> extends Asset<AssetType> {
     const age = await files.age(this.filename);
     if (!age || age > this.expire) {
       const data: AssetType = await this.download();
-      await files.write(this.filename, JSON.stringify(data));
+      await this.repo.write(this.filename, JSON.stringify(data));
       return data;
     } else {
       const data = await this.latest();

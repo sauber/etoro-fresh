@@ -65,12 +65,14 @@ export class Files {
     return rmdir(this.path);
   }
 
-  /** Path to most recent file */
+  /** Subdirectory of most recent file */
   public async latest(filename: string): Promise<string | undefined> {
     const list: string[] = await dirs(this.path);
     for (const dir of list.reverse()) {
       const path = join(this.path, dir, filename);
-      if (await stat(path)) return dir;
+      try {
+        if (await stat(path)) return dir;
+      } catch (_error) {}
     }
   }
 
@@ -109,9 +111,10 @@ export class Files {
 
   /** Age of file in minutes */
   public async age(filename: string): Promise<number | null> {
-    const fullPath = await this.latest(filename);
-    if (!fullPath) return null;
+    const subdir = await this.latest(filename);
+    if (!subdir) return null;
 
+    const fullPath = join(this.path, subdir, filename);
     const file = await stat(fullPath);
     const mtime: Date | null = file.mtime;
     if (!mtime) throw new Error(`Cannot get mtime for ${fullPath}`);

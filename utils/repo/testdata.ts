@@ -1,2 +1,2 @@
 export const username = "JeppeKirkBonde";
-export const cis = 2988943;
+export const cid = 2988943;

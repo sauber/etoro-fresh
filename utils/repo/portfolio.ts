@@ -2,6 +2,7 @@ import { sprintf } from "printf";
 import { assert } from "assert";
 import { Downloadable } from "./asset.ts";
 import { Repo } from "./repo.ts";
+import { Investors } from "./investors.ts";
 
 interface Position {
   InstrumentID: number;
@@ -27,10 +28,20 @@ interface StockIndustry {
   Value: number;
 }
 
+interface MirrorData {
+  MirrorID: number;
+  ParentCID: number;
+  ParentUsername: string;
+  Invested: number;
+  NetProfit: number;
+  Value: number;
+  PendingForClosure: boolean;
+}
+
 export interface PortfolioData {
   CreditByRealizedEquity: number;
   CreditByUnrealizedEquity: number;
-  AggregatedMirrors: Record<string, string | never>[];
+  AggregatedMirrors: MirrorData[];
   AggregatedPositions: Position[];
   AggregatedPositionsByInstrumentTypeID: InstrumentType[];
   AggregatedPositionsByStockIndustryID: StockIndustry[];
@@ -58,5 +69,14 @@ export class Portfolio extends Downloadable<PortfolioData> {
   protected validate(data: PortfolioData): boolean {
     assert(data.CreditByRealizedEquity > 0);
     return true;
+  }
+
+  async mirrors(): Promise<Investors> {
+    const data = await this.recent();
+    const investors = new Investors(this.repo);
+    for ( const investor of data.AggregatedMirrors) {
+      investors.add(investor.ParentUsername, investor.ParentCID);
+    }
+    return investors;
   }
 }
