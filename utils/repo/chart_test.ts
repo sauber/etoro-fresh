@@ -1,11 +1,10 @@
 import { assertInstanceOf, assert } from "assert";
 import { Repo } from "./repo.ts";
 import { Chart, ChartData } from "./chart.ts";
+import { username, cis } from "./testdata.ts";
 
 Deno.test("Chart", async (t) => {
   const repo = await Repo.tmp();
-  const username = "JeppeKirkBonde";
-  const cis = 2988943;
   const chart: Chart = new Chart(repo, username, cis);
   assertInstanceOf(chart, Chart);
 

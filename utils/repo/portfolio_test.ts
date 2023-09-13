@@ -1,12 +1,11 @@
 import { assertInstanceOf, assert } from "assert";
 import { Repo } from "./repo.ts";
 import { Portfolio, PortfolioData } from "./portfolio.ts";
+import { username, cis } from "./testdata.ts";
 
 Deno.test("Portfolio", async (t) => {
   const repo = await Repo.tmp();
-  const name = "JeppeKirkBonde";
-  const cis = 2988943;
-  const portfolio: Portfolio = new Portfolio(repo, name, cis);
+  const portfolio: Portfolio = new Portfolio(repo, username, cis);
   assertInstanceOf(portfolio, Portfolio);
 
   await t.step("recent", async () => {

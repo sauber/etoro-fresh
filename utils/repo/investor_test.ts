@@ -1,11 +1,11 @@
-import { assert, assertInstanceOf, assertRejects } from "assert";
+import { assertInstanceOf } from "assert";
 import { Repo } from "./repo.ts";
 import { Investor } from "./investor.ts";
+import { username, cis } from "./testdata.ts";
 
-Deno.test("Investor", async (t) => {
+Deno.test("Investor", async () => {
   const repo = await Repo.tmp();
-  const name = "JeppeKirkBonde";
-  const investor: Investor = new Investor(repo, name);
+  const investor: Investor = new Investor(repo, username, cis);
   assertInstanceOf(investor, Investor);
   await repo.delete();
 });
