@@ -9,11 +9,11 @@ export interface InvestorData {
 }
 
 export class Investor {
-  private readonly portfolio: Portfolio;
-  private readonly stats: Stats;
-  private readonly chart: Chart;
+  readonly portfolio: Portfolio;
+  readonly stats: Stats;
+  readonly chart: Chart;
 
-  constructor(private readonly repo: Repo, private readonly username: string, private readonly cid: number) {
+  constructor(private readonly repo: Repo, readonly username: string, readonly cid: number) {
     this.portfolio = new Portfolio(repo, username, cid);
     this.stats = new Stats(repo, username, cid);
     this.chart = new Chart(repo, username, cid);

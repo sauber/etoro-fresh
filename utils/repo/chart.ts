@@ -46,7 +46,7 @@ export class Chart extends Downloadable<ChartData> {
     const lastDate = list[length-1].timestamp.substring(0, 10);
     const todayDate = today();
 
-    assertEquals(lastDate, todayDate, "Last date in chart is not today");
+    assertEquals(lastDate, todayDate, `Last date ${lastDate} in ${this.username} chart is not today`);
     assert(length > 365, "Too few dates in chart");
     return true;
   }

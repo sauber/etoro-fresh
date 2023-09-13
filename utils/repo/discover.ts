@@ -2,6 +2,7 @@ import { sprintf } from "printf";
 import { assert } from "assert";
 import { Downloadable } from "./asset.ts";
 import { Investors } from "./investors.ts";
+import { InvestorData } from "./investor.ts";
 
 export interface DiscoverData {
   Status: string;

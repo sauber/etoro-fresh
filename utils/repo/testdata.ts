@@ -1,2 +1,2 @@
-export const username = "JeppeKirkBonde";
-export const cid = 2988943;
+export const username = "GainersQtr";
+export const cid = 4657429;

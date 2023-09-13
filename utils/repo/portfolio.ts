@@ -67,7 +67,7 @@ export class Portfolio extends Downloadable<PortfolioData> {
   }
 
   protected validate(data: PortfolioData): boolean {
-    assert(data.CreditByRealizedEquity > 0);
+    assert(data.CreditByRealizedEquity >= 0, `Portfolio CreditByRealizedEquity is ${data.CreditByRealizedEquity}`);
     return true;
   }
 

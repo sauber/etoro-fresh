@@ -1,5 +1,6 @@
 import { join } from "path";
 import { difference } from "difference";
+import { exists } from "fs";
 
 /** Wrapper for stat system call */
 function stat(path: string) {
@@ -70,9 +71,7 @@ export class Files {
     const list: string[] = await dirs(this.path);
     for (const dir of list.reverse()) {
       const path = join(this.path, dir, filename);
-      try {
-        if (await stat(path)) return dir;
-      } catch (_error) {}
+      if ( await exists(path)) return dir; 
     }
   }
 

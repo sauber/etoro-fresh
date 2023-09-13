@@ -42,7 +42,8 @@ export class Repo {
     return new Discover(this);
   }
 
-  investor(name: string): Investor {
-    return new Investor(this, name);
+  investor(username: string, cid: number): Investor {
+    return new Investor(this, username, cid);
   }
+
 }
