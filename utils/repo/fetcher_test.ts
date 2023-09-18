@@ -44,6 +44,7 @@ Deno.test("Fetcher", async (t) => {
     const end = new Date();
     const diff = end.getTime() - start.getTime();
     assert(diff > 2*rate);
+    assert(diff < 3*rate);
 });
 
 

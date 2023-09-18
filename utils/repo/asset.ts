@@ -1,5 +1,6 @@
 import { Repo } from "./repo.ts";
 import { Files } from "./files.ts";
+import { Fetcher } from "./fetcher.ts";
 
 export type JSONValue =
   | string
@@ -48,10 +49,9 @@ export abstract class Downloadable<AssetType> extends Asset<AssetType> {
   }
 
   protected async download(): Promise<AssetType> {
-    const fs: Files = this.repo.files;
+    const fs: Fetcher = this.repo.fetcher;
     const url = await this.url();
-    const content: string = await fs.download(url);
-    const data = JSON.parse(content) as AssetType;
+    const data = await fs.get(url) as AssetType;
     this.validate(data);
     return data;
   }

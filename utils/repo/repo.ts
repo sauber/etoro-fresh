@@ -1,15 +1,18 @@
 import { today } from "../calendar.ts";
 import { Files } from "./files.ts";
 import { Config } from "./config.ts";
+import { Fetcher } from "./fetcher.ts";
 import { UUID } from "./uuid.ts";
 import { Discover } from "./discover.ts";
 import { Investor } from "./investor.ts";
 
 export class Repo {
   readonly files: Files;
+  readonly fetcher: Fetcher;
 
   constructor(private readonly path: string) {
     this.files = new Files(path);
+    this.fetcher = new Fetcher(10000); // TODO read from config
   }
 
   /** Create repo in tmp directory */

@@ -98,6 +98,7 @@ export class Files {
   }
 
   /** Download content from url */
+  /*
   public async download(url: string): Promise<string> {
     const response = await fetch(url, {
       headers: {
@@ -107,6 +108,7 @@ export class Files {
     const content = await response.text();
     return content;
   }
+  */
 
   /** Age of file in minutes */
   public async age(filename: string): Promise<number | null> {
