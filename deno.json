@@ -5,7 +5,7 @@
     "start": "deno run -A --watch=static/,routes/ dev.ts",
     "build": "deno run -A dev.ts build",
     "preview": "deno run -A main.ts",
-    "test": "deno test --allow-write=/tmp --allow-read=/tmp --allow-net=www.etoro.com",
+    "test": "deno test --allow-write=/tmp --allow-read=/tmp --allow-net=www.etoro.com,jsonplaceholder.typicode.com",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
   "lint": {
@@ -44,6 +44,7 @@
     "fs": "https://deno.land/std@0.200.0/fs/mod.ts",
     "path": "https://deno.land/std@0.200.0/path/mod.ts",
     "printf": "https://deno.land/std@0.200.0/fmt/printf.ts",
+    "semaphore":  "https://deno.land/x/semaphore@v1.1.2/semaphore.ts",
     "yaml": "https://deno.land/std@0.200.0/yaml/mod.ts"
 
   },
