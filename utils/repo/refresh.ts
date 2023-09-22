@@ -43,7 +43,8 @@ export class Refresh {
     
     // Run in parallel
     await Promise.all(
-      subset.map( (investor: Investor) => this.load(investor))
+      //subset.map( (investor: Investor) => this.load(investor))
+      subset.map( (investor: Investor) => console.log(investor.username))
     );
 
     return subset.length;
