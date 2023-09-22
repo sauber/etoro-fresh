@@ -17,7 +17,7 @@ export class Fetcher {
       const now: Date = new Date();
       const wait: number = this.available.getTime() - now.getTime();
       if (wait > 0) {
-        //console.log('waiting', wait);
+        console.log('waiting', wait, 'ms');
         await this.delay(wait);
       }
 
@@ -31,6 +31,8 @@ export class Fetcher {
   }
 
   private fetchjson(url: string): Promise<JSONObject> {
+    console.log('Fetch', url);
+    
     return fetch(url, {
       headers: {
         accept: "application/json",
