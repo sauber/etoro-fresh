@@ -39,7 +39,8 @@ export class Refresh {
   async run(): Promise<number> {
     const investors: Investors = await this.investors();
     const all = investors.all;
-    const subset = this.max ? all.slice(0,this.max) : all.filter(i => i.username == "MoricPortfolio ");
+    const subset = this.max ? all.slice(0,this.max) : all;
+    console.log(subset);
     
     // Run in parallel
     await Promise.all(

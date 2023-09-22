@@ -5,7 +5,7 @@ import { username, cid } from "./testdata.ts";
 
 Deno.test("Fresh", async (t) => {
   const repo = await Repo.tmp();
-  const max = 0;
+  const max = 3;
   const refresh: Refresh = new Refresh(repo, username, cid, max);
   assertInstanceOf(refresh, Refresh);
 
