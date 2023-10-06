@@ -24,7 +24,8 @@ export interface ChartData {
 export class Chart extends Downloadable<ChartData> {
   protected readonly filename: string;
   static readonly urlTemplate =
-    "https://www.etoro.com/sapi/trade-data-real/chart/public/%s/oneYearAgo/1?client_request_id=%s";
+    //"https://www.etoro.com/sapi/trade-data-real/chart/public/%s/oneYearAgo/1?client_request_id=%s";
+    "https://www.etoro.com/sapi/userstats/CopySim/Username/%s/OneYearAgo?client_request_id=%s";
   protected readonly expire = 1440; // Max age in miutes
 
   constructor(
