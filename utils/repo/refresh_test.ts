@@ -4,8 +4,10 @@ import { Refresh } from "./refresh.ts";
 import { username, cid } from "./testdata.ts";
 
 Deno.test("Fresh", async (t) => {
-  const repo = await Repo.tmp();
-  const max = 3;
+  const path = '/tmp/data';
+  //const repo = await Repo.tmp();
+  const repo = new Repo(path);
+  const max = 0;
   const refresh: Refresh = new Refresh(repo, username, cid, max);
   assertInstanceOf(refresh, Refresh);
 

@@ -12,7 +12,7 @@ export class Repo {
 
   constructor(private readonly path: string) {
     this.files = new Files(path);
-    this.fetcher = new Fetcher(10000); // TODO read from config
+    this.fetcher = new Fetcher(5000); // TODO read from config
   }
 
   /** Create repo in tmp directory */

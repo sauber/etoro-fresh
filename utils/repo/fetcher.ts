@@ -1,5 +1,5 @@
 import { Semaphore } from "semaphore";
-import { JSONObject }  from "./asset.ts";
+import { JSONObject } from "./asset.ts";
 
 export class Fetcher {
   private available: Date = new Date();
@@ -7,7 +7,7 @@ export class Fetcher {
 
   constructor(private callbackDelayMs: number = 10000) {}
 
-  private  delay(ms: number) {
+  private delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
@@ -17,7 +17,7 @@ export class Fetcher {
       const now: Date = new Date();
       const wait: number = this.available.getTime() - now.getTime();
       if (wait > 0) {
-        console.log('waiting', wait, 'ms');
+        console.log("waiting", wait, "ms");
         await this.delay(wait);
       }
 
@@ -31,8 +31,8 @@ export class Fetcher {
   }
 
   private fetchjson(url: string): Promise<JSONObject> {
-    console.log('Fetch', url);
-    
+    console.log("Fetch", url);
+
     return fetch(url, {
       headers: {
         accept: "application/json",
@@ -40,14 +40,16 @@ export class Fetcher {
     }).then((resp) => resp.json());
   }
 
-/** Wrap fetch call in limit */
+  /** Wrap fetch call in limit */
   async get(url: string): Promise<JSONObject> {
     let data: JSONObject;
 
-    const data3: JSONObject = await this.limit(async (): Promise<JSONObject> => {
-      data = await this.fetchjson(url) as JSONObject;
-      return data;
-    });
+    const data3: JSONObject = await this.limit(
+      async (): Promise<JSONObject> => {
+        data = (await this.fetchjson(url)) as JSONObject;
+        return data;
+      }
+    );
 
     const data2 = data3;
     return data2;

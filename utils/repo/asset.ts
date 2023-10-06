@@ -59,14 +59,17 @@ export abstract class Downloadable<AssetType> extends Asset<AssetType> {
   async recent(): Promise<AssetType> {
     const files = this.repo.files;
     const age = await files.age(this.filename);
-    if (!age || age > this.expire) {
+    //console.log(`Age of ${this.filename} is ${age}`);
+    if (age === null || age > this.expire) {
+      //console.log(`Downloading`);
       const data: AssetType = await this.download();
       await this.repo.write(this.filename, JSON.stringify(data));
       return data;
     } else {
+      //console.log(`Reusing`);
       const data = await this.latest();
       if (data) return data as AssetType;
     }
-    throw new Error("File not downloaded");
+    throw new Error("File not available and cannot download");
   }
 }
