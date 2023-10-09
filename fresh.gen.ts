@@ -29,7 +29,6 @@ const manifest = {
     "./routes/posts/[id]/edit.tsx": $7,
     "./routes/posts/[id]/index.tsx": $8,
     "./routes/posts/new.tsx": $9,
-    "./routes/repo/[folder]/[filename].ts": $10,
     "./routes/repo/_middleware.ts": $11,
   },
   islands: {
