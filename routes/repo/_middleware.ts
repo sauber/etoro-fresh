@@ -1,15 +1,15 @@
 import { MiddlewareHandlerContext } from "$fresh/server.ts";
-import Files from "files";
+import { Repo } from "/utils/repo/repo.ts";
 
 interface State {
-  data: Files;
+  repo: Repo;
 }
 
 export async function handler(
   _req: Request,
   ctx: MiddlewareHandlerContext<State>,
 ) {
-  ctx.state.data = new Files("/tmp/data");
+  ctx.state.repo = new Repo("/tmp/data");
   const resp = await ctx.next();
   resp.headers.set("server", "fresh server");
   return resp;

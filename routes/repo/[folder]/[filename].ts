@@ -1,5 +1,5 @@
 import { Handlers } from "$fresh/server.ts";
-import Files from "files";
+import { Repo } from "/utils/repo/repo.ts";
 
 type User = {
   id: string;
@@ -7,13 +7,13 @@ type User = {
 };
 
 
-export const handler: Handlers<string, { data: Files }> = {
+export const handler: Handlers<string, { repo: Repo }> = {
   async GET(_req: Request, ctx) {
     //console.log('ctr: ', ctx);
     
-    const filename = ctx.params.filename;
-    const files: Files = ctx.state.data;
-    const content: string = await files.read(filename);
+    const { folder, filename } = ctx.params;
+    const repo: Repo = ctx.state.repo;
+    const content: string = await repo.files.sub(folder).read(filename);
     return new Response(content, {
       headers: { "Content-Type": "application/json" },
     });
