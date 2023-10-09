@@ -29,13 +29,13 @@ export class Config extends Asset<JSONObject> {
     // Attempt to read from file
     try {
       const latest: JSONObject = await this.latest();
-      return latest[key];
+      if (key in latest) return latest[key];
     } catch (_error) {
-      //  console.log(`Cannot load latest config`);
+      //console.log(`Cannot load latest config`);
     }
 
     // Defaults defined?
-    if (Config.defaults[key]) return Config.defaults[key];
+    if (key in Config.defaults) return Config.defaults[key];
 
     // Not in file and not in defaults
     return null;
