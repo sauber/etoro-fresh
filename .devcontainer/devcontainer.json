@@ -41,7 +41,7 @@
       "repositories": {
         "sauber/etoro-data": {
           "permissions": {
-            "issues": "write"
+            "contents": "write"
           }
         }
       }
