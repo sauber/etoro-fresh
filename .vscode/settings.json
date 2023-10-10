@@ -2,7 +2,8 @@
   "deno.enable": true,
   "deno.lint": true,
   "deno.config": "./deno.json",
-  "editor.defaultFormatter": "denoland.vscode-deno",
+  "deno.path": "/snap/bin/deno",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[typescriptreact]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
   },
@@ -13,7 +14,7 @@
     "editor.defaultFormatter": "denoland.vscode-deno"
   },
   "[javascript]": {
-    "editor.defaultFormatter": "denoland.vscode-deno"
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[css]": {
     "editor.defaultFormatter": "vscode.css-language-features"
