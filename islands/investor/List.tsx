@@ -6,7 +6,7 @@ const timeFmt = new Intl.RelativeTimeFormat("en-US");
 export default function InvestorList(props: { target: string }) {
   const target = new Date(props.target);
   const now = useSignal(new Date());
-  const names = useSignal(["John"]);
+  const names = useSignal(["Loading ..."]);
   
   const loadCommunity = async () => {
     const url = "/api/investor/names/last";
@@ -72,11 +72,14 @@ export default function InvestorList(props: { target: string }) {
 
   return (
     <div>
-      <h2>List of investors</h2>
       <span>{timeFmt.format(secondsLeft, "seconds")}</span>
+      <h2>List of investors</h2>
+      <ul>
+      
       { names.value.map((name: string) => 
-        (<span>Name: {name}</span>)
+        (<li>Name: {name}</li>)
       )}
+      </ul>
     </div>
   );
 }
