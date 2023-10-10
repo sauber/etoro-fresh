@@ -1,5 +1,4 @@
 import InvestorList from "../islands/investor/List.tsx";
-import Countdown from "../islands/Countdown.tsx";
 
 export default function Home() {
   const date = new Date();
