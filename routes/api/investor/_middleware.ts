@@ -4,9 +4,9 @@ import { Community, CommunityFileRepo } from "/investor/mod.ts";
 import { Files } from "/utils/repo/files.ts";
 
 // Create Community object
-await load({export: true});
-const path = Deno.env.get("DATAPATH") as string; 
-console.log('path: ', path);
+const env = await load();
+const path = env["DATAPATH"] as string; 
+//console.log('path: ', path);
 const files = new Files(path);
 const repo = new CommunityFileRepo(files);
 const comm = new Community(repo);
