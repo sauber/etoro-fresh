@@ -2,7 +2,7 @@ import { sprintf } from "printf";
 import { assert, assertEquals } from "assert";
 import { Downloadable } from "./asset.ts";
 import { Repo } from "./repo.ts";
-import { today } from "/utils/calendar.ts";
+import { today } from "../time/calendar.ts";
 
 interface ChartEntry {
   "timestamp": string;

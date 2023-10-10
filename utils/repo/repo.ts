@@ -1,4 +1,4 @@
-import { today } from "../calendar.ts";
+import { today } from "../time/calendar.ts";
 import { Files } from "./files.ts";
 import { Config } from "./config.ts";
 import { Fetcher } from "./fetcher.ts";

@@ -34,6 +34,7 @@ export class Discover extends Downloadable<DiscoverData> {
   }
 
   protected validate(data: DiscoverData): boolean {
+    // TODO: Use min/max from config
     assert(data.TotalRows >= 70 && data.TotalRows <= 140, `TotalRows error 70 <= ${data.TotalRows} <= 140`);
     return true;
   }

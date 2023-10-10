@@ -1,6 +1,7 @@
 import { join } from "path";
 import { difference } from "difference";
 import { exists } from "fs";
+import { PrimaryExpression } from "https://deno.land/x/ts_morph@17.0.1/ts_morph.js";
 
 /** Wrapper for stat system call */
 function stat(path: string) {
@@ -27,7 +28,7 @@ async function mkdir(path: string): Promise<void> {
   }
 }
 
-/** Get list of sub-directories */
+/** Get list of sub-directories, sorted */
 async function dirs(path: string): Promise<string[]> {
   const dirNames: string[] = [];
 
@@ -35,6 +36,16 @@ async function dirs(path: string): Promise<string[]> {
     if (dirEntry.isDirectory) dirNames.push(dirEntry.name);
 
   return dirNames.sort();
+}
+
+/** Get list of files, sorted */
+async function files(path: string): Promise<string[]> {
+  const fileNames: string[] = [];
+
+  for await (const fileEntry of Deno.readDir(path))
+    if (fileEntry.isFile) fileNames.push(fileEntry.name);
+
+  return fileNames.sort();
 }
 
 /** Create a temporary directory */
@@ -57,7 +68,7 @@ export class Files {
   }
 
   /** Create directory */
-  private create(): Promise<void> {
+  public create(): Promise<void> {
     return mkdir(this.path);
   }
 
@@ -66,12 +77,28 @@ export class Files {
     return rmdir(this.path);
   }
 
+  /** List of all subdirectories */
+  public dirs(): Promise<string[]> {
+    return dirs(this.path);
+  }
+
+  /** List of all subdirectories */
+  public files(): Promise<string[]> {
+    return files(this.path);
+  }
+
+  /** Name of most recent directory */
+  public async last(): Promise<string> {
+    const dirnames = await this.dirs();
+    return dirnames[dirnames.length - 1];
+  }
+
   /** Subdirectory of most recent file */
   public async latest(filename: string): Promise<string | undefined> {
-    const list: string[] = await dirs(this.path);
+    const list: string[] = await this.dirs();
     for (const dir of list.reverse()) {
       const path = join(this.path, dir, filename);
-      if ( await exists(path)) return dir; 
+      if (await exists(path)) return dir;
     }
   }
 
@@ -91,24 +118,6 @@ export class Files {
     const path: string = await mktmpdir();
     return new Files(path);
   }
-
-  /** Create temporary file */
-  private tmpfile(): Promise<string> {
-    return mktmpdir();
-  }
-
-  /** Download content from url */
-  /*
-  public async download(url: string): Promise<string> {
-    const response = await fetch(url, {
-      headers: {
-        accept: "application/json",
-      },
-    });
-    const content = await response.text();
-    return content;
-  }
-  */
 
   /** Age of file in minutes */
   public async age(filename: string): Promise<number | null> {
