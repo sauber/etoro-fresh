@@ -9,48 +9,28 @@
     "test": "deno test --allow-write=/tmp --allow-read=/tmp --allow-net=www.etoro.com,jsonplaceholder.typicode.com",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
-  "lint": {
-    "rules": {
-      "tags": [
-        "fresh",
-        "recommended"
-      ]
-    },
-    "exclude": [
-      "_fresh"
-    ]
-  },
-  "fmt": {
-    "exclude": [
-      "_fresh"
-    ]
-  },
+  "lint": { "rules": { "tags": ["fresh", "recommended"] } },
   "imports": {
     "/": "./",
     "./": "./",
-
-    "$fresh/": "https://deno.land/x/fresh@1.4.3/",
-    "preact": "https://esm.sh/preact@10.15.1",
-    "preact/": "https://esm.sh/preact@10.15.1/",
-    "preact-render-to-string": "https://esm.sh/*preact-render-to-string@6.2.1",
-    "@preact/signals": "https://esm.sh/*@preact/signals@1.1.3",
-    "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.2.3",
+    "$fresh/": "https://deno.land/x/fresh@1.5.0/",
+    "preact": "https://esm.sh/preact@10.18.1",
+    "preact/": "https://esm.sh/preact@10.18.1/",
+    "preact-render-to-string": "https://esm.sh/*preact-render-to-string@6.2.2",
+    "@preact/signals": "https://esm.sh/*@preact/signals@1.2.1",
+    "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.0",
     "twind": "https://esm.sh/twind@0.16.19",
     "twind/": "https://esm.sh/twind@0.16.19/",
     "$std/": "https://deno.land/std@0.193.0/",
-
     "dotenv": "https://deno.land/std@0.201.0/dotenv/mod.ts",
     "assert": "https://deno.land/std@0.200.0/assert/mod.ts",
     "difference": "https://deno.land/std@0.200.0/datetime/difference.ts",
     "fs": "https://deno.land/std@0.200.0/fs/mod.ts",
     "path": "https://deno.land/std@0.200.0/path/mod.ts",
     "printf": "https://deno.land/std@0.200.0/fmt/printf.ts",
-    "semaphore":  "https://deno.land/x/semaphore@v1.1.2/semaphore.ts",
+    "semaphore": "https://deno.land/x/semaphore@v1.1.2/semaphore.ts",
     "yaml": "https://deno.land/std@0.200.0/yaml/mod.ts"
-
   },
-  "compilerOptions": {
-    "jsx": "react-jsx",
-    "jsxImportSource": "preact"
-  }
+  "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" },
+  "exclude": ["**/_fresh/*"]
 }
