@@ -40,13 +40,41 @@ export class FetchRepo implements Repo {
     return this.fetch(url);
   }
 
+  private chart(filter: InvestorParams): Promise<JSONObject> {
+    const urlTemplate =
+      //"https://www.etoro.com/sapi/trade-data-real/chart/public/%s/oneYearAgo/1?client_request_id=%s";
+      "/sapi/userstats/CopySim/Username/%s/OneYearAgo?client_request_id=%s";
+    const url: string = this.site + sprintf(urlTemplate, filter.username, this.uuid);
+    return this.fetch(url);
+  }
+
+  private portfolio(filter: InvestorParams): Promise<JSONObject> {
+    const urlTemplate =
+      "/sapi/trade-data-real/live/public/portfolios?cid=%d&client_request_id=%s";
+    const url: string = this.site + sprintf(urlTemplate, filter.cid, this.uuid);
+    return this.fetch(url);
+  }
+
+  private stats(filter: InvestorParams): Promise<JSONObject> {
+    const urlTemplate =
+      "/rankings/cid/%d/rankings?Period=OneYearAgo&client_request_id=%s";
+    const url: string = this.site + sprintf(urlTemplate, filter.cid, this.uuid);
+    return this.fetch(url);
+  }
+
   public last(
     asset: Asset,
     options: DiscoverParams | InvestorParams
   ): Promise<JSONObject | null> {
     switch (asset) {
       case "discover":
-        return this.discover(options);
+        return this.discover(options as DiscoverParams);
+      case "chart":
+        return this.chart(options as InvestorParams);
+      case "portfolio":
+        return this.portfolio(options as InvestorParams);
+      case "stats":
+        return this.stats(options as InvestorParams);
     }
     throw new Error(`Cannot fetch ${asset} asset`);
   }

@@ -17,7 +17,7 @@ export class Fetcher {
       const now: Date = new Date();
       const wait: number = this.available.getTime() - now.getTime();
       if (wait > 0) {
-        console.log("waiting", wait, "ms");
+        console.log("fetch waiting", wait, "ms");
         await this.delay(wait);
       }
 

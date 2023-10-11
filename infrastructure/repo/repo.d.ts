@@ -10,11 +10,14 @@ export type JSONObject = {
   [k: string]: JSONValue;
 };
 
-export type Asset = "config" | "discover";
+export type Asset = "config" | "discover" | "chart" | "portfolio" | "stats";
 
 export interface Repo {
   store(asset: Asset, data: JSONObject): Promise<void>;
-  last(asset: Asset, options?: Record<string, string|number>): Promise<JSONObject | null>;
+  last(
+    asset: Asset,
+    options?: Record<string, string | number>
+  ): Promise<JSONObject | null>;
   //age(asset: string): Promise<void>;
   delete(): Promise<void>;
 }
