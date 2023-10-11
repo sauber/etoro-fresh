@@ -4,19 +4,9 @@ export class Config {
   static assetname: Asset = "config";
 
   static defaults: Record<string, JSONValue> = {
-    discover_filter: "B",
-    discover_filters: {
-      A: {
-        daily: 4,
-        weekly: 11,
-        risk: 4,
-      },
-      B: {
-        daily: 6,
-        weekly: 11,
-        risk: 4,
-      },
-    },
+    discover_risk: 4,
+    discover_daily: 6,
+    discover_weekly: 11,
     discover_min: 70,
     discover_max: 140,
     fetch_delay: 5000,
