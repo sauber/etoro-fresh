@@ -1,22 +1,12 @@
-import { assertEquals, assertRejects } from "assert";
+import { assertEquals } from "assert";
 
-import { Repo } from "./repo.ts";
-import { JSONValue } from "./asset.ts";
+import { TempRepo } from "./repo-temp.ts";
+import { JSONValue } from "./repo.d.ts";
 import { Config } from "./config.ts";
 
 Deno.test("Config", async (t) => {
-  const repo = await Repo.tmp();
+  const repo = new TempRepo();
   const config: Config = new Config(repo);
-
-  await t.step("latest", async () => {
-    await assertRejects(
-      () => {
-        return config.latest();
-      },
-      Error,
-      "File config.json not found"
-    );
-  });
 
   await t.step("get unknown value", async () => {
     const value: JSONValue = await config.get("foo");

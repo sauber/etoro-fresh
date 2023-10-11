@@ -1,2 +1,3 @@
-export const username = "GainersQtr";
-export const cid = 4657429;
+import { DiskRepo } from "./repo-disk.ts";
+import { Config } from "./config.ts";
+export const config = new Config(new DiskRepo("infrastructure/repo/testdata"));

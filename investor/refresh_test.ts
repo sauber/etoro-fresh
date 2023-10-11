@@ -1,13 +1,14 @@
 import { assertInstanceOf, assertEquals } from "assert";
-import { Repo } from "./repo.ts";
+import { TempRepo } from "./repo-temp.ts";
 import { Refresh } from "./refresh.ts";
-import { username, cid } from "./testdata.ts";
+import { config } from "./testdata.ts";
 
 Deno.test("Fresh", async (t) => {
-  const path = '/tmp/data';
-  const repo = await Repo.tmp();
-  //const repo = new Repo(path);
+  const repo = new TempRepo();
   const max = 1;
+  const username = await config.get("UserName") as string;
+  const cid = await config.get("CustomerId") as number;
+
   const refresh: Refresh = new Refresh(repo, username, cid, max);
   assertInstanceOf(refresh, Refresh);
 

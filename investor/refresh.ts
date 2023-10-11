@@ -1,4 +1,4 @@
-import { Repo } from "./repo.ts";
+import { Repo } from "./repo.d.ts";
 import { Investor } from "./investor.ts";
 import { Investors } from "./investors.ts";
 

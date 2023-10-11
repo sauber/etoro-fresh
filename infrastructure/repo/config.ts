@@ -1,7 +1,7 @@
-import { Asset, JSONObject, JSONValue } from "./asset.ts";
+import { Asset, Repo, JSONObject, JSONValue } from "./repo.d.ts";
 
-export class Config extends Asset<JSONObject> {
-  readonly filename = "config.json";
+export class Config {
+  static assetname: Asset = "config";
 
   static defaults: Record<string, JSONValue> = {
     discover_filter: "B",
@@ -19,20 +19,21 @@ export class Config extends Asset<JSONObject> {
     },
     discover_min: 70,
     discover_max: 140,
+    fetch_delay: 5000,
   };
 
-  recent(): Promise<JSONObject> {
-    return this.latest();
+  constructor(private readonly repo: Repo) {}
+
+  private async latest(): Promise<JSONObject> {
+    const data: JSONObject | null = await this.repo.last(Config.assetname);
+    return data ? data : {};
   }
 
+  /** Return a single value */
   async get(key: string): Promise<JSONValue> {
     // Attempt to read from file
-    try {
-      const latest: JSONObject = await this.latest();
-      if (key in latest) return latest[key];
-    } catch (_error) {
-      //console.log(`Cannot load latest config`);
-    }
+    const data: JSONObject = await this.latest();
+    if (key in data) return data[key];
 
     // Defaults defined?
     if (key in Config.defaults) return Config.defaults[key];
@@ -41,16 +42,10 @@ export class Config extends Asset<JSONObject> {
     return null;
   }
 
+  /** Set a single value */
   async set(key: string, value: JSONValue): Promise<void> {
-    let data: JSONObject = {};
-    try {
-      const latest: JSONObject = await this.latest();
-      data = latest;
-    } catch (_error) {
-      // console.log(`Cannot load previous config`);
-    }
-
+    const data: JSONObject = await this.latest();
     data[key] = value;
-    return this.write(data);
+    return this.repo.store(Config.assetname, data);
   }
 }

@@ -1,11 +1,11 @@
 import { Semaphore } from "semaphore";
-import { JSONObject } from "./asset.ts";
+import { JSONObject } from "./repo.d.ts";
 
 export class Fetcher {
   private available: Date = new Date();
   private semaphore = new Semaphore(1);
 
-  constructor(private callbackDelayMs: number = 10000) {}
+  constructor(private callbackDelayMs: number) {}
 
   private delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -41,6 +41,7 @@ export class Fetcher {
   }
 
   /** Wrap fetch call in limit */
+  // TODO: Too many data objects used
   async get(url: string): Promise<JSONObject> {
     let data: JSONObject;
 
