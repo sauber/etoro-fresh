@@ -28,10 +28,11 @@
   },
 
   "extensions": [
-    "akil-s.tokyo-light",
-    "denoland.vscode-deno",
-    "sastan.twind-intellisense"
-  ],
+	"akil-s.tokyo-light",
+	"denoland.vscode-deno",
+	"sastan.twind-intellisense",
+	"esbenp.prettier-vscode"
+],
 
   "remoteUser": "vscode",
   "forwardPorts": [8000],
