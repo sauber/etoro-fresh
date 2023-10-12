@@ -1,4 +1,4 @@
-import { assertArrayIncludes, assertEquals, assertInstanceOf } from "assert";
+import { assertEquals, assertInstanceOf } from "assert";
 import { FetchRepo } from "./repo-fetch.ts";
 import { config } from "./testdata.ts";
 
@@ -15,7 +15,6 @@ const investorOptions = {
 };
 
 Deno.test("investorOptions", () => {
-  const repo = new FetchRepo(delay);
   assertEquals(investorOptions, { username: "GainersQtr", cid: 4657429 });
 });
 

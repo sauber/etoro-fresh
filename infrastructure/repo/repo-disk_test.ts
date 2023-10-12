@@ -19,7 +19,7 @@ Deno.test("Persistency", async () => {
   );
 });
 
-Deno.test("Read config asset", async (t) => {
+Deno.test("Read config asset", async () => {
   const repo = new DiskRepo(path);
 
   const config: JSONObject | null = await repo.last("config");
