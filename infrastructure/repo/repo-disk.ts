@@ -10,6 +10,11 @@ function filename(asset: Asset): string {
 export class DiskRepo implements Repo {
   constructor(private readonly path: string) {}
 
+  /** Not allow for persistent repository */
+  public delete(): Promise<void> {
+    throw new Error("Refuse to delete persistent disk repository");
+  }
+
   /** File object at respository root */
   protected files(): Promise<Files> {
     return new Promise((resolve) => resolve(new Files(this.path)));
@@ -39,16 +44,14 @@ export class DiskRepo implements Repo {
     return this.write(today(), filename(asset), data);
   }
 
+  public async age(asset: Asset): Promise<JSONObject | null> {
+
+
   public async last(asset: Asset): Promise<JSONObject | null> {
     const fs: Files = await this.files();
     const file: string = filename(asset);
     const dir: string | undefined = await fs.latest(file);
     if (dir) return this.read(dir, file);
     else return null;
-  }
-
-  /** Not allow for persistent repository */
-  public delete(): Promise<void> {
-    throw new Error("Refuse to delete persistent disk repository");
   }
 }

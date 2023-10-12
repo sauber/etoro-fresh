@@ -44,7 +44,8 @@ export class FetchRepo implements Repo {
     const urlTemplate =
       //"https://www.etoro.com/sapi/trade-data-real/chart/public/%s/oneYearAgo/1?client_request_id=%s";
       "/sapi/userstats/CopySim/Username/%s/OneYearAgo?client_request_id=%s";
-    const url: string = this.site + sprintf(urlTemplate, filter.username, this.uuid);
+    const url: string =
+      this.site + sprintf(urlTemplate, filter.username, this.uuid);
     return this.fetch(url);
   }
 
@@ -77,6 +78,11 @@ export class FetchRepo implements Repo {
         return this.stats(options as InvestorParams);
     }
     throw new Error(`Cannot fetch ${asset} asset`);
+  }
+
+  /** Data fetch is always completely fresh */
+  public age(_asset: Asset): Promise<number | null> {
+    return new Promise((resolve) => resolve(0));
   }
 
   store(_asset: Asset, _data: JSONObject): Promise<void> {

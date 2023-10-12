@@ -12,12 +12,12 @@ export function diffDate(start: DateFormat, end: DateFormat): number {
 /** DateFormat object as string */
 export function formatDate(ms: number): DateFormat {
   const date = new Date(ms);
-  const yyyymmdd: DateFormat =
+  const yyyymmdd =
     date.getFullYear() +
     "-" +
     ("0" + (date.getMonth() + 1)).slice(-2) +
     "-" +
-    ("0" + date.getDate()).slice(-2);
+    ("0" + date.getDate()).slice(-2) as DateFormat;
   return yyyymmdd;
 }
 

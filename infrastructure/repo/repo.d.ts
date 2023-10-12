@@ -18,6 +18,9 @@ export interface Repo {
     asset: Asset,
     options?: Record<string, string | number>
   ): Promise<JSONObject | null>;
-  //age(asset: string): Promise<void>;
+  age(
+    asset: Asset,
+    options?: Record<string, string | number>
+  ): Promise<number | null>;
   delete(): Promise<void>;
 }
