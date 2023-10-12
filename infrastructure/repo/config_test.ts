@@ -1,12 +1,11 @@
 import { assertEquals } from "assert";
-
-import { TempRepo } from "./repo-temp.ts";
+import { RepoHeapBackend } from "./repo-heap.ts";
 import { JSONValue } from "./repo.d.ts";
 import { Config } from "./config.ts";
 
 Deno.test("Config", async (t) => {
-  const repo = new TempRepo();
-  const config: Config = new Config(repo);
+  const backend = new RepoHeapBackend();
+  const config: Config = new Config(backend);
 
   await t.step("get unknown value", async () => {
     const value: JSONValue = await config.get("foo");
@@ -18,6 +17,4 @@ Deno.test("Config", async (t) => {
     const value: JSONValue = await config.get("foo");
     assertEquals(value, "bar");
   });
-
-  await repo.delete();
 });

@@ -1,57 +1,65 @@
 import { today } from "../time/calendar.ts";
-import { Repo, Asset, JSONObject } from "./repo.d.ts";
+import { JSONObject, RepoBackend } from "./repo.d.ts";
 import { Files } from "./files.ts";
+import { DateFormat } from "/infrastructure/time/calendar.ts";
 
-function filename(asset: Asset): string {
+function filename(asset: string): string {
   return asset + ".json";
 }
 
 /** Disk base storage for repository */
-export class DiskRepo implements Repo {
+export class RepoDiskBackend implements RepoBackend {
   constructor(private readonly path: string) {}
+
+  /** File object at repository root */
+  protected files(): Promise<Files> {
+    return new Promise((resolve) => resolve(new Files(this.path)));
+  }
 
   /** Not allow for persistent repository */
   public delete(): Promise<void> {
     throw new Error("Refuse to delete persistent disk repository");
   }
 
-  /** File object at respository root */
-  protected files(): Promise<Files> {
-    return new Promise((resolve) => resolve(new Files(this.path)));
-  }
-
-  /** Write content to file in directory */
-  private async write(
-    dir: string,
-    filename: string,
-    data: JSONObject
-  ): Promise<void> {
-    const fs: Files = (await this.files()).sub(dir);
+  public async store(assetname: string, data: JSONObject): Promise<void> {
+    const fs = await this.files();
+    const dir = today();
     const content = JSON.stringify(data);
-    return fs.write(filename, content);
+    const file = filename(assetname);
+    return fs.sub(dir).write(file, content);
   }
 
-  /** Read and parse content of file in dir */
-  private async read(dir: string, filename: string): Promise<JSONObject> {
-    const fs: Files = (await this.files()).sub(dir);
-    const content: string = await fs.read(filename);
-    const data: JSONObject = JSON.parse(content);
+  async dates(): Promise<DateFormat[]> {
+    const fs = await this.files();
+    return fs.dirs();
+  }
+
+  public async assetsByDate(date: DateFormat): Promise<string[]> {
+    const fs = (await this.files()).sub(date);
+    return (await fs.files())
+      .filter((filename: string) => filename.match(/\.json$/))
+      .map((filename: string) => filename.replace(/\.json/, ""));
+  }
+
+  public async datesByAsset(assetname: string): Promise<DateFormat[]> {
+    const allDates = await this.dates();
+    const dates: DateFormat[] = [];
+    for (const date of allDates) {
+      const assets = await this.assetsByDate(date);
+      if (assets.includes(assetname)) dates.push(date);
+    }
+    return dates;
+  }
+
+  public async retrieve(
+    assetname: string,
+    date?: DateFormat
+  ): Promise<JSONObject | null> {
+    if (!date) date = (await this.datesByAsset(assetname)).reverse()[0];
+    if (!date) return null;
+    const fs = (await this.files()).sub(date);
+    const content = await fs.read(filename(assetname));
+    const data = JSON.parse(content);
     return data;
-  }
-
-  /** Write content to todays directory */
-  public store(asset: Asset, data: JSONObject): Promise<void> {
-    return this.write(today(), filename(asset), data);
-  }
-
-  public async age(asset: Asset): Promise<JSONObject | null> {
-
-
-  public async last(asset: Asset): Promise<JSONObject | null> {
-    const fs: Files = await this.files();
-    const file: string = filename(asset);
-    const dir: string | undefined = await fs.latest(file);
-    if (dir) return this.read(dir, file);
-    else return null;
   }
 }

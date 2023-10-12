@@ -1,16 +1,16 @@
 import { assertInstanceOf, assertRejects } from "assert";
-import { DiskRepo } from "./repo-disk.ts";
+import { RepoDiskBackend } from "./repo-disk.ts";
 import { JSONObject } from "./repo.d.ts";
 
 const path = "infrastructure/repo/testdata";
 
 Deno.test("Initialization", () => {
-  const repo = new DiskRepo(path);
-  assertInstanceOf(repo, DiskRepo);
+  const repo = new RepoDiskBackend(path);
+  assertInstanceOf(repo, RepoDiskBackend);
 });
 
 Deno.test("Persistency", async () => {
-  const repo = new DiskRepo(path);
+  const repo = new RepoDiskBackend(path);
 
   await assertRejects(
     async () => await repo.delete(),
@@ -20,8 +20,8 @@ Deno.test("Persistency", async () => {
 });
 
 Deno.test("Read config asset", async () => {
-  const repo = new DiskRepo(path);
+  const repo = new RepoDiskBackend(path);
 
-  const config: JSONObject | null = await repo.last("config");
+  const config: JSONObject | null = await repo.retrieve("config");
   assertInstanceOf(config, Object);
 });

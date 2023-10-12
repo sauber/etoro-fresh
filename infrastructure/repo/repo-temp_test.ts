@@ -1,20 +1,20 @@
 import { assertEquals, assertInstanceOf } from "assert";
-import { TempRepo } from "./repo-temp.ts";
-import { JSONObject } from "./repo.d.ts";
+import { RepoTempBackend } from "./repo-temp.ts";
+import { JSONObject, RepoBackend } from "./repo.d.ts";
 
 Deno.test("Initialization", async () => {
-  const repo = new TempRepo();
-  assertInstanceOf(repo, TempRepo);
+  const repo = new RepoTempBackend();
+  assertInstanceOf(repo, RepoTempBackend);
   await repo.delete();
 });
 
 Deno.test("Asset", async (t) => {
-  const repo = new TempRepo();
+  const repo = new RepoTempBackend();
   const asset = "config";
   const referenceData = {};
 
   await t.step("file does not exist yet", async () => {
-    const data: JSONObject | null = await repo.last(asset);
+    const data: JSONObject | null = await repo.retrieve(asset);
     assertEquals(data, null);
   });
 
@@ -23,7 +23,7 @@ Deno.test("Asset", async (t) => {
   });
 
   await t.step("read", async () => {
-    const data: JSONObject | null = await repo.last(asset);
+    const data: JSONObject | null = await repo.retrieve(asset);
     assertEquals(data, referenceData);
   });
 

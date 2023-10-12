@@ -1,3 +1,5 @@
+import type { DateFormat } from "../time/calendar.ts";
+
 export type JSONValue =
   | string
   | number
@@ -10,17 +12,16 @@ export type JSONObject = {
   [k: string]: JSONValue;
 };
 
-export type Asset = "config" | "discover" | "chart" | "portfolio" | "stats";
+export interface RepoBackend {
+    /** Delete whole repo */
+    delete(): Promise<void>;
 
-export interface Repo {
-  store(asset: Asset, data: JSONObject): Promise<void>;
-  last(
-    asset: Asset,
-    options?: Record<string, string | number>
-  ): Promise<JSONObject | null>;
-  age(
-    asset: Asset,
-    options?: Record<string, string | number>
-  ): Promise<number | null>;
-  delete(): Promise<void>;
+    /** Store/Retrieve Objects */
+    store(assetname: string, data: JSONObject): Promise<void>;
+    retrieve(assetname: string, date?: DateFormat): Promise<JSONObject|null>;
+  
+    /** Inventory */
+    dates(): Promise<DateFormat[]>;
+    datesByAsset(assetname: string): Promise<DateFormat[]>;
+    assetsByDate(date: DateFormat): Promise<string[]>;
 }

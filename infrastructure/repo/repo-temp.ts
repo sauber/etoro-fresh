@@ -1,8 +1,8 @@
-import { Repo } from "./repo.d.ts";
+import { RepoBackend } from "./repo.d.ts";
 import { Files } from "./files.ts";
-import { DiskRepo } from "./repo-disk.ts";
+import { RepoDiskBackend } from "./repo-disk.ts";
 
-export class TempRepo extends DiskRepo implements Repo {
+export class RepoTempBackend extends RepoDiskBackend implements RepoBackend {
   constructor() {
     super("");
   }

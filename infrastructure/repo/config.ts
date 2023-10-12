@@ -1,7 +1,7 @@
-import { Asset, Repo, JSONObject, JSONValue } from "./repo.d.ts";
+import { JSONObject, JSONValue, RepoBackend } from "./repo.d.ts";
 
 export class Config {
-  static assetname: Asset = "config";
+  static assetname = "config";
 
   static defaults: Record<string, JSONValue> = {
     discover_risk: 4,
@@ -12,11 +12,11 @@ export class Config {
     fetch_delay: 5000,
   };
 
-  constructor(private readonly repo: Repo) {}
+  constructor(private readonly backend: RepoBackend) {}
 
   private async latest(): Promise<JSONObject> {
-    const data: JSONObject | null = await this.repo.last(Config.assetname);
-    return data ? data : {};
+    const data: JSONObject | null = await this.backend.retrieve(Config.assetname);
+    return data || {};
   }
 
   /** Return a single value */
@@ -36,6 +36,6 @@ export class Config {
   async set(key: string, value: JSONValue): Promise<void> {
     const data: JSONObject = await this.latest();
     data[key] = value;
-    return this.repo.store(Config.assetname, data);
+    return this.backend.store(Config.assetname, data);
   }
 }

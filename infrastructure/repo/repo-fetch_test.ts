@@ -27,13 +27,13 @@ Deno.test("Fetching", {ignore: true}, async (t) => {
   const repo = new FetchRepo(delay);
 
   await t.step("discover", async () => {
-    const data = await repo.last("discover", discoverOptions);
+    const data = await repo.discover(discoverOptions);
     assertInstanceOf(data, Object);
     assertEquals(data.Status, "OK");
   });
 
   await t.step("stats", async () => {
-    const data = await repo.last("stats", investorOptions);
+    const data = await repo.stats(investorOptions);
     assertInstanceOf(data, Object);
     assertInstanceOf(data.Data, Object);
   });

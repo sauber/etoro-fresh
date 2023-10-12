@@ -1,34 +1,26 @@
-import { RepoAbstractBackend } from "./repo-abstract-backend.ts";
-import { JSONObject } from "./repo.d.ts";
+import { JSONObject, RepoBackend } from "./repo.d.ts";
 import { today, DateFormat } from "/infrastructure/time/calendar.ts";
 
 /** Storing objects in process memory */
-export class HeapRepo extends RepoAbstractBackend {
+export class RepoHeapBackend implements RepoBackend {
   private cache: Record<DateFormat, Record<string, JSONObject>> = {};
 
-  delete(): Promise<void> {
-    for (const key in this.cache) delete this.cache[key];
-    return new Promise((resolve) => resolve());
-  }
-
-  private save(key: string, data: JSONObject): void {
-    const date: DateFormat = today();
-    if (!(date in this.cache)) this.cache[date] = {};
-    this.cache[date][key] = data;
+  public delete(): Promise<void> {
+    return new Promise((resolve) => {
+      for (const key in this.cache) delete this.cache[key];
+      resolve()
+    });
   }
 
   private keys(): DateFormat[] {
     return Object.keys(this.cache).sort();
   }
 
-  private load(key: string, date?: DateFormat): JSONObject {
-    if (!date) date = this.keys().reverse()[0];
-    return this.cache[date][key];
-  }
-
   public store(assetname: string, data: JSONObject): Promise<void> {
     return new Promise((resolve) => {
-      this.save(assetname, data);
+      const date: DateFormat = today();
+      if (!(date in this.cache)) this.cache[date] = {};
+      this.cache[date][assetname] = data;
       resolve();
     });
   }
@@ -36,7 +28,7 @@ export class HeapRepo extends RepoAbstractBackend {
   public retrieve(
     assetname: string,
     date?: string | undefined
-  ): Promise<JSONObject> {
+  ): Promise<JSONObject|null> {
     return new Promise((resolve, reject) => {
       if (!date) {
         const dates = this.keys();
@@ -45,7 +37,7 @@ export class HeapRepo extends RepoAbstractBackend {
         }
       }
       if (date) resolve(this.cache[date][assetname]);
-      else reject(`${assetname} not in repo`);
+      else resolve(null);
     });
   }
 

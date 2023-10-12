@@ -1,3 +1,3 @@
-import { DiskRepo } from "./repo-disk.ts";
+import { RepoDiskBackend } from "./repo-disk.ts";
 import { Config } from "./config.ts";
-export const config = new Config(new DiskRepo("infrastructure/repo/testdata"));
+export const config = new Config(new RepoDiskBackend("infrastructure/repo/testdata"));

@@ -1,17 +1,38 @@
 import { assertEquals, assertInstanceOf } from "assert";
-import { HeapRepo } from "./repo-heap.ts";
+import { RepoHeapBackend } from "./repo-heap.ts";
 import { today, DateFormat } from "/infrastructure/time/calendar.ts";
 import { JSONObject } from "./repo.d.ts";
 
 Deno.test("Initialization", () => {
-  const repo = new HeapRepo();
-  assertInstanceOf(repo, HeapRepo);
+  const repo = new RepoHeapBackend();
+  assertInstanceOf(repo, RepoHeapBackend);
+});
+
+Deno.test("Empty repo", async (t) => {
+  const repo = new RepoHeapBackend();
+  const date: DateFormat = today();
+  const assetname = "foo";
+
+  await t.step("Search for dates", async () => {
+    const dates: DateFormat[] = await repo.dates();
+    assertEquals(dates, []);
+  });
+
+  await t.step("Search for dates by asset", async () => {
+    const dates: DateFormat[] = await repo.datesByAsset(assetname);
+    assertEquals(dates, []);
+  });
+
+  await t.step("Search for assets by dates", async () => {
+    const response: string[] = await repo.assetsByDate(date);
+    assertEquals(response, []);
+  });
 });
 
 Deno.test("Store and retrive objects", async (t) => {
-  const repo = new HeapRepo();
+  const repo = new RepoHeapBackend();
   const date: DateFormat = today();
-  const assetname = 'foo';
+  const assetname = "foo";
   const data: JSONObject = { bar: true };
 
   await t.step("Store", async () => {
@@ -19,11 +40,11 @@ Deno.test("Store and retrive objects", async (t) => {
   });
 
   await t.step("Retrive", async () => {
-    const response: JSONObject = await repo.retrieve(assetname);
+    const response = await repo.retrieve(assetname) as JSONObject;
     assertEquals(response, data);
   });
 
-  await t.step("Search for dates", async() => {
+  await t.step("Search for dates", async () => {
     const dates: DateFormat[] = await repo.dates();
     assertEquals(dates, [date]);
   });
@@ -37,5 +58,8 @@ Deno.test("Store and retrive objects", async (t) => {
     const response: string[] = await repo.assetsByDate(date);
     assertEquals(response, [assetname]);
   });
-});
 
+  await t.step("Delete", async () => {
+    await repo.delete();
+  });
+});
