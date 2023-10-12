@@ -6,7 +6,7 @@
     "build": "deno run -A dev.ts build",
     "preview": "deno run -A main.ts",
     "refresh": "deno run --allow-read=/workspaces/etoro-data/data --allow-write=/workspaces/etoro-data/data --allow-net=www.etoro.com utils/repo/refresh_bin.ts /workspaces/etoro-data/data",
-    "test": "deno test --allow-write=/tmp --allow-read=/tmp,infrastructure/repo/testdata --allow-net=www.etoro.com,jsonplaceholder.typicode.com",
+    "test": "deno test --allow-write=/tmp --allow-read=/tmp,infrastructure/repo/testdata,testdata --allow-net=www.etoro.com,jsonplaceholder.typicode.com",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
   "lint": { "rules": { "tags": ["fresh", "recommended"] } },

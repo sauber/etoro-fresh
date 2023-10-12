@@ -57,7 +57,7 @@ export class FetchRepo implements Repo {
 
   private stats(filter: InvestorParams): Promise<JSONObject> {
     const urlTemplate =
-      "/rankings/cid/%d/rankings?Period=OneYearAgo&client_request_id=%s";
+      "/sapi/rankings/cid/%d/rankings?Period=OneYearAgo&client_request_id=%s";
     const url: string = this.site + sprintf(urlTemplate, filter.cid, this.uuid);
     return this.fetch(url);
   }

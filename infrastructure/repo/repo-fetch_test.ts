@@ -1,4 +1,4 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import { assertArrayIncludes, assertEquals, assertInstanceOf } from "assert";
 import { FetchRepo } from "./repo-fetch.ts";
 import { config } from "./testdata.ts";
 
@@ -39,6 +39,6 @@ Deno.test("Fetching", async (t) => {
   await t.step("stats", async () => {
     const data = await repo.last('stats', investorOptions);
     assertInstanceOf(data, Object);
-    assertEquals(data.Status, 'OK');
+    assertInstanceOf(data.Data, Object);
   });
 });

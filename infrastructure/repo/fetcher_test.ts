@@ -2,7 +2,7 @@ import { assert, assertInstanceOf } from "assert";
 import { Fetcher } from "./fetcher.ts";
 
 Deno.test("Fetcher", async (t) => {
-  const rate = 200; // Min pause between calls
+  const rate = 1000; // Min pause between calls
 
   await t.step("blank initialize",  () => {
     const f: Fetcher = new Fetcher(rate);
