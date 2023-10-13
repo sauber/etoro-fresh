@@ -1,16 +1,12 @@
 import { JSONObject } from "./repo.d.ts";
 import { sprintf } from "printf";
 import { Fetcher } from "./fetcher.ts";
+import type { InvestorId } from "./repo.d.ts"
 
 type DiscoverParams = {
   daily: number;
   weekly: number;
   risk: number;
-};
-
-type InvestorParams = {
-  username: string;
-  cid: number;
 };
 
 /** Disk base storage for repository */
@@ -40,26 +36,26 @@ export class FetchRepo {
     return this.fetch(url);
   }
 
-  public chart(filter: InvestorParams): Promise<JSONObject> {
+  public chart(investor: InvestorId): Promise<JSONObject> {
     const urlTemplate =
       //"https://www.etoro.com/sapi/trade-data-real/chart/public/%s/oneYearAgo/1?client_request_id=%s";
       "/sapi/userstats/CopySim/Username/%s/OneYearAgo?client_request_id=%s";
     const url: string =
-      this.site + sprintf(urlTemplate, filter.username, this.uuid);
+      this.site + sprintf(urlTemplate, investor.UserName, this.uuid);
     return this.fetch(url);
   }
 
-  public portfolio(filter: InvestorParams): Promise<JSONObject> {
+  public portfolio(investor: InvestorId): Promise<JSONObject> {
     const urlTemplate =
       "/sapi/trade-data-real/live/public/portfolios?cid=%d&client_request_id=%s";
-    const url: string = this.site + sprintf(urlTemplate, filter.cid, this.uuid);
+    const url: string = this.site + sprintf(urlTemplate, investor.CustomerId, this.uuid);
     return this.fetch(url);
   }
 
-  public stats(filter: InvestorParams): Promise<JSONObject> {
+  public stats(investor: InvestorId): Promise<JSONObject> {
     const urlTemplate =
       "/sapi/rankings/cid/%d/rankings?Period=OneYearAgo&client_request_id=%s";
-    const url: string = this.site + sprintf(urlTemplate, filter.cid, this.uuid);
+    const url: string = this.site + sprintf(urlTemplate, investor.CustomerId, this.uuid);
     return this.fetch(url);
   }
 }

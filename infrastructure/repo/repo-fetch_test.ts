@@ -1,5 +1,6 @@
 import { assertEquals, assertInstanceOf } from "assert";
 import { FetchRepo } from "./repo-fetch.ts";
+import type { InvestorId } from "./repo.d.ts";
 import { config } from "./testdata.ts";
 
 const delay = (await config.get("fetch_delay")) as number;
@@ -9,13 +10,14 @@ const discoverOptions = {
   weekly: (await config.get("discover_weekly")) as number,
 };
 
-const investorOptions = {
-  username: (await config.get("UserName")) as string,
-  cid: (await config.get("CustomerId")) as number,
+// TODO: Use InvestorDate type
+const investor: InvestorId = {
+  UserName: (await config.get("UserName")) as string,
+  CustomerId: (await config.get("CustomerId")) as number,
 };
 
-Deno.test("investorOptions", () => {
-  assertEquals(investorOptions, { username: "GainersQtr", cid: 4657429 });
+Deno.test("investor", () => {
+  assertEquals(investor, { UserName: "GainersQtr", CustomerId: 4657429 });
 });
 
 Deno.test("Initialization", () => {
@@ -32,8 +34,21 @@ Deno.test("Fetching", {ignore: true}, async (t) => {
     assertEquals(data.Status, "OK");
   });
 
+  // TODO: Use InvestorDate type instead of investorOptions
+  await t.step("chart", async () => {
+    const data = await repo.chart(investor);
+    assertInstanceOf(data, Object);
+    assertInstanceOf(data.Data, Object);
+  });
+
+  await t.step("portfolio", async () => {
+    const data = await repo.portfolio(investor);
+    assertInstanceOf(data, Object);
+    assertInstanceOf(data.Data, Object);
+  });
+
   await t.step("stats", async () => {
-    const data = await repo.stats(investorOptions);
+    const data = await repo.stats(investor);
     assertInstanceOf(data, Object);
     assertInstanceOf(data.Data, Object);
   });

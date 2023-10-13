@@ -12,6 +12,11 @@ export type JSONObject = {
   [k: string]: JSONValue;
 };
 
+export type InvestorId = {
+  CustomerId: number;
+  UserName: string;
+}
+
 export interface RepoBackend {
     /** Delete whole repo */
     delete(): Promise<void>;
