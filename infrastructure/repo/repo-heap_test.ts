@@ -1,4 +1,4 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import { assertEquals, assertNotEquals, assertInstanceOf, assert } from "assert";
 import { RepoHeapBackend } from "./repo-heap.ts";
 import { today, DateFormat } from "/infrastructure/time/calendar.ts";
 import { JSONObject } from "./repo.d.ts";
@@ -57,6 +57,13 @@ Deno.test("Store and retrive objects", async (t) => {
   await t.step("Search for assets by dates", async () => {
     const response: string[] = await repo.assetsByDate(date);
     assertEquals(response, [assetname]);
+  });
+
+  await t.step("Age of most recent asset", async () => {
+    const ms: number|null = await repo.age(assetname);
+    assertNotEquals(ms, null);
+    if ( ms != null )
+      assert(ms > 0 && ms < 1000, `Age should be 0-1000ms, is ${ms}ms`);
   });
 
   await t.step("Delete", async () => {

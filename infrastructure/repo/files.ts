@@ -1,7 +1,5 @@
 import { join } from "path";
-import { difference } from "difference";
 import { exists } from "fs";
-import { PrimaryExpression } from "https://deno.land/x/ts_morph@17.0.1/ts_morph.js";
 
 /** Wrapper for stat system call */
 function stat(path: string) {
@@ -119,7 +117,7 @@ export class Files {
     return new Files(path);
   }
 
-  /** Age of file in minutes */
+  /** Age of most recent file in milliseconds */
   public async age(filename: string): Promise<number | null> {
     const subdir = await this.latest(filename);
     if (!subdir) return null;
@@ -128,10 +126,6 @@ export class Files {
     const file = await stat(fullPath);
     const mtime: Date | null = file.mtime;
     if (!mtime) throw new Error(`Cannot get mtime for ${fullPath}`);
-
-    const diff = difference(mtime, new Date(), { units: ["minutes"] });
-    if (diff.minutes != undefined) return diff.minutes;
-
-    throw new Error(`Age cannot be decided in minutes`);
+    return (new Date()).getTime() - mtime.getTime();
   }
 }

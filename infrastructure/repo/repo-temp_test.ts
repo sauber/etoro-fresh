@@ -1,4 +1,4 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import { assertEquals, assertNotEquals, assertInstanceOf, assert } from "assert";
 import { RepoTempBackend } from "./repo-temp.ts";
 import { JSONObject, RepoBackend } from "./repo.d.ts";
 
@@ -10,21 +10,33 @@ Deno.test("Initialization", async () => {
 
 Deno.test("Asset", async (t) => {
   const repo = new RepoTempBackend();
-  const asset = "config";
+  const assetname = "config";
   const referenceData = {};
 
   await t.step("file does not exist yet", async () => {
-    const data: JSONObject | null = await repo.retrieve(asset);
+    const data: JSONObject | null = await repo.retrieve(assetname);
     assertEquals(data, null);
   });
 
   await t.step("write", async () => {
-    await repo.store(asset, referenceData);
+    await repo.store(assetname, referenceData);
   });
 
   await t.step("read", async () => {
-    const data: JSONObject | null = await repo.retrieve(asset);
+    const data: JSONObject | null = await repo.retrieve(assetname);
     assertEquals(data, referenceData);
+  });
+
+  await t.step("read", async () => {
+    const data: JSONObject | null = await repo.retrieve(assetname);
+    assertEquals(data, referenceData);
+  });
+
+  await t.step("age", async () => {
+    const ms: number | null = await repo.age(assetname);
+    assertNotEquals(ms, null);
+    if ( ms != null )
+      assert(ms > 1 && ms < 1000, `Age should be 1-1000ms, is ${ms}ms`);
   });
 
   await repo.delete();

@@ -7,7 +7,7 @@
     },
     {
       "name": "Cache dependencies",
-      "command": "deno cache dev.ts"
+      "command": "deno cache web/dev.ts"
     }
   ],
 

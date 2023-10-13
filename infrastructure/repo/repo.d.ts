@@ -16,11 +16,14 @@ export interface RepoBackend {
     /** Delete whole repo */
     delete(): Promise<void>;
 
-    /** Store/Retrieve Objects */
+    /** Store/Retrieve Assets */
     store(assetname: string, data: JSONObject): Promise<void>;
     retrieve(assetname: string, date?: DateFormat): Promise<JSONObject|null>;
+
+    /** Asset Meta */
+    age(assetname: string): Promise<number|null>;
   
-    /** Inventory */
+    /** Asset Inventory */
     dates(): Promise<DateFormat[]>;
     datesByAsset(assetname: string): Promise<DateFormat[]>;
     assetsByDate(date: DateFormat): Promise<string[]>;

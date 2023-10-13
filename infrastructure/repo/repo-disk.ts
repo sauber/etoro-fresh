@@ -51,15 +51,24 @@ export class RepoDiskBackend implements RepoBackend {
     return dates;
   }
 
+  /** Which date is most recent for asset */
+  private async end(assetname: string): Promise<DateFormat|undefined> {
+    return (await this.files()).latest(filename(assetname));
+  }
+  
   public async retrieve(
     assetname: string,
     date?: DateFormat
   ): Promise<JSONObject | null> {
-    if (!date) date = (await this.datesByAsset(assetname)).reverse()[0];
+    if (!date) date = await this.end(assetname);
     if (!date) return null;
     const fs = (await this.files()).sub(date);
     const content = await fs.read(filename(assetname));
     const data = JSON.parse(content);
     return data;
+  }
+
+  public async age(assetname: string): Promise<number|null> {
+    return (await this.files()).age(filename(assetname));
   }
 }
