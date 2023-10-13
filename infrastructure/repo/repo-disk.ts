@@ -22,30 +22,30 @@ export class RepoDiskBackend implements RepoBackend {
   }
 
   public async store(assetname: string, data: JSONObject): Promise<void> {
-    const fs = await this.files();
-    const dir = today();
-    const content = JSON.stringify(data);
-    const file = filename(assetname);
+    const fs: Files = await this.files();
+    const dir: DateFormat = today();
+    const content: string = JSON.stringify(data);
+    const file: string = filename(assetname);
     return fs.sub(dir).write(file, content);
   }
 
   async dates(): Promise<DateFormat[]> {
-    const fs = await this.files();
+    const fs: Files = await this.files();
     return fs.dirs();
   }
 
   public async assetsByDate(date: DateFormat): Promise<string[]> {
-    const fs = (await this.files()).sub(date);
+    const fs: Files = (await this.files()).sub(date);
     return (await fs.files())
       .filter((filename: string) => filename.match(/\.json$/))
       .map((filename: string) => filename.replace(/\.json/, ""));
   }
 
   public async datesByAsset(assetname: string): Promise<DateFormat[]> {
-    const allDates = await this.dates();
+    const allDates: DateFormat[] = await this.dates();
     const dates: DateFormat[] = [];
     for (const date of allDates) {
-      const assets = await this.assetsByDate(date);
+      const assets: string[] = await this.assetsByDate(date);
       if (assets.includes(assetname)) dates.push(date);
     }
     return dates;
@@ -62,9 +62,9 @@ export class RepoDiskBackend implements RepoBackend {
   ): Promise<JSONObject | null> {
     if (!date) date = await this.end(assetname);
     if (!date) return null;
-    const fs = (await this.files()).sub(date);
-    const content = await fs.read(filename(assetname));
-    const data = JSON.parse(content);
+    const fs: Files = (await this.files()).sub(date);
+    const content: string = await fs.read(filename(assetname));
+    const data: JSONObject = JSON.parse(content);
     return data;
   }
 

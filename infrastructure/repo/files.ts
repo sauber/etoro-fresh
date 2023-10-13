@@ -103,7 +103,7 @@ export class Files {
   /** Write content to file */
   public async write(filename: string, content: string): Promise<void> {
     await this.create();
-    write(join(this.path, filename), content);
+    return write(join(this.path, filename), content);
   }
 
   /** Read content of file */

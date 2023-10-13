@@ -15,6 +15,6 @@ export class RepoTempBackend extends RepoDiskBackend implements RepoBackend {
   }
 
   public async delete(): Promise<void> {
-    if (this._files) return (await this.files()).delete();
+    if (this._files) return this._files.delete();
   }
 }
