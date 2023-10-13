@@ -1,14 +1,14 @@
+/*
 import { Repo } from "./repo.ts";
 import { Portfolio } from "./portfolio.ts";
 import { Stats } from "./stats.ts";
 import { Chart } from "./chart.ts";
-
-export interface InvestorData {
-  CustomerId: number;
-  UserName: string;
-}
+*/
+import type { InvestorId } from "./repo.d.ts";
 
 export class Investor {
+  constructor(private readonly id: InvestorId) {}
+/*
   readonly portfolio: Portfolio;
   readonly stats: Stats;
   readonly chart: Chart;
@@ -18,4 +18,5 @@ export class Investor {
     this.stats = new Stats(repo, username, cid);
     this.chart = new Chart(repo, username, cid);
   }
+*/
 }
