@@ -1,7 +1,7 @@
 import { Semaphore } from "semaphore";
-import { JSONObject } from "./repo.d.ts";
+import { JSONObject, FetchBackend } from "./repo.d.ts";
 
-export class Fetcher {
+export class FetchRateLimitingBackend implements FetchBackend {
   private available: Date = new Date();
   private semaphore = new Semaphore(1);
 
@@ -42,7 +42,7 @@ export class Fetcher {
 
   /** Wrap fetch call in limit */
   // TODO: Too many data objects used
-  async get(url: string): Promise<JSONObject> {
+  public async get(url: string): Promise<JSONObject> {
     let data: JSONObject;
 
     const data3: JSONObject = await this.limit(

@@ -1,7 +1,7 @@
 import { JSONObject } from "./repo.d.ts";
 import { sprintf } from "printf";
-import { Fetcher } from "./fetcher.ts";
-import type { InvestorId } from "./repo.d.ts"
+import { Fetcher } from "./fetch-ratelimit.ts";
+import type { InvestorId, FetchBackend } from "./repo.d.ts"
 
 type DiscoverParams = {
   daily: number;
@@ -14,7 +14,7 @@ export class FetchRepo {
   private site = "https://www.etoro.com";
   private readonly uuid = crypto.randomUUID();
 
-  constructor(private readonly delay: number = 5000) {}
+  constructor(private readonly fetcher: FetchBackend ) {}
 
   /** Use rate limiting fetcher for loading web pages */
   private _fetcher: Fetcher | null = null;

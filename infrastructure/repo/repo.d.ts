@@ -33,3 +33,7 @@ export interface RepoBackend {
     datesByAsset(assetname: string): Promise<DateFormat[]>;
     assetsByDate(date: DateFormat): Promise<string[]>;
 }
+
+export interface FetchBackend {
+  get(url: string): Promise<JSONObject>;
+}

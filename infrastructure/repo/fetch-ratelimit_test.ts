@@ -1,15 +1,14 @@
 import { assert, assertInstanceOf } from "assert";
-import { Fetcher } from "./fetcher.ts";
+import { FetchRateLimitingBackend } from "./fetch-ratelimit.ts";
+const rate = 1000; // Min pause between calls
 
-Deno.test("Fetcher", {ignore: true}, async (t) => {
-  const rate = 1000; // Min pause between calls
+Deno.test("Initialization", () => {
+  const f: FetchRateLimitingBackend = new FetchRateLimitingBackend(rate);
+  assertInstanceOf(f, FetchRateLimitingBackend);
+});
 
-  await t.step("blank initialize",  () => {
-    const f: Fetcher = new Fetcher(rate);
-    assertInstanceOf(f, Fetcher);
-  });
-
-  const fetch = new Fetcher(rate);
+Deno.test("Fetching", {ignore: false}, async (t) => {
+  const fetch = new FetchRateLimitingBackend(rate);
   const begin = new Date();
 
   await t.step("first fetch", async () => {
