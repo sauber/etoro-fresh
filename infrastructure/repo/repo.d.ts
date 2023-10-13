@@ -9,13 +9,19 @@ export type JSONValue =
   | { [key: string]: JSONValue };
 
 export type JSONObject = {
-  [k: string]: JSONValue;
+  [key: string]: JSONValue;
 };
 
 export type InvestorId = {
   CustomerId: number;
   UserName: string;
 }
+
+export type DiscoverParams = {
+  risk: number;
+  daily: number;
+  weekly: number;
+};
 
 export interface RepoBackend {
     /** Delete whole repo */

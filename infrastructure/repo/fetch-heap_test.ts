@@ -1,36 +1,14 @@
-import { assert, assertEquals, assertInstanceOf } from "assert";
-import { FetchHeapBackend, Assets } from "./fetch-heap.ts";
-import { repoBackend, investorId } from "./testdata.ts";
-import { JSONObject } from "./repo.d.ts";
-
-// Pull from repo a collective of assets
-const assets: Assets = {
-  // discover
-  "rankings/rankings": (await repoBackend.retrieve("discover")) as JSONObject,
-
-  // chart
-  chart: (await repoBackend.retrieve(
-    investorId.UserName + ".chart"
-  )) as JSONObject,
-
-  // portfolio
-  portfolio: (await repoBackend.retrieve(
-    investorId.UserName + ".portfolio"
-  )) as JSONObject,
-
-  // stats
-  "rankings/cid": (await repoBackend.retrieve(
-    investorId.UserName + ".stats"
-  )) as JSONObject,
-};
+import { assertEquals, assertInstanceOf } from "assert";
+import { FetchHeapBackend } from "./fetch-heap.ts";
+import { testAssets } from "./testdata.ts";
 
 Deno.test("Initialization", () => {
-  const f: FetchHeapBackend = new FetchHeapBackend(assets);
+  const f: FetchHeapBackend = new FetchHeapBackend(testAssets);
   assertInstanceOf(f, FetchHeapBackend);
 });
 
 Deno.test("Fetching", { ignore: false }, async (t) => {
-  const f: FetchHeapBackend = new FetchHeapBackend(assets);
+  const f: FetchHeapBackend = new FetchHeapBackend(testAssets);
 
   await t.step("discover", async () => {
     const data = await f.get("rankings/rankings");

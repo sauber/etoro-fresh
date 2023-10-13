@@ -1,13 +1,8 @@
 import { JSONObject } from "./repo.d.ts";
 import { sprintf } from "printf";
-import { Fetcher } from "./fetch-ratelimit.ts";
+import { FetchRateLimitingBackend } from "./fetch-ratelimit.ts";
 import type { InvestorId, FetchBackend } from "./repo.d.ts"
 
-type DiscoverParams = {
-  daily: number;
-  weekly: number;
-  risk: number;
-};
 
 /** Disk base storage for repository */
 export class FetchRepo {

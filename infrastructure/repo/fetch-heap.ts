@@ -1,6 +1,5 @@
 import { FetchBackend, JSONObject } from "./repo.d.ts";
 
-
 export type Assets = Record<string, JSONObject>;
 
 export class FetchHeapBackend implements FetchBackend {
