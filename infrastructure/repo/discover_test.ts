@@ -21,7 +21,7 @@ Deno.test("Discover", async (t) => {
   });
 });
 
-Deno.test("Discover invalid", async (t) => {
+Deno.test("Discover invalid", async () => {
   await assertRejects(
     async () => {
       const data = await repoBackend.retrieve('discover') as unknown as DiscoverData;

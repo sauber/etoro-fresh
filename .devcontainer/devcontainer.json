@@ -5,35 +5,6 @@
     "dockerfile": "Dockerfile"
   },
 
-  "settings": {
-    "deno.config": "./deno.json",
-    "deno.enable": true,
-    "deno.lint": true,
-    "editor.defaultFormatter": "denoland.vscode-deno",
-    "[typescriptreact]": {
-      "editor.defaultFormatter": "denoland.vscode-deno"
-    },
-    "[typescript]": {
-      "editor.defaultFormatter": "denoland.vscode-deno"
-    },
-    "[javascriptreact]": {
-      "editor.defaultFormatter": "denoland.vscode-deno"
-    },
-    "[javascript]": {
-      "editor.defaultFormatter": "denoland.vscode-deno"
-    },
-    "[css]": {
-      "editor.defaultFormatter": "vscode.css-language-features"
-    }
-  },
-
-  "extensions": [
-	"akil-s.tokyo-light",
-	"denoland.vscode-deno",
-	"sastan.twind-intellisense",
-	"esbenp.prettier-vscode"
-],
-
   "remoteUser": "vscode",
   "forwardPorts": [8000],
 
@@ -44,6 +15,35 @@
           "permissions": {
             "contents": "write"
           }
+        }
+      }
+    },
+    "extensions": [
+      "akil-s.tokyo-light",
+      "denoland.vscode-deno",
+      "sastan.twind-intellisense",
+      "esbenp.prettier-vscode"
+    ],
+    "vscode": {
+      "settings": {
+        "deno.config": "./deno.json",
+        "deno.enable": true,
+        "deno.lint": true,
+        "editor.defaultFormatter": "denoland.vscode-deno",
+        "[typescriptreact]": {
+          "editor.defaultFormatter": "denoland.vscode-deno"
+        },
+        "[typescript]": {
+          "editor.defaultFormatter": "denoland.vscode-deno"
+        },
+        "[javascriptreact]": {
+          "editor.defaultFormatter": "denoland.vscode-deno"
+        },
+        "[javascript]": {
+          "editor.defaultFormatter": "denoland.vscode-deno"
+        },
+        "[css]": {
+          "editor.defaultFormatter": "vscode.css-language-features"
         }
       }
     }

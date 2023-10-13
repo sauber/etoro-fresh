@@ -1,4 +1,4 @@
-import { assert, assertEquals } from "assert";
+import { assert } from "assert";
 import { DateFormat, today } from "/infrastructure/time/calendar.ts";
 
 type ChartEntry = {

@@ -1,4 +1,4 @@
-import { assert, assertEquals, assertInstanceOf } from "assert";
+import { assertEquals, assertInstanceOf } from "assert";
 import { Files } from "./files.ts";
 
 
@@ -17,7 +17,7 @@ Deno.test("write a file", async (t) => {
     await files.write(filename, content);
   });
 
-  await t.step("list", async () => {
+  await t.step("list files", async () => {
     const filenames: string[] = await files.files();
     assertEquals(filenames, [filename]);
   });
@@ -33,7 +33,7 @@ Deno.test("write a file", async (t) => {
 
 Deno.test("Create a directory", async (t) => {
   const files: Files = await Files.tmp();
-  const dirname: string = 'dir';
+  const dirname = 'dir';
 
   await t.step("write", async () => {
     await files.sub(dirname).create();

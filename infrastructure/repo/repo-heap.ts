@@ -24,7 +24,7 @@ export class RepoHeapBackend implements RepoBackend {
       const date: DateFormat = today();
 
       // Delete previous entry with same name/date;
-      var index =  this.cache.findIndex((asset: Asset) => ( asset.name == assetname && asset.date == date ));
+      const index =  this.cache.findIndex((asset: Asset) => ( asset.name == assetname && asset.date == date ));
       if ( index > -1 ) this.cache.splice(index, 1);
 
       // Add new asset
@@ -44,7 +44,7 @@ export class RepoHeapBackend implements RepoBackend {
     assetname: string,
     date?: string | undefined
   ): Promise<JSONObject|null> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const asset: Asset|undefined = (date)
         ? this.cache.find((asset: Asset) => ( asset.name == assetname && asset.date == date ))
         : this.cache.find((asset: Asset) => ( asset.name == assetname ));
@@ -55,7 +55,7 @@ export class RepoHeapBackend implements RepoBackend {
   }
 
   public age(assetname: string): Promise<number|null> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       const asset: Asset|undefined =  this.cache.find((asset: Asset) => ( asset.name == assetname ));
 
       if ( asset )

@@ -1,7 +1,5 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import { assertInstanceOf } from "assert";
 import { RepoHeapBackend } from "./repo-heap.ts";
-import { today, DateFormat } from "/infrastructure/time/calendar.ts";
-import { JSONObject } from "./repo.d.ts";
 import { Repo } from "./repo.ts";
 import { Config } from "./config.ts";
 

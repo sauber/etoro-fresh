@@ -1,6 +1,6 @@
 import { assertEquals, assertNotEquals, assertInstanceOf, assert } from "assert";
 import { RepoTempBackend } from "./repo-temp.ts";
-import { JSONObject, RepoBackend } from "./repo.d.ts";
+import { JSONObject } from "./repo.d.ts";
 
 Deno.test("Initialization", async () => {
   const repo = new RepoTempBackend();
