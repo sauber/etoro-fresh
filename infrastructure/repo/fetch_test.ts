@@ -1,6 +1,6 @@
 import { assertEquals, assertInstanceOf } from "assert";
-import { FetchRepo } from "./repo-fetch.ts";
-import type { InvestorId } from "./repo.d.ts";
+import { FetchRepo } from "./fetch.ts";
+import type { InvestorId } from "./repo.js";
 import { config } from "./testdata.ts";
 
 const delay = (await config.get("fetch_delay")) as number;

@@ -1,7 +1,7 @@
-import { JSONObject } from "./repo.d.ts";
+import { JSONObject } from "./repo.js";
 import { sprintf } from "printf";
 import { FetchRateLimitingBackend } from "./fetch-ratelimit.ts";
-import type { InvestorId, FetchBackend } from "./repo.d.ts"
+import type { InvestorId, FetchBackend } from "./repo.js"
 
 
 /** Disk base storage for repository */
