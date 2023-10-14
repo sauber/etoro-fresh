@@ -1,41 +1,35 @@
 import { assertInstanceOf, assertEquals } from "assert";
-import { RepoTempBackend } from "./repo-temp.ts";
 import { FetchHeapBackend } from "./fetch-heap.ts";
 import { Refresh } from "./refresh.ts";
-import { investorId, testAssets } from "./testdata.ts";
+import { investorId, testAssets, discoverOptions } from "./testdata.ts";
+import { RepoHeapBackend } from "./repo-heap.ts";
 
-const fetcher: FetchHeapBackend = new FetchHeapBackend(testAssets);
-const max = 1;
-
-Deno.test("Initialize", async (t) => {
-  const repo = new RepoTempBackend();
-  const refresh: Refresh = new Refresh(repo, fetcher, investorId, max);
+Deno.test("Initialize", async () => {
+  const repo: RepoHeapBackend = new RepoHeapBackend();
+  const fetcher: FetchHeapBackend = new FetchHeapBackend({});
+  const refresh: Refresh = new Refresh(repo, fetcher, investorId, discoverOptions);
   assertInstanceOf(refresh, Refresh);
   await repo.delete();
 });
 
-/*
 Deno.test("Fresh", async (t) => {
-  const repo = new RepoTempBackend();
-  const max = 1;
-
-  await t.step("initialize", async () => {
-    const refresh: Refresh = new Refresh(repo, investorId, max);
-    assertInstanceOf(refresh, Refresh);
-  });
+  const repo = new RepoHeapBackend();
+  const fetcher: FetchHeapBackend = new FetchHeapBackend(testAssets);
+  const max = 2;
 
   await t.step("fetch all", async () => {
-    const count: number = await refresh.run();
-    console.log(`Fetch data for ${count} investors`);
-    assertEquals(count, max);
+    const refresh = new Refresh(repo, fetcher, investorId, discoverOptions);
+    const count: number = await refresh.run(max);
+    //console.log(`Fetch data for ${count} investors`);
+    assertEquals(count, 8);
   });
 
   await t.step("fetch again", async () => {
-    const count: number = await refresh.run();
-    console.log(`Fetch data for ${count} investors`);
-    assertEquals(count, max);
+    const refresh = new Refresh(repo, fetcher, investorId, discoverOptions);
+    const count: number = await refresh.run(max);
+    //console.log(`Fetch data for ${count} investors`);
+    assertEquals(count, 0);
   });
 
-  //await repo.delete();
+  await repo.delete();
 });
-*/

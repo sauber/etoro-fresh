@@ -1,56 +1,25 @@
-import { JSONObject } from "./repo.js";
-import { sprintf } from "printf";
-import { FetchRateLimitingBackend } from "./fetch-ratelimit.ts";
-import type { InvestorId, FetchBackend } from "./repo.js"
+import type { InvestorId, FetchBackend, DiscoverParams, JSONObject } from "./repo.d.ts"
+import { FetchURL } from "./fetch-url.ts";
 
-
-/** Disk base storage for repository */
-export class FetchRepo {
-  private site = "https://www.etoro.com";
-  private readonly uuid = crypto.randomUUID();
+/** Generate URL to assets */
+export class Fetch {
+  private readonly url = new FetchURL();
 
   constructor(private readonly fetcher: FetchBackend ) {}
 
-  /** Use rate limiting fetcher for loading web pages */
-  private _fetcher: Fetcher | null = null;
-  private fetch(url: string): Promise<JSONObject> {
-    if (!this._fetcher) this._fetcher = new Fetcher(this.delay);
-    return this._fetcher.get(url);
-  }
-
   public discover(filter: DiscoverParams): Promise<JSONObject> {
-    const urlTemplate = "/sapi/rankings/rankings?client_request_id=%s&%s";
-    const filter_template = `blocked=false&bonusonly=false&copyblock=false&istestaccount=false&optin=true&page=1&period=OneYearAgo&verified=true&isfund=false&copiersmin=1&dailyddmin=-%d&gainmin=11&gainmax=350&maxmonthlyriskscoremax=%d&maxmonthlyriskscoremin=2&pagesize=70&profitablemonthspctmin=60&sort=-weeklydd&weeklyddmin=-%d&activeweeksmin=12&lastactivitymax=14`;
-    const options: string = sprintf(
-      filter_template,
-      filter.daily,
-      filter.risk,
-      filter.weekly
-    );
-    const url: string = this.site + sprintf(urlTemplate, this.uuid, options);
-    return this.fetch(url);
+    return this.fetcher.get(this.url.discover(filter));
   }
 
   public chart(investor: InvestorId): Promise<JSONObject> {
-    const urlTemplate =
-      //"https://www.etoro.com/sapi/trade-data-real/chart/public/%s/oneYearAgo/1?client_request_id=%s";
-      "/sapi/userstats/CopySim/Username/%s/OneYearAgo?client_request_id=%s";
-    const url: string =
-      this.site + sprintf(urlTemplate, investor.UserName, this.uuid);
-    return this.fetch(url);
+    return this.fetcher.get(this.url.chart(investor));
   }
 
   public portfolio(investor: InvestorId): Promise<JSONObject> {
-    const urlTemplate =
-      "/sapi/trade-data-real/live/public/portfolios?cid=%d&client_request_id=%s";
-    const url: string = this.site + sprintf(urlTemplate, investor.CustomerId, this.uuid);
-    return this.fetch(url);
+    return this.fetcher.get(this.url.portfolio(investor));
   }
 
   public stats(investor: InvestorId): Promise<JSONObject> {
-    const urlTemplate =
-      "/sapi/rankings/cid/%d/rankings?Period=OneYearAgo&client_request_id=%s";
-    const url: string = this.site + sprintf(urlTemplate, investor.CustomerId, this.uuid);
-    return this.fetch(url);
+    return this.fetcher.get(this.url.stats(investor));
   }
 }

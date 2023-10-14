@@ -1,6 +1,6 @@
 import { assert } from "assert";
 
-export interface StatsData {
+export type StatsData = {
   Data: {
     CustomerId: number,
     UserName: string

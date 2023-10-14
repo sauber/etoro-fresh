@@ -1,77 +1,126 @@
-import { Investor } from "./investor.ts";
-import { RepoBackend, FetchBackend, InvestorId } from "./repo.d.ts";
+import {
+  RepoBackend,
+  FetchBackend,
+  InvestorId,
+  DiscoverParams,
+  JSONObject,
+} from "./repo.d.ts";
+import { Fetch } from "./fetch.ts";
+import { Discover, DiscoverData } from "./discover.ts";
+import { Portfolio, PortfolioData } from "./portfolio.ts";
+import { ChartData } from "./chart.ts";
+import { StatsData } from "./stats.ts";
 
 /** Load all data for all investors */
 export class Refresh {
+  private readonly fetch: Fetch;
+
+  // TODO: Read from config
+  private readonly expire = {
+    mirror: 1000,
+    discover: 1000,
+    chart: 1000,
+    portfolio: 1000,
+    stats: 1000,
+  };
+
+  // How many external fetches are performed
+  private fetchCount = 0;
+
   constructor(
     private readonly repo: RepoBackend,
-    private readonly fetch: FetchBackend,
+    private readonly fetcher: FetchBackend,
     private readonly investor: InvestorId,
-    readonly max?: number
-  ) {}
+    private readonly filter: DiscoverParams
+  ) {
+    this.fetch = new Fetch(fetcher);
+  }
 
-  
-  /** Generate list of investors, combination of discovery, user and mirrors of user */
-  /*
-  private async investors(): Promise<Investors> {
-    const combined = new Investors(this.repo);
+  /** Load  asset from disk or web */
+  private async recent(
+    assetname: string,
+    expire: number,
+    web: () => Promise<JSONObject>
+  ): Promise<JSONObject | null> {
+    const age: number | null = await this.repo.age(assetname);
+    if (!age || age > expire) {
+      console.log(`Loading ${assetname} from web`);
+      const data: JSONObject = await web();
+      ++this.fetchCount;
+      await this.repo.store(assetname, data);
+      return data;
+    } else {
+      console.log(`Loading ${assetname} from disk`);
+      return await this.repo.retrieve(assetname);
+    }
+  }
 
-    // Add user
-    const investor: Investor = combined.add(this.username, this.cid);
+  /** Load investor ID's from discovery */
+  private async discover(): Promise<InvestorId[]> {
+    // TODO: Validate data
+    const data = (await this.recent("discover", this.expire.discover, () =>
+      this.fetch.discover(this.filter)
+    )) as DiscoverData;
+    const discover: Discover = new Discover(data);
+    const investors: InvestorId[] = discover.investors();
+    return investors;
+  }
 
-    await Promise.all([
-      // Add mirrors of user
-      investor.portfolio
-        .mirrors()
-        .then((inv: Investors) => combined.extend(inv)),
+  private async chart(investor: InvestorId): Promise<ChartData> {
+    // TODO: Confirm last data is today
+    return (await this.recent(
+      investor.UserName + ".chart",
+      this.expire.chart,
+      () => this.fetch.chart(investor)
+    )) as ChartData;
+  }
 
-      // Add discovery
-      this.repo.discover
-        .investors()
-        .then((inv: Investors) => combined.extend(inv)),
+  private async portfolio(investor: InvestorId): Promise<PortfolioData> {
+    // TODO: Validate data
+    return (await this.recent(
+      investor.UserName + ".portfolio",
+      this.expire.portfolio,
+      () => this.fetch.portfolio(investor)
+    )) as PortfolioData;
+  }
+
+  private async stats(investor: InvestorId): Promise<StatsData> {
+    // TODO: Validate data
+    return (await this.recent(
+      investor.UserName + ".stats",
+      this.expire.stats,
+      () => this.fetch.stats(investor)
+    )) as StatsData;
+  }
+
+  private loadInvestor(investor: InvestorId): Promise<JSONObject[]> {
+    return Promise.all([
+      this.chart(investor),
+      this.portfolio(investor),
+      this.stats(investor),
     ]);
-
-    return combined;
-  }
-  */
-
-  /** Load all data for one investor */
-  /*
-  private async load(investor: Investor): Promise<void> {
-    // Run in parallel
-    
-    const portfolio = investor.portfolio.recent().then(
-      () => console.log(`Loaded portfolio ${investor.username}`),
-      (error) =>
-        console.warn(`Could not load portfolio for ${investor.username}`)
-    );
-    const stats = investor.stats.recent().then(
-      () => console.log(`Loaded stats for ${investor.username}`),
-      (error) => console.warn(`Could not load stats for ${investor.username}`)
-    );
-    const chart = investor.chart.recent().then(
-      () => console.log(`Loaded chart for ${investor.username}`),
-      (error) => console.warn(`Could not load chart for ${investor.username}`)
-    );
-
-    await portfolio;
-    await stats;
-    await chart;
   }
 
-  async run(): Promise<number> {
-    const investors: Investors = await this.investors();
-    const all = investors.all;
-    const subset = this.max ? all.slice(0, this.max) : all;
-    //console.log(subset);
+  private async mirrors(): Promise<InvestorId[]> {
+    const data = (await this.portfolio(this.investor)) as PortfolioData;
+    const portfolio: Portfolio = new Portfolio(data);
+    const investors: InvestorId[] = portfolio.investors();
+    return investors;
+  }
+
+  public async run(max?: number): Promise<number> {
+    const investors = [...(await this.mirrors()), ...(await this.discover())];
+    const subset = max ? investors.slice(0, max) : investors;
 
     // Run in parallel
     await Promise.all(
-      subset.map((investor: Investor) => this.load(investor))
-      //subset.map( (investor: Investor) => console.log(investor.username))
+      subset.map((investor: InvestorId) => this.loadInvestor(investor))
+      //subset.map((investor: InvestorId) => {
+      //  console.log(investor.UserName, investor.CustomerId);
+      //  return this.loadInvestor(investor);
+      //})
     );
 
-    return subset.length;
+    return this.fetchCount;
   }
-  */
 }
