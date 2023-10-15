@@ -20,7 +20,8 @@ const daily = await config.get("discover_daily") as number;
 const weekly = await config.get("discover_daily") as number;
 const discoverOptions: DiscoverParams = { risk, daily, weekly };
 
-const rate = await config.get("delay") as number;
+const rate = await config.get("fetch_delay") as number;
+console.log(`Fetch delay is ${rate}`);
 const fetcher: FetchRateLimitingBackend = new FetchRateLimitingBackend(rate);
 
 const refresh = new Refresh(backend, fetcher, investorId, discoverOptions);

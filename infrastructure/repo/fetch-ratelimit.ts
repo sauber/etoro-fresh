@@ -5,7 +5,10 @@ export class FetchRateLimitingBackend implements FetchBackend {
   private available: Date = new Date();
   private semaphore = new Semaphore(1);
 
-  constructor(private callbackDelayMs: number) {}
+  constructor(private callbackDelayMs: number = 5000) {
+    if ( ! callbackDelayMs || callbackDelayMs < 100 )
+      throw new Error(`Delaus is ${callbackDelayMs}`);
+  }
 
   private delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -22,8 +25,9 @@ export class FetchRateLimitingBackend implements FetchBackend {
       }
 
       // Next time to run
-      const next = new Date().getTime() + this.callbackDelayMs;
+      const next = this.available.getTime() + this.callbackDelayMs;
       this.available = new Date(next);
+      //console.log('Next run: ', this.callbackDelayMs, next, this.available);
 
       // Execute the callback
       return await callback();
