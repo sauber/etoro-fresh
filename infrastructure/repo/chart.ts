@@ -8,28 +8,39 @@ type ChartEntry = {
   "pnL": number;
   "equity": number;
   "totalDividends": number;
-}
+};
 
 export type ChartData = {
   simulation: {
     oneYearAgo: {
-      chart: ChartEntry[]
-    }
-  }
-}
+      chart: ChartEntry[];
+    };
+  };
+};
 
 export class Chart {
   constructor(private readonly raw: ChartData) {}
-  
-  public validate(): boolean {
-    const list: ChartEntry[] = this.raw.simulation.oneYearAgo.chart;
-    const length = list.length;
-    const lastDate: DateFormat = list[length-1].timestamp.substring(0, 10);
-    const todayDate = today();
 
-    assert(length > 365, "Too few dates in chart");
-    assert(lastDate <= todayDate, "Last date is in the future");
-    return true;
+  private get list(): ChartEntry[] {
+    return this.raw.simulation.oneYearAgo.chart;
   }
 
+  // Last date in chart
+  public get end(): DateFormat {
+    const list: ChartEntry[] = this.list;
+    const length = list.length;
+    const lastDate: DateFormat = list[length - 1].timestamp.substring(0, 10);
+    return lastDate;
+  }
+
+  public get count(): number {
+    return this.list.length;
+  }
+
+  public validate(): boolean {
+    const todayDate = today();
+    assert(this.count > 365, "Too few dates in chart");
+    assert(this.end <= todayDate, "Last date is in the future");
+    return true;
+  }
 }

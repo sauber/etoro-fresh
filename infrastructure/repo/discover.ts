@@ -15,7 +15,11 @@ export class Discover {
     return true;
   }
 
-  public investors(): InvestorId[] {
+  public get investors(): InvestorId[] {
     return this.raw.Items;
+  }
+
+  public get count(): number {
+    return this.raw.TotalRows;
   }
 }

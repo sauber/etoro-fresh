@@ -7,7 +7,7 @@ export class FetchRateLimitingBackend implements FetchBackend {
 
   constructor(private callbackDelayMs: number = 5000) {
     if ( ! callbackDelayMs || callbackDelayMs < 100 )
-      throw new Error(`Delaus is ${callbackDelayMs}`);
+      throw new Error(`Delay is ${callbackDelayMs}`);
   }
 
   private delay(ms: number) {

@@ -8,8 +8,9 @@ import {
 import { Fetch } from "./fetch.ts";
 import { Discover, DiscoverData } from "./discover.ts";
 import { Portfolio, PortfolioData } from "./portfolio.ts";
-import { ChartData } from "./chart.ts";
-import { StatsData } from "./stats.ts";
+import { Chart, ChartData } from "./chart.ts";
+import { today } from "/infrastructure/time/calendar.ts";
+import { assert } from "assert";
 
 /** Load all data for all investors */
 export class Refresh {
@@ -38,64 +39,95 @@ export class Refresh {
     this.fetch = new Fetch(fetcher);
   }
 
-  /** Load  asset from disk or web */
+  /** Load  asset from web if missing or expired */
   private async recent(
     assetname: string,
     expire: number,
-    web: () => Promise<JSONObject>
-  ): Promise<JSONObject | null> {
+    web: () => Promise<JSONObject>,
+    validate?: (data: JSONObject) => boolean,
+  ): Promise<boolean> {
+    // Check age
     const age: number | null = await this.repo.age(assetname);
-    if (!age || age > expire) {
-      console.log(`Loading ${assetname} from web`);
-      const data: JSONObject = await web();
-      ++this.fetchCount;
-      await this.repo.store(assetname, data);
-      return data;
-    } else {
-      console.log(`Loading ${assetname} from disk`);
-      return await this.repo.retrieve(assetname);
+    if ( age && age < expire ) return true;
+
+    // Load from web
+    console.log(`Loading ${assetname} from web`);
+    const data: JSONObject = await web();
+    ++this.fetchCount;
+    if ( validate && ! validate(data) ) {
+      console.warn(`Warning: Asset ${assetname} failed validation`);
+      return false;
     }
+    await this.repo.store(assetname, data);
+    return true;
   }
 
   /** Load investor ID's from discovery */
   private async discover(): Promise<InvestorId[]> {
+    const validate = function (loaded: JSONObject) {
+      const discover: Discover = new Discover(loaded as DiscoverData);
+      const count: number = discover.count;
+      // TODO: Use config values
+      assert( count >= 70 && count <= 140, `Count of discovered investors is ${count}, should be 70-140`);
+      return true;
+    }
+  
     // TODO: Validate data
-    const data = (await this.recent("discover", this.expire.discover, () =>
-      this.fetch.discover(this.filter)
-    )) as DiscoverData;
-    const discover: Discover = new Discover(data);
-    const investors: InvestorId[] = discover.investors();
-    return investors;
+    const available: boolean = (await this.recent(
+      "discover", 
+      this.expire.discover, 
+      () => this.fetch.discover(this.filter),
+      validate
+    ));
+    if ( available ) {
+      const data = await this.repo.retrieve("discover") as DiscoverData;
+      const discover: Discover = new Discover(data);
+      const investors: InvestorId[] = discover.investors;
+      return investors;
+    } else {
+      return [];
+    }
   }
 
-  private async chart(investor: InvestorId): Promise<ChartData> {
-    // TODO: Confirm last data is today
-    return (await this.recent(
+  private chart(investor: InvestorId): Promise<boolean> {
+    const validate = function (loaded: JSONObject) {
+      const chart: Chart = new Chart(loaded as ChartData);
+      if ( ! chart.validate ) {
+        console.warn(`Warning: Chart for ${investor.UserName} is invalid`);
+        return false;
+      }
+      if ( chart.end != today() ) {
+        console.warn(`Warning: ${investor.UserName} chart end ${chart.end} is not today`);
+        return false;
+      }
+      return true;
+    }
+
+    return this.recent(
       investor.UserName + ".chart",
       this.expire.chart,
-      () => this.fetch.chart(investor)
-    )) as ChartData;
+      () => this.fetch.chart(investor),
+      validate
+    );
   }
 
-  private async portfolio(investor: InvestorId): Promise<PortfolioData> {
-    // TODO: Validate data
-    return (await this.recent(
+  private portfolio(investor: InvestorId, expire: number = this.expire.portfolio): Promise<boolean> {
+    return this.recent(
       investor.UserName + ".portfolio",
-      this.expire.portfolio,
+      expire,
       () => this.fetch.portfolio(investor)
-    )) as PortfolioData;
+    );
   }
 
-  private async stats(investor: InvestorId): Promise<StatsData> {
-    // TODO: Validate data
-    return (await this.recent(
+  private stats(investor: InvestorId): Promise<boolean> {
+    return this.recent(
       investor.UserName + ".stats",
       this.expire.stats,
       () => this.fetch.stats(investor)
-    )) as StatsData;
+    );
   }
 
-  private loadInvestor(investor: InvestorId): Promise<JSONObject[]> {
+  private loadInvestor(investor: InvestorId): Promise<boolean[]> {
     return Promise.all([
       this.chart(investor),
       this.portfolio(investor),
@@ -104,10 +136,14 @@ export class Refresh {
   }
 
   private async mirrors(): Promise<InvestorId[]> {
-    const data = (await this.portfolio(this.investor)) as PortfolioData;
-    const portfolio: Portfolio = new Portfolio(data);
-    const investors: InvestorId[] = portfolio.investors();
-    return investors;
+    if (await this.portfolio(this.investor, this.expire.mirror)) {
+      const data = await this.repo.retrieve(this.investor.UserName + '.portfolio') as PortfolioData;
+      const portfolio: Portfolio = new Portfolio(data);
+      const investors: InvestorId[] = portfolio.investors();
+      return investors;
+    } else {
+      return [];
+    }
   }
 
   public async run(max?: number): Promise<number> {
