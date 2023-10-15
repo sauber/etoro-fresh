@@ -16,12 +16,14 @@ export class Refresh {
   private readonly fetch: Fetch;
 
   // TODO: Read from config
+  // Convert hours to ms
+  private static msPerHour = 60 * 60 * 1000;
   private readonly expire = {
-    mirror: 1000,
-    discover: 1000,
-    chart: 1000,
-    portfolio: 1000,
-    stats: 1000,
+    mirror: 16 * Refresh.msPerHour,
+    discover: 50 * Refresh.msPerHour,
+    chart: 24 * Refresh.msPerHour,
+    portfolio: 666 * Refresh.msPerHour,
+    stats: 333 * Refresh.msPerHour,
   };
 
   // How many external fetches are performed
