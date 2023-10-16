@@ -16,7 +16,7 @@ Deno.test("Fetching", { ignore: false }, async (t) => {
   });
 
   await t.step("chart", async () => {
-    const data = await f.get("chart");
+    const data = await f.get("CopySim");
     assertInstanceOf(data.simulation, Object);
   });
 

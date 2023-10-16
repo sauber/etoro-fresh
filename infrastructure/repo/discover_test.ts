@@ -16,7 +16,7 @@ Deno.test("Discover", async (t) => {
   await t.step("investors", async () => {
     const data = await repoBackend.retrieve('discover') as unknown as DiscoverData;
     const discover: Discover = new Discover(data);
-    const investors: InvestorId[] = discover.investors();
+    const investors: InvestorId[] = discover.investors;
     assertEquals(investors.length, 60);
   });
 });

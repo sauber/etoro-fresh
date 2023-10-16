@@ -136,7 +136,8 @@ export class Refresh {
   }
 
   private async mirrors(): Promise<InvestorId[]> {
-    await this.loadInvestor(this.investor);
+    await this.chart(this.investor);
+    await this.stats(this.investor);
     if (await this.portfolio(this.investor, this.expire.mirror)) {
       const data = await this.repo.retrieve(this.investor.UserName + '.portfolio') as PortfolioData;
       const portfolio: Portfolio = new Portfolio(data);
