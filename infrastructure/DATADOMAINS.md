@@ -1,8 +1,56 @@
 # Domains of data
 
-## Repository
+## Investor (by investorId)
 
-Objects:
+Properties:
+
+- chart
+- portfolio
+- stats
+
+Aggregate: Community
+
+## Transaction (by transactionId)
+
+Properties:
+
+- action (buy | close)
+- instrument
+- date
+- amount
+- fee
+
+Aggregate: Book
+
+## Instruments (by instrumentId)
+
+Properties:
+
+- name
+
+Aggregate: Market
+
+## Discover (value object)
+
+Properties:
+
+- community
+
+## Strategy (value object)
+
+Properties:
+
+- ranking
+- timing
+
+Use Cases:
+
+- learn()
+- transaction[] = execute(community)
+
+## Repository (value object)
+
+Properties:
 
 - config
 - persistentBackend
@@ -14,91 +62,3 @@ Use Cases:
 - delete()
 - store(name, data)
 - data = retreive(name)
-
-## Chart
-
-Objects:
-
-- timeseries
-
-Use Cases:
-
-- validate(dto)
-- extend(chart)
-
-## Portfolio
-
-Objects:
-
-- positions
-
-Use Cases:
-
-- validate(dto)
-- pctOverlap(portfolio)
-
-## Stats
-
-Objects:
-
-- stats
-
-Use Cases:
-
-- validate(dto)
-
-## Discover
-
-Objects:
-
-- portfolio
-
-Use Cases:
-
-- validate(dto)
-
-## Instruments
-
-Objects:
-
-- instrument
-
-Use Cases:
-
-- validate(dto)
-
-## Investor
-
-Objects:
-
-- chart
-- portfolio
-- stats
-
-Use Cases:
-
-- getCommunity(date)
-- getInvestor(date)
-
-## Book
-
-Objects:
-
-- transaction
-
-Use Cases:
-
-- placeorder()
-
-## Tradingmodel
-
-Objects:
-
-- ranking
-- timing
-
-Use Cases:
-
-- learn()
-- store()
-- retrieve()
