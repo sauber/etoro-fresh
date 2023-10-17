@@ -6,12 +6,12 @@
     "build": "deno run -A dev.ts build",
     "preview": "deno run -A main.ts",
     "refresh": "deno run --allow-read=/workspaces/etoro-data/data --allow-write=/workspaces/etoro-data/data --allow-net=www.etoro.com infrastructure/repo/refresh_bin.ts /workspaces/etoro-data/data",
-    "test": "deno test --allow-write=/tmp --allow-read=/tmp,infrastructure/repo/testdata,testdata --allow-net=www.etoro.com,jsonplaceholder.typicode.com",
+    "test": "deno test --allow-write=/tmp --allow-read=/tmp,src/repository/testdata,testdata --allow-net=www.etoro.com,jsonplaceholder.typicode.com",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
   "lint": { "rules": { "tags": ["fresh", "recommended"] } },
   "imports": {
-    "/": "./",
+    "/": "./src/",
     "./": "./",
     "$fresh/": "https://deno.land/x/fresh@1.5.0/",
     "preact": "https://esm.sh/preact@10.18.1",

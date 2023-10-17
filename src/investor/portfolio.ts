@@ -1,5 +1,5 @@
 import { assert } from "assert";
-import { InvestorId } from "./repo.d.ts";
+import { InvestorId } from "./investor.d.ts";
 
 type Position = {
   InstrumentID: number;

@@ -1,7 +1,7 @@
 import { assertInstanceOf, assert, assertEquals } from "assert";
 import { Portfolio, PortfolioData } from "./portfolio.ts";
-import { repoBackend, investorId } from "./testdata.ts";
-import { InvestorId } from "./repo.d.ts";
+import { repoBackend, investorId } from "/repository/testdata.ts";
+import { InvestorId } from "./investor.d.ts";
 
 Deno.test("Initialization", () => {
   const portfolio = new Portfolio({

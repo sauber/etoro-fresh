@@ -1,15 +1,15 @@
 import {
   RepoBackend,
   FetchBackend,
+  InvestorId,
+  DiscoverParams,
   JSONObject,
-} from "/repository/repo.d.ts";
-import { Fetch } from "/repository/fetch.ts";
-import { Discover, DiscoverData } from "/discover/discover.ts";
-import type { DiscoverParams } from "/discover/discover.d.ts";
-import { Portfolio, PortfolioData } from "/investor/portfolio.ts";
-import type { InvestorId } from "/investor/investor.d.ts";
-import { Chart, ChartData } from "/investor/chart.ts";
-import { today } from "/utils/time/calendar.ts";
+} from "./repo.d.ts";
+import { Fetch } from "./fetch.ts";
+import { Discover, DiscoverData } from "./discover.ts";
+import { Portfolio, PortfolioData } from "./portfolio.ts";
+import { Chart, ChartData } from "./chart.ts";
+import { today } from "../src/utils/time/calendar.ts";
 import { assert } from "assert";
 
 /** Load all data for all investors */

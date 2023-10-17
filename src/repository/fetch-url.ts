@@ -1,5 +1,6 @@
 import { sprintf } from "printf";
-import type { InvestorId, DiscoverParams } from "./repo.d.ts"
+import type { DiscoverParams } from "/discover/discover.d.ts";
+import type { InvestorId } from "/investor/investor.d.ts";
 
 /** Disk base storage for repository */
 export class FetchURL {

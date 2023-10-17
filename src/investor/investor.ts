@@ -4,7 +4,7 @@ import { Portfolio } from "./portfolio.ts";
 import { Stats } from "./stats.ts";
 import { Chart } from "./chart.ts";
 */
-import type { InvestorId } from "./repo.d.ts";
+import type { InvestorId } from "./investor.d.ts";
 
 export class Investor {
   constructor(private readonly id: InvestorId) {}

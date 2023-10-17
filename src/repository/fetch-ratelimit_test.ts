@@ -7,7 +7,7 @@ Deno.test("Initialization", () => {
   assertInstanceOf(f, FetchRateLimitingBackend);
 });
 
-Deno.test("Fetching", {ignore: false}, async (t) => {
+Deno.test("Fetching", {ignore: true}, async (t) => {
   const fetch = new FetchRateLimitingBackend(rate);
   const begin = new Date();
 

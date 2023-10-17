@@ -1,5 +1,5 @@
 import { JSONObject, RepoBackend } from "./repo.d.ts";
-import { today, DateFormat } from "/utils/time/calendar.ts";
+import { today, DateFormat } from "../src/utils/time/calendar.ts";
 
 type Asset = {
   name: string;

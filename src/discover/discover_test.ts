@@ -1,7 +1,7 @@
 import { assert, assertRejects, assertInstanceOf, assertEquals } from "assert";
 import { Discover, DiscoverData } from "./discover.ts";
-import { InvestorId } from "./repo.d.ts";
-import { repoBackend } from "./testdata.ts";
+import type { InvestorId } from "/investor/investor.d.ts";
+import { repoBackend } from "/repository/testdata.ts";
 
 Deno.test("Discover", async (t) => {
   const discover: Discover = new Discover({Status: '', TotalRows: 0, Items: []});

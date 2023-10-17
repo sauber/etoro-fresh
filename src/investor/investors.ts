@@ -1,27 +1,26 @@
-import { Repo } from "./repo.ts";
-import { Investor } from "./investor.ts";
+import { InvestorId } from "./investor.d.ts";
 
 export class Investors {
-  private readonly list: Record<string, Investor> = {};
+  private readonly list: Record<string, InvestorId> = {};
 
-  constructor(private readonly repo: Repo) {}
+  constructor() {}
 
   get length(): number { return Object.keys(this.list).length}
 
-  add(username: string, cis: number): Investor {
-    if ( ! this.list[username] )
-      this.list[username] = new Investor(this.repo, username, cis)
-    return this.list[username];
+  add(investor: InvestorId): void {
+    const id = investor.CustomerId;
+    if ( ! this.list[id] )
+      this.list[id] = investor;
   }
 
   /** Combine with investors from other list */
   extend(other: Investors): void {
-    for ( const inv of other.all ) {
-      this.add(inv.username, inv.cid);
+    for ( const investor of other.all ) {
+      this.add(investor);
     }
   }
 
-  get all(): Investor[] {
+  get all(): InvestorId[] {
     return Object.values(this.list);
   }
 }

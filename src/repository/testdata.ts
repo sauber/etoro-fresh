@@ -1,9 +1,12 @@
 import { RepoDiskBackend } from "./repo-disk.ts";
 import { Config } from "./config.ts";
-import type { InvestorId, DiscoverParams, JSONObject } from "./repo.d.ts";
+import type { JSONObject } from "./repo.d.ts";
+import type { DiscoverParams } from "/discover/discover.d.ts";
+import type { InvestorId } from "/investor/investor.d.ts";
 import type { Assets } from "./fetch-heap.ts";
 
-export const repoBackend = new RepoDiskBackend("infrastructure/repo/testdata");
+export const repoPath = "src/repository/testdata"
+export const repoBackend = new RepoDiskBackend(repoPath);
 export const config = new Config(repoBackend);
 
 export const investorId: InvestorId = {

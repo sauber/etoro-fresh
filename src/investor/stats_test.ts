@@ -1,6 +1,6 @@
 import { assertInstanceOf, assertEquals } from "assert";
 import { Stats, StatsData } from "./stats.ts";
-import { investorId, repoBackend } from "./testdata.ts";
+import { investorId, repoBackend } from "/repository/testdata.ts";
 
 Deno.test("Initialization", () => {
   const stats = new Stats({Data:{CustomerId: 0, UserName: ''}});
