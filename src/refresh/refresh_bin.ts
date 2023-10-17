@@ -1,9 +1,10 @@
-import { RepoDiskBackend } from "./repo-disk.ts";
-import { FetchRateLimitingBackend } from "./fetch-ratelimit.ts";
+import { RepoDiskBackend } from "/repository/repo-disk.ts";
+import { FetchRateLimitingBackend } from "/repository/fetch-ratelimit.ts";
 import { Refresh } from "./refresh.ts";
-import { InvestorId, DiscoverParams } from "./repo.d.ts";
-import { Config } from "./config.ts";
-import { Repo } from "./repo.ts";
+import type { DiscoverParams } from "/discover/discover.d.ts";
+import type { InvestorId } from "/investor/investor.d.ts";
+import { Config } from "/repository/config.ts";
+import { Repo } from "/repository/repo.ts";
 
 const path = Deno.args[0];
 const backend = new RepoDiskBackend(path);
