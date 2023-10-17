@@ -1,8 +1,8 @@
-import { Files } from "/utils/repo/files.ts";
-import { CommunityRepo, Names } from "./community.ts";
+import { Files } from "/repository/files.ts";
+import { Community, Names } from "./community.ts";
 
 /** Handle Community I/O requests to local reposotiry */
-export class CommunityFileRepo implements CommunityRepo {
+export class CommunityFileRepo implements Community {
   constructor(private readonly files: Files) {}
 
   /** Identify all investor names in a directory */

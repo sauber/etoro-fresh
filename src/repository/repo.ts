@@ -8,4 +8,8 @@ export class Repo {
   get config(){
     return new Config(this.backend);
   }
+
+  get community() {
+    return [];
+  }
 }
