@@ -8,7 +8,7 @@ import { FetchBackend } from "./mod.ts";
 import { Discover, DiscoverData } from "/discover/discover.ts";
 import type { DiscoverParams } from "/discover/discover.d.ts";
 import { Portfolio, PortfolioData } from "/investor/portfolio.ts";
-import type { InvestorId } from "/investor/investor.d.ts";
+import type { InvestorId } from "/investor/mod.ts";
 import { Chart, ChartData } from "/investor/chart.ts";
 import { today } from "/utils/time/calendar.ts";
 import { assert } from "assert";

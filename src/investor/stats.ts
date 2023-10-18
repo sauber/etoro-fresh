@@ -1,10 +1,8 @@
 import { assert } from "assert";
+import { InvestorId } from "./mod.ts";
 
 export type StatsData = {
-  Data: {
-    CustomerId: number,
-    UserName: string
-  }
+  Data: InvestorId
 }
 
 export class Stats {

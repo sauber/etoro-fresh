@@ -1,5 +1,5 @@
 import { assert } from "assert";
-import type { InvestorId } from "/investor/investor.d.ts";
+import type { InvestorId } from "/investor/mod.ts";
 
 export type DiscoverData = {
   Status: string;

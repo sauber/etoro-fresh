@@ -1,6 +1,6 @@
 import { assert, assertRejects, assertInstanceOf, assertEquals } from "assert";
 import { Discover, DiscoverData } from "./discover.ts";
-import type { InvestorId } from "/investor/investor.d.ts";
+import type { InvestorId } from "/investor/mod.ts";
 import { repoBackend } from "/refresh/testdata.ts";
 
 Deno.test("Discover", async (t) => {

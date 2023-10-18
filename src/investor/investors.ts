@@ -1,4 +1,4 @@
-import { InvestorId } from "./investor.d.ts";
+import { InvestorId } from "./mod.ts";
 
 export class Investors {
   private readonly list: Record<string, InvestorId> = {};
