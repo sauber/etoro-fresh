@@ -1,6 +1,4 @@
-import { RepoDiskBackend } from "./repo-disk.ts";
-import { Config } from "./config.ts";
-import type { JSONObject } from "./repo.d.ts";
+import { JSONObject, Config, RepoDiskBackend } from "/repository/mod.ts";
 import type { DiscoverParams } from "/discover/discover.d.ts";
 import type { InvestorId } from "/investor/investor.d.ts";
 import type { Assets } from "./fetch-heap.ts";

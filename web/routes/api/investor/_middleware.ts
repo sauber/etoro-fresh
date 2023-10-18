@@ -1,19 +1,21 @@
 import { MiddlewareHandlerContext } from "$fresh/server.ts";
 import { load } from "dotenv";
 import { Community, CommunityFileRepo } from "/investor/mod.ts";
-import { Files } from "/infrastructure/repo/files.ts";
+//import { Files } from "/infrastructure/repo/files.ts";
+import { RepoDiskBackend } from "/repository/repo-disk.ts";
+import { Repo } from "/repository/repo.ts";
 
 // Create Community object
 const env = await load();
 const path = env["DATAPATH"] as string; 
-//console.log('path: ', path);
-const files = new Files(path);
-const repo = new CommunityFileRepo(files);
-const comm = new Community(repo);
+console.log('path: ', path);
+const backend = new RepoDiskBackend(path);
+const repo = new Repo(backend);
+const comm = repo.community;
 
 // State must include community object
 interface State {
-  community: Community;
+  community: string[];
 }
 
 // Run before each request

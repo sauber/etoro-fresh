@@ -10,7 +10,7 @@ Properties:
 - portfolio
 - stats
 
-Aggregate: Community
+Container: Community
 
 ### Transaction (by transactionId)
 
@@ -22,7 +22,7 @@ Properties:
 - amount
 - fee
 
-Aggregate: Book
+Container: Book
 
 ### Instruments (by instrumentId)
 
@@ -30,7 +30,7 @@ Properties:
 
 - name
 
-Aggregate: Market
+Container: Market
 
 ### Discover (value object)
 

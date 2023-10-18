@@ -1,18 +1,16 @@
-import { JSONObject, JSONValue, RepoBackend } from "./repo.d.ts";
+import { JSONObject, JSONValue, RepoBackend } from "./mod.ts";
+
+type Defaults = Record<string, JSONValue>;
 
 export class Config {
   static assetname = "config";
 
-  static defaults: Record<string, JSONValue> = {
-    discover_risk: 4,
-    discover_daily: 6,
-    discover_weekly: 11,
-    discover_min: 70,
-    discover_max: 140,
-    fetch_delay: 5000,
-  };
+  constructor(private readonly backend: RepoBackend, private readonly defaults: Defaults = {}) {}
 
-  constructor(private readonly backend: RepoBackend) {}
+  /** create new Config object with default values */
+  public withDefaults(defaults: Defaults): Config {
+    return new Config(this.backend, defaults);
+  }
 
   private async latest(): Promise<JSONObject> {
     const data: JSONObject | null = await this.backend.retrieve(Config.assetname);
@@ -26,7 +24,7 @@ export class Config {
     if (key in data) return data[key];
 
     // Defaults defined?
-    if (key in Config.defaults) return Config.defaults[key];
+    if (key in this.defaults) return this.defaults[key];
 
     // Not in file and not in defaults
     return null;

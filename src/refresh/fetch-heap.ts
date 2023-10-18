@@ -1,4 +1,5 @@
-import { FetchBackend, JSONObject } from "./repo.d.ts";
+import { FetchBackend } from "./mod.ts";
+import { JSONObject } from "/repository/mod.ts";
 
 export type Assets = Record<string, JSONObject>;
 

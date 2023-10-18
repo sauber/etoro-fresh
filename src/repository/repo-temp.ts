@@ -1,4 +1,4 @@
-import { RepoBackend } from "./repo.d.ts";
+import { RepoBackend } from "./mod.ts";
 import { Files } from "./files.ts";
 import { RepoDiskBackend } from "./repo-disk.ts";
 
