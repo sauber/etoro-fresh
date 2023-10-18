@@ -1,4 +1,4 @@
-import type { FetchBackend, JSONObject } from "./repo.d.ts"
+import type { FetchBackend, JSONObject } from "/infrastructure/repo.d.ts"
 import type { DiscoverParams } from "/discover/discover.d.ts";
 import type { InvestorId } from "/investor/investor.d.ts";
 import { FetchURL } from "./fetch-url.ts";
