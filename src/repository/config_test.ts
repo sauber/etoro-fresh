@@ -17,4 +17,14 @@ Deno.test("Config", async (t) => {
     const value: JSONValue = await config.get("foo");
     assertEquals(value, "bar");
   });
+
+  // Create new derived config object with defaults
+  const configWithDefaults = config.withDefaults({"standard": "normal"});
+
+  await t.step("set default", async () => {
+    const value: JSONValue = await configWithDefaults.get("standard");
+    assertEquals(value, "normal");
+  });
+
+
 });

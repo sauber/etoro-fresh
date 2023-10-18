@@ -1,10 +1,13 @@
 import { Semaphore } from "semaphore";
-import { FetchBackend } from "./mod.ts";
-import { JSONObject } from "/repository/mod.ts";
+import type { FetchBackend } from "./mod.ts";
+import { JSONObject, JSONValue } from "/repository/mod.ts";
 
 export class FetchRateLimitingBackend implements FetchBackend {
   private available: Date = new Date();
   private semaphore = new Semaphore(1);
+  private static defaults: Record<string, JSONValue> = {
+    fetch_delay: 5000,
+  };
 
   constructor(private callbackDelayMs: number = 5000) {
     if ( ! callbackDelayMs || callbackDelayMs < 100 )
