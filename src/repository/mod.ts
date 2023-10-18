@@ -1,4 +1,6 @@
 import type { DateFormat } from "/utils/time/calendar.ts";
+export { Config } from "./config.ts";
+export { RepoDiskBackend } from "./repo-disk.ts";
 
 export type JSONValue =
   | string
@@ -10,12 +12,6 @@ export type JSONValue =
 
 export type JSONObject = {
   [key: string]: JSONValue;
-};
-
-export type DiscoverParams = {
-  risk: number;
-  daily: number;
-  weekly: number;
 };
 
 export interface RepoBackend {
@@ -33,8 +29,4 @@ export interface RepoBackend {
   dates(): Promise<DateFormat[]>;
   datesByAsset(assetname: string): Promise<DateFormat[]>;
   assetsByDate(date: DateFormat): Promise<string[]>;
-}
-
-export interface FetchBackend {
-  get(url: string): Promise<JSONObject>;
 }

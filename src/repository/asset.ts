@@ -1,4 +1,4 @@
-import { JSONObject } from "/repository/repo.d.ts";
+import { JSONObject } from "./mod.ts";
 
 /** Lazy load and cache result og callback */
 export class Asset {

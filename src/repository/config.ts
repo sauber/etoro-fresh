@@ -1,4 +1,4 @@
-import { JSONObject, JSONValue, RepoBackend } from "./repo.d.ts";
+import { JSONObject, JSONValue, RepoBackend } from "./mod.ts";
 
 export class Config {
   static assetname = "config";

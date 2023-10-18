@@ -1,9 +1,10 @@
 import {
   RepoBackend,
-  FetchBackend,
+  
   JSONObject,
-} from "/repository/repo.d.ts";
-import { Fetch } from "/repository/fetch.ts";
+} from "/repository/mod.ts";
+import { Fetch } from "./fetch.ts";
+import { FetchBackend } from "./mod.ts";
 import { Discover, DiscoverData } from "/discover/discover.ts";
 import type { DiscoverParams } from "/discover/discover.d.ts";
 import { Portfolio, PortfolioData } from "/investor/portfolio.ts";

@@ -1,5 +1,6 @@
 import { Semaphore } from "semaphore";
-import { JSONObject, FetchBackend } from "./repo.d.ts";
+import { FetchBackend } from "./mod.ts";
+import { JSONObject } from "/repository/mod.ts";
 
 export class FetchRateLimitingBackend implements FetchBackend {
   private available: Date = new Date();

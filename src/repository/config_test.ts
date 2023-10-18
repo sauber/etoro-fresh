@@ -1,6 +1,6 @@
 import { assertEquals } from "assert";
 import { RepoHeapBackend } from "./repo-heap.ts";
-import { JSONValue } from "./repo.d.ts";
+import { JSONValue } from "./mod.ts";
 import { Config } from "./config.ts";
 
 Deno.test("Config", async (t) => {

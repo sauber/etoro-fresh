@@ -1,5 +1,5 @@
 import { today, DateFormat } from "/utils/time/calendar.ts";
-import { JSONObject, RepoBackend } from "./repo.d.ts";
+import { JSONObject, RepoBackend } from "./mod.ts";
 import { Files } from "./files.ts";
 
 function filename(asset: string): string {

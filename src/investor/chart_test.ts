@@ -1,5 +1,5 @@
 import { assertInstanceOf, assertEquals } from "assert";
-import { repoBackend, investorId } from "/repository/testdata.ts";
+import { repoBackend, investorId } from "/refresh/testdata.ts";
 import { Chart, ChartData } from "./chart.ts";
 
 Deno.test("Initialization", () => {

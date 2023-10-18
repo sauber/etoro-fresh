@@ -1,4 +1,4 @@
-import { JSONObject, RepoBackend } from "./repo.d.ts";
+import { JSONObject, RepoBackend } from "./mod.ts";
 import { today, DateFormat } from "/utils/time/calendar.ts";
 
 type Asset = {
