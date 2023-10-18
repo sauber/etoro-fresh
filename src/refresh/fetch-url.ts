@@ -1,5 +1,5 @@
 import { sprintf } from "printf";
-import type { DiscoverParams } from "/discover/discover.d.ts";
+import type { DiscoverParams } from "/discover/mod.ts";
 import type { InvestorId } from "/investor/mod.ts";
 import { JSONValue } from "/repository/mod.ts";
 

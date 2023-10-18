@@ -28,9 +28,13 @@ export class RepoDiskBackend implements RepoBackend {
     return fs.sub(dir).write(file, content);
   }
 
-  async dates(): Promise<DateFormat[]> {
+  public async dates(): Promise<DateFormat[]> {
     const fs: Files = await this.files();
     return fs.dirs();
+  }
+
+  public async end(): Promise<DateFormat> {
+    return (await this.dates()).reverse()[0];
   }
 
   public async assetsByDate(date: DateFormat): Promise<string[]> {
@@ -51,7 +55,7 @@ export class RepoDiskBackend implements RepoBackend {
   }
 
   /** Which date is most recent for asset */
-  private async end(assetname: string): Promise<DateFormat|undefined> {
+  private async assetEnd(assetname: string): Promise<DateFormat|undefined> {
     return (await this.files()).latest(filename(assetname));
   }
   
@@ -59,7 +63,7 @@ export class RepoDiskBackend implements RepoBackend {
     assetname: string,
     date?: DateFormat
   ): Promise<JSONObject | null> {
-    if (!date) date = await this.end(assetname);
+    if (!date) date = await this.assetEnd(assetname);
     if (!date) return null;
     const fs: Files = (await this.files()).sub(date);
     const content: string = await fs.read(filename(assetname));

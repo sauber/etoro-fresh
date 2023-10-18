@@ -1,5 +1,7 @@
-export * from "./community/community.ts";
-export * from "./community/community-file-repo.ts";
+export * from "./community.ts";
+export * from "./chart.ts";
+export * from "./portfolio.ts";
+export * from "./stats.ts";
 
 export type InvestorId = {
   CustomerId: number;

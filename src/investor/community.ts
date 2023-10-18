@@ -1,13 +1,16 @@
-import { Files } from "/repository/files.ts";
-import { Community, Names } from "./community.ts";
+import { RepoBackend } from "/repository/mod.ts";
+import { DateFormat, today } from "/utils/time/calendar.ts";
 
-/** Handle Community I/O requests to local reposotiry */
-export class CommunityFileRepo implements Community {
-  constructor(private readonly files: Files) {}
+type Names = string[];
+
+/** Handle Community I/O requests to local repository */
+export class Community {
+  constructor(private readonly repo: RepoBackend) {}
 
   /** Identify all investor names in a directory */
-  private async names(dir: Files): Promise<Names> {
-    const files: string[] = await dir.files();
+  async names(date?: DateFormat): Promise<Names> {
+    if ( ! date ) date = today();
+    const files: string[] = await this.repo.assetsByDate(date);
     const valid = /[chart|portfolio|stats].json$/;
 
     // Catalog which file type exist for each investor name
@@ -32,9 +35,8 @@ export class CommunityFileRepo implements Community {
   }
 
   async last(): Promise<Names> {
-    const dirName: string = await this.files.last();
-    const dir = this.files.sub(dirName);
-    const names: Names = await this.names(dir);
+    const end: string = await this.repo.end();
+    const names: Names = await this.repo.assetsByDate(end);
     return names;
   }
 }

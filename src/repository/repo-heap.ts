@@ -73,6 +73,13 @@ export class RepoHeapBackend implements RepoBackend {
     });
   }
 
+  public end(): Promise<DateFormat> {
+    return new Promise((resolve) => {
+      const l = this.cache.length;
+      resolve(this.cache[l-1].date);
+  });
+}
+
   /** List of all asset names available on a certain date */
   public assetsByDate(date: DateFormat): Promise<string[]> {
     return new Promise((resolve) => {
