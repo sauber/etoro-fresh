@@ -1,6 +1,8 @@
 {
   "recommendations": [
+    "akil-s.tokyo-light",
     "denoland.vscode-deno",
-    "sastan.twind-intellisense"
+    "sastan.twind-intellisense",
+    "esbenp.prettier-vscode"
   ]
 }
