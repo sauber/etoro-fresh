@@ -1,4 +1,4 @@
-import { Repo } from "/repository/repo.d.ts";
+import { Repo } from "/repository/mod.ts";
 
 export type Names = string[];
 

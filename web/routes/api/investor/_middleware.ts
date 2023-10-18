@@ -1,9 +1,7 @@
 import { MiddlewareHandlerContext } from "$fresh/server.ts";
 import { load } from "dotenv";
 import { Community, CommunityFileRepo } from "/investor/mod.ts";
-//import { Files } from "/infrastructure/repo/files.ts";
-import { RepoDiskBackend } from "/repository/repo-disk.ts";
-import { Repo } from "/repository/repo.ts";
+import { Repo, RepoDiskBackend } from "/repository/mod.ts";
 
 // Create Community object
 const env = await load();

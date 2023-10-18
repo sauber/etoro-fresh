@@ -1,5 +1,6 @@
 import type { DateFormat } from "/utils/time/calendar.ts";
 export { Config } from "./config.ts";
+export { Repo } from "./repo.ts";
 export { RepoDiskBackend } from "./repo-disk.ts";
 
 export type JSONValue =
