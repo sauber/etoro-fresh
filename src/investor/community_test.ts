@@ -17,16 +17,16 @@ Deno.test("Latest Names", async (t) => {
 
   await t.step("incomplete write", async () => {
     await Promise.all([
-      repo.store(`${name}.chart.json`, {}),
-      repo.store(`${name}.portfolio.json`, {}),
+      repo.store(`${name}.chart`, {}),
+      repo.store(`${name}.portfolio`, {}),
     ]);
     const names = await community.names(date);
-    assertEquals(names, []);
+    assertEquals(names, new Set([name]));
   });
 
   await t.step("complete write", async () => {
-    await repo.store(`${name}.stats.json`, {});
+    await repo.store(`${name}.stats`, {});
     const names = await community.names(date);
-    assertEquals(names, [name]);
+    assertEquals(names, new Set([name]));
   });
 });

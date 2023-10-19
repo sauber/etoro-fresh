@@ -41,9 +41,11 @@ export class RepoDiskBackend implements RepoBackend {
 
   public async assetsByDate(date: DateFormat): Promise<string[]> {
     const fs: Files = (await this.files()).sub(date);
-    return (await fs.files())
+    const filenames: string[] = await fs.files();
+    const assetnames: string[] = filenames
       .filter((filename: string) => filename.match(/\.json$/))
       .map((filename: string) => filename.replace(/\.json/, ""));
+    return assetnames;
   }
 
   public async datesByAsset(assetname: string): Promise<DateFormat[]> {
