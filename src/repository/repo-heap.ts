@@ -73,10 +73,10 @@ export class RepoHeapBackend implements RepoBackend {
     });
   }
 
-  public end(): Promise<DateFormat> {
+  public end(): Promise<DateFormat|null> {
     return new Promise((resolve) => {
       const l = this.cache.length;
-      resolve(this.cache[l-1].date);
+      resolve(l > 0 ? this.cache[l-1].date : null);
   });
 }
 

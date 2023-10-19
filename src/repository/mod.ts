@@ -27,7 +27,7 @@ export interface RepoBackend {
   age(assetname: string): Promise<number | null>;
 
   /** Asset Inventory */
-  end(): Promise<DateFormat>;
+  end(): Promise<DateFormat|null>;
   dates(): Promise<DateFormat[]>;
   datesByAsset(assetname: string): Promise<DateFormat[]>;
   assetsByDate(date: DateFormat): Promise<string[]>;

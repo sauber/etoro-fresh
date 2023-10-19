@@ -12,7 +12,7 @@ Deno.test("Initialization", () => {
 Deno.test("Latest Names", async (t) => {
   const repo = new RepoHeapBackend();
   const community: Community = new Community(repo);
-  const name = 'foo';
+  const name = 'john';
   const date = today();
 
   await t.step("incomplete write", async () => {

@@ -33,8 +33,10 @@ export class RepoDiskBackend implements RepoBackend {
     return fs.dirs();
   }
 
-  public async end(): Promise<DateFormat> {
-    return (await this.dates()).reverse()[0];
+  public async end(): Promise<DateFormat|null> {
+    const dates = await this.dates();
+    if ( dates.length > 0) return dates.reverse()[0]
+    else return null;
   }
 
   public async assetsByDate(date: DateFormat): Promise<string[]> {

@@ -27,6 +27,12 @@ Deno.test("Empty repo", async (t) => {
     const response: string[] = await repo.assetsByDate(date);
     assertEquals(response, []);
   });
+
+  await t.step("End date", async () => {
+    const date: DateFormat|null = await repo.end();
+    assertEquals(date, null);
+  });
+
 });
 
 Deno.test("Store and retrive objects", async (t) => {
@@ -64,6 +70,11 @@ Deno.test("Store and retrive objects", async (t) => {
     assertNotEquals(ms, null);
     if ( ms != null )
       assert(ms > 0 && ms < 1000, `Age should be 0-1000ms, is ${ms}ms`);
+  });
+
+  await t.step("End date", async () => {
+    const date: DateFormat|null = await repo.end();
+    assertEquals(date, today());
   });
 
   await t.step("Delete", async () => {
