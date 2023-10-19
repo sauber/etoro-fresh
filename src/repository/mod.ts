@@ -2,6 +2,7 @@ import type { DateFormat } from "/utils/time/calendar.ts";
 export { Config } from "./config.ts";
 export { Repo } from "./repo.ts";
 export { RepoDiskBackend } from "./repo-disk.ts";
+import { LazyLoad } from "./lazy-load.ts";
 
 export type JSONValue =
   | string
@@ -22,6 +23,7 @@ export interface RepoBackend {
   /** Store/Retrieve Assets */
   store(assetname: string, data: JSONObject): Promise<void>;
   retrieve(assetname: string, date?: DateFormat): Promise<JSONObject | null>;
+  lazyload(assetname: string, date?: DateFormat): LazyLoad;
 
   /** Asset Meta */
   age(assetname: string): Promise<number | null>;

@@ -1,3 +1,4 @@
+import { LazyLoad } from "./lazy-load.ts";
 import { JSONObject, RepoBackend } from "./mod.ts";
 import { today, DateFormat } from "/utils/time/calendar.ts";
 
@@ -52,6 +53,10 @@ export class RepoHeapBackend implements RepoBackend {
       if ( asset ) resolve(JSON.parse(asset.content))
       else resolve(null)
     });
+  }
+
+  public lazyload(assetname: string, date?: DateFormat): LazyLoad {
+    return new LazyLoad(() => this.retrieve(assetname, date));  
   }
 
   public age(assetname: string): Promise<number|null> {

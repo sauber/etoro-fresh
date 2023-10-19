@@ -1,6 +1,7 @@
 import { today, DateFormat } from "/utils/time/calendar.ts";
 import { JSONObject, RepoBackend } from "./mod.ts";
 import { Files } from "./files.ts";
+import { LazyLoad } from "./lazy-load.ts";
 
 function filename(asset: string): string {
   return asset + ".json";
@@ -74,6 +75,11 @@ export class RepoDiskBackend implements RepoBackend {
     const data: JSONObject = JSON.parse(content);
     return data;
   }
+
+  public lazyload(assetname: string, date?: DateFormat): LazyLoad {
+    return new LazyLoad(() => this.retrieve(assetname, date));  
+  }
+
 
   public async age(assetname: string): Promise<number|null> {
     return (await this.files()).age(filename(assetname));
