@@ -9,28 +9,27 @@ export class Community {
 
   /** Sort names alphabetically */
   static sortedNames(names: Names): Names {
-    return new Set<string>([...names].sort((Intl.Collator().compare)));
+    return new Set<string>([...names].sort(Intl.Collator().compare));
   }
 
   private async allNames(): Promise<Names> {
     let merged: Names = new Set();
     const dates: DateFormat[] = await this.repo.dates();
-    for ( const date of dates ) {
+    for (const date of dates) {
       const names: Names = await this.namesByDate(date);
       merged = new Set([...merged, ...names]);
     }
     return Community.sortedNames(merged);
   }
 
-
   /** Identify all investor names on a date */
   public async namesByDate(date: DateFormat): Promise<Names> {
     const assets: string[] = await this.repo.assetsByDate(date);
     const valid = /(chart|portfolio|stats)$/;
-    
+
     // Catalog which file type exist for each investor name
     //const catalog: Record<string, Record<string, boolean>> = {};
-    const names: Names = new Set<string>;
+    const names: Names = new Set<string>();
     assets
       .filter((assetname: string) => assetname.match(valid) != null)
       .forEach((assetname: string) => {
@@ -57,7 +56,7 @@ export class Community {
 
   /** List of names optionally on a certain date  */
   public names(date?: DateFormat): Promise<Names> {
-    if ( date ) return this.namesByDate(date)
+    if (date) return this.namesByDate(date);
     else return this.allNames();
   }
 }
