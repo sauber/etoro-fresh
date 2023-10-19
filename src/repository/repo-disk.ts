@@ -1,5 +1,6 @@
 import { today, DateFormat } from "/utils/time/calendar.ts";
-import { JSONObject, RepoBackend } from "./mod.ts";
+import { JSONObject } from "./mod.ts";
+import { RepoBackend } from "./repo-backend.ts";
 import { Files } from "./files.ts";
 import { LazyLoad } from "./lazy-load.ts";
 
@@ -8,8 +9,8 @@ function filename(asset: string): string {
 }
 
 /** Disk base storage for repository */
-export class RepoDiskBackend implements RepoBackend {
-  constructor(private readonly path: string) {}
+export class RepoDiskBackend extends RepoBackend {
+  constructor(private readonly path: string) {super()}
 
   /** File object at repository root */
   protected files(): Promise<Files> {

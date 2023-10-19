@@ -5,9 +5,14 @@ import { Stats } from "./stats.ts";
 import { Chart } from "./chart.ts";
 */
 import type { InvestorId } from "./mod.ts";
+import { DateSeries } from "/repository/date-series.ts";
 
 export class Investor {
-  constructor(private readonly id: InvestorId) {}
+  constructor(
+    private readonly chartSeries: DateSeries,
+    private readonly portfolioSeries: DateSeries,
+    private readonly statsSeries: DateSeries,
+  ) {}
 /*
   readonly portfolio: Portfolio;
   readonly stats: Stats;

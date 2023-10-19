@@ -1,5 +1,6 @@
 import { RepoBackend } from "/repository/mod.ts";
 import { DateFormat, today } from "/utils/time/calendar.ts";
+import { Investor } from "./investor.ts";
 
 export type Names = Set<string>;
 
@@ -59,5 +60,13 @@ export class Community {
   public names(date?: DateFormat): Promise<Names> {
     if (date) return this.namesByDate(date);
     else return this.allNames();
+  }
+
+  public investor(username: string): Investor {
+    return new Investor(
+      this.repo.asset(username + ".chart"),
+      this.repo.asset(username + ".portfolio"),
+      this.repo.asset(username + ".stats"),
+    )
   }
 }

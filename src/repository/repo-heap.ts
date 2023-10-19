@@ -1,5 +1,5 @@
-import { LazyLoad } from "./lazy-load.ts";
-import { JSONObject, RepoBackend } from "./mod.ts";
+import { JSONObject } from "./mod.ts";
+import { RepoBackend } from "./repo-backend.ts";
 import { today, DateFormat } from "/utils/time/calendar.ts";
 
 type Asset = {
@@ -10,7 +10,7 @@ type Asset = {
 };
 
 /** Storing objects in process memory */
-export class RepoHeapBackend implements RepoBackend {
+export class RepoHeapBackend extends RepoBackend {
   private cache: Asset[] = [];
 
   public delete(): Promise<void> {
@@ -55,9 +55,6 @@ export class RepoHeapBackend implements RepoBackend {
     });
   }
 
-  public lazyload(assetname: string, date?: DateFormat): LazyLoad {
-    return new LazyLoad(() => this.retrieve(assetname, date));  
-  }
 
   public age(assetname: string): Promise<number|null> {
     return new Promise((resolve) => {
@@ -93,7 +90,7 @@ export class RepoHeapBackend implements RepoBackend {
   }
 
   /** List all dates having asset */
-  public datesByAsset(assetname: string): Promise<string[]> {
+  public datesByAsset(assetname: string): Promise<DateFormat[]> {
     return new Promise((resolve) => {
       resolve(this.cache.filter((asset: Asset) => asset.name == assetname).map((asset: Asset) => asset.date));
     });
