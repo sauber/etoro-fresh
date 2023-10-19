@@ -2,7 +2,7 @@ import { Handlers } from "$fresh/server.ts";
 import { Community } from "/investor/mod.ts";
 //import { today } from "/utils/time/calendar.ts";
 
-export const handler: Handlers<null, { community: string[] }> = {
+export const handler: Handlers<null, { community: Community }> = {
   async GET(_req, ctx) {
     const community: Community = ctx.state.community;
     //const names: Names = await community.names();

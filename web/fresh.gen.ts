@@ -15,8 +15,6 @@ import * as $9 from "./routes/login.tsx";
 import * as $10 from "./routes/posts/[id]/edit.tsx";
 import * as $11 from "./routes/posts/[id]/index.tsx";
 import * as $12 from "./routes/posts/new.tsx";
-import * as $13 from "./routes/repo/[folder]/[filename].ts";
-import * as $14 from "./routes/repo/_middleware.ts";
 import * as $$0 from "./islands/Counter.tsx";
 import * as $$1 from "./islands/LoginForm.tsx";
 import * as $$2 from "./islands/investor/List.tsx";
@@ -36,8 +34,6 @@ const manifest = {
     "./routes/posts/[id]/edit.tsx": $10,
     "./routes/posts/[id]/index.tsx": $11,
     "./routes/posts/new.tsx": $12,
-    "./routes/repo/[folder]/[filename].ts": $13,
-    "./routes/repo/_middleware.ts": $14,
   },
   islands: {
     "./islands/Counter.tsx": $$0,

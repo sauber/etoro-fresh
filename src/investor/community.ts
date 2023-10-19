@@ -44,14 +44,15 @@ export class Community {
   /** Get list of names on last date available in repo */
   // TODO: Should this be in public interface?
   public async last(): Promise<Names> {
-    const end: string = await this.end();
-    const names: Names = new Set(await this.repo.assetsByDate(end));
-    return names;
+    const end: DateFormat | null = await this.end();
+    if (end) {
+      const names: Names = new Set(await this.repo.assetsByDate(end));
+      return names;
+    } else return new Set();
   }
 
-  public async end(): Promise<DateFormat> {
-    const end: DateFormat = await this.repo.end();
-    return end;
+  public end(): Promise<DateFormat | null> {
+    return this.repo.end();
   }
 
   /** List of names optionally on a certain date  */
