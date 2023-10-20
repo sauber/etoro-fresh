@@ -1,4 +1,4 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import { assertEquals, assertInstanceOf, assert } from "assert";
 import { DateSeries } from "./date-series.ts";
 import { repoBackend } from "/refresh/testdata.ts";
 import { DateFormat } from "/utils/time/calendar.ts";
@@ -14,6 +14,7 @@ Deno.test("Dates of discovery", async () => {
   assertEquals(
     dates.length,
     7,
-    "7 copies of discover.json in testdata repository"
+    "7 copies of discover.json in testdata repository",
   );
+  assert(dates[0] < dates[dates.length-1], "dates are sorted");
 });
