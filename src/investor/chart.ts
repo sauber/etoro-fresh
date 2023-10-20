@@ -1,5 +1,5 @@
 import { assert } from "assert";
-import { DateFormat, today } from "/utils/time/calendar.ts";
+import { DateFormat, today } from "/utils/time/mod.ts";
 
 type ChartEntry = {
   "timestamp": string;

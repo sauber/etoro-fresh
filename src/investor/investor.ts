@@ -4,14 +4,16 @@ import { Portfolio } from "./portfolio.ts";
 import { Stats } from "./stats.ts";
 import { Chart } from "./chart.ts";
 */
-import type { InvestorId } from "./mod.ts";
-import { DateSeries } from "/repository/date-series.ts";
 
-export class Investor {
+import type { InvestorId } from "./mod.ts";
+import { Asset } from "/repository/mod.ts";
+import { ChartData, PortfolioData, StatsData } from "./mod.ts";
+
+ export class Investor {
   constructor(
-    private readonly chartSeries: DateSeries,
-    private readonly portfolioSeries: DateSeries,
-    private readonly statsSeries: DateSeries,
+    private readonly chartSeries: Asset<ChartData>,
+    private readonly portfolioSeries: Asset<PortfolioData>,
+    private readonly statsSeries: Asset<StatsData>,
   ) {}
 /*
   readonly portfolio: Portfolio;

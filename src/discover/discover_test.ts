@@ -1,7 +1,7 @@
 import { assert, assertRejects, assertInstanceOf, assertEquals } from "assert";
 import { Discover, DiscoverData } from "./discover.ts";
 import type { InvestorId } from "/investor/mod.ts";
-import { repoBackend } from "/refresh/testdata.ts";
+import { repoBackend } from "/repository/testdata.ts";
 
 Deno.test("Discover", async (t) => {
   const discover: Discover = new Discover({Status: '', TotalRows: 0, Items: []});
@@ -17,7 +17,7 @@ Deno.test("Discover", async (t) => {
     const data = await repoBackend.retrieve('discover') as unknown as DiscoverData;
     const discover: Discover = new Discover(data);
     const investors: InvestorId[] = discover.investors;
-    assertEquals(investors.length, 60);
+    assertEquals(investors.length, 70);
   });
 });
 

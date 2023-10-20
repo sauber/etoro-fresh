@@ -1,7 +1,6 @@
-import { DateFormat } from "/utils/time/calendar.ts";
-import { LazyLoad } from "./lazy-load.ts";
+import { DateFormat } from "/utils/time/mod.ts";
 import { JSONObject } from "./mod.ts";
-import { DateSeries } from "./date-series.ts";
+import { Asset } from "./asset.ts";
 
 export abstract class RepoBackend {
   /** Delete whole repo */
@@ -28,13 +27,8 @@ export abstract class RepoBackend {
   /** Which assets are available on specific date */
   abstract assetsByDate(date: DateFormat): Promise<string[]>;
 
-  /** Load data not until needed */
-  public lazyload(assetname: string, date?: DateFormat): LazyLoad {
-    return new LazyLoad(() => this.retrieve(assetname, date));  
-  }
-
   /** Date Series for named asset */
-  public asset(assetname: string): DateSeries {
-    return new DateSeries(this, assetname);
+  public asset<JSONObject>(assetname: string): Asset<JSONObject> {
+    return new Asset(this, assetname);
   }
 }

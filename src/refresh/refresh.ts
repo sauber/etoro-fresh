@@ -10,7 +10,7 @@ import type { DiscoverParams } from "/discover/mod.ts";
 import { Portfolio, PortfolioData } from "/investor/mod.ts";
 import type { InvestorId } from "/investor/mod.ts";
 import { Chart, ChartData } from "/investor/mod.ts";
-import { today } from "/utils/time/calendar.ts";
+import { today } from "/utils/time/mod.ts";
 import { assert } from "assert";
 
 /** Load all data for all investors */

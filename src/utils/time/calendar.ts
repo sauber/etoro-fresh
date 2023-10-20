@@ -2,7 +2,8 @@
 // Example 2022-02-10
 // TODO: Fix error: Type '"2022-02-04"' is not assignable to type '"${number}-${number}-${number}"'
 //export type DateFormat = "${string}-${string}-${string}";
-export type DateFormat = string;
+// export type DateFormat = string;
+import type { DateFormat } from "./mod.ts";
 
 /** Number of days from start to end date */
 export function diffDate(start: DateFormat, end: DateFormat): number {

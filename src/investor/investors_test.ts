@@ -1,6 +1,6 @@
 import { assertEquals, assertInstanceOf } from "assert";
 import { Investors } from "./investors.ts";
-import { investorId } from "/refresh/testdata.ts";
+import { investorId } from "./testdata.ts";
 
 Deno.test("Investors", async (t) => {
   const investors: Investors = new Investors();

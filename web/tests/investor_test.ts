@@ -1,7 +1,7 @@
 import { createHandler, ServeHandlerInfo } from "$fresh/server.ts";
 import manifest from "../fresh.gen.ts";
 import { assert, assertEquals } from "$std/testing/asserts.ts";
-import { DateFormat } from "/utils/time/calendar.ts";
+import { DateFormat } from "/utils/time/mod.ts";
 import { assertInstanceOf } from "assert";
 import { Names } from "/investor/mod.ts";
 

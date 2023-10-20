@@ -1,7 +1,7 @@
 import { JSONObject, Config, RepoDiskBackend } from "/repository/mod.ts";
 import type { DiscoverParams } from "/discover/mod.ts";
 import type { InvestorId } from "/investor/mod.ts";
-import type { Assets } from "./fetch-heap.ts";
+import type { Assets } from "/refresh/fetch-heap.ts";
 
 export const repoPath = "src/repository/testdata"
 export const repoBackend = new RepoDiskBackend(repoPath);

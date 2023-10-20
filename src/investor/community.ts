@@ -1,5 +1,5 @@
 import { RepoBackend } from "/repository/mod.ts";
-import { DateFormat, today } from "/utils/time/calendar.ts";
+import { DateFormat, today } from "/utils/time/mod.ts";
 import { Investor } from "./investor.ts";
 
 export type Names = Set<string>;

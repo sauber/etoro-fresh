@@ -1,8 +1,7 @@
 import { assertEquals, assertNotEquals, assertInstanceOf, assert } from "assert";
 import { RepoHeapBackend } from "./repo-heap.ts";
-import { today, DateFormat } from "/utils/time/calendar.ts";
+import { today, DateFormat } from "/utils/time/mod.ts";
 import { JSONObject } from "./mod.ts";
-import { LazyLoad } from "./lazy-load.ts";
 
 Deno.test("Initialization", () => {
   const repo = new RepoHeapBackend();
@@ -49,12 +48,6 @@ Deno.test("Store and retrive objects", async (t) => {
   await t.step("Retrieve", async () => {
     const response = await repo.retrieve(assetname) as JSONObject;
     assertEquals(response, data);
-  });
-
-  await t.step("Lazy Load", async () => {
-    const response: LazyLoad = await repo.lazyload(assetname);
-    const value = await response.value();
-    assertEquals(value, data);
   });
 
   await t.step("Search for dates", async () => {

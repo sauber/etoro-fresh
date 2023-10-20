@@ -1,7 +1,7 @@
 import { assertEquals, assertInstanceOf  } from "assert";
 import { Community } from "./community.ts";
 import { RepoHeapBackend } from "/repository/repo-heap.ts";
-import { today } from "/utils/time/calendar.ts";
+import { today } from "/utils/time/mod.ts";
 
 Deno.test("Initialization", () => {
   const repo = new RepoHeapBackend();
