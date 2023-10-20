@@ -1,5 +1,6 @@
 import { assert } from "assert";
-import { DateFormat, today } from "/utils/time/mod.ts";
+import { DateFormat, DateSeries, today } from "/utils/time/mod.ts";
+import { ChartSeries } from "./chart-series.ts";
 
 type ChartEntry = {
   "timestamp": string;
@@ -17,6 +18,7 @@ export type ChartData = {
     };
   };
 };
+
 
 export class Chart {
   constructor(private readonly raw: ChartData) {}
@@ -42,5 +44,11 @@ export class Chart {
     assert(this.count > 365, "Too few dates in chart");
     assert(this.end <= todayDate, "Last date is in the future");
     return true;
+  }
+
+  /** All values as a DateSeries */
+  public series(): ChartSeries {
+    const entries: ChartEntry[] = this.list();
+    return new ChartSeries([], "2022-22-22");
   }
 }

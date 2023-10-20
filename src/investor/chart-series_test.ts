@@ -1,0 +1,65 @@
+import { assertEquals, assertInstanceOf, assertThrows } from "assert";
+import { ChartSeries } from "./chart-series.ts";
+import type { DateFormat } from "/utils/time/mod.ts";
+import { nextDate } from "/utils/time/mod.ts";
+
+Deno.test("Blank Initialization", () => {
+  const chart = new ChartSeries([], "2022-10-10");
+  assertInstanceOf(chart, ChartSeries);
+});
+
+Deno.test("Single value", () => {
+  const value = 10000;
+  const start: DateFormat = "2023-10-30";
+  const chart = new ChartSeries([value], start);
+  assertEquals(chart.first(), value);
+  assertEquals(chart.last(), value);
+  assertEquals(chart.start(), start);
+  assertEquals(chart.end(), start);
+  assertEquals(chart.dates(), [start]);
+  assertEquals(chart.value(start), value);
+});
+
+Deno.test("Series of values", () => {
+  const values = [30, 31, 1, 2];
+  const dates: DateFormat[] = [
+    "2023-10-30",
+    "2023-10-31",
+    "2023-11-01",
+    "2023-11-02",
+  ];
+  const chart = new ChartSeries(values, dates[0]);
+  assertEquals(chart.first(), values[0]);
+  assertEquals(chart.last(), values[values.length - 1]);
+  assertEquals(chart.start(), dates[0]);
+  assertEquals(chart.end(), dates[dates.length - 1]);
+  assertEquals(chart.dates(), dates);
+
+  for (let i = 0; i < values.length; i++)
+    assertEquals(chart.value(dates[i]), values[i]);
+});
+
+Deno.test("Invalid range", () => {
+  const values = [30, 31, 1, 2];
+  const dates: DateFormat[] = [
+    "2023-10-30",
+    "2023-10-31",
+    "2023-11-01",
+    "2023-11-02",
+  ];
+  const chart = new ChartSeries(values, dates[0]);
+
+  // Before range
+  assertThrows(
+    () => chart.value(nextDate(dates[0], -1)),
+    Error,
+    "Date not in range: 2023-10-30 < 2023-10-29 < 2023-11-02"
+  );
+
+  // After range
+  assertThrows(
+    () => chart.value(nextDate(dates[dates.length-1], 1)),
+    Error,
+    "Date not in range: 2023-10-30 < 2023-11-03 < 2023-11-02"
+  );
+});

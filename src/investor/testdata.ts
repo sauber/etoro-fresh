@@ -10,7 +10,7 @@ export const investorId: InvestorId = {
 };
 
 // TODO: Use generic type function
-export const chartData = await repoBackend.retrieve(investorId.UserName + '.stats') as unknown as ChartData;
-export const portfolioData = await repoBackend.retrieve(investorId.UserName + '.portfolio') as unknown as PortfolioData;
-export const statsData = await repoBackend.retrieve(investorId.UserName + '.stats') as unknown as StatsData;
+export const chartData = await repoBackend.retrieve(investorId.UserName + '.chart') as ChartData;
+export const portfolioData = await repoBackend.retrieve(investorId.UserName + '.portfolio') as PortfolioData;
+export const statsData = await repoBackend.retrieve(investorId.UserName + '.stats') as StatsData;
 
