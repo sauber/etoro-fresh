@@ -1,6 +1,6 @@
 import { assertInstanceOf, assert, assertEquals } from "assert";
-import { Portfolio, PortfolioData } from "./portfolio.ts";
-import { investorId, portfolioDate } from "./testdata.ts";
+import { Portfolio } from "./portfolio.ts";
+import { portfolioData } from "./testdata.ts";
 import { InvestorId } from "./mod.ts";
 
 Deno.test("Initialization", () => {
@@ -16,7 +16,7 @@ Deno.test("Initialization", () => {
 });
 
 Deno.test("Portfolio", async (t) => {
-  const portfolio: Portfolio = new Portfolio(portfolioDate);
+  const portfolio: Portfolio = new Portfolio(portfolioData);
 
   await t.step("validate", () => {
     assertEquals(portfolio.validate(), true);

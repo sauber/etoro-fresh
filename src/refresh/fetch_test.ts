@@ -1,7 +1,8 @@
 import { assertEquals, assertInstanceOf } from "assert";
 import { FetchHeapBackend } from "./fetch-heap.ts";
 import { Fetch } from "./fetch.ts";
-import { testAssets, discoverOptions, investorId } from "./testdata.ts";
+import { testAssets, discoverOptions } from "./testdata.ts";
+import { investorId } from "/investor/testdata.ts";
 
 const repo = new FetchHeapBackend(testAssets);
 

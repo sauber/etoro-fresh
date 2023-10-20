@@ -1,6 +1,6 @@
 import { assertEquals, assertInstanceOf, assert } from "assert";
 import { Asset } from "./asset.ts";
-import { repoBackend } from "/refresh/testdata.ts";
+import { repoBackend } from "./testdata.ts";
 import { DateFormat } from "/utils/time/mod.ts";
 import { DiscoverData } from "../discover/mod.ts";
 

@@ -1,6 +1,7 @@
 import { assertInstanceOf, assertStringIncludes } from "assert";
 import { FetchURL } from "./fetch-url.ts";
-import { investorId, discoverOptions } from "./testdata.ts";
+import { discoverOptions } from "./testdata.ts";
+import { investorId } from "/investor/testdata.ts";
 
 Deno.test("Initialization", () => {
   const f: FetchURL = new FetchURL();
