@@ -1,6 +1,8 @@
 import { assert } from "assert";
-import { DateFormat, DateSeries, today } from "/utils/time/mod.ts";
+import type { DateFormat } from "/utils/time/mod.ts";
+import { today, formatDate } from "/utils/time/mod.ts";
 import { ChartSeries } from "./chart-series.ts";
+
 
 type ChartEntry = {
   "timestamp": string;
@@ -48,7 +50,10 @@ export class Chart {
 
   /** All values as a DateSeries */
   public series(): ChartSeries {
-    const entries: ChartEntry[] = this.list();
-    return new ChartSeries([], "2022-22-22");
+    const entries: ChartEntry[] = this.list;
+    const timestamp: string = entries[0].timestamp;
+    const firstDate: DateFormat = formatDate(new Date(timestamp).getTime());
+    const values = entries.map((entry) => entry.equity);
+    return new ChartSeries(values, firstDate);
   }
 }

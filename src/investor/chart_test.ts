@@ -1,6 +1,7 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import { assertEquals, assertNotEquals, assertInstanceOf } from "assert";
 import { Chart } from "./chart.ts";
 import { chartData } from "./testdata.ts";
+import { ChartSeries } from "./chart-series.ts";
 
 Deno.test("Initialization", () => {
   const chart = new Chart({ simulation: { oneYearAgo: { chart: [] } } });
@@ -12,10 +13,11 @@ Deno.test("Validate", () => {
   assertEquals(chart.validate(), true);
 });
 
-/*
 Deno.test("Series", () => {
   const chart: Chart = new Chart(chartData);
-  const series: DateSeries<number> = chart.series();
-  assertEquals(series.end(), "2023-10-11");
+  const series: ChartSeries = chart.series();
+  assertEquals(series.first(), 10000);
+  assertNotEquals(series.last(), 10000);
+  assertEquals(series.start(), "2022-10-01");
+  assertEquals(series.end(), "2023-10-13");
 });
-*/
