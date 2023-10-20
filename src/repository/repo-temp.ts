@@ -2,7 +2,7 @@ import { RepoBackend } from "./mod.ts";
 import { Files } from "./files.ts";
 import { RepoDiskBackend } from "./repo-disk.ts";
 
-export class RepoTempBackend extends RepoDiskBackend implements RepoBackend {
+export class RepoTempBackend extends RepoDiskBackend  {
   constructor() {
     super("");
   }

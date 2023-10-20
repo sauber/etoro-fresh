@@ -8,13 +8,13 @@ Deno.test("Discover", async (t) => {
   assertInstanceOf(discover, Discover);
 
   await t.step("validate", async () => {
-    const data = await repoBackend.retrieve('discover') as unknown as DiscoverData;
+    const data = await repoBackend.retrieve('discover') as DiscoverData;
     const discover: Discover = new Discover(data);
     assertEquals(discover.validate(), true);
   });
 
   await t.step("investors", async () => {
-    const data = await repoBackend.retrieve('discover') as unknown as DiscoverData;
+    const data = await repoBackend.retrieve('discover') as DiscoverData;
     const discover: Discover = new Discover(data);
     const investors: InvestorId[] = discover.investors;
     assertEquals(investors.length, 70);
@@ -24,7 +24,7 @@ Deno.test("Discover", async (t) => {
 Deno.test("Discover invalid", async () => {
   await assertRejects(
     async () => {
-      const data = await repoBackend.retrieve('discover') as unknown as DiscoverData;
+      const data = await repoBackend.retrieve('discover') as DiscoverData;
       data.TotalRows = 0;
       const discover: Discover = new Discover(data);
       assert(discover.validate());
