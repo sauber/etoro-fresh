@@ -1,4 +1,5 @@
 import { config, repoBackend } from "/repository/testdata.ts";
+export { config } from "/repository/testdata.ts";
 import type { JSONObject } from "../repository/mod.ts";
 import type { DiscoverParams } from "../discover/mod.ts";
 import { Assets } from "./fetch-heap.ts";

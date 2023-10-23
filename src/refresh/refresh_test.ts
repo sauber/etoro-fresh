@@ -1,25 +1,24 @@
 import { assertInstanceOf, assertEquals } from "assert";
 import { FetchHeapBackend } from "./fetch-heap.ts";
 import { Refresh } from "./refresh.ts";
-import { testAssets, discoverOptions } from "./testdata.ts";
-import { investorId } from "/investor/testdata.ts";
+import { testAssets, config } from "./testdata.ts";
 import { RepoHeapBackend } from "/repository/repo-heap.ts";
 
 Deno.test("Initialize", async () => {
   const repo: RepoHeapBackend = new RepoHeapBackend();
-  const fetcher: FetchHeapBackend = new FetchHeapBackend({});
-  const refresh: Refresh = new Refresh(repo, fetcher, investorId, discoverOptions);
+  const fetcher: FetchHeapBackend = new FetchHeapBackend({}, config);
+  const refresh: Refresh = new Refresh(repo, fetcher);
   assertInstanceOf(refresh, Refresh);
   await repo.delete();
 });
 
 Deno.test("Fresh", async (t) => {
   const repo = new RepoHeapBackend();
-  const fetcher: FetchHeapBackend = new FetchHeapBackend(testAssets);
+  const fetcher: FetchHeapBackend = new FetchHeapBackend(testAssets, config);
   const max = 3;
 
   await t.step("fetch all", async () => {
-    const refresh = new Refresh(repo, fetcher, investorId, discoverOptions);
+    const refresh = new Refresh(repo, fetcher);
     const count: number = await refresh.run(max);
     //console.log(`Fetch data for ${count} investors`);
     // three downloads from own invester + 2x3 from mirrors + 1 discover = 10
@@ -27,7 +26,7 @@ Deno.test("Fresh", async (t) => {
   });
 
   await t.step("fetch again", async () => {
-    const refresh = new Refresh(repo, fetcher, investorId, discoverOptions);
+    const refresh = new Refresh(repo, fetcher);
     const count: number = await refresh.run(max);
     //console.log(`Fetch data for ${count} investors`);
     assertEquals(count, max + 1, 'Expired charts will try download again');

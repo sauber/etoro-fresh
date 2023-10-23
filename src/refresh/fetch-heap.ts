@@ -1,10 +1,10 @@
 import { FetchBackend } from "./mod.ts";
-import { JSONObject } from "/repository/mod.ts";
+import { Config, JSONObject } from "/repository/mod.ts";
 
 export type Assets = Record<string, JSONObject>;
 
 export class FetchHeapBackend implements FetchBackend {
-  constructor(private readonly assets: Assets) {}
+  constructor(private readonly assets: Assets, readonly config: Config) {}
 
   public get(url: string): Promise<JSONObject> {
     return new Promise((resolve) => {

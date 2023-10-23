@@ -1,14 +1,14 @@
 import { assertEquals, assertInstanceOf } from "assert";
 import { FetchHeapBackend } from "./fetch-heap.ts";
-import { testAssets } from "./testdata.ts";
+import { testAssets, config } from "./testdata.ts";
 
 Deno.test("Initialization", () => {
-  const f: FetchHeapBackend = new FetchHeapBackend(testAssets);
+  const f: FetchHeapBackend = new FetchHeapBackend(testAssets, config);
   assertInstanceOf(f, FetchHeapBackend);
 });
 
 Deno.test("Fetching", { ignore: false }, async (t) => {
-  const f: FetchHeapBackend = new FetchHeapBackend(testAssets);
+  const f: FetchHeapBackend = new FetchHeapBackend(testAssets, config);
 
   await t.step("discover", async () => {
     const data = await f.get("rankings/rankings");
