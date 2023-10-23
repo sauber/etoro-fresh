@@ -14,7 +14,6 @@ type URL = string;
 export class FetchURL {
   private static defaults: Record<string, JSONValue> = {
     discover_filter: { risk: 4, daily: 6, weekly: 11 } as DiscoverFilter,
-    //discover_items: { min: 70, max: 140 },
   };
 
   private site = "https://www.etoro.com";
