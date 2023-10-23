@@ -1,12 +1,7 @@
-import {
-  RepoBackend,
-  
-  JSONObject,
-} from "/repository/mod.ts";
+import { RepoBackend, JSONObject, Config } from "/repository/mod.ts";
 import { Fetch } from "./fetch.ts";
 import { FetchBackend } from "./mod.ts";
 import { Discover, DiscoverData } from "/discover/mod.ts";
-import type { DiscoverParams } from "/discover/mod.ts";
 import { Portfolio, PortfolioData } from "/investor/mod.ts";
 import type { InvestorId } from "/investor/mod.ts";
 import { Chart, ChartData } from "/investor/mod.ts";
@@ -17,9 +12,9 @@ import { assert } from "assert";
 export class Refresh {
   private readonly fetch: Fetch;
 
-  // TODO: Read from config
   // Convert hours to ms
   private static msPerHour = 60 * 60 * 1000;
+  // TODO: Read from config
   private readonly expire = {
     mirror: 16 * Refresh.msPerHour,
     discover: 50 * Refresh.msPerHour,
@@ -30,21 +25,22 @@ export class Refresh {
 
   // How many external fetches are performed
   private fetchCount = 0;
+  private readonly config: Config;
 
+  // TODO: It's wrong to pull out config object from fetcher. Probably need a controller instead of a chain of modules
   constructor(
     private readonly repo: RepoBackend,
-    private readonly fetcher: FetchBackend,
-    private readonly investor: InvestorId,
-    private readonly filter: DiscoverParams
+    fetcher: FetchBackend,
   ) {
     this.fetch = new Fetch(fetcher);
+    this.config = fetcher.config;
   }
 
   /** Load  asset from web if missing or expired */
   private async recent(
     assetname: string,
     expire: number,
-    web: () => Promise<JSONObject>,
+    download: () => Promise<JSONObject>,
     validate?: (data: JSONObject) => boolean,
   ): Promise<boolean> {
     // Check age
@@ -53,7 +49,7 @@ export class Refresh {
 
     // Load from web
     console.log(`Loading ${assetname} from web`);
-    const data: JSONObject = await web();
+    const data: JSONObject = await download();
     ++this.fetchCount;
     if ( validate && ! validate(data) ) {
       console.warn(`Warning: Asset ${assetname} failed validation`);
@@ -77,7 +73,7 @@ export class Refresh {
     const available: boolean = (await this.recent(
       "discover", 
       this.expire.discover, 
-      () => this.fetch.discover(this.filter),
+      () => this.fetch.discover(),
       validate
     ));
     if ( available ) {
@@ -137,10 +133,14 @@ export class Refresh {
   }
 
   private async mirrors(): Promise<InvestorId[]> {
-    await this.chart(this.investor);
-    await this.stats(this.investor);
-    if (await this.portfolio(this.investor, this.expire.mirror)) {
-      const data = await this.repo.retrieve(this.investor.UserName + '.portfolio') as PortfolioData;
+    const thisInvestor = await this.config.get('investor') as InvestorId;
+    console.log('Loaded investor: ', thisInvestor);
+    if (! thisInvestor || ! thisInvestor.UserName || ! thisInvestor.CustomerId )
+      throw new Error(`Invalid investor: ${thisInvestor}`);
+    await this.chart(thisInvestor);
+    await this.stats(thisInvestor);
+    if (await this.portfolio(thisInvestor, this.expire.mirror)) {
+      const data = await this.repo.retrieve(thisInvestor.UserName + '.portfolio') as PortfolioData;
       const portfolio: Portfolio = new Portfolio(data);
       const investors: InvestorId[] = portfolio.investors();
       return investors;
@@ -156,10 +156,6 @@ export class Refresh {
     // Run in parallel
     await Promise.all(
       subset.map((investor: InvestorId) => this.loadInvestor(investor))
-      //subset.map((investor: InvestorId) => {
-      //  console.log(investor.UserName, investor.CustomerId);
-      //  return this.loadInvestor(investor);
-      //})
     );
 
     return this.fetchCount;

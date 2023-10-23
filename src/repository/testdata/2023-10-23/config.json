@@ -1,0 +1,11 @@
+{
+  "investor": {
+    "CustomerId": 4657429,
+    "UserName": "GainersQtr"
+  },
+  "discover": {
+    "risk": 4,
+    "daily": 6,
+    "weekly": 11
+  }
+}

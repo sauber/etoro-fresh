@@ -1,17 +1,18 @@
 import type { JSONObject } from "/repository/mod.ts"
-import type { DiscoverParams } from "./mod.ts";
 import { FetchBackend } from "./mod.ts";
 import type { InvestorId } from "/investor/mod.ts";
 import { FetchURL } from "./fetch-url.ts";
 
 /** Generate URL to assets */
 export class Fetch {
-  private readonly url = new FetchURL();
+  private readonly url;
 
-  constructor(private readonly fetcher: FetchBackend ) {}
+  constructor(private readonly fetcher: FetchBackend ) {
+    this.url = new FetchURL(fetcher.config);
+  }
 
-  public discover(filter: DiscoverParams): Promise<JSONObject> {
-    return this.fetcher.get(this.url.discover(filter));
+  public async discover(): Promise<JSONObject> {
+    return this.fetcher.get(await this.url.discover());
   }
 
   public chart(investor: InvestorId): Promise<JSONObject> {
