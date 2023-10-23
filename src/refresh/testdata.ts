@@ -4,12 +4,9 @@ import type { JSONObject } from "../repository/mod.ts";
 import type { DiscoverParams } from "../discover/mod.ts";
 import { Assets } from "./fetch-heap.ts";
 import { investorId } from "/investor/testdata.ts";
+import { DiscoverFilter } from "./fetch-url.ts";
 
-export const discoverOptions: DiscoverParams = {
-  risk: (await config.get("discover_risk")) as number,
-  daily: (await config.get("discover_daily")) as number,
-  weekly: (await config.get("discover_weekly")) as number,
-};
+export const discoverOptions: DiscoverParams = (await config.get("discover")) as DiscoverFilter;
 
 // Pull from repo a collective of assets
 export const testAssets: Assets = {

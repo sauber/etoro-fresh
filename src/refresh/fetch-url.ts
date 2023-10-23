@@ -2,7 +2,7 @@ import { sprintf } from "printf";
 import type { InvestorId } from "/investor/mod.ts";
 import { Config, JSONValue } from "/repository/mod.ts";
 
-type DiscoverFilter = {
+export type DiscoverFilter = {
   risk: number;
   daily: number;
   weekly: number;
