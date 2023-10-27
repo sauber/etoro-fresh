@@ -1,6 +1,8 @@
 import { DateSeries, diffDate, nextDate } from "/utils/time/mod.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
 
+// TODO: Replace with DenoForge: https://deno.land/x/denoforge
+
 export class ChartSeries implements DateSeries<number> {
   constructor(
     readonly values: number[],
