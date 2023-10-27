@@ -4,10 +4,7 @@ import type { ChartData } from "./chart.ts";
 import type { PortfolioData } from "./portfolio.ts";
 import type { StatsData } from "./stats.ts";
 
-export const investorId: InvestorId = {
-  UserName: (await config.get("UserName")) as string,
-  CustomerId: (await config.get("CustomerId")) as number,
-};
+export const investorId = await config.get("investor") as InvestorId;
 
 // TODO: Use generic type function
 export const chartData = await repoBackend.retrieve(investorId.UserName + '.chart') as ChartData;

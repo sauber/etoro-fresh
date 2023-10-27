@@ -1,6 +1,6 @@
 import { assertInstanceOf, assertStringIncludes } from "assert";
 import { FetchURL } from "./fetch-url.ts";
-import { discoverOptions } from "./testdata.ts";
+import { discoverFilter } from "./testdata.ts";
 import { investorId } from "/investor/testdata.ts";
 
 Deno.test("Initialization", () => {
@@ -10,10 +10,10 @@ Deno.test("Initialization", () => {
 
 Deno.test("discover", () => {
   const f: FetchURL = new FetchURL();
-  const url = f.discover(discoverOptions);
-  assertStringIncludes(url, "maxmonthlyriskscoremax=" + discoverOptions.risk);
-  assertStringIncludes(url, "dailyddmin=-" + discoverOptions.daily);
-  assertStringIncludes(url, "weeklyddmin=-" + discoverOptions.weekly);
+  const url = f.discover(discoverFilter);
+  assertStringIncludes(url, "maxmonthlyriskscoremax=" + discoverFilter.risk);
+  assertStringIncludes(url, "dailyddmin=-" + discoverFilter.daily);
+  assertStringIncludes(url, "weeklyddmin=-" + discoverFilter.weekly);
 });
 
 Deno.test("chart", () => {

@@ -1,20 +1,15 @@
 import { sprintf } from "printf";
-import type { DiscoverParams } from "/discover/mod.ts";
 import type { InvestorId } from "/investor/mod.ts";
-import { JSONValue } from "/repository/mod.ts";
+import type { DiscoverFilter } from "./mod.ts";
+
+type URL = string;
 
 /** Disk base storage for repository */
 export class FetchURL {
-  private static defaults: Record<string, JSONValue> = {
-    discover_filter: { risk: 4, daily: 6, weekly: 11 },
-    discover_items: { min: 70, max: 140 },
-    fetch_delay: 5000,
-  };
-
-  private site = "https://www.etoro.com";
+  private readonly site = "https://www.etoro.com";
   private readonly uuid = crypto.randomUUID();
 
-  public discover(filter: DiscoverParams = FetchURL.defaults.discover_filter as DiscoverParams): string {
+  public discover(filter: DiscoverFilter): URL {
     const urlTemplate = "/sapi/rankings/rankings?client_request_id=%s&%s";
     const filter_template = `blocked=false&bonusonly=false&copyblock=false&istestaccount=false&optin=true&page=1&period=OneYearAgo&verified=true&isfund=false&copiersmin=1&dailyddmin=-%d&gainmin=11&gainmax=350&maxmonthlyriskscoremax=%d&maxmonthlyriskscoremin=2&pagesize=70&profitablemonthspctmin=60&sort=-weeklydd&weeklyddmin=-%d&activeweeksmin=12&lastactivitymax=14`;
     const options: string = sprintf(
@@ -27,7 +22,7 @@ export class FetchURL {
     return url;
   }
 
-  public chart(investor: InvestorId): string {
+  public chart(investor: InvestorId): URL {
     const urlTemplate =
       //"https://www.etoro.com/sapi/trade-data-real/chart/public/%s/oneYearAgo/1?client_request_id=%s";
       "/sapi/userstats/CopySim/Username/%s/OneYearAgo?client_request_id=%s";
@@ -36,14 +31,14 @@ export class FetchURL {
     return url;
   }
 
-  public portfolio(investor: InvestorId): string {
+  public portfolio(investor: InvestorId): URL {
     const urlTemplate =
       "/sapi/trade-data-real/live/public/portfolios?cid=%d&client_request_id=%s";
     const url: string = this.site + sprintf(urlTemplate, investor.CustomerId, this.uuid);
     return url;
   }
 
-  public stats(investor: InvestorId): string {
+  public stats(investor: InvestorId): URL {
     const urlTemplate =
       "/sapi/rankings/cid/%d/rankings?Period=OneYearAgo&client_request_id=%s";
     const url: string = this.site + sprintf(urlTemplate, investor.CustomerId, this.uuid);

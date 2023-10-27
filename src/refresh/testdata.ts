@@ -1,22 +1,18 @@
 import { config, repoBackend } from "/repository/testdata.ts";
+export { config } from "/repository/testdata.ts";
 import type { JSONObject } from "../repository/mod.ts";
-import type { DiscoverParams } from "../discover/mod.ts";
 import { Assets } from "./fetch-heap.ts";
 import { investorId } from "/investor/testdata.ts";
+export { investorId } from "/investor/testdata.ts";import type { DiscoverFilter } from "./mod.ts";
+export const discoverFilter: DiscoverFilter = (await config.get("discover")) as DiscoverFilter;
 
-export const discoverOptions: DiscoverParams = {
-  risk: (await config.get("discover_risk")) as number,
-  daily: (await config.get("discover_daily")) as number,
-  weekly: (await config.get("discover_weekly")) as number,
-};
-
-// Pull from repo a collective of assets
+// Pull from repo a collection of assets
 export const testAssets: Assets = {
   // discover
-  "rankings/rankings": (await repoBackend.retrieve("discover")) as JSONObject,
+  discover: (await repoBackend.retrieve("discover")) as JSONObject,
 
   // chart
-  "CopySim": (await repoBackend.retrieve(
+  chart: (await repoBackend.retrieve(
     investorId.UserName + ".chart"
   )) as JSONObject,
 
@@ -26,7 +22,7 @@ export const testAssets: Assets = {
   )) as JSONObject,
 
   // stats
-  "rankings/cid": (await repoBackend.retrieve(
+  stats: (await repoBackend.retrieve(
     investorId.UserName + ".stats"
   )) as JSONObject,
 };
