@@ -19,7 +19,7 @@ export class FetchWebBackend implements FetchBackend {
 
   /** Ratelimit calls to fetchjson */
   private fetch(url: string): Promise<JSONObject> {
-    return this.ratelimit.limit(() => fetchjson(url));
+    return this.ratelimit.limit(() => fetchjson(url)) as Promise<JSONObject>;
   }
 
   public discover(filter: DiscoverFilter): Promise<JSONObject> {

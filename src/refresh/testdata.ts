@@ -3,9 +3,8 @@ export { config } from "/repository/testdata.ts";
 import type { JSONObject } from "../repository/mod.ts";
 import { Assets } from "./fetch-heap.ts";
 import { investorId } from "/investor/testdata.ts";
-import type { DiscoverFilter } from "./mod.ts";
-
-export const discoverOptions: DiscoverFilter = (await config.get("discover")) as DiscoverFilter;
+export { investorId } from "/investor/testdata.ts";import type { DiscoverFilter } from "./mod.ts";
+export const discoverFilter: DiscoverFilter = (await config.get("discover")) as DiscoverFilter;
 
 // Pull from repo a collection of assets
 export const testAssets: Assets = {

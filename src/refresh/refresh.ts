@@ -1,7 +1,9 @@
-import { RepoBackend, JSONObject, Config } from "/repository/mod.ts";
-import { Fetch } from "./fetch.ts";
+import { RepoBackend } from "/repository/mod.ts";
+import type { JSONObject } from "/repository/mod.ts";
 import { FetchBackend } from "./mod.ts";
-import { Discover, DiscoverData } from "/discover/mod.ts";
+import type { DiscoverFilter } from "./mod.ts";
+import { Discover } from "/discover/mod.ts";
+import type { DiscoverData } from "/discover/mod.ts";
 import { Chart, Portfolio } from "/investor/mod.ts";
 import type { InvestorId, ChartData, PortfolioData } from "/investor/mod.ts";
 import { today } from "/utils/time/mod.ts";
@@ -22,36 +24,31 @@ type Expire = {
 
 /** Load all data for all investors */
 export class Refresh {
-  private readonly fetch: Fetch;
-
   // Convert hours to ms
   private static msPerHour = 60 * 60 * 1000;
 
-  private static defaults = {
-    discover_count: {
+  private readonly discover_count = {
       min: 70, max: 140
-    } as Range,
-    expire: {
+    } as Range;
+   private readonly expire = {
       mirror: 16 * Refresh.msPerHour,
       discover: 50 * Refresh.msPerHour,
       chart: 24 * Refresh.msPerHour,
       portfolio: 666 * Refresh.msPerHour,
       stats: 333 * Refresh.msPerHour,
-    } as Expire
-  };
+    } as Expire;
 
   // How many external fetches are performed
   private fetchCount = 0;
-  private readonly config: Config;
 
   constructor(
     private readonly repo: RepoBackend,
-    fetcher: FetchBackend,
-    config: Config,
-  ) {
-    this.fetch = new Fetch(fetcher);
-    this.config = config.withDefaults(Refresh.defaults);
-  }
+    private readonly fetcher: FetchBackend,
+    private readonly investor: InvestorId,
+    private readonly filter: DiscoverFilter,
+    // TODO: Expire
+    // TODO: Discover Range
+  ) {  }
 
   /** Load  asset from web if missing or expired */
   private async recent(
@@ -82,7 +79,7 @@ export class Refresh {
 
   /** Load list of investor ID's from discovery */
   private async discover(): Promise<InvestorId[]> {
-    const range = await this.config.get('discover_count') as Range;
+    const range: Range = this.discover_count;
     const validate = function (loaded: JSONObject) {
       const discover: Discover = new Discover(loaded as DiscoverData);
       const count: number = discover.count;
@@ -91,18 +88,17 @@ export class Refresh {
     }
   
     // TODO: Validate data
-    const expire = await this.config.get('expire') as Expire;
+    const expire: Expire = this.expire;
     const available: boolean = (await this.recent(
       "discover", 
       expire.discover, 
-      () => this.fetch.discover(),
+      () => this.fetcher.discover(this.filter),
       validate
     ));
     if ( available ) {
       const data = await this.repo.retrieve("discover") as DiscoverData;
       const discover: Discover = new Discover(data);
-      const investors: InvestorId[] = discover.investors;
-      return investors;
+      return discover.investors;
     } else {
       return [];
     }
@@ -122,12 +118,10 @@ export class Refresh {
       return true;
     }
 
-    const expire = await this.config.get('expire') as Expire;
-
-    return this.recent(
+     return this.recent(
       investor.UserName + ".chart",
-      expire.chart,
-      () => this.fetch.chart(investor),
+      this.expire.chart,
+      () => this.fetcher.chart(investor),
       validate
     );
   }
@@ -136,44 +130,31 @@ export class Refresh {
     return this.recent(
       investor.UserName + ".portfolio",
       expire,
-      () => this.fetch.portfolio(investor)
+      () => this.fetcher.portfolio(investor)
     );
   }
 
-  private async stats(investor: InvestorId): Promise<boolean> {
-    const expire = await this.config.get('expire') as Expire;
+  private stats(investor: InvestorId): Promise<boolean> {
     return this.recent(
       investor.UserName + ".stats",
-      expire.stats,
-      () => this.fetch.stats(investor)
+      this.expire.stats,
+      () => this.fetcher.stats(investor)
     );
   }
 
-  private async loadInvestor(investor: InvestorId): Promise<boolean[]> {
-    const expire = await this.config.get('expire') as Expire;
+  private loadInvestor(investor: InvestorId, expire: number = this.expire.portfolio): Promise<boolean[]> {
     return Promise.all([
       this.chart(investor),
-      this.portfolio(investor, expire.portfolio),
+      this.portfolio(investor, expire),
       this.stats(investor),
     ]);
   }
 
   private async mirrors(): Promise<InvestorId[]> {
-    const expire = await this.config.get('expire') as Expire;
-    const thisInvestor = await this.config.get('investor') as InvestorId;
-    console.log('Loaded investor: ', thisInvestor);
-    if (! thisInvestor || ! thisInvestor.UserName || ! thisInvestor.CustomerId )
-      throw new Error(`Invalid investor: ${thisInvestor}`);
-    await this.chart(thisInvestor);
-    await this.stats(thisInvestor);
-    if (await this.portfolio(thisInvestor, expire.mirror)) {
-      const data = await this.repo.retrieve(thisInvestor.UserName + '.portfolio') as PortfolioData;
-      const portfolio: Portfolio = new Portfolio(data);
-      const investors: InvestorId[] = portfolio.investors();
-      return investors;
-    } else {
-      return [];
-    }
+    await this.loadInvestor(this.investor, this.expire.mirror);
+    const data = await this.repo.retrieve(this.investor.UserName + '.portfolio') as PortfolioData;
+    const portfolio: Portfolio = new Portfolio(data);
+    return portfolio.investors();
   }
 
   public async run(max?: number): Promise<number> {

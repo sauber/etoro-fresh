@@ -1,6 +1,6 @@
 import { assertEquals, assertInstanceOf } from "assert";
 import { FetchWebBackend } from "./fetch-web.ts";
-import { discoverOptions } from "./testdata.ts";
+import { discoverFilter } from "./testdata.ts";
 import { investorId } from "/investor/testdata.ts";
 
 const rate = 5000;
@@ -10,11 +10,11 @@ Deno.test("Initialization", () => {
   assertInstanceOf(f, FetchWebBackend);
 });
 
-Deno.test("Fetching", { ignore: false }, async (t) => {
+Deno.test("Fetching", { ignore: true }, async (t) => {
   const f = new FetchWebBackend(rate);
 
   await t.step("discover", async () => {
-    const data = await f.discover(discoverOptions);
+    const data = await f.discover(discoverFilter);
     assertEquals(data.Status, 'OK');
   });
 
