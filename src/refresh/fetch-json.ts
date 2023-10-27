@@ -1,7 +1,7 @@
 import { JSONObject } from "/repository/mod.ts";
 
 export function fetchjson (url: string): Promise<JSONObject> {
-    console.log("Fetch", url);
+    console.log(url);
 
     return fetch(url, {
       headers: {
