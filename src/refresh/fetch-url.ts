@@ -1,31 +1,15 @@
 import { sprintf } from "printf";
 import type { InvestorId } from "/investor/mod.ts";
-import { Config, JSONValue } from "/repository/mod.ts";
-
-export type DiscoverFilter = {
-  risk: number;
-  daily: number;
-  weekly: number;
-}
+import type { DiscoverFilter } from "./mod.ts";
 
 type URL = string;
 
 /** Disk base storage for repository */
 export class FetchURL {
-  private static defaults: Record<string, JSONValue> = {
-    discover_filter: { risk: 4, daily: 6, weekly: 11 } as DiscoverFilter,
-  };
-
-  private site = "https://www.etoro.com";
+  private readonly site = "https://www.etoro.com";
   private readonly uuid = crypto.randomUUID();
-  readonly config: Config;
 
-  constructor(config: Config) {
-    this.config = config.withDefaults(FetchURL.defaults);
-  }
-
-  public async discover(): Promise<URL> {
-    const filter = await this.config.get('discover_filter') as DiscoverFilter;
+  public discover(filter: DiscoverFilter): URL {
     const urlTemplate = "/sapi/rankings/rankings?client_request_id=%s&%s";
     const filter_template = `blocked=false&bonusonly=false&copyblock=false&istestaccount=false&optin=true&page=1&period=OneYearAgo&verified=true&isfund=false&copiersmin=1&dailyddmin=-%d&gainmin=11&gainmax=350&maxmonthlyriskscoremax=%d&maxmonthlyriskscoremin=2&pagesize=70&profitablemonthspctmin=60&sort=-weeklydd&weeklyddmin=-%d&activeweeksmin=12&lastactivitymax=14`;
     const options: string = sprintf(
