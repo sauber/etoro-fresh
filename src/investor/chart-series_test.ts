@@ -58,7 +58,7 @@ Deno.test("Invalid range", () => {
 
   // After range
   assertThrows(
-    () => chart.value(nextDate(dates[dates.length-1], 1)),
+    () => chart.value(nextDate(dates[dates.length - 1], 1)),
     Error,
     "Date not in range: 2023-10-30 < 2023-11-03 < 2023-11-02"
   );

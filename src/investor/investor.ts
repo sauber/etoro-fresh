@@ -1,5 +1,11 @@
 import { Asset } from "/repository/mod.ts";
-import type { ChartData, PortfolioData, StatsData, InvestorExport, InvestorId } from "./mod.ts";
+import type {
+  ChartData,
+  PortfolioData,
+  StatsData,
+  InvestorExport,
+  InvestorId,
+} from "./mod.ts";
 import { ChartSeries } from "./chart-series.ts";
 import { Chart } from "./chart.ts";
 import { Stats, StatsExport } from "./stats.ts";
@@ -43,21 +49,22 @@ export class Investor {
   public async stats(): Promise<StatsExport> {
     const raw = await this.statsSeries.last();
     const stats = new Stats(raw);
-    return stats.export()    
+    return stats.export();
   }
 
   /** Latest mirrors */
   public async mirrors(): Promise<InvestorId[]> {
     const raw = await this.portfolioSeries.last();
     const portfolio = new Portfolio(raw);
-    return portfolio.investors();    
+    return portfolio.investors();
   }
 
   public async export(): Promise<InvestorExport> {
+    const chart = await this.chart();
     return {
-      chart: await this.chart(),
+      chart: [chart.dates(), chart.values],
       mirrors: await this.mirrors(),
       stats: await this.stats(),
-    }
+    };
   }
 }

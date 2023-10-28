@@ -2,7 +2,8 @@ export * from "./community.ts";
 export * from "./chart.ts";
 export * from "./portfolio.ts";
 export * from "./stats.ts";
-import { ChartSeries } from "./chart-series.ts";
+export * from "./investor.ts";
+import { DateFormat } from "/utils/time/mod.ts";
 import type { StatsExport } from "./stats.ts";
 
 export type InvestorId = {
@@ -11,7 +12,7 @@ export type InvestorId = {
 }
 
 export type InvestorExport = {
-  chart: ChartSeries;
+  chart: [DateFormat[], number[]];
   mirrors: InvestorId[];
   stats: StatsExport;
 }
