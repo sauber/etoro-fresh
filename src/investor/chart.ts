@@ -21,7 +21,6 @@ export type ChartData = {
   };
 };
 
-
 export class Chart {
   constructor(private readonly raw: ChartData) {}
 

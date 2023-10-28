@@ -1,1 +1,189 @@
-{"CreditByRealizedEquity":0.013650635974816320,"CreditByUnrealizedEquity":0.013568566913597314,"AggregatedPositions":[],"AggregatedMirrors":[{"MirrorID":8710716,"ParentCID":18653256,"ParentUsername":"MilanIvann","Invested":5.00702109332,"NetProfit":0.099100,"Value":4.981800,"PendingForClosure":false},{"MirrorID":8710734,"ParentCID":12752985,"ParentUsername":"Moushin_Gani","Invested":5.00702109332,"NetProfit":0.314800,"Value":4.992500,"PendingForClosure":false},{"MirrorID":8710744,"ParentCID":7291399,"ParentUsername":"Gknedler","Invested":5.00702109332,"NetProfit":0.978300,"Value":5.025600,"PendingForClosure":false},{"MirrorID":8710745,"ParentCID":17536782,"ParentUsername":"yacineMoulay","Invested":5.00702109332,"NetProfit":-0.834200,"Value":4.935300,"PendingForClosure":false},{"MirrorID":8710802,"ParentCID":28137666,"ParentUsername":"MoricPortfolio","Invested":5.00702109332,"NetProfit":1.899100,"Value":5.071400,"PendingForClosure":false},{"MirrorID":8710806,"ParentCID":29012865,"ParentUsername":"SCoudreau","Invested":5.00702109332,"NetProfit":-0.079800,"Value":4.972900,"PendingForClosure":false},{"MirrorID":8710809,"ParentCID":11585635,"ParentUsername":"adrian93_93","Invested":5.00702109332,"NetProfit":0.061400,"Value":4.979900,"PendingForClosure":false},{"MirrorID":8710811,"ParentCID":27614024,"ParentUsername":"KayZerfass","Invested":5.00702109332,"NetProfit":1.406700,"Value":5.046900,"PendingForClosure":false},{"MirrorID":8710813,"ParentCID":24967712,"ParentUsername":"DiegoHarlock81","Invested":5.00702109332,"NetProfit":-0.402100,"Value":4.956900,"PendingForClosure":false},{"MirrorID":8710816,"ParentCID":14438919,"ParentUsername":"KellyLuo","Invested":5.00702109332,"NetProfit":-0.082300,"Value":4.972800,"PendingForClosure":false},{"MirrorID":8710825,"ParentCID":8054616,"ParentUsername":"Krampus768","Invested":5.00702109332,"NetProfit":-1.166900,"Value":4.918800,"PendingForClosure":false},{"MirrorID":8710827,"ParentCID":13124111,"ParentUsername":"chlomayu","Invested":5.00702109332,"NetProfit":1.465000,"Value":5.049800,"PendingForClosure":false},{"MirrorID":8710828,"ParentCID":17793779,"ParentUsername":"joseto4062","Invested":5.00702109332,"NetProfit":1.395700,"Value":5.046300,"PendingForClosure":false},{"MirrorID":8710829,"ParentCID":9141101,"ParentUsername":"seldomseenkd","Invested":5.00702109332,"NetProfit":1.311600,"Value":5.042100,"PendingForClosure":false},{"MirrorID":8710833,"ParentCID":13291514,"ParentUsername":"YoussefGabsi","Invested":5.00702109332,"NetProfit":-0.005400,"Value":4.976600,"PendingForClosure":false},{"MirrorID":8710834,"ParentCID":13818705,"ParentUsername":"Ralfknipping","Invested":5.00702109332,"NetProfit":0.251400,"Value":4.989400,"PendingForClosure":false},{"MirrorID":8710844,"ParentCID":16005979,"ParentUsername":"basis100180","Invested":5.00702109332,"NetProfit":1.053400,"Value":5.029300,"PendingForClosure":false},{"MirrorID":8710845,"ParentCID":22756709,"ParentUsername":"Thomitch","Invested":5.00702109332,"NetProfit":-0.384100,"Value":4.957800,"PendingForClosure":false},{"MirrorID":8710847,"ParentCID":9509269,"ParentUsername":"tintinmelo75","Invested":5.00702109332,"NetProfit":0.963500,"Value":5.024800,"PendingForClosure":false},{"MirrorID":8710869,"ParentCID":10132211,"ParentUsername":"AndrewJW","Invested":5.00702109332,"NetProfit":0.799200,"Value":5.016600,"PendingForClosure":false}],"AggregatedPositionsByInstrumentTypeID":[],"AggregatedPositionsByStockIndustryID":[]}
+{
+  "CreditByRealizedEquity": 0.01365063597481632,
+  "CreditByUnrealizedEquity": 0.013568566913597314,
+  "AggregatedPositions": [],
+  "AggregatedMirrors": [
+    {
+      "MirrorID": 8710716,
+      "ParentCID": 18653256,
+      "ParentUsername": "MilanIvann",
+      "Invested": 5.00702109332,
+      "NetProfit": 0.0991,
+      "Value": 4.9818,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710734,
+      "ParentCID": 12752985,
+      "ParentUsername": "Moushin_Gani",
+      "Invested": 5.00702109332,
+      "NetProfit": 0.3148,
+      "Value": 4.9925,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710744,
+      "ParentCID": 7291399,
+      "ParentUsername": "Gknedler",
+      "Invested": 5.00702109332,
+      "NetProfit": 0.9783,
+      "Value": 5.0256,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710745,
+      "ParentCID": 17536782,
+      "ParentUsername": "yacineMoulay",
+      "Invested": 5.00702109332,
+      "NetProfit": -0.8342,
+      "Value": 4.9353,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710802,
+      "ParentCID": 28137666,
+      "ParentUsername": "MoricPortfolio",
+      "Invested": 5.00702109332,
+      "NetProfit": 1.8991,
+      "Value": 5.0714,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710806,
+      "ParentCID": 29012865,
+      "ParentUsername": "SCoudreau",
+      "Invested": 5.00702109332,
+      "NetProfit": -0.0798,
+      "Value": 4.9729,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710809,
+      "ParentCID": 11585635,
+      "ParentUsername": "adrian93_93",
+      "Invested": 5.00702109332,
+      "NetProfit": 0.0614,
+      "Value": 4.9799,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710811,
+      "ParentCID": 27614024,
+      "ParentUsername": "KayZerfass",
+      "Invested": 5.00702109332,
+      "NetProfit": 1.4067,
+      "Value": 5.0469,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710813,
+      "ParentCID": 24967712,
+      "ParentUsername": "DiegoHarlock81",
+      "Invested": 5.00702109332,
+      "NetProfit": -0.4021,
+      "Value": 4.9569,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710816,
+      "ParentCID": 14438919,
+      "ParentUsername": "KellyLuo",
+      "Invested": 5.00702109332,
+      "NetProfit": -0.0823,
+      "Value": 4.9728,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710825,
+      "ParentCID": 8054616,
+      "ParentUsername": "Krampus768",
+      "Invested": 5.00702109332,
+      "NetProfit": -1.1669,
+      "Value": 4.9188,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710827,
+      "ParentCID": 13124111,
+      "ParentUsername": "chlomayu",
+      "Invested": 5.00702109332,
+      "NetProfit": 1.465,
+      "Value": 5.0498,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710828,
+      "ParentCID": 17793779,
+      "ParentUsername": "joseto4062",
+      "Invested": 5.00702109332,
+      "NetProfit": 1.3957,
+      "Value": 5.0463,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710829,
+      "ParentCID": 9141101,
+      "ParentUsername": "seldomseenkd",
+      "Invested": 5.00702109332,
+      "NetProfit": 1.3116,
+      "Value": 5.0421,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710833,
+      "ParentCID": 13291514,
+      "ParentUsername": "YoussefGabsi",
+      "Invested": 5.00702109332,
+      "NetProfit": -0.0054,
+      "Value": 4.9766,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710834,
+      "ParentCID": 13818705,
+      "ParentUsername": "Ralfknipping",
+      "Invested": 5.00702109332,
+      "NetProfit": 0.2514,
+      "Value": 4.9894,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710844,
+      "ParentCID": 16005979,
+      "ParentUsername": "basis100180",
+      "Invested": 5.00702109332,
+      "NetProfit": 1.0534,
+      "Value": 5.0293,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710845,
+      "ParentCID": 22756709,
+      "ParentUsername": "Thomitch",
+      "Invested": 5.00702109332,
+      "NetProfit": -0.3841,
+      "Value": 4.9578,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710847,
+      "ParentCID": 9509269,
+      "ParentUsername": "tintinmelo75",
+      "Invested": 5.00702109332,
+      "NetProfit": 0.9635,
+      "Value": 5.0248,
+      "PendingForClosure": false
+    },
+    {
+      "MirrorID": 8710869,
+      "ParentCID": 10132211,
+      "ParentUsername": "AndrewJW",
+      "Invested": 5.00702109332,
+      "NetProfit": 0.7992,
+      "Value": 5.0166,
+      "PendingForClosure": false
+    }
+  ],
+  "AggregatedPositionsByInstrumentTypeID": [],
+  "AggregatedPositionsByStockIndustryID": []
+}

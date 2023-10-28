@@ -6,6 +6,7 @@ import { StatsData } from "./stats.ts";
 import { repoBackend } from "/repository/testdata.ts";
 import { Asset } from "/repository/mod.ts";
 import { ChartSeries } from "./chart-series.ts";
+import { InvestorExport } from "./mod.ts";
 
 const charts = repoBackend.asset("FundManagerZech.chart") as Asset<ChartData>;
 const portfolios = repoBackend.asset("FundManagerZech.portfolio") as Asset<PortfolioData>;
@@ -18,7 +19,14 @@ Deno.test("Blank Initialization", () => {
 
 Deno.test("Chart Series", async () => {
   const investor: Investor = new Investor(charts, portfolios, stats);
-  const series: ChartSeries = await investor.chartAssembly();
+  const series: ChartSeries = await investor.chart();
   assertEquals(series.start(),  "2020-12-01");
   assertEquals(series.values.length,  511);
+});
+
+Deno.test("Investor Export", async () => {
+  const investor: Investor = new Investor(charts, portfolios, stats);
+  const dump: InvestorExport = await investor.export();
+  console.log(dump);
+  assertInstanceOf(dump.chart, Object);
 });

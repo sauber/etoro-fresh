@@ -66,4 +66,12 @@ export class ChartSeries implements DateSeries<number> {
     const prepend: number[] = sooner.values.slice(0, days).map(value => value*scale);
     return new ChartSeries([...prepend, ...later.values], sooner.start());
   }
+
+  /** Keep entries until and including date */
+  public until(date: DateFormat): ChartSeries {
+    const count = diffDate(this.firstDate, date);
+    const trimmed = this.values.slice(0, count+1);
+    return new ChartSeries(trimmed, this.firstDate);
+  }
+
 }

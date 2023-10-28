@@ -1,15 +1,10 @@
-/*
-import { Repo } from "./repo.ts";
-import { Portfolio } from "./portfolio.ts";
-import { Stats } from "./stats.ts";
-import { Chart } from "./chart.ts";
-*/
-
 import { Asset } from "/repository/mod.ts";
-import { ChartData, PortfolioData, StatsData } from "./mod.ts";
+import type { ChartData, PortfolioData, StatsData, InvestorExport, InvestorId } from "./mod.ts";
 import { ChartSeries } from "./chart-series.ts";
 import { Chart } from "./chart.ts";
-import { DateFormat } from "/utils/time/mod.ts";
+import { Stats, StatsExport } from "./stats.ts";
+import type { DateFormat } from "/utils/time/mod.ts";
+import { Portfolio } from "./portfolio.ts";
 
 export class Investor {
   constructor(
@@ -17,17 +12,6 @@ export class Investor {
     private readonly portfolioSeries: Asset<PortfolioData>,
     private readonly statsSeries: Asset<StatsData>
   ) {}
-  /*
-  readonly portfolio: Portfolio;
-  readonly stats: Stats;
-  readonly chart: Chart;
-
-  constructor(private readonly repo: Repo, readonly username: string, readonly cid: number) {
-    this.portfolio = new Portfolio(repo, username, cid);
-    this.stats = new Stats(repo, username, cid);
-    this.chart = new Chart(repo, username, cid);
-  }
- */
 
   /** Load chart and extract series */
   private async series(date: DateFormat): Promise<ChartSeries> {
@@ -37,12 +21,14 @@ export class Investor {
     return series;
   }
 
-  public async chartAssembly(): Promise<ChartSeries> {
+  /** Combination of as few charts as possible from start to end */
+  public async chart(): Promise<ChartSeries> {
     const dates = await this.chartSeries.dates();
-    let series: ChartSeries = await this.series(dates[dates.length-1]);
+    let series: ChartSeries = await this.series(dates[dates.length - 1]);
     let start: DateFormat = series.start();
 
     // Prepend older charts
+    // Search backwards for the chart oldest chart with overlap
     for (let i = dates.length - 2; i >= 0; i--) {
       const date = dates[i];
       if (i == 0 || (start && date >= start && dates[i - 1] < start)) {
@@ -51,5 +37,27 @@ export class Investor {
       }
     }
     return series;
+  }
+
+  /** Essentials latest stats */
+  public async stats(): Promise<StatsExport> {
+    const raw = await this.statsSeries.last();
+    const stats = new Stats(raw);
+    return stats.export()    
+  }
+
+  /** Latest mirrors */
+  public async mirrors(): Promise<InvestorId[]> {
+    const raw = await this.portfolioSeries.last();
+    const portfolio = new Portfolio(raw);
+    return portfolio.investors();    
+  }
+
+  public async export(): Promise<InvestorExport> {
+    return {
+      chart: await this.chart(),
+      mirrors: await this.mirrors(),
+      stats: await this.stats(),
+    }
   }
 }
