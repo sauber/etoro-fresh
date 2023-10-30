@@ -1,4 +1,4 @@
-import InvestorList from "../islands/investor/List.tsx";
+import InvestorList from "../islands/investor/InvestorList.tsx";
 
 export default function Home() {
   const date = new Date();
@@ -10,7 +10,7 @@ export default function Home() {
         Welcome to `🥤 Fresh Blogs 🍋`!
       </h1>
       <p class="my-6">Fresh ideas everyday</p>
-      <InvestorList target={date.toISOString()} />
+      <InvestorList/>
     </div>
   );
 }
