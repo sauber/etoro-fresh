@@ -15,12 +15,12 @@ export default function InvestorList() {
       },
     };
 
-    console.log("Start fetching names");
+    //console.log("Start fetching names");
     const response = await fetch(url, fetchOptions);
     if (response.ok) {
-      console.log("Parsing result");
+      //console.log("Parsing result");
       const data = await response.json();
-      console.log("data loaded: ", data);
+      //console.log("data loaded: ", data);
       return data;
       //names.value = data;
     } else {
