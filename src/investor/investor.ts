@@ -16,7 +16,7 @@ export class Investor {
   constructor(
     private readonly chartSeries: Asset<ChartData>,
     private readonly portfolioSeries: Asset<PortfolioData>,
-    private readonly statsSeries: Asset<StatsData>
+    public readonly statsSeries: Asset<StatsData>
   ) {}
 
   /** Load chart and extract series */
