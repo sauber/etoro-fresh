@@ -20,9 +20,10 @@ import * as $14 from "./routes/posts/new.tsx";
 import * as $$0 from "./islands/Counter.tsx";
 import * as $$1 from "./islands/LoginForm.tsx";
 import * as $$2 from "./islands/PostItem.tsx";
-import * as $$3 from "./islands/investor/InvestorItem.tsx";
-import * as $$4 from "./islands/investor/InvestorList.tsx";
-import * as $$5 from "./islands/investor/List.tsx";
+import * as $$3 from "./islands/investor/InvestorAvatar.tsx";
+import * as $$4 from "./islands/investor/InvestorItem.tsx";
+import * as $$5 from "./islands/investor/InvestorList.tsx";
+import * as $$6 from "./islands/investor/List.tsx";
 
 const manifest = {
   routes: {
@@ -46,9 +47,10 @@ const manifest = {
     "./islands/Counter.tsx": $$0,
     "./islands/LoginForm.tsx": $$1,
     "./islands/PostItem.tsx": $$2,
-    "./islands/investor/InvestorItem.tsx": $$3,
-    "./islands/investor/InvestorList.tsx": $$4,
-    "./islands/investor/List.tsx": $$5,
+    "./islands/investor/InvestorAvatar.tsx": $$3,
+    "./islands/investor/InvestorItem.tsx": $$4,
+    "./islands/investor/InvestorList.tsx": $$5,
+    "./islands/investor/List.tsx": $$6,
   },
   baseUrl: import.meta.url,
 };

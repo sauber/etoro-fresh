@@ -10,12 +10,12 @@ Deno.test("Initialization", () => {
   assertInstanceOf(f, FetchWebBackend);
 });
 
-Deno.test("Fetching", { ignore: true }, async (t) => {
+Deno.test.ignore("Fetching", async (t) => {
   const f = new FetchWebBackend(rate);
 
   await t.step("discover", async () => {
     const data = await f.discover(discoverFilter);
-    assertEquals(data.Status, 'OK');
+    assertEquals(data.Status, "OK");
   });
 
   await t.step("chart", async () => {

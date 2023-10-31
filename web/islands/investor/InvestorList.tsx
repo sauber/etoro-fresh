@@ -40,7 +40,7 @@ export default function InvestorList() {
 
   return (
     <div>
-      <h2>List of investors</h2>
+      <h2>List of investors: {investorNames.length}</h2>
       <ul>
         {investorNames.map((name: string) => <li><ListItem UserName={name} /></li>)}
       </ul>

@@ -1,16 +1,15 @@
 import { useSignal } from "@preact/signals";
 import { useEffect } from "preact/hooks";
 import type { InvestorExport } from "../../../src/investor/mod.ts";
+import InvestorAvatar from "./InvestorAvatar.tsx";
 
 interface Props {
   UserName: string;
 }
 
 export default function InvestorItem({ UserName }: Props) {
-  const CustomerId = useSignal(-1);
-  const imageUrl = useSignal(new URL("http://www.pngall.com/wp-content/uploads/2/Friend-PNG-Image-HD-180x180.png"));
-  const PopularInvestor = useSignal(false);
-  const Gain = useSignal(-1);
+  const CustomerId = useSignal<null | number>(null);
+  const InvestorData = useSignal<InvestorExport | null>(null);
 
   const loadInvestor = async () => {
     const url = `/api/investor/${UserName}/last`;
@@ -30,46 +29,26 @@ export default function InvestorItem({ UserName }: Props) {
     }
   };
 
-  // Confirm if an image is loading
-  const testUrl = async (url: URL) => {
-    const response = await fetch(url, { method: "HEAD" });
-    return response.ok ? true : false;
-  };
-
-  // Which image is available
-  const findImage = async (id: number): Promise<URL | undefined> => {
-    for (const index of [7, 6, 5, 4, 3, 2, 1]) {
-      const sub = new URL(
-        `https://etoro-cdn.etorostatic.com/avatars/150X150/${id}/${index}.jpg`,
-      );
-      if (await testUrl(sub)) return sub;
-    }
-    const base = new URL(
-      `https://etoro-cdn.etorostatic.com/avatars/150X150/${id}.jpg`,
-    );
-    if (await testUrl(base)) return base;
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       const data = await loadInvestor();
       const id = data.stats.CustomerId as number;
       CustomerId.value = id;
-      Gain.value = data.stats.Gain as number;
-      PopularInvestor.value = data.stats.PopularInvestor as boolean;
-      if (data.stats.HasAvatar) {
-        const url: URL = await findImage(id);
-        if (url) imageUrl.value = url;
-      }
+      InvestorData.value = data as InvestorExport;
     };
     fetchData();
   }, []);
 
-  return (
-    <div class="h-8">
-      <img class="h-full inline" src={`${imageUrl}`} content=" " />
-      {UserName}, CustomerID: {CustomerId}, Gain: {Gain}, Popular:{" "}
-      {PopularInvestor.value ? "true" : "false"}
-    </div>
-  );
+  if (InvestorData.value == null) return <div>Loading {UserName}...</div>;
+  else {return (
+      <div class="h-8">
+        {InvestorData.value.stats.HasAvatar
+          ? <InvestorAvatar CustomerId={CustomerId} />
+          : ""}
+
+        {UserName}, CustomerID: {CustomerId}, Gain:
+        {InvestorData.value.stats.Gain}, Avatar:
+        {InvestorData.value.stats.HasAvatar ? "true" : "false"}
+      </div>
+    );}
 }
