@@ -43,9 +43,6 @@ class FeatureLoader {
     const date: DateFormat = await this.start();
     const full: ChartSeries = await this.fullChart();
     const slice: ChartSeries = full.from(date);
-    //const fend: DateFormat = full.end();
-    //const send: DateFormat = slice.end();
-    //console.log({full, date, fend, send, slice});
     return slice;
   }
 }
@@ -88,11 +85,8 @@ export class Ranking {
   /** Features object for named investor */
   private async features(username: string): Promise<Features> {
     const loader = new FeatureLoader(this.community.investor(username));
-    //console.log({loader});
     const chart: ChartSeries = await loader.chart();
-    //console.log({chart});
     const stats: StatsData = await loader.stats();
-    //console.log({stats});
     return new Features(chart, stats);
   }
 
@@ -100,11 +94,7 @@ export class Ranking {
     const result = new Table();
     const names = await this.names();
     for (const username of names) {
-      //console.log({username});
       const features = await this.features(username);
-      //console.log({features});
-      const all = features.all;
-      //console.log({username, all});
       if (features.days < 2) continue;
       result.addRow(username, features.all);
     }

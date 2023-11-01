@@ -10,11 +10,9 @@ Deno.test("Initialization", () => {
 
 Deno.test("Features", async (t) => {
   const rank = new Ranking(community);
-  
+
   await t.step("data", async () => {
     const features: Table = await rank.data();
-    //console.log(features);
-    features.print('features');
+    features.print("features");
   });
-  
 });
