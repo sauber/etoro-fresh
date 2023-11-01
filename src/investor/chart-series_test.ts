@@ -68,6 +68,7 @@ Deno.test("Combine series", () => {
   const sooner = new ChartSeries([10, 20], "2023-10-31");
   const later = new ChartSeries([10, 20], "2023-11-01");
   const combined = later.combine(sooner);
+  assertEquals(combined.values.length, 3);
   //console.log(combined);
 });
 
@@ -81,6 +82,18 @@ Deno.test("Combine non-overlapping series", () => {
     Error,
     "Chart Series do not overlap: 2023-10-31:2023-11-01 < 2023-11-31:2023-12-02"
   );
+});
+
+Deno.test("From date", () => {
+  const start = "2023-10-31";
+  const cut = "2023-11-01";
+  const end = "2023-11-02";
+  const chart = new ChartSeries([10, 20, 30], start);
+  const from = chart.from(cut);
+  assertEquals(from.first(), 20);
+  assertEquals(from.last(), 30);
+  assertEquals(from.start(), cut);
+  assertEquals(from.end(), end);
 });
 
 Deno.test("Until date", () => {

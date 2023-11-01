@@ -69,7 +69,19 @@ export class ChartSeries implements DateSeries<number> {
     return new ChartSeries([...prepend, ...later.values], sooner.start());
   }
 
-  /** Keep entries until and including date */
+  /** Sub chart with entries starting on date */
+  public from(date: DateFormat): ChartSeries {
+    const offset = diffDate(this.firstDate, date);
+    //const count = this.values.length - offset;
+    //const first: DateFormat = this.firstDate;
+    const end: number = this.values.length;
+    //console.log({first, length, date, offset, count});
+    const trimmed = this.values.slice(offset, end);
+    //console.log({trimmed});
+    return new ChartSeries(trimmed, date);
+  }
+
+  /** Sub chart with entries until and including date */
   public until(date: DateFormat): ChartSeries {
     const count = diffDate(this.firstDate, date);
     const trimmed = this.values.slice(0, count + 1);

@@ -23,6 +23,7 @@
     "twind": "https://esm.sh/twind@0.16.19",
     "twind/": "https://esm.sh/twind@0.16.19/",
     "$std/": "https://deno.land/std@0.193.0/",
+    "ascii_table": "https://deno.land/x/ascii_table@v0.1.0/mod.ts",
     "dotenv": "https://deno.land/std@0.201.0/dotenv/mod.ts",
     "assert": "https://deno.land/std@0.200.0/assert/mod.ts",
     "difference": "https://deno.land/std@0.200.0/datetime/difference.ts",
