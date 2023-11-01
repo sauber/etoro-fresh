@@ -16,4 +16,14 @@ Deno.test("Names", async (t) => {
     console.log(names);
     //assertInstanceOf(names, string[]);
   });
+  
+  await t.step("Gains", async () => {
+    const names: Names = await rank.names();;
+    //console.log(names);
+    //assertInstanceOf(names, string[]);
+    for ( const name of names) {
+      const gain = await rank.gain(name);
+      console.log({name, gain});
+    }
+  });
 });

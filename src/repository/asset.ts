@@ -3,7 +3,10 @@ import { RepoBackend } from "./mod.ts";
 
 /** A named asset in repo on all the dates it is available */
 export class Asset<AssetType> implements DateSeriesAsync<AssetType> {
-  constructor(private readonly repo: RepoBackend, private readonly assetname: string) {}
+  constructor(
+    private readonly repo: RepoBackend,
+    private readonly assetname: string,
+  ) {}
 
   private async load(date: DateFormat): Promise<AssetType> {
     return (await this.repo.retrieve(this.assetname, date)) as AssetType;
@@ -32,18 +35,53 @@ export class Asset<AssetType> implements DateSeriesAsync<AssetType> {
   }
 
   /** Search for asset no later than date */
-  public async value(date: DateFormat): Promise<AssetType> {
-    // After range
-    if ( date >= await this.end() ) return this.last();
-
-    // In range
+  public async before(date: DateFormat): Promise<DateFormat> {
+    // Available dates
     const dates: DateFormat[] = await this.dates();
-    for ( const available of dates.reverse() ) {
-      if ( available <= date ) return this.load(available);
+    const start: DateFormat = dates[0];
+    const end: DateFormat = dates[dates.length - 1];
+
+    // Outside range
+    if (date >= end) return end;
+    if (date < start) {
+      throw new Error(
+        `´Searching for asset before ${date} but first date is ${start}`,
+      );
     }
 
-    // Before range (dummy code never called, to satisfy return type)
-    return this.first();
+    // In range
+    for (const available of dates.reverse()) {
+      if (available <= date) return available;
+    }
+
+    throw new Error('This code should never be reached');
   }
 
+  /** Search for asset no sooner than date */
+  public async after(date: DateFormat): Promise<DateFormat> {
+    // Available dates
+    const dates: DateFormat[] = await this.dates();
+    const start: DateFormat = dates[0];
+    const end: DateFormat = dates[dates.length - 1];
+
+    // Outside range
+    if (date > end) {
+      throw new Error(
+        `´Searching for asset after ${date} but latest date is ${end}`,
+      );
+    }
+    if (date <= start) return start;
+
+    // In range
+    for (const available of dates) {
+      if (available >= date) return available;
+    }
+
+    throw new Error('This code should never be reached');
+  }
+
+  public async value(date: DateFormat): Promise<AssetType> {
+    const available: DateFormat = await this.before(date);
+    return this.load(available);
+  }
 }
