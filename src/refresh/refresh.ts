@@ -157,13 +157,20 @@ export class Refresh {
     return portfolio.investors();
   }
 
+
+
   public async run(max?: number): Promise<number> {
-    const investors = [...(await this.mirrors()), ...(await this.discover())];
-    const subset = max ? investors.slice(0, max) : investors;
+    function onlyUnique(value: InvestorId, index: number, self: InvestorId[]) { 
+      return index === self.findIndex((elem: InvestorId) => elem.UserName === value.UserName);
+    }
+
+    const investors: InvestorId[] = [...(await this.mirrors()), ...(await this.discover())];
+    const subset: InvestorId[] = max ? investors.slice(0, max) : investors;
+    const uniq: InvestorId[] = subset.filter(onlyUnique);
 
     // Run in parallel
     await Promise.all(
-      subset.map((investor: InvestorId) => this.loadInvestor(investor))
+      uniq.map((investor: InvestorId) => this.loadInvestor(investor))
     );
 
     return this.fetchCount;
