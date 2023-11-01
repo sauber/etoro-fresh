@@ -47,6 +47,6 @@ export default function InvestorItem({ CustomerId }: Props) {
   if (imageUrl.value != null ) {
     return <img class="h-full inline p-1" src={`${imageUrl}`} />;
   } else {
-    return <span>Image not found</span>;
+    return <span>...</span>;
   }
 }
