@@ -70,6 +70,7 @@ class Features {
     return {
       days: this.days,
       profit: this.profit,
+      sharpe: this.chart.sharpeRatio(0.05)
     };
   }
 }
