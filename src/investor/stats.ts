@@ -6,9 +6,21 @@ export type StatsExport = Record<
   string | number | boolean | Array<number>
 >;
 
+//export type StatsData = {
+//  Data: ...InvestorId;
+//};
+
 export type StatsData = {
-  Data: InvestorId;
-};
+  Data: {
+    CustomerId: number;
+    UserName: string;
+    Gain: number;
+    RiskScore: number;
+    Copiers: number;
+    WeeklyDD: number;
+    ActiveWeeks: number;
+  };
+}
 
 export class Stats {
   constructor(private readonly raw: StatsData) {}

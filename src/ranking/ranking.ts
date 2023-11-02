@@ -68,7 +68,14 @@ class Features {
 
   public get all(): Record<string, number> {
     return {
+      // inputs
+      gain: this.stats.Data.Gain/100,
+      risk: this.stats.Data.RiskScore,
+      copiers: this.stats.Data.Copiers,
+      weeklydd: this.stats.Data.WeeklyDD,
+      weeks: this.stats.Data.ActiveWeeks,
       days: this.days,
+      // outputs
       profit: this.profit,
       sharpe: this.chart.sharpeRatio(0.05),
     };

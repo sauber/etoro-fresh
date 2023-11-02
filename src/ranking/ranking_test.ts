@@ -13,6 +13,6 @@ Deno.test("Features", async (t) => {
 
   await t.step("data", async () => {
     const features: Table = await rank.data();
-    features.print("features");
+    features.print("features", "sharpe");
   });
 });
