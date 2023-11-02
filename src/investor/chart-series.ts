@@ -138,21 +138,21 @@ export class ChartSeries implements DateSeries<number> {
   public get win(): ChartSeries {
     const v = this.values;
     return new ChartSeries(
-      v.map((a, i) => i==0 ? 0 : a/v[i-1]-1 ).slice(1),
-      nextDate(this.firstDate, -1)
+      v.map((a, i) => i == 0 ? 0 : a / v[i - 1] - 1).slice(1),
+      nextDate(this.firstDate, -1),
     );
   }
 
   /** Sharpe Ratio, riskfree is annual riskfree return, for example 0.05 */
   public sharpeRatio(riskfree: number): number {
     // Daily benchmark and daily average profit
-    const profit = (this.last() / this.first() -1) / ( this.length -1 );
-    const benchmark = riskfree/365;
+    const profit = (this.last() / this.first() - 1) / (this.length - 1);
+    const benchmark = riskfree / 365;
 
     // std of incrementals
-    const incrementals = this.win.values.filter(x=>x>0);
+    const incrementals = this.win.values.filter((x) => x > 0);
     const volatility = new ChartSeries(incrementals, this.firstDate).std;
-   
+
     // Sharpe Ratio
     const sharpe = (profit - benchmark) / volatility;
     //console.log({profit, benchmark, volatility, sharpe});

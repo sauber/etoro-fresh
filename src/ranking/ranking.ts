@@ -51,7 +51,7 @@ class FeatureLoader {
 class Features {
   constructor(
     private readonly chart: ChartSeries,
-    private readonly stats: StatsData
+    private readonly stats: StatsData,
   ) {}
 
   /** Number of days between start and end */
@@ -70,7 +70,7 @@ class Features {
     return {
       days: this.days,
       profit: this.profit,
-      sharpe: this.chart.sharpeRatio(0.05)
+      sharpe: this.chart.sharpeRatio(0.05),
     };
   }
 }
