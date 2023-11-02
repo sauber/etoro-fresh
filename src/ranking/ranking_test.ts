@@ -12,7 +12,10 @@ Deno.test("Features", async (t) => {
   const rank = new Ranking(community);
 
   await t.step("data", async () => {
-    const features: Table = await rank.data();
-    features.print("features", "sharpe");
+    const [input, output] = await rank.data();
+    //input.print("Input");
+    console.log(JSON.stringify(input));
+    console.log(JSON.stringify(output));
+    
   });
 });

@@ -51,7 +51,7 @@ class FeatureLoader {
 class Features {
   constructor(
     private readonly chart: ChartSeries,
-    private readonly stats: StatsData,
+    private readonly stats: StatsData
   ) {}
 
   /** Number of days between start and end */
@@ -66,21 +66,48 @@ class Features {
     return apy;
   }
 
-  public get all(): Record<string, number> {
+  public get input(): Record<string, number> {
+    const d = this.stats.Data;
     return {
-      // inputs
-      gain: this.stats.Data.Gain/100,
-      risk: this.stats.Data.RiskScore,
-      copiers: this.stats.Data.Copiers,
-      weeklydd: this.stats.Data.WeeklyDD,
-      weeks: this.stats.Data.ActiveWeeks,
-      days: this.days,
-      // outputs
+      PopularInvestor: d.PopularInvestor ? 1 : 0,
+      Gain: d.Gain / 100,
+      RiskScore: d.RiskScore,
+      MaxDailyRiskScore: d.MaxDailyRiskScore,
+      MaxMonthlyRiskScore: d.MaxMonthlyRiskScore,
+      Copiers: d.Copiers,
+      CopiersGain: d.CopiersGain,
+      VirtualCopiers: d.VirtualCopiers,
+      AUMTier: d.AUMTier,
+      AUMTierV2: d.AUMTierV2,
+      Trades: d.Trades,
+      WinRatio: d.WinRatio / 100,
+      DailyDD: d.DailyDD / 100,
+      WeeklyDD: d.WeeklyDD / 100,
+      ProfitableWeeksPct: d.ProfitableWeeksPct / 100,
+      ProfitableMonthsPct: d.ProfitableMonthsPct / 100,
+      Velocity: d.Velocity,
+      Exposure: d.Exposure / 100,
+      AvgPosSize: d.AvgPosSize,
+      HighLeveragePct: d.HighLeveragePct / 100,
+      MediumLeveragePct: d.MediumLeveragePct / 100,
+      LowLeveragePct: d.LowLeveragePct / 100,
+      PeakToValley: d.PeakToValley / 100,
+      LongPosPct: d.LongPosPct / 100,
+      ActiveWeeks: d.ActiveWeeks,
+      ActiveWeeksPct: d.ActiveWeeksPct,
+      WeeksSinceRegistration: d.WeeksSinceRegistration,
+    };
+  }
+
+  public get output(): Record<string, number> {
+    return {
       profit: this.profit,
       sharpe: this.chart.sharpeRatio(0.05),
     };
   }
 }
+
+type Tensor2D = number[][];
 
 export class Ranking {
   constructor(private readonly community: Community) {}
@@ -98,14 +125,16 @@ export class Ranking {
     return new Features(chart, stats);
   }
 
-  public async data(): Promise<Table> {
-    const result = new Table();
+  public async data(): Promise<[Tensor2D, Tensor2D]> {
+    const input: Tensor2D = [];
+    const output: Tensor2D = [];
     const names = await this.names();
     for (const username of names) {
       const features = await this.features(username);
       if (features.days < 2) continue;
-      result.addRow(username, features.all);
+      input.push(Object.values(features.input));
+      output.push(Object.values(features.output));
     }
-    return result;
+    return [input, output];
   }
 }
