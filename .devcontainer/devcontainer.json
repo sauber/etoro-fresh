@@ -22,7 +22,8 @@
       "akil-s.tokyo-light",
       "denoland.vscode-deno",
       "sastan.twind-intellisense",
-      "esbenp.prettier-vscode"
+      "esbenp.prettier-vscode",
+      "ms-vscode.vscode-typescript-next"
     ],
     "vscode": {
       "settings": {
@@ -45,7 +46,5 @@
         "[css]": {
           "editor.defaultFormatter": "vscode.css-language-features"
         }
-      }
-    }
-  }
+	},
 }
