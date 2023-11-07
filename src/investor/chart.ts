@@ -3,14 +3,13 @@ import type { DateFormat } from "/utils/time/mod.ts";
 import { today, formatDate } from "/utils/time/mod.ts";
 import { ChartSeries } from "./chart-series.ts";
 
-
 type ChartEntry = {
-  "timestamp": string;
-  "credit": number;
-  "investment": number;
-  "pnL": number;
-  "equity": number;
-  "totalDividends": number;
+  timestamp: string;
+  credit: number;
+  investment: number;
+  pnL: number;
+  equity: number;
+  totalDividends: number;
 };
 
 export type ChartData = {
@@ -20,7 +19,6 @@ export type ChartData = {
     };
   };
 };
-
 
 export class Chart {
   constructor(private readonly raw: ChartData) {}
