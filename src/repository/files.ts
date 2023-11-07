@@ -40,9 +40,9 @@ async function dirs(path: string): Promise<string[]> {
 async function files(path: string): Promise<string[]> {
   const fileNames: string[] = [];
 
-  for await (const fileEntry of Deno.readDir(path))
+  for await (const fileEntry of Deno.readDir(path)) {
     if (fileEntry.isFile) fileNames.push(fileEntry.name);
-
+  }
   return fileNames.sort();
 }
 
@@ -61,8 +61,12 @@ export class Files {
   constructor(readonly path: string) {}
 
   /** Subdirectory */
+  private readonly _sub: Record<string, Files> = {};
   public sub(path: string): Files {
-    return new Files(join(this.path, path));
+    if ( ! ( path in this._sub )) {
+      this._sub[path] = new Files(join(this.path, path));
+    }
+    return this._sub[path];
   }
 
   /** Create directory */
@@ -76,13 +80,17 @@ export class Files {
   }
 
   /** List of all subdirectories */
-  public dirs(): Promise<string[]> {
-    return dirs(this.path);
+  private _dirs: null|string[] = null;
+  public async dirs(): Promise<string[]> {
+    if ( ! this._dirs ) this._dirs = await dirs(this.path);
+    return this._dirs;
   }
 
   /** List of all subdirectories */
-  public files(): Promise<string[]> {
-    return files(this.path);
+  private _files: null|string[] = null;
+  public async files(): Promise<string[]> {
+    if ( ! this._files ) this._files = await files(this.path);
+    return this._files;
   }
 
   /** Name of most recent directory */

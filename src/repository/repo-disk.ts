@@ -12,8 +12,11 @@ export class RepoDiskBackend extends RepoBackend {
   constructor(private readonly path: string) {super()}
 
   /** File object at repository root */
+  private _files: Files | null = null;
   protected files(): Promise<Files> {
-    return new Promise((resolve) => resolve(new Files(this.path)));
+    if ( ! this._files) this._files = new Files(this.path);
+    //return new Promise((resolve) => resolve(new Files(this.path)));
+    return Promise.resolve(this._files);
   }
 
   /** Not allow for persistent repository */
@@ -40,14 +43,18 @@ export class RepoDiskBackend extends RepoBackend {
     else return null;
   }
 
+  private _assets: Record<DateFormat, string[]> = {}
   public async assetsByDate(date: DateFormat): Promise<string[]> {
+    if ( ! ( date in this._assets )) {
     const fs: Files = (await this.files()).sub(date);
     const filenames: string[] = await fs.files();
     const assetnames: string[] = filenames
-      .filter((filename: string) => filename.match(/\.json$/))
-      .map((filename: string) => filename.replace(/\.json/, ""));
-    return assetnames;
+      .filter((filename: string) => filename.endsWith(".json"))
+      .map((filename: string) => filename.slice(0, filename.length-5));
+    this._assets[date] = assetnames;
   }
+  return this._assets[date];
+}
 
   public async datesByAsset(assetname: string): Promise<DateFormat[]> {
     const allDates: DateFormat[] = await this.dates();

@@ -45,7 +45,7 @@ export class Investor {
     return series;
   }
 
-  /** Essentials latest stats */
+  /** Extract essential latest stats */
   public async stats(): Promise<StatsExport> {
     const raw = await this.statsSeries.last();
     const stats = new Stats(raw);
@@ -59,6 +59,7 @@ export class Investor {
     return portfolio.investors();
   }
 
+  /** Combine data into one structure */
   public async export(): Promise<InvestorExport> {
     const chart = await this.chart();
     return {
@@ -66,5 +67,21 @@ export class Investor {
       mirrors: await this.mirrors(),
       stats: await this.stats(),
     };
+  }
+
+  /** Confirm if any charts exists, and stats within chart range */
+  public async isValid(): Promise<boolean> {
+    const dates: DateFormat[] = await this.chartSeries.dates();
+    if (dates.length < 1) return false;
+    const chart = await this.chart();
+    const chart_start: DateFormat = chart.start();
+    const chart_end: DateFormat = chart.end();
+    const stats = await this.statsSeries;
+    const stats_start: DateFormat = await stats.start();
+    const stats_end: DateFormat = await stats.end();
+    //console.log({chart_start, chart_end, stats_start, stats_end});
+    if (stats_end < chart_start) return false;
+    if (stats_start > chart_end) return false;
+    return true;
   }
 }

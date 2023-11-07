@@ -2,7 +2,6 @@ import { DateFormat } from "/utils/time/mod.ts";
 import { ChartSeries, Community, Investor } from "/investor/mod.ts";
 import type { Names, StatsData } from "/investor/mod.ts";
 import { Asset } from "/repository/mod.ts";
-import { Table } from "/utils/table.ts";
 
 /** Load all relevant data for investor */
 class FeatureLoader {
@@ -117,8 +116,14 @@ export class Ranking {
     return this.community.names();
   }
 
+  /** Generate investor object */
+  private investor(username: string): Investor {
+    return this.community.investor(username);
+  }
+
   /** Features object for named investor */
   private async features(username: string): Promise<Features> {
+    
     const loader = new FeatureLoader(this.community.investor(username));
     const chart: ChartSeries = await loader.chart();
     const stats: StatsData = await loader.stats();
@@ -129,11 +134,18 @@ export class Ranking {
     const input: Tensor2D = [];
     const output: Tensor2D = [];
     const names = await this.names();
+    //let count = 0;
     for (const username of names) {
+      //console.log(username);
+      if ( ! await this.investor(username).isValid() ) continue;
       const features = await this.features(username);
       if (features.days < 2) continue;
+      const o = Object.values(features.output);
+      if ( o.some( e => Number.isNaN(e) || e === 0 || e === Infinity || e === -Infinity)) continue;
+      //console.log('☑');
       input.push(Object.values(features.input));
-      output.push(Object.values(features.output));
+      output.push(o);
+      //if ( ++ count >= 100 ) break;
     }
     return [input, output];
   }

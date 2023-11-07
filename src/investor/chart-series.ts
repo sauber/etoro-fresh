@@ -52,9 +52,8 @@ export class ChartSeries implements DateSeries<number> {
 
     // Non overlap
     if (sooner.end() < later.start()) {
-      throw new Error(
-        `Chart Series do not overlap: ${sooner.start()}:${sooner.end()} < ${later.start()}:${later.end()}`,
-      );
+      return later;
+      //throw new Error(`Chart Series do not overlap: ${sooner.start()}:${sooner.end()} < ${later.start()}:${later.end()}`);
     }
 
     // 'later' fully overlaps 'sooner'

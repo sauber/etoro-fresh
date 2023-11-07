@@ -54,6 +54,7 @@ export class Asset<AssetType> implements DateSeriesAsync<AssetType> {
       if (available <= date) return available;
     }
 
+    console.log(this.assetname, {dates, start, end,  date});
     throw new Error('This code should never be reached');
   }
 
@@ -67,7 +68,7 @@ export class Asset<AssetType> implements DateSeriesAsync<AssetType> {
     // Outside range
     if (date > end) {
       throw new Error(
-        `´Searching for asset after ${date} but latest date is ${end}`,
+        `´Searching for ${this.assetname} after ${date} but latest date is ${end}`,
       );
     }
     if (date <= start) return start;
