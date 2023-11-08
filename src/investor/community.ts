@@ -1,5 +1,5 @@
 import { RepoBackend } from "/repository/mod.ts";
-import { DateFormat, today } from "/utils/time/mod.ts";
+import { DateFormat } from "/utils/time/mod.ts";
 import { Investor } from "./investor.ts";
 
 export type Names = Set<string>;
@@ -62,11 +62,15 @@ export class Community {
     else return this.allNames();
   }
 
+  private _loaded: Record<string, Investor> = {};
   public investor(username: string): Investor {
-    return new Investor(
-      this.repo.asset(username + ".chart"),
-      this.repo.asset(username + ".portfolio"),
-      this.repo.asset(username + ".stats"),
-    )
+    if (!(username in this._loaded)) {
+      this._loaded[username] = new Investor(
+        this.repo.asset(username + ".chart"),
+        this.repo.asset(username + ".portfolio"),
+        this.repo.asset(username + ".stats")
+      );
+    }
+    return this._loaded[username];
   }
 }
