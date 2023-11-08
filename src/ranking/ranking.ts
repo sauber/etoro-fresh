@@ -2,6 +2,7 @@ import { DateFormat } from "/utils/time/mod.ts";
 import { ChartSeries, Community, Investor } from "/investor/mod.ts";
 import type { Names, StatsData } from "/investor/mod.ts";
 import { Asset } from "/repository/mod.ts";
+import { ProgressBar } from "/utils/time/progressbar.ts";
 
 type FeatureData = Record<string, number>;
 
@@ -132,10 +133,16 @@ export class Ranking {
   }
 
   public async data(): Promise<FeatureData[]> {
+
     const list: FeatureData[] = [];
     const names = await this.names();
-    //let count = 0;
+    const bar = new ProgressBar('Loading', names.size);
+    let count = 0;
+    let keep = 0;
     for (const username of names) {
+      ++count;
+      bar.total = names.size - count + keep;
+      await bar.update(keep);
       //console.log(username);
       if (!(await this.investor(username).isValid())) continue;
       const features = await this.features(username);
@@ -151,8 +158,10 @@ export class Ranking {
         continue;
       //console.log('☑');
       list.push({ ...inp, ...out });
+      ++keep;
       //if ( ++ count >= 5 ) break;
     }
+    bar.finish();
 
     return list;
   }
