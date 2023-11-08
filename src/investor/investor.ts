@@ -28,7 +28,10 @@ export class Investor {
   }
 
   /** Combination of as few charts as possible from start to end */
+  private _chart: ChartSeries | null = null;
   public async chart(): Promise<ChartSeries> {
+    if (this._chart) return this._chart; // Caching
+
     const dates = await this.chartSeries.dates();
     let series: ChartSeries = await this.series(dates[dates.length - 1]);
     let start: DateFormat = series.start();
@@ -37,11 +40,13 @@ export class Investor {
     // Search backwards for the chart oldest chart with overlap
     for (let i = dates.length - 2; i >= 0; i--) {
       const date = dates[i];
-      if (i == 0 || (start && date >= start && dates[i - 1] < start)) {
-        series = series.combine(await this.series(date));
-        start = series.start();
-      }
+      if (date < start) break; // Too old to overlap
+      if (i > 0 && dates[i - 1] >= start) continue; // An even older exists and overlaps
+
+      series = series.combine(await this.series(date));
+      start = series.start();
     }
+    this._chart = series;
     return series;
   }
 
