@@ -3,6 +3,8 @@ import { ChartSeries, Community, Investor } from "/investor/mod.ts";
 import type { Names, StatsData } from "/investor/mod.ts";
 import { Asset } from "/repository/mod.ts";
 
+type FeatureData = Record<string, number>;
+
 /** Load all relevant data for investor */
 class FeatureLoader {
   /** List of all stats files */
@@ -65,11 +67,11 @@ class Features {
     return apy;
   }
 
-  public get input(): Record<string, number> {
+  public get input(): FeatureData {
     const d = this.stats.Data;
     return {
       PopularInvestor: d.PopularInvestor ? 1 : 0,
-      Gain: d.Gain / 100,
+      Gain: d.Gain,
       RiskScore: d.RiskScore,
       MaxDailyRiskScore: d.MaxDailyRiskScore,
       MaxMonthlyRiskScore: d.MaxMonthlyRiskScore,
@@ -79,34 +81,34 @@ class Features {
       AUMTier: d.AUMTier,
       AUMTierV2: d.AUMTierV2,
       Trades: d.Trades,
-      WinRatio: d.WinRatio / 100,
-      DailyDD: d.DailyDD / 100,
-      WeeklyDD: d.WeeklyDD / 100,
-      ProfitableWeeksPct: d.ProfitableWeeksPct / 100,
-      ProfitableMonthsPct: d.ProfitableMonthsPct / 100,
+      WinRatio: d.WinRatio,
+      DailyDD: d.DailyDD,
+      WeeklyDD: d.WeeklyDD,
+      ProfitableWeeksPct: d.ProfitableWeeksPct,
+      ProfitableMonthsPct: d.ProfitableMonthsPct,
       Velocity: d.Velocity,
-      Exposure: d.Exposure / 100,
+      Exposure: d.Exposure,
       AvgPosSize: d.AvgPosSize,
-      HighLeveragePct: d.HighLeveragePct / 100,
-      MediumLeveragePct: d.MediumLeveragePct / 100,
-      LowLeveragePct: d.LowLeveragePct / 100,
-      PeakToValley: d.PeakToValley / 100,
-      LongPosPct: d.LongPosPct / 100,
+      HighLeveragePct: d.HighLeveragePct,
+      MediumLeveragePct: d.MediumLeveragePct,
+      LowLeveragePct: d.LowLeveragePct,
+      PeakToValley: d.PeakToValley,
+      LongPosPct: d.LongPosPct,
       ActiveWeeks: d.ActiveWeeks,
       ActiveWeeksPct: d.ActiveWeeksPct,
       WeeksSinceRegistration: d.WeeksSinceRegistration,
     };
   }
 
-  public get output(): Record<string, number> {
+  public get output(): FeatureData {
     return {
-      profit: this.profit,
-      sharpe: this.chart.sharpeRatio(0.05),
+      Profit: this.profit,
+      SharpeRatio: this.chart.sharpeRatio(0.05),
     };
   }
 }
 
-type Tensor2D = number[][];
+//type Tensor2D = number[][];
 
 export class Ranking {
   constructor(private readonly community: Community) {}
@@ -123,30 +125,35 @@ export class Ranking {
 
   /** Features object for named investor */
   private async features(username: string): Promise<Features> {
-    
-    const loader = new FeatureLoader(this.community.investor(username));
+    const loader = new FeatureLoader(this.investor(username));
     const chart: ChartSeries = await loader.chart();
     const stats: StatsData = await loader.stats();
     return new Features(chart, stats);
   }
 
-  public async data(): Promise<[Tensor2D, Tensor2D]> {
-    const input: Tensor2D = [];
-    const output: Tensor2D = [];
+  public async data(): Promise<FeatureData[]> {
+    const list: FeatureData[] = [];
     const names = await this.names();
     //let count = 0;
     for (const username of names) {
       //console.log(username);
-      if ( ! await this.investor(username).isValid() ) continue;
+      if (!(await this.investor(username).isValid())) continue;
       const features = await this.features(username);
       if (features.days < 2) continue;
-      const o = Object.values(features.output);
-      if ( o.some( e => Number.isNaN(e) || e === 0 || e === Infinity || e === -Infinity)) continue;
+      const inp: FeatureData = features.input;
+      const out: FeatureData = features.output;
+      const o = Object.values(out);
+      if (
+        o.some(
+          (e) => Number.isNaN(e) || e === 0 || e === Infinity || e === -Infinity
+        )
+      )
+        continue;
       //console.log('☑');
-      input.push(Object.values(features.input));
-      output.push(o);
-      //if ( ++ count >= 100 ) break;
+      list.push({ ...inp, ...out });
+      //if ( ++ count >= 5 ) break;
     }
-    return [input, output];
+
+    return list;
   }
 }
