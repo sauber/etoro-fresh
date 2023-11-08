@@ -61,12 +61,8 @@ export class Files {
   constructor(readonly path: string) {}
 
   /** Subdirectory */
-  private readonly _sub: Record<string, Files> = {};
   public sub(path: string): Files {
-    if ( ! ( path in this._sub )) {
-      this._sub[path] = new Files(join(this.path, path));
-    }
-    return this._sub[path];
+    return new Files(join(this.path, path));
   }
 
   /** Create directory */
@@ -80,17 +76,13 @@ export class Files {
   }
 
   /** List of all subdirectories */
-  private _dirs: null|string[] = null;
-  public async dirs(): Promise<string[]> {
-    if ( ! this._dirs ) this._dirs = await dirs(this.path);
-    return this._dirs;
+  public dirs(): Promise<string[]> {
+    return dirs(this.path)
   }
 
   /** List of all subdirectories */
-  private _files: null|string[] = null;
-  public async files(): Promise<string[]> {
-    if ( ! this._files ) this._files = await files(this.path);
-    return this._files;
+  public files(): Promise<string[]> {
+    return files(this.path);
   }
 
   /** Name of most recent directory */

@@ -9,13 +9,16 @@ function filename(asset: string): string {
 
 /** Disk base storage for repository */
 export class RepoDiskBackend extends RepoBackend {
-  constructor(private readonly path: string) {super()}
+  private assets: Record<DateFormat, string[]> = {};
+  protected _files: Files | null = null;
+
+  constructor(private readonly path: string) {
+    super();
+  }
 
   /** File object at repository root */
-  private _files: Files | null = null;
   protected files(): Promise<Files> {
-    if ( ! this._files) this._files = new Files(this.path);
-    //return new Promise((resolve) => resolve(new Files(this.path)));
+    if (!this._files) this._files = new Files(this.path);
     return Promise.resolve(this._files);
   }
 
@@ -29,7 +32,9 @@ export class RepoDiskBackend extends RepoBackend {
     const dir: DateFormat = today();
     const content: string = JSON.stringify(data);
     const file: string = filename(assetname);
-    return fs.sub(dir).write(file, content);
+    await fs.sub(dir).write(file, content);
+    delete this.assets[dir];
+    return;
   }
 
   public async dates(): Promise<DateFormat[]> {
@@ -37,24 +42,23 @@ export class RepoDiskBackend extends RepoBackend {
     return fs.dirs();
   }
 
-  public async end(): Promise<DateFormat|null> {
+  public async end(): Promise<DateFormat | null> {
     const dates = await this.dates();
-    if ( dates.length > 0) return dates.reverse()[0]
+    if (dates.length > 0) return dates.reverse()[0];
     else return null;
   }
 
-  private _assets: Record<DateFormat, string[]> = {}
   public async assetsByDate(date: DateFormat): Promise<string[]> {
-    if ( ! ( date in this._assets )) {
-    const fs: Files = (await this.files()).sub(date);
-    const filenames: string[] = await fs.files();
-    const assetnames: string[] = filenames
-      .filter((filename: string) => filename.endsWith(".json"))
-      .map((filename: string) => filename.slice(0, filename.length-5));
-    this._assets[date] = assetnames;
+    if (!(date in this.assets)) {
+      const fs: Files = (await this.files()).sub(date);
+      const filenames: string[] = await fs.files();
+      const assetnames: string[] = filenames
+        .filter((filename: string) => filename.endsWith(".json"))
+        .map((filename: string) => filename.slice(0, filename.length - 5));
+      this.assets[date] = assetnames;
+    }
+    return this.assets[date];
   }
-  return this._assets[date];
-}
 
   public async datesByAsset(assetname: string): Promise<DateFormat[]> {
     const allDates: DateFormat[] = await this.dates();
@@ -67,10 +71,10 @@ export class RepoDiskBackend extends RepoBackend {
   }
 
   /** Which date is most recent for asset */
-  private async assetEnd(assetname: string): Promise<DateFormat|undefined> {
+  private async assetEnd(assetname: string): Promise<DateFormat | undefined> {
     return (await this.files()).latest(filename(assetname));
   }
-  
+
   public async retrieve(
     assetname: string,
     date?: DateFormat
@@ -83,7 +87,7 @@ export class RepoDiskBackend extends RepoBackend {
     return data;
   }
 
-  public async age(assetname: string): Promise<number|null> {
+  public async age(assetname: string): Promise<number | null> {
     return (await this.files()).age(filename(assetname));
   }
 }
