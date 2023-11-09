@@ -4,7 +4,7 @@ export class ProgressBar {
   private readonly start = new Date().getTime();
   private readonly encoder = new TextEncoder();
 
-  constructor(private readonly title: string, private readonly total: number) {}
+  constructor(private readonly title: string, public total: number) {}
 
   /** Calculate epoch ms for estimated eta */
   private eta(count: number): number {

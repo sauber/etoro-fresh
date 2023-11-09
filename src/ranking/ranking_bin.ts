@@ -34,7 +34,7 @@ const samples = features.length;
 //const output = features.map((record) => yf.map((f) => record[f])).slice(0, samples);
 const xw = input[0].length;
 const yw = output[0].length;
-console.log({input, output});
+//console.log({input, output});
 
 //console.log(output);
 

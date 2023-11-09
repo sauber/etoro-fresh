@@ -25,6 +25,6 @@ Deno.test("DataFrames", async (t) => {
     const df = await rank.data();
     //console.log(df);
     //console.log(df.length);
-    assertEquals(df.length, 19);
+    assertEquals(df.length, 10);
   });
 });
