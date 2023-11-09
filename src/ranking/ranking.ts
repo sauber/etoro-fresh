@@ -146,7 +146,7 @@ export class Ranking {
       //console.log(username);
       if (!(await this.investor(username).isValid())) continue;
       const features = await this.features(username);
-      if (features.days < 2) continue;
+      if (features.days < 60) continue;
       const inp: FeatureData = features.input;
       const out: FeatureData = features.output;
       const o = Object.values(out);

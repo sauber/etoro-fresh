@@ -27,11 +27,11 @@ const xf = [
 const yf = ["Profit", "SharpeRatio"];
 // Split xs and ys
 
-//const input = features.map( record => Object.values(record).slice(0,-2) );
-//const output = features.map( record => Object.values(record).slice(-2) );
+const input = features.map( record => Object.values(record).slice(0,-2) );
+const output = features.map( record => Object.values(record).slice(-2) );
 const samples = features.length;
-const input = features.map((record) => xf.map((f) => record[f])).slice(0, samples);
-const output = features.map((record) => yf.map((f) => record[f])).slice(0, samples);
+//const input = features.map((record) => xf.map((f) => record[f])).slice(0, samples);
+//const output = features.map((record) => yf.map((f) => record[f])).slice(0, samples);
 const xw = input[0].length;
 const yw = output[0].length;
 console.log({input, output});
@@ -49,17 +49,18 @@ const model = tf.sequential({
     //tf.layers.dense({inputShape: [27], units: 20}),
     tf.layers.batchNormalization({ inputShape: [xw] }),
     tf.layers.dense({ units: xw }),
-    //tf.layers.dropout(0.2),
-    //tf.layers.dense({units: 12}),
-    //tf.layers.dense({units: 4}),
+    tf.layers.dropout(0.2),
+    tf.layers.dense({units: 18}),
+    tf.layers.dense({units: 8}),
+    tf.layers.dense({units: 4}),
     tf.layers.dense({ units: yw }),
   ],
 });
 model.compile({ optimizer: "adam", loss: "meanSquaredError" });
 model.summary();
 
-const split = 0.1;
-for (let i = 1; i <= 20; ++i) {
+const split = 0.2;
+for (let i = 1; i <= 5; ++i) {
   const h = await model.fit(xs, ys, {
     epochs: 30,
     shuffle: true,
@@ -73,11 +74,13 @@ for (let i = 1; i <= 20; ++i) {
   );
 }
 
-// Validation
-const xval = xs.slice([samples - 2]);
-const yval = ys.slice([samples - 2]);
-//const xval = xs.slice([0], [2]);
-//const yval = ys.slice([0], [2]);
+// Validation - last samples
+const xval = xs.slice([samples - 5]);
+const yval = ys.slice([samples - 5]);
+
+// Validation - first samples
+//const xval = xs.slice([0], [5]);
+//const yval = ys.slice([0], [5]);
 
 console.log("Validation input");
 xval.print();
