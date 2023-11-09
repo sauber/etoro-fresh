@@ -9,9 +9,33 @@ export const community = new Community(backend);
 const rank = new Ranking(community);
 const features = await rank.data();
 
+// Write to to file
+//Deno.writeTextFileSync("rank.json", JSON.stringify(features));
+//Deno.exit(0);
+
+// Relevant fields
+// xs: MaxDailyRiskScore, DailyDD, WeeklyDD, MediumLeveragePct, PeakToValley, WeeksSinceRegistration
+// YS: Profit, SharpeRatio
+const xf = [
+  "MaxDailyRiskScore",
+  "DailyDD",
+  "WeeklyDD",
+  "MediumLeveragePct",
+  "PeakToValley",
+  "WeeksSinceRegistration",
+];
+const yf = ["Profit", "SharpeRatio"];
 // Split xs and ys
-const input = features.map( record => Object.values(record).slice(0,-2) );
-const output = features.map( record => Object.values(record).slice(-2) );
+
+//const input = features.map( record => Object.values(record).slice(0,-2) );
+//const output = features.map( record => Object.values(record).slice(-2) );
+const samples = features.length;
+const input = features.map((record) => xf.map((f) => record[f])).slice(0, samples);
+const output = features.map((record) => yf.map((f) => record[f])).slice(0, samples);
+const xw = input[0].length;
+const yw = output[0].length;
+console.log({input, output});
+
 //console.log(output);
 
 // Create tensors
@@ -22,41 +46,46 @@ const ys = tf.tensor2d(output);
 
 const model = tf.sequential({
   layers: [
-      //tf.layers.dense({inputShape: [27], units: 20}),
-      tf.layers.batchNormalization({inputShape: [27]}),
-      tf.layers.dense({units: 27}),
-      tf.layers.dropout(0.2),
-      //tf.layers.dense({units: 12}),
-      //tf.layers.dense({units: 4}),
-      tf.layers.dense({units: 2}),
-  ]
+    //tf.layers.dense({inputShape: [27], units: 20}),
+    tf.layers.batchNormalization({ inputShape: [xw] }),
+    tf.layers.dense({ units: xw }),
+    //tf.layers.dropout(0.2),
+    //tf.layers.dense({units: 12}),
+    //tf.layers.dense({units: 4}),
+    tf.layers.dense({ units: yw }),
+  ],
 });
-model.compile({optimizer: 'adam', loss: 'meanSquaredError'});
+model.compile({ optimizer: "adam", loss: "meanSquaredError" });
 model.summary();
 
-const split = 0.3;
-for (let i = 1; i <= 100 ; ++i) {
-const h = await model.fit(xs, ys, {
-    epochs: 3,
+const split = 0.1;
+for (let i = 1; i <= 20; ++i) {
+  const h = await model.fit(xs, ys, {
+    epochs: 30,
     shuffle: true,
     validationSplit: split,
-});
-console.log("Loss after Epoch " + i + " : ",  h.history.loss[0], " : ", h.history.val_loss[0]);
+  });
+  console.log(
+    "Loss after Epoch " + i + " : ",
+    h.history.loss[0],
+    " : ",
+    h.history.val_loss[0]
+  );
 }
 
 // Validation
-const xval = xs.slice([features.length-2]);
-const yval = ys.slice([features.length-2]);
-//const xval = xs.slice([0, 0], [2, 27]);
-//const yval = ys.slice([0, 0], [ 2, 2]);
+const xval = xs.slice([samples - 2]);
+const yval = ys.slice([samples - 2]);
+//const xval = xs.slice([0], [2]);
+//const yval = ys.slice([0], [2]);
 
-console.log('Validation input');
+console.log("Validation input");
 xval.print();
 
-console.log('Validation output [profit, sharpe]');
+console.log("Validation output [profit, sharpe]");
 yval.print();
 
-console.log('Predicted output');
+console.log("Predicted output");
 model.predict(xval).print();
-console.log('numTensors : ' + tf.memory().numTensors);
+console.log("numTensors : " + tf.memory().numTensors);
 Deno.exit(0);

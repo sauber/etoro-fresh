@@ -7,3 +7,6 @@
 
 # Fresh build directory
 _fresh/
+
+# tmpfiles
+rank.json
