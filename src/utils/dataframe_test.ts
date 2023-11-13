@@ -1,5 +1,6 @@
 import { assertEquals, assertInstanceOf } from "assert";
 import { DataFrame } from "./dataframe.ts";
+import type { SeriesTypes } from "/utils/series.ts";
 
 const testdata = [
   { n: 1, s: "a", b: true },
@@ -13,15 +14,29 @@ Deno.test("Empty initialization", () => {
 
 Deno.test("Import and export records", () => {
   const df = DataFrame.fromRecords(testdata);
-  assertInstanceOf(df, DataFrame);
   assertEquals(df.series("b").values, [true, false]);
   const e = df.records;
   assertEquals(testdata, e);
 });
 
-Deno.test("Select", () => {
+Deno.test("Grid", () => {
+  const df = DataFrame.fromRecords(testdata);
+  const g: SeriesTypes[][] = df.grid;
+  console.log(g);
+  assertEquals(g[0][0], 1);
+});
+
+
+Deno.test("Include Columns", () => {
   const df = DataFrame.fromRecords(testdata);
   const cols = ["s", "n"];
-  const sel = df.select(cols);
+  const sel = df.include(cols);
   assertEquals(sel.names, cols);
+});
+
+Deno.test("Exclude columns", () => {
+  const df = DataFrame.fromRecords(testdata);
+  const cols = ["s", "n"];
+  const sel = df.exclude(cols);
+  assertEquals(sel.names, ["b"]);
 });

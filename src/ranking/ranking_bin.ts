@@ -1,13 +1,14 @@
 import { RepoDiskBackend } from "/repository/repo-disk.ts";
 import { Community } from "/investor/mod.ts";
 import { Ranking } from "./ranking.ts";
+import { DataFrame } from "/utils/dataframe.ts";
 import tf from "tensorflow";
 
 const path: string = Deno.args[0];
 const backend: RepoDiskBackend = new RepoDiskBackend(path);
 export const community = new Community(backend);
 const rank = new Ranking(community);
-const features = await rank.data();
+const features: DataFrame = await rank.data();
 
 // Write to to file
 //Deno.writeTextFileSync("rank.json", JSON.stringify(features));
@@ -27,21 +28,26 @@ const xf = [
 const yf = ["Profit", "SharpeRatio"];
 // Split xs and ys
 
-const input = features.map( record => Object.values(record).slice(0,-2) );
-const output = features.map( record => Object.values(record).slice(-2) );
+//const input = features.map( record => Object.values(record).slice(0,-2) );
+//const output = features.map( record => Object.values(record).slice(-2) );
+const input: DataFrame = features.exclude(["Profit", "SharpeRatio"]);
+//console.log(input);
+
+
+const output: DataFrame = features.include(["Profit", "SharpeRatio"]);
 const samples = features.length;
 //const input = features.map((record) => xf.map((f) => record[f])).slice(0, samples);
 //const output = features.map((record) => yf.map((f) => record[f])).slice(0, samples);
-const xw = input[0].length;
-const yw = output[0].length;
+const xw = input.names.length;
+const yw = output.names.length;
 //console.log({input, output});
 
 //console.log(output);
 
 // Create tensors
-const xs = tf.tensor2d(input);
+const xs = tf.tensor2d(input.grid);
 //xs.print();
-const ys = tf.tensor2d(output);
+const ys = tf.tensor2d(output.grid);
 //ys.print();
 
 const model = tf.sequential({

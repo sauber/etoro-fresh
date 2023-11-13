@@ -3,6 +3,7 @@ import { ChartSeries, Community, Investor } from "/investor/mod.ts";
 import type { Names, StatsData } from "/investor/mod.ts";
 import { Asset } from "/repository/mod.ts";
 import { ProgressBar } from "/utils/time/progressbar.ts";
+import { DataFrame } from "/utils/dataframe.ts";
 
 type FeatureData = Record<string, number>;
 
@@ -53,7 +54,7 @@ class FeatureLoader {
 class Features {
   constructor(
     private readonly chart: ChartSeries,
-    private readonly stats: StatsData
+    private readonly stats: StatsData,
   ) {}
 
   /** Number of days between start and end */
@@ -61,7 +62,7 @@ class Features {
     return this.chart.values.length;
   }
 
-  /** Yearly Profit */
+  /** Average yearly Profit */
   public get profit(): number {
     const profit: number = this.chart.last() / this.chart.first() - 1;
     const apy: number = (365 / this.days) * profit;
@@ -132,11 +133,10 @@ export class Ranking {
     return new Features(chart, stats);
   }
 
-  public async data(): Promise<FeatureData[]> {
-
+  public async data(): Promise<DataFrame> {
     const list: FeatureData[] = [];
     const names = await this.names();
-    const bar = new ProgressBar('Loading', names.size);
+    const bar = new ProgressBar("Loading", names.size);
     let count = 0;
     let keep = 0;
     for (const username of names) {
@@ -146,16 +146,19 @@ export class Ranking {
       //console.log(username);
       if (!(await this.investor(username).isValid())) continue;
       const features = await this.features(username);
+      // Features are unreliable if too short period
+      // TODO: Configuable how many days
       if (features.days < 60) continue;
       const inp: FeatureData = features.input;
       const out: FeatureData = features.output;
       const o = Object.values(out);
       if (
         o.some(
-          (e) => Number.isNaN(e) || e === 0 || e === Infinity || e === -Infinity
+          (e) => Number.isNaN(e) || e === Infinity || e === -Infinity,
         )
-      )
+      ) {
         continue;
+      }
       //console.log('☑');
       list.push({ ...inp, ...out });
       ++keep;
@@ -163,6 +166,6 @@ export class Ranking {
     }
     bar.finish();
 
-    return list;
+    return DataFrame.fromRecords(list);
   }
 }

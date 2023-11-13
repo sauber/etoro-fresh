@@ -48,12 +48,12 @@ export class DataFrame {
   }
 
   /** Export data to list of records */
-  get records(): Array<Record<string, string | number | boolean>> {
+  get records(): Array<Record<string, SeriesTypes>> {
     const names = this.names;
     const l = this.length;
-    const records: Array<Record<string, string | number | boolean>> = [];
+    const records: Array<Record<string, SeriesTypes>> = [];
     for (let i = 0; i < l; i++) {
-      const record: Record<string, string | number | boolean> = {};
+      const record: Record<string, SeriesTypes> = {};
       for (const key of names) {
         record[key] = this.columns[key].values[i];
       }
@@ -62,9 +62,31 @@ export class DataFrame {
     return records;
   }
 
+  /** Export data to matrix */
+  get grid(): Array<Array<SeriesTypes>> {
+    const names = this.names;
+    const l = this.length;
+    const records: Array<Array<SeriesTypes>> = [];
+    for (let i = 0; i < l; i++) {
+      const record: Array<SeriesTypes> = [];
+      for (const key of names) {
+        record.push(this.columns[key].values[i]);
+      }
+      records.push(record);
+    }
+    return records;
+  }
+
+
   /** A new dataframe with subset of columns */
-  select(names: string[]): DataFrame {
+  include(names: string[]): DataFrame {
     return new DataFrame(names.map((n) => this.series(n)));
+  }
+
+  /** A new dataframe except named columns */
+  exclude(names: string[]): DataFrame {
+    const keep: string[] = this.names.filter((n) => !names.includes(n));
+    return this.include(keep);
   }
 
   /** Lookup a particular column */
