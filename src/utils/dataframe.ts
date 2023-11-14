@@ -1,5 +1,6 @@
+import AsciiTable from "ascii_table";
 import { BoolSeries, Series, TextSeries } from "./series.ts";
-import type { SeriesTypes } from "./series.ts";
+import type { SeriesClasses, SeriesTypes } from "./series.ts";
 
 type Column = Series | TextSeries | BoolSeries;
 type Columns = Array<Column>;
@@ -7,10 +8,14 @@ type Columns = Array<Column>;
 /** A collection of series with same length */
 export class DataFrame {
   private readonly columns: Record<string, Column> = {};
+  public readonly names: string[];
 
   constructor(series: Columns = []) {
-    // Convert array to dict
+    // Convert array of columns to dict of columns
     series.forEach((column: Column) => this.columns[column.name] = column);
+
+    // Cache column names
+    this.names = series.map((column: Column) => column.name);
   }
 
   /** Import data from list of records */
@@ -77,7 +82,6 @@ export class DataFrame {
     return records;
   }
 
-
   /** A new dataframe with subset of columns */
   include(names: string[]): DataFrame {
     return new DataFrame(names.map((n) => this.series(n)));
@@ -89,18 +93,73 @@ export class DataFrame {
     return this.include(keep);
   }
 
+  //** First column */
+  get first(): Column {
+    return this.series(this.names[0]);
+  }
+
   /** Lookup a particular column */
   series(key: string): Column {
     return this.columns[key];
   }
 
-  /** List of all column names */
-  get names(): string[] {
-    return Object.keys(this.columns);
-  }
-
   /** Count of items in columns */
   get length(): number {
-    return Object.values(this.columns)[0].values.length;
+    return this.first.length;
+  }
+
+  /** Count of columns */
+  get width(): number {
+    return this.names.length;
+  }
+
+  /** Correlation of each series to each series on other dataframe */
+  correlationMatrix(other: DataFrame): DataFrame {
+    const rows = this.names;
+    const cols = other.names;
+    const series: SeriesClasses[] = [
+      new TextSeries(rows, "Keys"),
+    ];
+    for (const colname of cols) {
+      const results: number[] = [];
+      for (const rowname of rows) {
+        const sc = other.series(colname) as Series;
+        const sr = this.series(rowname) as Series;
+        const coef: number = sr.correlation(sc);
+        results.push(coef);
+      }
+      series.push(new Series(results, colname));
+    }
+
+    return new DataFrame(series);
+  }
+
+  /** Reference to object */
+  get ref(): DataFrame {
+    return this;
+  }
+
+  decimals(units: number, names: string[] = this.names): DataFrame {
+    return new DataFrame(
+      Object.entries(this.columns).map(([key, column]) =>
+        (names.includes(key) && column.isNumber)
+          ? (column as Series).decimals(units)
+          : column
+      ),
+    );
+  }
+
+  /** Pretty print as ascii table */
+  print(title?: string): void {
+    const tidy = this.decimals(2);
+    //const tidy = this.ref;
+    const colnames = tidy.names;
+    //const rownames = sortby ? tidy.rownamesBy(sortby) : tidy.rownames;
+    const table = new AsciiTable(title);
+    table.setHeading(colnames);
+    for (let i = 0; i < tidy.length; i++) {
+      table.addRow([...colnames].map((x) => tidy.series(x).values[i]));
+    }
+    console.log("\n" + table.toString());
   }
 }

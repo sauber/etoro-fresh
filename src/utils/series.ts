@@ -13,13 +13,18 @@ export interface SeriesInterface<T> {
   last: T;
 }
 
-export type SeriesTypes = string | number | boolean;
+export type SeriesTypes = number | string | boolean;
+export type SeriesClasses = Series | TextSeries | BoolSeries;
 
-class DataSeries<T> implements SeriesInterface<T> {
+abstract class DataSeries<T> implements SeriesInterface<T> {
+  public readonly length;
+
   constructor(
     public readonly values: Array<T> = [],
     public readonly name: string = "",
-  ) {}
+  ) {
+    this.length = values.length;
+  }
 
   get first(): T {
     return this.values[0];
@@ -27,6 +32,10 @@ class DataSeries<T> implements SeriesInterface<T> {
 
   get last(): T {
     return this.values[this.values.length - 1];
+  }
+
+  get isNumber(): boolean {
+    return typeof this.first === "number";
   }
 }
 
@@ -49,13 +58,15 @@ export class BoolSeries extends DataSeries<boolean>
 /** Series of numbers */
 export class Series extends DataSeries<number>
   implements SeriesInterface<number> {
-  constructor(values?: Array<number>, name?: string) {
+    //public readonly isNumber = true;
+
+    constructor(values?: Array<number>, name?: string) {
     super(values, name);
   }
 
   /** Generate new Series: n => n*n */
   get pow2(): Series {
-    return new Series(this.values.map((n) => n * n));
+    return new Series(this.values.map((n) => n * n), `${this.name}^2`);
   }
 
   /** Multiply each items in this series with item at other series: n[i] = x[i] * y[i] */
@@ -64,7 +75,7 @@ export class Series extends DataSeries<number>
     for (let i = 0; i < this.values.length; i++) {
       values.push(this.values[i] * other.values[i]);
     }
-    return new Series(values);
+    return new Series(values, `${this.name} * ${other.name}`);
   }
 
   /** Calculate sum of numbers in series */
@@ -86,5 +97,10 @@ export class Series extends DataSeries<number>
     const xy = this.multiply(other).sum;
     const r = (n * xy - x * y) / Math.sqrt((n * x2 - x * x) * (n * y2 - y * y));
     return r;
+  }
+
+  /** Number of decimals in float */
+  decimals(unit: number): Series {
+    return new Series(this.values.map((n) => +n.toPrecision(unit)), this.name);
   }
 }

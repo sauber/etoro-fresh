@@ -19,6 +19,12 @@ Deno.test("Import and export records", () => {
   assertEquals(testdata, e);
 });
 
+Deno.test("Print as Table", () => {
+  const df = DataFrame.fromRecords(testdata);
+  assertEquals(df.print(), undefined, "Without Title");
+  assertEquals(df.print("Test Title"), undefined, "With Title");
+});
+
 Deno.test("Grid", () => {
   const df = DataFrame.fromRecords(testdata);
   const g: SeriesTypes[][] = df.grid;
@@ -40,3 +46,26 @@ Deno.test("Exclude columns", () => {
   const sel = df.exclude(cols);
   assertEquals(sel.names, ["b"]);
 });
+
+Deno.test("Correlation Matrix", () => {
+  function r() { return Math.round(10*Math.random()) }
+
+  const i = DataFrame.fromRecords([
+    {i1: r(), i2: r(), i3: r()},
+    {i1: r(), i2: r(), i3: r()},
+    {i1: r(), i2: r(), i3: r()},
+  ]);
+
+  const o = DataFrame.fromRecords([
+    {o1: r(), o2: r()},
+    {o1: r(), o2: r()},
+    {o1: r(), o2: r()},
+  ]);
+
+  const c = i.correlationMatrix(o);
+  assertEquals(c.names, ["Keys", "o1", "o2"]);
+  assertEquals(c.series("Keys").values, ["i1", "i2", "i3"])
+  c.print("Pearson Correlation Coefficients Matrix");
+  //console.log(c);
+});
+
