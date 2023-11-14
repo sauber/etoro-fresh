@@ -33,8 +33,13 @@ const yf = ["Profit", "SharpeRatio"];
 const input: DataFrame = features.exclude(["Profit", "SharpeRatio"]);
 //console.log(input);
 
-
 const output: DataFrame = features.include(["Profit", "SharpeRatio"]);
+
+// Show a correlation matrix
+const c = input.correlationMatrix(output);
+c.print("Correlation Matrix");
+Deno.exit();
+
 const samples = features.length;
 //const input = features.map((record) => xf.map((f) => record[f])).slice(0, samples);
 //const output = features.map((record) => yf.map((f) => record[f])).slice(0, samples);
