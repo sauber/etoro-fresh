@@ -8,6 +8,7 @@ const path: string = Deno.args[0];
 const backend: RepoDiskBackend = new RepoDiskBackend(path);
 export const community = new Community(backend);
 const rank = new Ranking(community);
+rank.days = 30;
 const features: DataFrame = await rank.data();
 
 // Write to to file
@@ -30,7 +31,7 @@ const yf = ["Profit", "SharpeRatio"];
 
 //const input = features.map( record => Object.values(record).slice(0,-2) );
 //const output = features.map( record => Object.values(record).slice(-2) );
-const input: DataFrame = features.exclude(["Profit", "SharpeRatio"]);
+const input: DataFrame = features.exclude(["VirtualCopiers", "Profit", "SharpeRatio"]);
 //console.log(input);
 
 const output: DataFrame = features.include(["Profit", "SharpeRatio"]);
@@ -38,8 +39,9 @@ const output: DataFrame = features.include(["Profit", "SharpeRatio"]);
 // Show a correlation matrix
 const c = input.correlationMatrix(output);
 c.print("Correlation Matrix");
-const sum: number = yf.map(col=>c.series(col).abs.sum).reduce((a,b)=>a+b);
-console.log('Total coefficients: ', sum);
+//const sum: number = yf.map(col=>c.series(col).abs.sum).reduce((a,b)=>a+b);
+//console.log('Total coefficients: ', sum);
+
 Deno.exit();
 
 const samples = features.length;

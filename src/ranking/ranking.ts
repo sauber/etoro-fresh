@@ -157,7 +157,7 @@ export class Ranking {
       ++count;
       bar.total = names.size - count + keep;
       await bar.update(keep);
-      console.log(username);
+      //console.log(username);
       if (!(await this.investor(username).isValid())) continue;
       const features = await this.features(username);
       if ( ! this.validate(features)) continue;
