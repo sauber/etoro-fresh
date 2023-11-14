@@ -76,7 +76,7 @@ export class Table {
 
   /** Render table title */
   private renderTitle(): string {
-    return this.title ? `[ ${this.title} ]` : "";
+    return "[ " + this.title + " ]";
   }
 
   /** Render top or bottom border, og horizontal divider */
@@ -109,10 +109,8 @@ export class Table {
 
   /** Render a row of content */
   private renderRow(row: CellTypes[], isHeader: boolean = false): string {
-    //console.log("render row: ", row);
     const sym = this.theme.row;
     const w = this.columnWidth();
-    //if (!row.length) return "";
     return sym[0] +
       row.map((c, i) => this.renderCell(c, w[i], isHeader)).join(sym[2]) +
       sym[3];
@@ -124,7 +122,7 @@ export class Table {
     const hasHeaders = this.headers.length > 0;
     const hasRows = this.rows.length > 0;
     return [
-      this.renderTitle(),
+      this.title ? this.renderTitle() : "",
       (hasHeaders || hasRows) ? this.renderLine(t.top) : "",
       hasHeaders ? this.renderRow(this.headers, true) : "",
       (hasHeaders && hasRows) ? this.renderLine(t.div) : "",

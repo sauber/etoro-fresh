@@ -155,7 +155,7 @@ export class DataFrame {
     const tidy = this.digits(2);
     const colnames = tidy.names;
     const table = new Table();
-    if ( title ) table.title = title;
+    if (title) table.title = title;
     table.headers = colnames;
     table.rows = tidy.grid;
     console.log("\n" + table.toString());

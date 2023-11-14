@@ -37,9 +37,9 @@ Deno.test("Display Rows", () => {
   );
 });
 
-Deno.test("Display Headers and Rows", {ignore: true}, () => {
+Deno.test("Display Headers and Rows", { ignore: true }, () => {
   const t = new Table();
-  t.headers = ['text', 'number', 'boolean'];
+  t.headers = ["text", "number", "boolean"];
   t.rows = [["a", 0, true], ["bb", 10, false]];
   console.log(t.toString());
 });
