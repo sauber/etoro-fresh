@@ -1,4 +1,4 @@
-import AsciiTable from "ascii_table";
+import { Table } from "./table.ts";
 import { BoolSeries, Series, TextSeries } from "./series.ts";
 import type { SeriesClasses, SeriesTypes } from "./series.ts";
 
@@ -139,7 +139,8 @@ export class DataFrame {
     return this;
   }
 
-  decimals(units: number, names: string[] = this.names): DataFrame {
+  /** Disable count of significant digits */
+  public digits(units: number, names: string[] = this.names): DataFrame {
     return new DataFrame(
       Object.entries(this.columns).map(([key, column]) =>
         (names.includes(key) && column.isNumber)
@@ -151,15 +152,12 @@ export class DataFrame {
 
   /** Pretty print as ascii table */
   print(title?: string): void {
-    const tidy = this.decimals(2);
-    //const tidy = this.ref;
+    const tidy = this.digits(2);
     const colnames = tidy.names;
-    //const rownames = sortby ? tidy.rownamesBy(sortby) : tidy.rownames;
-    const table = new AsciiTable(title);
-    table.setHeading(colnames);
-    for (let i = 0; i < tidy.length; i++) {
-      table.addRow([...colnames].map((x) => tidy.series(x).values[i]));
-    }
+    const table = new Table();
+    if ( title ) table.title = title;
+    table.headers = colnames;
+    table.rows = tidy.grid;
     console.log("\n" + table.toString());
   }
 }
