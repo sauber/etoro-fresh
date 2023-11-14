@@ -144,7 +144,7 @@ export class DataFrame {
     return new DataFrame(
       Object.entries(this.columns).map(([key, column]) =>
         (names.includes(key) && column.isNumber)
-          ? (column as Series).decimals(units)
+          ? (column as Series).digits(units)
           : column
       ),
     );

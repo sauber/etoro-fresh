@@ -113,6 +113,9 @@ class Features {
 //type Tensor2D = number[][];
 
 export class Ranking {
+  /** Minimum number of days in chart after stats */
+  public days = 60;
+
   constructor(private readonly community: Community) {}
 
   /** List of all names */
@@ -133,6 +136,17 @@ export class Ranking {
     return new Features(chart, stats);
   }
 
+  /** Confirm is features are usable */
+  private validate(features: Features): boolean {
+    if (features.days < this.days) return false;
+    const out: FeatureData = features.output;
+    const o = Object.values(out);
+    if (o.some((e) => Number.isNaN(e) || e === Infinity || e === -Infinity)) {
+      return false;
+    }
+    return true;
+  }
+
   public async data(): Promise<DataFrame> {
     const list: FeatureData[] = [];
     const names = await this.names();
@@ -143,24 +157,12 @@ export class Ranking {
       ++count;
       bar.total = names.size - count + keep;
       await bar.update(keep);
-      //console.log(username);
+      console.log(username);
       if (!(await this.investor(username).isValid())) continue;
       const features = await this.features(username);
-      // Features are unreliable if too short period
-      // TODO: Configuable how many days
-      if (features.days < 60) continue;
-      const inp: FeatureData = features.input;
-      const out: FeatureData = features.output;
-      const o = Object.values(out);
-      if (
-        o.some(
-          (e) => Number.isNaN(e) || e === Infinity || e === -Infinity,
-        )
-      ) {
-        continue;
-      }
+      if ( ! this.validate(features)) continue;
       //console.log('☑');
-      list.push({ ...inp, ...out });
+      list.push({ ...features.input, ...features.output });
       ++keep;
       //if ( ++ count >= 5 ) break;
     }

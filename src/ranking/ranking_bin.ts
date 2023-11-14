@@ -38,6 +38,8 @@ const output: DataFrame = features.include(["Profit", "SharpeRatio"]);
 // Show a correlation matrix
 const c = input.correlationMatrix(output);
 c.print("Correlation Matrix");
+const sum: number = yf.map(col=>c.series(col).abs.sum).reduce((a,b)=>a+b);
+console.log('Total coefficients: ', sum);
 Deno.exit();
 
 const samples = features.length;
