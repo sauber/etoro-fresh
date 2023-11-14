@@ -52,6 +52,14 @@ export class Table {
     bot: ["╚═", "═", "═╧═", "═╝"],
   };
 
+  public readonly roundTheme: Theme = {
+    top: ["╭─", "─", "─┬─", "─╮"],
+    row: ["│ ", " ", " │ ", " │"],
+    div: ["├─", "─", "─┼─", "─┤"],
+    bot: ["╰─", "─", "─┴─", "─╯"],
+  };
+
+  
   /** Set theme */
   public theme = this.wideTheme;
 
