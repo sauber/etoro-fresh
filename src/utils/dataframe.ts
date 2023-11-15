@@ -31,6 +31,7 @@ function series(
 export class DataFrame {
   public readonly names: ColumnNames;
   private readonly index: Index;
+  private readonly length: number;
 
   constructor(
     // Data Series
@@ -44,13 +45,15 @@ export class DataFrame {
     // Index
     if (index) {
       this.index = index;
+      this.length = index.length;
     } else {
       if (this.names.length) {
         const first = columns[this.names[0]];
-        const length = first.length;
-        this.index = Array.from(Array(length).keys());
+        this.length = first.length;
+        this.index = Array.from(Array(first.length).keys());
       } else {
         this.index = [];
+        this.length = 0;
       }
     }
   }
@@ -98,6 +101,7 @@ export class DataFrame {
   public include(names: ColumnNames): DataFrame {
     return new DataFrame(
       Object.assign({}, ...names.map((x) => ({ [x]: this.column(x) }))),
+      this.index
     );
   }
 
@@ -177,5 +181,10 @@ export class DataFrame {
     if (ser) {
       return new DataFrame(Object.assign({}, this.columns, { [name]: ser }));
     } else return this;
+  }
+
+  /** Rows in reverse order */
+  public get reverse(): DataFrame {
+    return new DataFrame(this.columns, this.index.reverse());
   }
 }
