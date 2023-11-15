@@ -1,6 +1,6 @@
 import { Table } from "./table.ts";
 import { BoolSeries, Series, TextSeries } from "./series.ts";
-import type { SeriesTypes } from "./series.ts";
+import type { SeriesClasses, SeriesTypes } from "./series.ts";
 
 type Column = Series | TextSeries | BoolSeries;
 type Columns = Record<string, Column>;
@@ -10,6 +10,22 @@ type RowValues = Array<SeriesTypes>;
 type Index = number[];
 type ColumnNames = string[];
 type SortElement = [number, SeriesTypes];
+type RowCallback = (row: RowRecord) => SeriesTypes;
+
+/** Generate a series from an array of unknown values */
+function series(
+  array: Array<unknown>,
+  name: string,
+): SeriesClasses | undefined {
+  switch (typeof array[0]) {
+    case "number":
+      return new Series(array as number[], name);
+    case "string":
+      return new TextSeries(array as string[], name);
+    case "boolean":
+      return new BoolSeries(array as boolean[], name);
+  }
+}
 
 /** A collection of series with same length */
 export class DataFrame {
@@ -44,16 +60,12 @@ export class DataFrame {
     return new DataFrame(
       Object.assign(
         {},
-        ...Object.keys(records[0]).map((key: string) => {
-          const array = records.map((r: Record<string, unknown>) => r[key]);
-          switch (typeof array[0]) {
-            case "number":
-              return { [key]: new Series(array as number[], key) };
-            case "string":
-              return { [key]: new TextSeries(array as string[], key) };
-            case "boolean":
-              return { [key]: new BoolSeries(array as boolean[], key) };
-          }
+        ...Object.keys(records[0]).map((name: string) => {
+          const array = records.map((rec: Record<string, unknown>) =>
+            rec[name]
+          );
+          const ser = series(array, name);
+          if (ser) return { [name]: ser };
         }),
       ),
     );
@@ -96,8 +108,8 @@ export class DataFrame {
   }
 
   /** Lookup a particular column */
-  public column(key: string): Column {
-    return this.columns[key];
+  public column(name: string): Column {
+    return this.columns[name];
   }
 
   /** Correlation of each series to each series on other dataframe */
@@ -125,9 +137,9 @@ export class DataFrame {
   /** Display count of significant digits */
   public digits(units: number, names: ColumnNames = this.names): DataFrame {
     const columns: Columns = {};
-    names.forEach((key) => {
-      const column: Column = this.column(key);
-      columns[key] = column.isNumber
+    names.forEach((name) => {
+      const column: Column = this.column(name);
+      columns[name] = column.isNumber
         ? (column as Series).digits(units)
         : column;
     });
@@ -155,5 +167,15 @@ export class DataFrame {
     ) => (a[1] < b[1] ? -1 : 1));
     const order: Index = sorted.map((a: SortElement) => a[0]);
     return new DataFrame(this.columns, order);
+  }
+
+  /** Generate a new column from existing columns */
+  public amend(name: string, callback: RowCallback): DataFrame {
+    const array: SeriesTypes[] = this.index.map((index) => this.record(index))
+      .map((row: RowRecord) => callback(row));
+    const ser = series(array, name);
+    if (ser) {
+      return new DataFrame(Object.assign({}, this.columns, { [name]: ser }));
+    } else return this;
   }
 }
