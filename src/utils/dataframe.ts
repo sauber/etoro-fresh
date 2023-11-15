@@ -4,6 +4,8 @@ import type { SeriesClasses, SeriesTypes } from "./series.ts";
 
 type Column = Series | TextSeries | BoolSeries;
 type Columns = Array<Column>;
+type RowRecord = Record<string, SeriesTypes>;
+type RowValues = Array<SeriesTypes>;
 
 /** A collection of series with same length */
 export class DataFrame {
@@ -19,10 +21,10 @@ export class DataFrame {
   }
 
   /** Import data from list of records */
-  static fromRecords(records: Array<Record<string, unknown>>): DataFrame {
-    const series: Record<string, Array<SeriesTypes>> = {};
+  public static fromRecords(records: Array<Record<string, unknown>>): DataFrame {
+    const series: Record<string, RowValues> = {};
 
-    // Confirm supported type and map rows of dict to named columns
+    // Confirm supported type and map RowRecords of dict to named columns
     records.forEach((record, index) => {
       Object.entries(record).forEach(([key, value]) => {
         switch (typeof value) {
@@ -52,79 +54,79 @@ export class DataFrame {
     );
   }
 
+  /** Sequence of all indices in series */
+  private get indices(): number[] {
+    return Array.from(Array(this.length).keys());
+  }
+
+  /** Values and columns names from all series at index */
+  private record(index: number): RowRecord {
+    return Object.assign(
+      {},
+      ...this.names.map((x) => ({ [x]: this.columns[x].values[index] })),
+    );
+  }
+
   /** Export data to list of records */
-  get records(): Array<Record<string, SeriesTypes>> {
-    const names = this.names;
-    const l = this.length;
-    const records: Array<Record<string, SeriesTypes>> = [];
-    for (let i = 0; i < l; i++) {
-      const record: Record<string, SeriesTypes> = {};
-      for (const key of names) {
-        record[key] = this.columns[key].values[i];
-      }
-      records.push(record);
-    }
-    return records;
+  public get records(): Array<RowRecord> {
+    return this.indices.map((i: number) => this.record(i));
+  }
+
+  /** Values from all series at index */
+  private line(index: number): RowValues {
+    const l = this.names.map((x) => this.columns[x].values[index]);
+    console.log({index, line: l});
+    return l;
   }
 
   /** Export data to matrix */
-  get grid(): Array<Array<SeriesTypes>> {
-    const names = this.names;
-    const l = this.length;
-    const records: Array<Array<SeriesTypes>> = [];
-    for (let i = 0; i < l; i++) {
-      const record: Array<SeriesTypes> = [];
-      for (const key of names) {
-        record.push(this.columns[key].values[i]);
-      }
-      records.push(record);
-    }
-    return records;
+  public get grid(): Array<RowValues> {
+    return this.indices.map((i: number) => this.line(i));
   }
 
   /** A new dataframe with subset of columns */
-  include(names: string[]): DataFrame {
+  public include(names: string[]): DataFrame {
     return new DataFrame(names.map((n) => this.series(n)));
   }
 
   /** A new dataframe except named columns */
-  exclude(names: string[]): DataFrame {
+  public exclude(names: string[]): DataFrame {
     const keep: string[] = this.names.filter((n) => !names.includes(n));
     return this.include(keep);
   }
 
   //** First column */
-  get first(): Column {
+  public get first(): Column {
     return this.series(this.names[0]);
   }
 
   /** Lookup a particular column */
-  series(key: string): Column {
+  public series(key: string): Column {
     return this.columns[key];
   }
 
   /** Count of items in columns */
-  get length(): number {
+  public get length(): number {
     return this.first.length;
   }
 
   /** Count of columns */
-  get width(): number {
+  public get width(): number {
     return this.names.length;
   }
 
   /** Correlation of each series to each series on other dataframe */
-  correlationMatrix(other: DataFrame): DataFrame {
-    const rows = this.names;
+  public correlationMatrix(other: DataFrame): DataFrame {
+    const RowRecords = this.names;
     const cols = other.names;
     const series: SeriesClasses[] = [
-      new TextSeries(rows, "Keys"),
+      new TextSeries(RowRecords, "Keys"),
     ];
     for (const colname of cols) {
       const results: number[] = [];
-      for (const rowname of rows) {
+      for (const RowRecordname of RowRecords) {
         const sc = other.series(colname) as Series;
-        const sr = this.series(rowname) as Series;
+        const sr = this.series(RowRecordname) as Series;
         const coef: number = sr.correlation(sc);
         results.push(coef);
       }
@@ -132,11 +134,6 @@ export class DataFrame {
     }
 
     return new DataFrame(series);
-  }
-
-  /** Reference to object */
-  get ref(): DataFrame {
-    return this;
   }
 
   /** Disable count of significant digits */
@@ -151,13 +148,11 @@ export class DataFrame {
   }
 
   /** Pretty print as ascii table */
-  print(title?: string): void {
-    const tidy = this.digits(2);
-    const colnames = tidy.names;
+  public print(title?: string): void {
     const table = new Table();
     if (title) table.title = title;
-    table.headers = colnames;
-    table.rows = tidy.grid;
+    table.headers = this.names;
+    table.rows = this.grid;
     console.log("\n" + table.toString());
   }
 }
