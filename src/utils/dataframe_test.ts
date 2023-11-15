@@ -80,3 +80,9 @@ Deno.test("Generate Column", () => {
   const amend = df.amend("neg", (r) => -r.n);
   assertEquals(amend.column("neg").values, [-1, -2]);
 });
+
+Deno.test("Reverse Rows", () => {
+  const df = DataFrame.fromRecords(testdata);
+  const rev = df.reverse;
+  assertEquals(rev.column("n").values, [1, 2]);
+});

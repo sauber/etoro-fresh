@@ -38,7 +38,7 @@ const output: DataFrame = features.include(["Profit", "SharpeRatio"]);
 
 // Show a correlation matrix
 const c = input.correlationMatrix(output);
-c.print("Correlation Matrix");
+c.sort("SharpeRatio").digits(3).print("Correlation Matrix");
 //const sum: number = yf.map(col=>c.series(col).abs.sum).reduce((a,b)=>a+b);
 //console.log('Total coefficients: ', sum);
 
