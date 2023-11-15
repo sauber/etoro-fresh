@@ -74,9 +74,7 @@ export class DataFrame {
 
   /** Values from all series at index */
   private line(index: number): RowValues {
-    const l = this.names.map((x) => this.columns[x].values[index]);
-    console.log({index, line: l});
-    return l;
+    return this.names.map((x) => this.columns[x].values[index]);
   }
 
   /** Export data to matrix */
