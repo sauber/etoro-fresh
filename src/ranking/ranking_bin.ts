@@ -9,7 +9,15 @@ const backend: RepoDiskBackend = new RepoDiskBackend(path);
 export const community = new Community(backend);
 const rank = new Ranking(community);
 rank.days = 30;
-const features: DataFrame = await rank.data();
+const features: DataFrame = (await rank.data()).sort("SharpeRatio").reverse;
+features.include([
+  "PeakToValley",
+  "RiskScore",
+  "DailyDD",
+  "LongPosPct",
+  "ProfitableWeeksPct",
+  "SharpeRatio",
+]).digits(2).print("Significant Features");
 
 // Write to to file
 //Deno.writeTextFileSync("rank.json", JSON.stringify(features));
@@ -31,18 +39,29 @@ const yf = ["Profit", "SharpeRatio"];
 
 //const input = features.map( record => Object.values(record).slice(0,-2) );
 //const output = features.map( record => Object.values(record).slice(-2) );
-const input: DataFrame = features.exclude(["VirtualCopiers", "Profit", "SharpeRatio"]);
+const input: DataFrame = features.exclude([
+  "VirtualCopiers",
+  "Profit",
+  "SharpeRatio",
+]);
 //console.log(input);
 
 const output: DataFrame = features.include(["Profit", "SharpeRatio"]);
 
 // Show a correlation matrix
 const c = input.correlationMatrix(output);
-c.sort("SharpeRatio").digits(3).print("Correlation Matrix");
-//const sum: number = yf.map(col=>c.series(col).abs.sum).reduce((a,b)=>a+b);
-//console.log('Total coefficients: ', sum);
+c.amend(
+  "Score",
+  (r) => Math.abs(r.SharpeRatio as number) + Math.abs(r.Profit as number),
+).sort("Score").reverse.digits(3).print("Correlation Matrix");
 
-Deno.exit();
+// Calculate total of coefficients
+const sum: number = yf.map((col) => c.column(col).abs.sum).reduce((a, b) =>
+  a + b
+);
+console.log("Total coefficients: ", sum);
+
+//Deno.exit();
 
 const samples = features.length;
 //const input = features.map((record) => xf.map((f) => record[f])).slice(0, samples);
@@ -57,7 +76,7 @@ const yw = output.names.length;
 const xs = tf.tensor2d(input.grid);
 //xs.print();
 const ys = tf.tensor2d(output.grid);
-//ys.print();
+ys.print();
 
 const model = tf.sequential({
   layers: [
@@ -65,37 +84,37 @@ const model = tf.sequential({
     tf.layers.batchNormalization({ inputShape: [xw] }),
     tf.layers.dense({ units: xw }),
     tf.layers.dropout(0.2),
-    tf.layers.dense({units: 18}),
-    tf.layers.dense({units: 8}),
-    tf.layers.dense({units: 4}),
+    //tf.layers.dense({ units: xw*2 }),
+    //tf.layers.dense({ units: 8 }),
+    //tf.layers.dense({ units: 4 }),
     tf.layers.dense({ units: yw }),
   ],
 });
-model.compile({ optimizer: "adam", loss: "meanSquaredError" });
+model.compile({ optimizer: "adamax", loss: "meanSquaredError" });
 model.summary();
 
 const split = 0.2;
-for (let i = 1; i <= 5; ++i) {
+for (let i = 1; i <= 25; ++i) {
   const h = await model.fit(xs, ys, {
     epochs: 30,
     shuffle: true,
-    validationSplit: split,
+    //validationSplit: split,
   });
   console.log(
     "Loss after Epoch " + i + " : ",
     h.history.loss[0],
-    " : ",
-    h.history.val_loss[0]
+    //" : ",
+    //h.history.val_loss[0],
   );
 }
 
 // Validation - last samples
-const xval = xs.slice([samples - 5]);
-const yval = ys.slice([samples - 5]);
+//const xval = xs.slice([samples - 5]);
+//const yval = ys.slice([samples - 5]);
 
 // Validation - first samples
-//const xval = xs.slice([0], [5]);
-//const yval = ys.slice([0], [5]);
+const xval = xs.slice([0], [5]);
+const yval = ys.slice([0], [5]);
 
 console.log("Validation input");
 xval.print();
