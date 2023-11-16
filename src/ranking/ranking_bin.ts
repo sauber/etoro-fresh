@@ -82,7 +82,7 @@ const model = tf.sequential({
   layers: [
     //tf.layers.dense({inputShape: [27], units: 20}),
     tf.layers.batchNormalization({ inputShape: [xw] }),
-    tf.layers.dense({ units: xw }),
+    //tf.layers.dense({ units: xw }),
     tf.layers.dropout(0.2),
     //tf.layers.dense({ units: xw*2 }),
     //tf.layers.dense({ units: 8 }),
@@ -90,13 +90,13 @@ const model = tf.sequential({
     tf.layers.dense({ units: yw }),
   ],
 });
-model.compile({ optimizer: "adamax", loss: "meanSquaredError" });
+model.compile({ optimizer: "sgd", loss: "meanSquaredError" });
 model.summary();
 
 const split = 0.2;
 for (let i = 1; i <= 25; ++i) {
   const h = await model.fit(xs, ys, {
-    epochs: 30,
+    epochs: 100,
     shuffle: true,
     //validationSplit: split,
   });
