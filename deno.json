@@ -7,7 +7,7 @@
     "preview": "deno run -A main.ts",
     "rank": "deno run --allow-read=src/repository/testdata --allow-net=github.com,objects.githubusercontent.com src/ranking/ranking_bin.ts",
     "refresh": "deno run --allow-read=/workspaces/etoro-data/data --allow-write=/workspaces/etoro-data/data --allow-net=www.etoro.com src/refresh/refresh_bin.ts /workspaces/etoro-data/data",
-    "test": "deno test --allow-write=/tmp --allow-read=/tmp,src/repository/testdata,testdata --allow-net=www.etoro.com,jsonplaceholder.typicode.com",
+    "test": "deno test --allow-write=/tmp --allow-read=/tmp,src/repository/testdata,testdata --allow-net=www.etoro.com,jsonplaceholder.typicode.com,github.com,objects.githubusercontent.com",
     "webtest": "deno test --allow-env --allow-read=. --allow-net=127.0.0.1",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
   },
@@ -24,6 +24,7 @@
     "twind": "https://esm.sh/twind@0.16.19",
     "twind/": "https://esm.sh/twind@0.16.19/",
     "$std/": "https://deno.land/std@0.193.0/",
+    "base64": "https://deno.land/std@0.206.0/encoding/base64.ts",
     "dotenv": "https://deno.land/std@0.201.0/dotenv/mod.ts",
     "assert": "https://deno.land/std@0.200.0/assert/mod.ts",
     "difference": "https://deno.land/std@0.200.0/datetime/difference.ts",

@@ -22,20 +22,20 @@ type Expire = {
   stats: number;
 }
 
+// Convert hours to ms
+const msPerHour = 60 * 60 * 1000;
+
 /** Load all data for all investors */
 export class Refresh {
-  // Convert hours to ms
-  private static msPerHour = 60 * 60 * 1000;
-
   private readonly discover_count = {
       min: 70, max: 140
     } as Range;
    private readonly expire = {
-      mirror: 16 * Refresh.msPerHour,
-      discover: 50 * Refresh.msPerHour,
-      chart: 24 * Refresh.msPerHour,
-      portfolio: 666 * Refresh.msPerHour,
-      stats: 333 * Refresh.msPerHour,
+      mirror: 16 * msPerHour,
+      discover: 50 * msPerHour,
+      chart: 24 * msPerHour,
+      portfolio: 666 * msPerHour,
+      stats: 333 * msPerHour,
     } as Expire;
 
   // How many external fetches are performed

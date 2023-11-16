@@ -86,7 +86,7 @@ const yw = output.names.length;
 await setupBackend(WASM);
 const net = new Sequential({
   // The number of minibatches is set to 4 and the output size is set to 2.
-  size: [samples, xw],
+  size: [128, xw],
 
   // The silent option is set to true, which means that the network will not output any logs during trainin
   silent: true,
@@ -106,7 +106,6 @@ const net = new Sequential({
     DenseLayer({ size: [yw] }),
     SigmoidLayer(),
     DenseLayer({ size: [yw] }),
-    //SigmoidLayer(),
   ],
 
   // The cost function used for training the network is the mean squared error (MSE).
@@ -126,7 +125,7 @@ net.train(
     },
   ],
   // The number of iterations is set to 10000.
-  10000,
+  500,
 );
 console.log(`training time: ${performance.now() - time}ms`);
 
