@@ -2,7 +2,18 @@ import { RepoDiskBackend } from "/repository/repo-disk.ts";
 import { Community } from "/investor/mod.ts";
 import { Ranking } from "./ranking.ts";
 import { DataFrame } from "/utils/dataframe.ts";
-import tf from "tensorflow";
+
+import {   Cost,
+  WASM,
+  setupBackend,
+  Sequential,
+  DenseLayer,
+  SigmoidLayer,
+  BatchNorm1DLayer,
+  ReluLayer,
+  tensor1D,
+  tensor2D,
+ } from "netsaur";
 
 const path: string = Deno.args[0];
 const backend: RepoDiskBackend = new RepoDiskBackend(path);
@@ -68,61 +79,59 @@ const samples = features.length;
 //const output = features.map((record) => yf.map((f) => record[f])).slice(0, samples);
 const xw = input.names.length;
 const yw = output.names.length;
-//console.log({input, output});
 
-//console.log(output);
+/**
+ * Creates a sequential neural network.
+ */
+await setupBackend(WASM);
+const net = new Sequential({
+  // The number of minibatches is set to 4 and the output size is set to 2.
+  size: [samples, xw],
 
-// Create tensors
-const xs = tf.tensor2d(input.grid);
-//xs.print();
-const ys = tf.tensor2d(output.grid);
-ys.print();
+  // The silent option is set to true, which means that the network will not output any logs during trainin
+  silent: true,
 
-const model = tf.sequential({
+  /**
+   * Defines the layers of a neural network in the XOR function example.
+   * The neural network has two input neurons and one output neuron.
+   * The layers are defined as follows:
+   * - A dense layer with 3 neurons.
+   * - sigmoid activation layer.
+   * - A dense layer with 1 neuron.
+   * -A sigmoid activation layer.
+   */
   layers: [
-    //tf.layers.dense({inputShape: [27], units: 20}),
-    tf.layers.batchNormalization({ inputShape: [xw] }),
-    //tf.layers.dense({ units: xw }),
-    tf.layers.dropout(0.2),
-    //tf.layers.dense({ units: xw*2 }),
-    //tf.layers.dense({ units: 8 }),
-    //tf.layers.dense({ units: 4 }),
-    tf.layers.dense({ units: yw }),
+    BatchNorm1DLayer({ momentum: 0.9 }),
+    ReluLayer(),
+    DenseLayer({ size: [yw] }),
+    SigmoidLayer(),
+    DenseLayer({ size: [yw] }),
+    //SigmoidLayer(),
   ],
+
+  // The cost function used for training the network is the mean squared error (MSE).
+  cost: Cost.MSE,
 });
-model.compile({ optimizer: "sgd", loss: "meanSquaredError" });
-model.summary();
 
-const split = 0.2;
-for (let i = 1; i <= 25; ++i) {
-  const h = await model.fit(xs, ys, {
-    epochs: 100,
-    shuffle: true,
-    //validationSplit: split,
-  });
-  console.log(
-    "Loss after Epoch " + i + " : ",
-    h.history.loss[0],
-    //" : ",
-    //h.history.val_loss[0],
-  );
+
+/**
+ * Train the network on the given data.
+ */
+const time = performance.now();
+net.train(
+  [
+    {
+      inputs: tensor2D(input.grid),
+      outputs: tensor2D(output.grid),
+    },
+  ],
+  // The number of iterations is set to 10000.
+  10000,
+);
+console.log(`training time: ${performance.now() - time}ms`);
+
+
+for ( let i=0; i<samples; i++ ) {
+  const out1 = (await net.predict(tensor1D(input.grid[i]))).data;
+   console.log(output.grid[i], out1);
 }
-
-// Validation - last samples
-//const xval = xs.slice([samples - 5]);
-//const yval = ys.slice([samples - 5]);
-
-// Validation - first samples
-const xval = xs.slice([0], [5]);
-const yval = ys.slice([0], [5]);
-
-console.log("Validation input");
-xval.print();
-
-console.log("Validation output [profit, sharpe]");
-yval.print();
-
-console.log("Predicted output");
-model.predict(xval).print();
-console.log("numTensors : " + tf.memory().numTensors);
-Deno.exit(0);
