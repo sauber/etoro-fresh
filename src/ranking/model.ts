@@ -14,10 +14,10 @@ import { Asset, RepoBackend } from "/repository/mod.ts";
 import type { JSONObject } from "/repository/mod.ts";
 
 type ModelTS = Uint8Array;
-type input = Array<Array<number>>;
+export type Input = Array<Array<number>>;
 type Profit = number;
 type SharpeRatio = number;
-type output = Array<[Profit, SharpeRatio]>;
+export type Output = Array<[Profit, SharpeRatio]>;
 
 // Convert days to ms
 const Days = 60 * 60 * 1000;
@@ -105,7 +105,7 @@ export class Model {
     return this.save(model);
   }
 
-  public predict(input: Input): Promise<Output>) {
+  public async predict(input: Input): Promise<Output> {
     // Setup backend
     await this.setupBackend();
 
@@ -113,7 +113,11 @@ export class Model {
     const model: Sequential = await this.loadModel();
 
     // Generate predictions
-    const output = model.predict(input);
+    const output: Output = [];
+    for ( const i of input ) {
+      const o = (await model.predict(tensor1D(i))).data;
+      output.push([o[0], o[1]] as [Profit, SharpeRatio]);
+    }
     return output;
   }
 }
