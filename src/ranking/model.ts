@@ -13,8 +13,11 @@ import {
 import { Asset, RepoBackend } from "/repository/mod.ts";
 import type { JSONObject } from "/repository/mod.ts";
 
-
 type ModelTS = Uint8Array;
+type input = Array<Array<number>>;
+type Profit = number;
+type SharpeRatio = number;
+type output = Array<[Profit, SharpeRatio]>;
 
 // Convert days to ms
 const Days = 60 * 60 * 1000;
@@ -30,18 +33,12 @@ export class Model {
   }
 
   /** Run before creating model, training or predicting */
-  async setupBackend(): Promise<void> {
+  private async setupBackend(): Promise<void> {
     await setupBackend(WASM);
   }
 
-  /** Confirm if a recent model exists */
-  async hasModel(): Promise<boolean> {
-    const age: number | null = await this.repo.age(this.assetname);
-    return (age && age < this.expire) ? true : false;
-  }
-
   /** Load existing model */
-  async loadModel(): Promise<Sequential> {
+  private async loadModel(): Promise<Sequential> {
     const loaded: JSONObject | null = await this.repo.retrieve(this.assetname);
     if (loaded) {
       const model: Uint8Array = decodeBase64(loaded.model as string);
@@ -51,8 +48,8 @@ export class Model {
   }
 
   /** Create a sequential model with layers */
-  createModel(): Sequential {
-    const outputSize = 2;
+  private createModel(): Sequential {
+    const outputSize = 2; // Profit and SharpeRatio
     return new Sequential({
       // Number of minibatches, and size of output
       size: [128, outputSize],
@@ -70,24 +67,53 @@ export class Model {
     });
   }
 
+  /** Load model if exists, otherwise create one */
+  private async loadOrCreate(): Promise<Sequential> {
+    console.log("Loading model");
+    if (await this.repo.has(this.assetname)) return this.loadModel();
+    console.log("Loading failed. Creating model instead.");
+    return this.createModel();
+  }
+
+  /** Encode Model as Base64 and save in repository */
+  private async save(model: Sequential): Promise<void> {
+    const uint8arr: Uint8Array = await model.save();
+    const str = encodeBase64(uint8arr);
+    //console.log(str);
+    return this.repo.store(this.assetname, { model: str });
+  }
+
   /** Train model with input and output data */
-  train(
-    model: Sequential,
-    input: Array<Array<number>>,
-    output: Array<[number, number]>,
-  ): void {
+  public async train(
+    input: Input,
+    output: Output,
+  ): Promise<void> {
+    // Setup backend
+    await this.setupBackend();
+
+    // Load existing or create new model
+    const model: Sequential = await this.loadOrCreate();
+
+    // Train model
     model.train(
       [{ inputs: tensor2D(input), outputs: tensor2D(output) }],
       // The number of iterations is set to 10000.
       10000,
     );
+
+    // Save trained model
+    return this.save(model);
   }
 
-  /** Encode Model as Base64 and save in repository */
-  async save(model: Sequential): Promise<void> {
-    const uint8arr: Uint8Array = await model.save();
-    const str = encodeBase64(uint8arr);
-    //console.log(str);
-    return this.repo.store(this.assetname, { model: str });
+  public predict(input: Input): Promise<Output>) {
+    // Setup backend
+    await this.setupBackend();
+
+    // Load existing model
+    const model: Sequential = await this.loadModel();
+
+    // Generate predictions
+    const output = model.predict(input);
+    return output;
   }
 }

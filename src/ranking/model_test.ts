@@ -10,25 +10,8 @@ Deno.test("Initialize", () => {
   assertInstanceOf(model, Model);
 });
 
-Deno.test("Setup Backend", async () => {
-  const model = new Model(repo);
-  const done = await model.setupBackend();
-  assertEquals(done, undefined);
-});
 
-Deno.test("No pre-existing model", async () => {
-  const model = new Model(repo);
-  const prev = await model.hasModel();
-  assertEquals(prev, false);
-});
-
-Deno.test("Create model", () => {
-  const model = new Model(repo);
-  const seq = model.createModel();
-  assertInstanceOf(seq, Sequential);
-});
-
-Deno.test("Train model", { ignore: true }, async () => {
+Deno.test("Train model", { ignore: flase }, async () => {
   // Testdata
   // y1 = (2x - 1)/10
   // y2 = (x*x -1)/100
@@ -43,10 +26,10 @@ Deno.test("Train model", { ignore: true }, async () => {
 
   // Sequential model
   const model = new Model(repo);
-  const seq = model.createModel();
+  //const seq = model.createModel();
 
   // Training
-  const done = model.train(seq, input, output);
+  const done = await model.train(seq, input, output);
   assertEquals(done, undefined);
 
   // Validate
@@ -56,14 +39,3 @@ Deno.test("Train model", { ignore: true }, async () => {
   }
 });
 
-Deno.test("Save model", async () => {
-  const model = new Model(repo);
-  const seq = model.createModel();
-  const done = await model.save(seq);
-  assertEquals(done, undefined);
-
-  // Load to Confirm
-  const seq2: Sequential = await model.loadModel();
-  assertInstanceOf(seq2, Sequential);
-
-});
