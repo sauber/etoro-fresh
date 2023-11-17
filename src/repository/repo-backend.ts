@@ -6,6 +6,9 @@ export abstract class RepoBackend {
   /** Delete whole repo */
   abstract delete(): Promise<void>;
 
+  /** Verify if asset exists */
+  abstract has(assetname: string): Promise<boolean>;
+
   /** Store Asset */
   abstract store(assetname: string, data: JSONObject): Promise<void>;
 

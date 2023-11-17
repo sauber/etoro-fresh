@@ -41,6 +41,11 @@ Deno.test("Store and retrive objects", async (t) => {
   const assetname = "foo";
   const data: JSONObject = { bar: true };
 
+  await t.step("Lookup", async () => {
+    const exists: boolean = await repo.has(assetname);
+    assertEquals(exists, false);
+  });
+
   await t.step("Store", async () => {
     await repo.store(assetname, data);
   });

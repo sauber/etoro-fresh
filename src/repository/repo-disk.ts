@@ -27,6 +27,10 @@ export class RepoDiskBackend extends RepoBackend {
     throw new Error("Refuse to delete persistent disk repository");
   }
 
+  public async has(assetname: string): Promise<boolean> {
+     return (await this.assetEnd(assetname) !== undefined) ? true : false;
+  }
+
   public async store(assetname: string, data: JSONObject): Promise<void> {
     const fs: Files = await this.files();
     const dir: DateFormat = today();
