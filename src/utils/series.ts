@@ -99,13 +99,13 @@ export class Series extends DataSeries<number>
 
   /** Calculate Pearson Correlation Coefficient to other series */
   public correlation(other: Series): number {
-    const n = this.values.length;
-    const x = this.sum;
-    const y = other.sum;
-    const x2 = this.pow2.sum;
-    const y2 = other.pow2.sum;
-    const xy = this.multiply(other).sum;
-    const r = (n * xy - x * y) / Math.sqrt((n * x2 - x * x) * (n * y2 - y * y));
+    const n: number = this.values.length;
+    const x: number = this.sum;
+    const y: number = other.sum;
+    const x2: number = this.pow2.sum;
+    const y2: number = other.pow2.sum;
+    const xy: number = this.multiply(other).sum;
+    const r: number = (n * xy - x * y) / Math.sqrt((n * x2 - x * x) * (n * y2 - y * y));
     return r;
   }
 }

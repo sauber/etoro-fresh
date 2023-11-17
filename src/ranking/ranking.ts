@@ -105,12 +105,12 @@ class Features {
   public get output(): FeatureData {
     return {
       Profit: this.profit,
+      // 0.05 is safe returns ie. money market 5% yearly returns
+      // TODO move to config
       SharpeRatio: this.chart.sharpeRatio(0.05),
     };
   }
 }
-
-//type Tensor2D = number[][];
 
 export class Ranking {
   /** Minimum number of days in chart after stats */

@@ -31,7 +31,7 @@ function series(
 export class DataFrame {
   public readonly names: ColumnNames;
   private readonly index: Index;
-  private readonly length: number;
+  public readonly length: number;
 
   constructor(
     // Data Series
