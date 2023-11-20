@@ -16,9 +16,7 @@ export type SeriesClasses = Series | TextSeries | BoolSeries;
 abstract class DataSeries<T> implements SeriesInterface<T> {
   public readonly length;
 
-  constructor(
-    public readonly values: Array<T> = [],
-  ) {
+  constructor(public readonly values: Array<T> = []) {
     this.length = values.length;
   }
 
@@ -36,24 +34,30 @@ abstract class DataSeries<T> implements SeriesInterface<T> {
 }
 
 /** Series of strings */
-export class TextSeries extends DataSeries<string>
-  implements SeriesInterface<string> {
+export class TextSeries
+  extends DataSeries<string>
+  implements SeriesInterface<string>
+{
   constructor(values?: Array<string>) {
     super(values);
   }
 }
 
 /** Series of booleans */
-export class BoolSeries extends DataSeries<boolean>
-  implements SeriesInterface<boolean> {
+export class BoolSeries
+  extends DataSeries<boolean>
+  implements SeriesInterface<boolean>
+{
   constructor(values?: Array<boolean>) {
     super(values);
   }
 }
 
 /** Series of numbers */
-export class Series extends DataSeries<number>
-  implements SeriesInterface<number> {
+export class Series
+  extends DataSeries<number>
+  implements SeriesInterface<number>
+{
   //public readonly isNumber = true;
 
   constructor(values?: Array<number>) {
@@ -101,7 +105,8 @@ export class Series extends DataSeries<number>
     const x2: number = this.pow2.sum;
     const y2: number = other.pow2.sum;
     const xy: number = this.multiply(other).sum;
-    const r: number = (n * xy - x * y) / Math.sqrt((n * x2 - x * x) * (n * y2 - y * y));
+    const r: number =
+      (n * xy - x * y) / Math.sqrt((n * x2 - x * x) * (n * y2 - y * y));
     return r;
   }
 }

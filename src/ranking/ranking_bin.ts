@@ -3,7 +3,8 @@ import { Community } from "/investor/mod.ts";
 import { Ranking } from "./ranking.ts";
 import { DataFrame } from "/utils/dataframe.ts";
 
-import {   Cost,
+import {
+  Cost,
   WASM,
   setupBackend,
   Sequential,
@@ -13,72 +14,40 @@ import {   Cost,
   ReluLayer,
   tensor1D,
   tensor2D,
- } from "netsaur";
+  Array1D,
+  Array2D,
+  AdamOptimizer,
+  Dropout1DLayer,
+} from "netsaur";
 
+// Load investor stats data
 const path: string = Deno.args[0];
 const backend: RepoDiskBackend = new RepoDiskBackend(path);
 export const community = new Community(backend);
 const rank = new Ranking(community);
-rank.days = 30;
-const features: DataFrame = (await rank.data()).sort("SharpeRatio").reverse;
-features.include([
-  "PeakToValley",
-  "RiskScore",
-  "DailyDD",
-  "LongPosPct",
-  "ProfitableWeeksPct",
-  "SharpeRatio",
-]).digits(2).print("Significant Features");
+rank.days = 15;
+const features: DataFrame = await rank.data();
 
-// Write to to file
-//Deno.writeTextFileSync("rank.json", JSON.stringify(features));
-//Deno.exit(0);
-
-// Relevant fields
-// xs: MaxDailyRiskScore, DailyDD, WeeklyDD, MediumLeveragePct, PeakToValley, WeeksSinceRegistration
-// YS: Profit, SharpeRatio
-const xf = [
-  "MaxDailyRiskScore",
-  "DailyDD",
-  "WeeklyDD",
-  "MediumLeveragePct",
-  "PeakToValley",
-  "WeeksSinceRegistration",
-];
-const yf = ["Profit", "SharpeRatio"];
-// Split xs and ys
-
-//const input = features.map( record => Object.values(record).slice(0,-2) );
-//const output = features.map( record => Object.values(record).slice(-2) );
-const input: DataFrame = features.exclude([
-  "VirtualCopiers",
-  "Profit",
-  "SharpeRatio",
-]);
-//console.log(input);
-
-const output: DataFrame = features.include(["Profit", "SharpeRatio"]);
-
-// Show a correlation matrix
-const c = input.correlationMatrix(output);
-c.amend(
-  "Score",
-  (r) => Math.abs(r.SharpeRatio as number) + Math.abs(r.Profit as number),
-).sort("Score").reverse.digits(3).print("Correlation Matrix");
-
-// Calculate total of coefficients
-const sum: number = yf.map((col) => c.column(col).abs.sum).reduce((a, b) =>
-  a + b
+// Split into training and validation set
+const validation_ratio = 0.05;
+const validation_length = Math.round(features.length * validation_ratio);
+const training = features.slice(0, features.length - validation_length);
+const validation = features.slice(
+  features.length - validation_length,
+  features.length
 );
-console.log("Total coefficients: ", sum);
+//console.log({training: training.length, validation: validation.length});
 
-//Deno.exit();
+// Split input and output
+const xf = ["Profit", "SharpeRatio"];
+//const train_x = training.exclude([...xf, "VirtualCopiers"]);
+//const train_y = training.include(xf);
+const valid_x = validation.exclude([...xf, "VirtualCopiers"]);
+const valid_y = validation.include(xf);
 
-const samples = features.length;
-//const input = features.map((record) => xf.map((f) => record[f])).slice(0, samples);
-//const output = features.map((record) => yf.map((f) => record[f])).slice(0, samples);
-const xw = input.names.length;
-const yw = output.names.length;
+// Count of fields in input and output
+const xw = valid_x.names.length;
+const yw = valid_y.names.length;
 
 /**
  * Creates a sequential neural network.
@@ -89,7 +58,7 @@ const net = new Sequential({
   size: [128, xw],
 
   // The silent option is set to true, which means that the network will not output any logs during trainin
-  silent: true,
+  silent: false,
 
   /**
    * Defines the layers of a neural network in the XOR function example.
@@ -103,34 +72,104 @@ const net = new Sequential({
   layers: [
     BatchNorm1DLayer({ momentum: 0.9 }),
     ReluLayer(),
-    DenseLayer({ size: [yw] }),
+    DenseLayer({ size: [Math.round(xw/2)] }),
     SigmoidLayer(),
+    //DenseLayer({size: [1]}),
+    //SigmoidLayer(),
     DenseLayer({ size: [yw] }),
   ],
 
   // The cost function used for training the network is the mean squared error (MSE).
   cost: Cost.MSE,
+
+  // Use Adam optimizer
+  optimizer: AdamOptimizer(),
 });
 
+/** Calculate Mean Squared Error betwen two datasets of same size */
+function MSE(expected: Array2D, actual: Array2D): number {
+  let sum = 0;
+  let count = 1;
+  for (let y = 0; y < expected.length; y++) {
+    for (let x = 0; x < expected[0].length; x++) {
+      const diff = expected[y][x] - actual[y][x];
+      const squared = diff * diff;
+      sum += squared;
+      ++count;
+    }
+  }
+  const avg = sum / count;
+  return avg;
+}
+
+async function predictOne(values: Array1D, results: Array2D): Promise<void> {
+  const out1 = (await net.predict(tensor1D(values))).data;
+  results.push([out1[0], out1[1]]);
+}
+
+async function predict(rows: Array2D): Promise<Array2D> {
+  const results: Array2D = [];
+  await Promise.all(rows.map((r) => predictOne(r, results)));
+  return results;
+}
 
 /**
  * Train the network on the given data.
  */
 const time = performance.now();
-net.train(
-  [
-    {
-      inputs: tensor2D(input.grid),
-      outputs: tensor2D(output.grid),
-    },
-  ],
-  // The number of iterations is set to 10000.
-  500,
-);
+for (let i = 0; i < 50; i++) {
+  const shuffled = training.shuffle;
+  const train_x = shuffled.exclude([...xf, "VirtualCopiers"]);
+  const train_y = shuffled.include(xf);
+  const inputs = tensor2D(train_x.grid as Array2D);
+  const outputs = tensor2D(train_y.grid as Array2D);
+  net.train(
+    [{ inputs, outputs }],
+    // The number of iterations is set to 10000.
+    100,
+    // Batches
+    50,
+    // Learning Rate
+    0.005
+  );
+
+  // Calculate Training loss
+  const train_p = await predict(train_x.grid as Array2D);
+  const train_loss = MSE(train_y.grid as Array2D, train_p);
+
+  // Calculate Validation Loss
+  const valid_p = await predict(valid_x.grid as Array2D);
+  const valid_loss = MSE(valid_y.grid as Array2D, valid_p);
+
+  console.log({train_loss, valid_loss});
+
+  //const i = 0;
+  //const out1 = (await net.predict(tensor1D(input.grid[i] as Array1D))).data;
+  //console.log(output.grid[i], out1);
+}
 console.log(`training time: ${performance.now() - time}ms`);
 
-
-for ( let i=0; i<samples; i++ ) {
-  const out1 = (await net.predict(tensor1D(input.grid[i]))).data;
-   console.log(output.grid[i], out1);
+/*
+for (let i = 0; i < 5; i++) {
+  const out1 = (await net.predict(tensor1D(input.grid[i] as Array1D))).data;
+  console.log(output.grid[i], out1);
 }
+console.log("...");
+for (let e = 5; e > 0; e--) {
+  const i = input.length - e;
+  const out1 = (await net.predict(tensor1D(input.grid[i] as Array1D))).data;
+  console.log(output.grid[i], out1);
+}
+*/
+
+// Test results
+const test_x = valid_x.slice(0,5).grid as Array2D;
+const test_y = valid_y.slice(0,5).grid as Array2D;
+//const test_x = training.exclude([...xf, "VirtualCopiers"]).slice(0,5).grid as Array2D;
+//const test_y = training.include(xf).slice(0,5).grid as Array2D;
+const test_p = await predict(test_x);
+const test_loss = MSE(test_y, test_p);
+for ( let i=0; i<test_x.length; i++) {
+  console.log({expected: test_y[i], predicted: test_p[i]});
+}
+console.log({test_loss});

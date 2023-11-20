@@ -86,3 +86,9 @@ Deno.test("Reverse Rows", () => {
   const rev = df.reverse;
   assertEquals(rev.column("n").values, [1, 2]);
 });
+
+Deno.test("Reduce Rows", () => {
+  const df = DataFrame.fromRecords(testdata);
+  const rev = df.slice(0,1);
+  assertEquals(rev.records, [testdata[0]]);
+});

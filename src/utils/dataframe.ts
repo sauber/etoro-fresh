@@ -13,9 +13,7 @@ type SortElement = [number, SeriesTypes];
 type RowCallback = (row: RowRecord) => SeriesTypes;
 
 /** Generate a series from an array of unknown values */
-function series(
-  array: Array<unknown>,
-): SeriesClasses | undefined {
+function series(array: Array<unknown>): SeriesClasses | undefined {
   switch (typeof array[0]) {
     case "number":
       return new Series(array as number[]);
@@ -36,7 +34,7 @@ export class DataFrame {
     // Data Series
     private readonly columns: Columns = {},
     // Ordering of rows
-    index?: Index,
+    index?: Index
   ) {
     // Names of columns
     this.names = Object.keys(columns);
@@ -63,13 +61,13 @@ export class DataFrame {
       Object.assign(
         {},
         ...Object.keys(records[0]).map((name: string) => {
-          const array = records.map((rec: Record<string, unknown>) =>
-            rec[name]
+          const array = records.map(
+            (rec: Record<string, unknown>) => rec[name]
           );
           const ser = series(array);
           if (ser) return { [name]: ser };
-        }),
-      ),
+        })
+      )
     );
   }
 
@@ -77,7 +75,7 @@ export class DataFrame {
   private record(index: number): RowRecord {
     return Object.assign(
       {},
-      ...this.names.map((x) => ({ [x]: this.columns[x].values[index] })),
+      ...this.names.map((x) => ({ [x]: this.columns[x].values[index] }))
     );
   }
 
@@ -163,17 +161,17 @@ export class DataFrame {
     const index: Index = this.index;
     const value: SeriesTypes[] = this.column(colname).values;
     const zip: Array<SortElement> = index.map((i: number) => [i, value[i]]);
-    const sorted: Array<SortElement> = zip.sort((
-      a,
-      b,
-    ) => (a[1] < b[1] ? -1 : 1));
+    const sorted: Array<SortElement> = zip.sort((a, b) =>
+      a[1] < b[1] ? -1 : 1
+    );
     const order: Index = sorted.map((a: SortElement) => a[0]);
     return new DataFrame(this.columns, order);
   }
 
   /** Generate a new column from existing columns */
   public amend(name: string, callback: RowCallback): DataFrame {
-    const array: SeriesTypes[] = this.index.map((index) => this.record(index))
+    const array: SeriesTypes[] = this.index
+      .map((index) => this.record(index))
       .map((row: RowRecord) => callback(row));
     const ser = series(array);
     if (ser) {
@@ -181,8 +179,25 @@ export class DataFrame {
     } else return this;
   }
 
+  /** Rearrange rows */
+  private reindex(index: Index): DataFrame {
+    return new DataFrame(this.columns, index);
+  }
+
   /** Rows in reverse order */
   public get reverse(): DataFrame {
-    return new DataFrame(this.columns, this.index.reverse());
+    return this.reindex(this.index.reverse());
+  }
+
+  /** Slice each column
+   * Note: Underlying series are not sliced
+   */
+  public slice(start: number, end: number): DataFrame {
+    return this.reindex(this.index.slice(start, end));
+  }
+
+  /** Rows in random order */
+  public get shuffle(): DataFrame {
+    return this.reindex(this.index.sort(() => Math.random() - 0.5));
   }
 }
