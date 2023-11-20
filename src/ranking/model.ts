@@ -8,13 +8,14 @@ import {
   SigmoidLayer,
   tensor1D,
   tensor2D,
+  Array2D,
   WASM,
 } from "netsaur";
 import { Asset, RepoBackend } from "/repository/mod.ts";
 import type { JSONObject } from "/repository/mod.ts";
 
 type ModelTS = Uint8Array;
-export type Input = Array<Array<number>>;
+export type Input = Array2D;
 type Profit = number;
 type SharpeRatio = number;
 export type Output = Array<[Profit, SharpeRatio]>;
