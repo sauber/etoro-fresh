@@ -3,9 +3,6 @@ export interface SeriesInterface<T> {
   /** List of all values */
   values: Array<T>;
 
-  /** Name of series */
-  name?: string;
-
   /** First value */
   first: T;
 
@@ -21,7 +18,6 @@ abstract class DataSeries<T> implements SeriesInterface<T> {
 
   constructor(
     public readonly values: Array<T> = [],
-    public readonly name: string = "",
   ) {
     this.length = values.length;
   }
@@ -42,16 +38,16 @@ abstract class DataSeries<T> implements SeriesInterface<T> {
 /** Series of strings */
 export class TextSeries extends DataSeries<string>
   implements SeriesInterface<string> {
-  constructor(values?: Array<string>, name?: string) {
-    super(values, name);
+  constructor(values?: Array<string>) {
+    super(values);
   }
 }
 
 /** Series of booleans */
 export class BoolSeries extends DataSeries<boolean>
   implements SeriesInterface<boolean> {
-  constructor(values?: Array<boolean>, name?: string) {
-    super(values, name);
+  constructor(values?: Array<boolean>) {
+    super(values);
   }
 }
 
@@ -60,13 +56,13 @@ export class Series extends DataSeries<number>
   implements SeriesInterface<number> {
   //public readonly isNumber = true;
 
-  constructor(values?: Array<number>, name?: string) {
-    super(values, name);
+  constructor(values?: Array<number>) {
+    super(values);
   }
 
   /** Generate new Series: n => n*n */
   public get pow2(): Series {
-    return new Series(this.values.map((n) => n * n), `${this.name}^2`);
+    return new Series(this.values.map((n) => n * n));
   }
 
   /** Multiply each items in this series with item at other series: n[i] = x[i] * y[i] */
@@ -75,17 +71,17 @@ export class Series extends DataSeries<number>
     for (let i = 0; i < this.values.length; i++) {
       values.push(this.values[i] * other.values[i]);
     }
-    return new Series(values, `${this.name} * ${other.name}`);
+    return new Series(values);
   }
 
   /** Number of significant decimals in float */
   public digits(unit: number): Series {
-    return new Series(this.values.map((n) => +n.toPrecision(unit)), this.name);
+    return new Series(this.values.map((n) => +n.toPrecision(unit)));
   }
 
   /** Convert to absolute numbers */
   public get abs(): Series {
-    return new Series(this.values.map((n) => Math.abs(n)), this.name);
+    return new Series(this.values.map((n) => Math.abs(n)));
   }
 
   /** Calculate sum of numbers in series */

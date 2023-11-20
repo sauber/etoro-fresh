@@ -15,15 +15,14 @@ type RowCallback = (row: RowRecord) => SeriesTypes;
 /** Generate a series from an array of unknown values */
 function series(
   array: Array<unknown>,
-  name: string,
 ): SeriesClasses | undefined {
   switch (typeof array[0]) {
     case "number":
-      return new Series(array as number[], name);
+      return new Series(array as number[]);
     case "string":
-      return new TextSeries(array as string[], name);
+      return new TextSeries(array as string[]);
     case "boolean":
-      return new BoolSeries(array as boolean[], name);
+      return new BoolSeries(array as boolean[]);
   }
 }
 
@@ -67,7 +66,7 @@ export class DataFrame {
           const array = records.map((rec: Record<string, unknown>) =>
             rec[name]
           );
-          const ser = series(array, name);
+          const ser = series(array);
           if (ser) return { [name]: ser };
         }),
       ),
@@ -121,7 +120,7 @@ export class DataFrame {
     const RowRecords = this.names;
     const cols = other.names;
     const columns: Columns = {
-      Keys: new TextSeries(RowRecords, "Keys"),
+      Keys: new TextSeries(RowRecords),
     };
     for (const colname of cols) {
       const results: number[] = [];
@@ -131,15 +130,14 @@ export class DataFrame {
         const coef: number = sr.correlation(sc);
         results.push(coef);
       }
-      //series.push(new Series(results, colname));
-      columns[colname] = new Series(results, colname);
+      columns[colname] = new Series(results);
     }
 
     return new DataFrame(columns);
   }
 
   /** Display count of significant digits */
-  public digits(units: number, names: ColumnNames = this.names): DataFrame {
+  public digits(units: number, names: string[] = this.names): DataFrame {
     const columns: Columns = {};
     names.forEach((name) => {
       const column: Column = this.column(name);
@@ -177,7 +175,7 @@ export class DataFrame {
   public amend(name: string, callback: RowCallback): DataFrame {
     const array: SeriesTypes[] = this.index.map((index) => this.record(index))
       .map((row: RowRecord) => callback(row));
-    const ser = series(array, name);
+    const ser = series(array);
     if (ser) {
       return new DataFrame(Object.assign({}, this.columns, { [name]: ser }));
     } else return this;
