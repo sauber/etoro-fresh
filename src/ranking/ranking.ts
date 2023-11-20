@@ -54,7 +54,7 @@ class FeatureLoader {
 class Features {
   constructor(
     private readonly chart: ChartSeries,
-    private readonly stats: StatsData,
+    private readonly stats: StatsData
   ) {}
 
   /** Number of days between start and end */
@@ -147,26 +147,28 @@ export class Ranking {
     return true;
   }
 
+  private async addInvestor(
+    list: FeatureData[],
+    username: string,
+    bar: ProgressBar
+  ): Promise<void> {
+    await bar.inc();
+    if (await this.investor(username).isValid()) {
+      const features = await this.features(username);
+      if (this.validate(features)) {
+        list.push({ ...features.input, ...features.output });
+      }
+    }
+    return;
+  }
+
   public async data(): Promise<DataFrame> {
     const list: FeatureData[] = [];
-    const names = await this.names();
+    const names: Names = await this.names();
     const bar = new ProgressBar("Loading", names.size);
-    let count = 0;
-    let keep = 0;
-    for (const username of names) {
-      ++count;
-      bar.total = names.size - count + keep;
-      await bar.update(keep);
-      //console.log(username);
-      if (!(await this.investor(username).isValid())) continue;
-      const features = await this.features(username);
-      if ( ! this.validate(features)) continue;
-      //console.log('☑');
-      list.push({ ...features.input, ...features.output });
-      ++keep;
-      //if ( ++ count >= 5 ) break;
-    }
+    await Promise.all(Array.from(names).map((name: string) => this.addInvestor(list, name, bar)));
     bar.finish();
+    console.log(`Found ${list.length} valid investors`);
 
     return DataFrame.fromRecords(list);
   }
