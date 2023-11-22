@@ -69,7 +69,7 @@ class Spot {
 
 ////////////////////////////////////////////////////////////////////////
 
-class DataSet {
+export class DataSet {
   private readonly list: Array<Item>;
   public readonly xmin: number;
   public readonly xmax: number;
@@ -104,14 +104,14 @@ class DataSet {
 
 ////////////////////////////////////////////////////////////////////////
 
-class Grid {
+export class Grid {
   private readonly spots: Matrix;
   private readonly colcount: number;
   private readonly rowcount: number;
 
   constructor(private readonly set: DataSet) {
     this.spots = Grid.generateSpots(set);
-    this.colcount = this.spots[0].length;
+    this.colcount = this.spots[0]?.length || 0;
     this.rowcount = this.spots.length;
     for (const item of set.values) this.insert(item);
   }
@@ -201,8 +201,8 @@ class Grid {
   public optimize(): void {
     let displ = Infinity;
     while (this.displacement < displ) {
-      displ = grid.displacement;
-      grid.sweep();
+      displ = this.displacement;
+      this.sweep();
     }
   }
 
@@ -225,8 +225,8 @@ class Grid {
 
 ////////////////////////////////////////////////////////////////////////
 
-const set = new DataSet(5);
-const grid = new Grid(set);
-grid.print();
-grid.optimize();
-grid.print();
+//const set = new DataSet(5);
+//const grid = new Grid(set);
+//grid.print();
+//grid.optimize();
+//grid.print();
