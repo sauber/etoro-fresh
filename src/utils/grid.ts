@@ -18,27 +18,27 @@ type Box = {
 ////////////////////////////////////////////////////////////////////////
 
 class Spot {
-  private slot: Box | undefined;
+  private box: Box | undefined;
 
   constructor(private readonly position: Position) {}
 
   /** Insert a box in slot */
   public insert(box: Box): void {
-    if (this.slot) throw new Error("Inserting box in occupied slot");
-    this.slot = box;
+    if (this.box) throw new Error("Inserting box in occupied slot");
+    this.box = box;
   }
 
   /** Remove box from slot */
   public remove(): Box {
-    if (!this.slot) throw new Error("Removing non-existing box from slot");
-    const box = this.slot;
-    this.slot = undefined;
+    if (!this.box) throw new Error("Removing non-existing box from slot");
+    const box = this.box;
+    this.box = undefined;
     return box;
   }
 
   /** Check if a box is in slot */
   public get isEmpty(): boolean {
-    return this.slot === undefined;
+    return this.box === undefined;
   }
 
   /** Swap box with another slot */
@@ -49,7 +49,7 @@ class Spot {
   }
 
   /** How far away from target is box */
-  public distance(target: Position | undefined = this.slot?.target): number {
+  public distance(target: Position | undefined = this.box?.target): number {
     if (!target) return 0;
     const x = 0.5 + this.position.x - target.x;
     const y = 0.5 + this.position.y - target.y;
@@ -58,12 +58,12 @@ class Spot {
 
   /** Look at item in box */
   public get content(): Item | undefined {
-    return this.slot?.content;
+    return this.box?.content;
   }
 
   /** Look at target for item in box */
   public get target(): Position | undefined {
-    return this.slot?.target;
+    return this.box?.target;
   }
 }
 
@@ -138,8 +138,8 @@ export class Grid {
     const yhei: number = (this.set.ymax - this.set.ymin) * 1.001;
     const cwid: number = xwid / this.colcount;
     const rhei: number = yhei / this.rowcount;
-    const x: number = (item.x - this.set.xmin) / cwid;
-    const y: number = (item.y - this.set.ymin) / rhei;
+    const x: number = cwid == 0 ? 0.5 : (item.x - this.set.xmin) / cwid;
+    const y: number = rhei == 0 ? 0.5 : (item.y - this.set.ymin) / rhei;
     return { x, y };
   }
 
@@ -189,6 +189,7 @@ export class Grid {
   /** Swap all pairs of slots to reduce displacement */
   private sweep(): void {
     const flat: Row = this.flat;
+    if ( flat.length < 2) return;
     for (let i = 0; i < flat.length - 1; i++) {
       for (let j = i + 1; j < flat.length; j++) {
         this.minimize(flat[i], flat[j]);
