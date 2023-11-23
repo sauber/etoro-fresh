@@ -25,11 +25,11 @@ const path: string = Deno.args[0];
 const backend: RepoDiskBackend = new RepoDiskBackend(path);
 export const community = new Community(backend);
 const rank = new Ranking(community);
-rank.days = 15;
+rank.days = 30;
 const features: DataFrame = await rank.data();
 
 // Split into training and validation set
-const validation_ratio = 0.05;
+const validation_ratio = 0.1;
 const validation_length = Math.round(features.length * validation_ratio);
 const training = features.slice(0, features.length - validation_length);
 const validation = features.slice(
@@ -72,10 +72,8 @@ const net = new Sequential({
   layers: [
     BatchNorm1DLayer({ momentum: 0.9 }),
     ReluLayer(),
-    DenseLayer({ size: [Math.round(xw/2)] }),
+    DenseLayer({ size: [Math.round(xw / 2)] }),
     SigmoidLayer(),
-    //DenseLayer({size: [1]}),
-    //SigmoidLayer(),
     DenseLayer({ size: [yw] }),
   ],
 
@@ -130,7 +128,7 @@ for (let i = 0; i < 50; i++) {
     // Batches
     50,
     // Learning Rate
-    0.005
+    0.01
   );
 
   // Calculate Training loss
@@ -141,7 +139,7 @@ for (let i = 0; i < 50; i++) {
   const valid_p = await predict(valid_x.grid as Array2D);
   const valid_loss = MSE(valid_y.grid as Array2D, valid_p);
 
-  console.log({train_loss, valid_loss});
+  console.log({ train_loss, valid_loss });
 
   //const i = 0;
   //const out1 = (await net.predict(tensor1D(input.grid[i] as Array1D))).data;
@@ -163,13 +161,13 @@ for (let e = 5; e > 0; e--) {
 */
 
 // Test results
-const test_x = valid_x.slice(0,5).grid as Array2D;
-const test_y = valid_y.slice(0,5).grid as Array2D;
+const test_x = valid_x.slice(0, 5).grid as Array2D;
+const test_y = valid_y.slice(0, 5).grid as Array2D;
 //const test_x = training.exclude([...xf, "VirtualCopiers"]).slice(0,5).grid as Array2D;
 //const test_y = training.include(xf).slice(0,5).grid as Array2D;
 const test_p = await predict(test_x);
 const test_loss = MSE(test_y, test_p);
-for ( let i=0; i<test_x.length; i++) {
-  console.log({expected: test_y[i], predicted: test_p[i]});
+for (let i = 0; i < test_x.length; i++) {
+  console.log({ expected: test_y[i], predicted: test_p[i] });
 }
-console.log({test_loss});
+console.log({ test_loss });
