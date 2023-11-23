@@ -8,64 +8,12 @@ type Item = {
   y: number;
 };
 
-type Row = Array<Spot>;
+type Row = Array<Slot>;
 type Matrix = Array<Row>;
 type Box = {
   target: Position;
   content: Item;
 };
-
-////////////////////////////////////////////////////////////////////////
-
-class Spot {
-  private box: Box | undefined;
-
-  constructor(private readonly position: Position) {}
-
-  /** Insert a box in slot */
-  public insert(box: Box): void {
-    if (this.box) throw new Error("Inserting box in occupied slot");
-    this.box = box;
-  }
-
-  /** Remove box from slot */
-  public remove(): Box {
-    if (!this.box) throw new Error("Removing non-existing box from slot");
-    const box = this.box;
-    this.box = undefined;
-    return box;
-  }
-
-  /** Check if a box is in slot */
-  public get isEmpty(): boolean {
-    return this.box === undefined;
-  }
-
-  /** Swap box with another slot */
-  public swap(other: Spot): void {
-    const box = other.remove();
-    other.insert(this.remove());
-    this.insert(box);
-  }
-
-  /** How far away from target is box */
-  public distance(target: Position | undefined = this.box?.target): number {
-    if (!target) return 0;
-    const x = 0.5 + this.position.x - target.x;
-    const y = 0.5 + this.position.y - target.y;
-    return Math.sqrt(x * x + y * y);
-  }
-
-  /** Look at item in box */
-  public get content(): Item | undefined {
-    return this.box?.content;
-  }
-
-  /** Look at target for item in box */
-  public get target(): Position | undefined {
-    return this.box?.target;
-  }
-}
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -104,32 +52,85 @@ export class DataSet {
 
 ////////////////////////////////////////////////////////////////////////
 
+/** Boxes can be inserted and ejected from slots */
+class Slot {
+  private box: Box | undefined;
+
+  constructor(private readonly position: Position) {}
+
+  /** Insert a box in slot */
+  public insert(box: Box): void {
+    if (this.box) throw new Error("Inserting box in occupied slot");
+    this.box = box;
+  }
+
+  /** Eject box from slot */
+  public eject(): Box {
+    if (!this.box) throw new Error("Removing non-existing box from slot");
+    const box = this.box;
+    this.box = undefined;
+    return box;
+  }
+
+  /** Check if a box is in slot */
+  public get isEmpty(): boolean {
+    return this.box === undefined;
+  }
+
+  /** Swap box with another slot */
+  public swap(other: Slot): void {
+    const box = other.eject();
+    other.insert(this.eject());
+    this.insert(box);
+  }
+
+  /** How far away from target is box */
+  public displacement(target: Position | undefined = this.box?.target): number {
+    if (!target) return 0;
+    const x = 0.5 + this.position.x - target.x;
+    const y = 0.5 + this.position.y - target.y;
+    return Math.sqrt(x * x + y * y);
+  }
+
+  /** Look at item in box */
+  public get content(): Item | undefined {
+    return this.box?.content;
+  }
+
+  /** Look at target for item in box */
+  public get target(): Position | undefined {
+    return this.box?.target;
+  }
+}
+
+////////////////////////////////////////////////////////////////////////
+
 export class Grid {
-  private readonly spots: Matrix;
+  private readonly matrix: Matrix;
   private readonly colcount: number;
   private readonly rowcount: number;
 
   constructor(private readonly set: DataSet) {
-    this.spots = Grid.generateSpots(set);
-    this.colcount = this.spots[0]?.length || 0;
-    this.rowcount = this.spots.length;
+    this.matrix = Grid.generateMatrix(set);
+    this.colcount = this.matrix[0]?.length || 0;
+    this.rowcount = this.matrix.length;
     for (const item of set.values) this.insert(item);
   }
 
-  /** Generate an empty matrix */
-  private static generateSpots(list: DataSet): Matrix {
-    const spots = [];
+  /** Generate a matrix of empty slots */
+  private static generateMatrix(list: DataSet): Matrix {
+    const slots = [];
     const avgsize = Math.sqrt(list.length);
     const rowcount = Math.ceil(list.length / avgsize);
     const colcount = Math.ceil(list.length / rowcount);
     for (let r = 0; r < rowcount; r++) {
       const row: Row = [];
       for (let c = 0; c < colcount; c++) {
-        row.push(new Spot({ x: c, y: r }));
+        row.push(new Slot({ x: c, y: r }));
       }
-      spots.push(row);
+      slots.push(row);
     }
-    return spots;
+    return slots;
   }
 
   /** Calculate target in Matrix for item */
@@ -143,53 +144,55 @@ export class Grid {
     return { x, y };
   }
 
-  /** A flat list of all spots */
+  /** A flat list of all slots */
   private get flat(): Row {
-    return this.spots.flat();
+    return this.matrix.flat();
   }
 
-  /** A random free slot */
-  private get freeSpot(): Spot {
-    const free = this.flat.filter((slot) => slot.isEmpty);
-    const index = Math.floor(free.length * Math.random());
-    return free[index];
+  /** Locate an empty slot */
+  private get emptySlot(): Slot {
+    const slot = this.flat.find((slot) => slot.isEmpty) as Slot;
+    return slot;
   }
 
   /** Insert Item in Matrix at any free slot */
   private insert(item: Item): void {
-    const pos = this.targetPosition(item);
-    const spot = this.freeSpot;
-    const box: Box = { content: item, target: pos };
-    spot.insert(box);
+    // Generate a box
+    const box: Box = { content: item, target: this.targetPosition(item) };
+    // Insert box in an empty slot
+    this.emptySlot.insert(box);
   }
 
-  /** Swap content of two slots, if it makes combined distance less */
-  private minimize(a: Spot, b: Spot): void {
+  /** Swap boxes of two slots, if it makes combined displacement less */
+  private minimize(a: Slot, b: Slot): void {
     if (a.isEmpty) [a, b] = [b, a];
     if (b.isEmpty) {
       if (a.isEmpty) return; // Both are empty
-      const dist = a.distance();
-      const test = b.distance(a.target);
-      if (test < dist) b.insert(a.remove());
+      // Slot b is empty
+      const dist = a.displacement();
+      const test = b.displacement(a.target);
+      if (test < dist) b.insert(a.eject());
+      return;
     }
 
     // Content in both slots
-    const dist = a.distance() + b.distance();
-    const test = a.distance(b.target) + b.distance(a.target);
+    const dist = a.displacement() + b.displacement();
+    const test = a.displacement(b.target) + b.displacement(a.target);
     if (test < dist) a.swap(b);
   }
 
   /** Calculate sum of displacements */
   public get displacement(): number {
-    let sum = 0;
-    this.flat.map((spot) => (sum += spot.distance()));
-    return sum;
+    return this.flat.map((slot) => slot.displacement()).reduce(
+      (sum, d) => sum + d,
+      0,
+    );
   }
 
-  /** Swap all pairs of slots to reduce displacement */
+  /** Compare all pairs of slots */
   private sweep(): void {
     const flat: Row = this.flat;
-    if ( flat.length < 2) return;
+    if (flat.length < 2) return;
     for (let i = 0; i < flat.length - 1; i++) {
       for (let j = i + 1; j < flat.length; j++) {
         this.minimize(flat[i], flat[j]);
@@ -198,24 +201,23 @@ export class Grid {
     this.minimize(flat[0], flat[1]);
   }
 
-  /** Swap content of slots until minimal combined displacement */
+  /** Swap content of slots until displacement no longer changes*/
   public optimize(): void {
-    let displ = Infinity;
-    while (this.displacement < displ) {
-      displ = this.displacement;
+    let prev = Infinity;
+    while (this.displacement < prev) {
+      prev = this.displacement;
       this.sweep();
     }
   }
 
   /** Print content of matrix */
   public print(): void {
-    const matrix: Matrix = this.spots;
     const table = [];
     for (let r = 0; r < this.rowcount; r++) {
       const row = [];
       for (let c = 0; c < this.colcount; c++) {
-        const spot: Spot = matrix[r][c];
-        row.push({ ...spot.content, dist: spot.distance().toPrecision(3) });
+        const slot: Slot = this.matrix[r][c];
+        row.push({ ...slot.content, dist: slot.displacement().toPrecision(3) });
       }
       table.unshift(row);
     }
@@ -223,11 +225,3 @@ export class Grid {
     console.log("Displacement:", this.displacement);
   }
 }
-
-////////////////////////////////////////////////////////////////////////
-
-//const set = new DataSet(5);
-//const grid = new Grid(set);
-//grid.print();
-//grid.optimize();
-//grid.print();
