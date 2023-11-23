@@ -1,3 +1,9 @@
+// Input
+export type DataSet = Array<Item>;
+
+// Output
+export type Table = Array<Array<Item | null>>;
+
 type Position = {
   x: number;
   y: number;
@@ -9,15 +15,13 @@ type Item = {
   content: unknown;
 };
 
-export type DataSet = Array<Item>;
-
-type Row = Array<Slot>;
-type Matrix = Array<Row>;
-
 type Box = {
   target: Position;
   item: Item;
 };
+
+type Row = Array<Slot>;
+type Matrix = Array<Row>;
 
 ////////////////////////////////////////////////////////////////////////
 
@@ -29,7 +33,7 @@ class Slot {
 
   /** Insert a box in slot */
   public insert(box: Box): void {
-    if (! this.isEmpty) throw new Error("Inserting box in occupied slot");
+    if (!this.isEmpty) throw new Error("Inserting box in occupied slot");
     this.box.push(box);
   }
 
@@ -54,8 +58,8 @@ class Slot {
   /** How far away from target is box */
   public displacement(box?: Box): number {
     let target: Position;
-    if ( box ) target = box.target;
-    else if ( this.isEmpty) return 0;
+    if (box) target = box.target;
+    else if (this.isEmpty) return 0;
     else target = this.target;
     const x = 0.5 + this.position.x - target.x;
     const y = 0.5 + this.position.y - target.y;
@@ -190,21 +194,17 @@ export class Grid {
     }
   }
 
-  /** Print matrix */
-  public print(): void {
+  /** Export content in table */
+  public get table(): Table {
     const table = [];
     for (let r = 0; r < this.rowcount; r++) {
       const row = [];
       for (let c = 0; c < this.colcount; c++) {
         const slot: Slot = this.matrix[r][c];
-        if ( slot.isEmpty )
-          row.push(null);
-        else
-          row.push({ ...slot.item, dist: +slot.displacement().toPrecision(3) });
+        row.push(slot.isEmpty ? null : slot.item);
       }
       table.unshift(row);
     }
-    console.table(table);
-    console.log("Displacement:", this.displacement);
+    return table;
   }
 }

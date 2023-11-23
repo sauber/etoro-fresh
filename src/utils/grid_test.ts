@@ -57,9 +57,9 @@ Deno.test("Optimize Many Items", () => {
   assert(g.displacement > 50);
 });
 
-Deno.test("Visualize before and after", () => {
+Deno.test("Visualize before and after", { ignore: true }, () => {
   const g = new Grid(dataset(5));
-  g.print();
+  console.table(g.table);
   g.optimize();
-  g.print();
+  console.table(g.table);
 });
