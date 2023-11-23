@@ -6,53 +6,22 @@ type Position = {
 type Item = {
   x: number;
   y: number;
+  content: unknown;
 };
+
+export type DataSet = Array<Item>;
 
 type Row = Array<Slot>;
 type Matrix = Array<Row>;
+
 type Box = {
   target: Position;
-  content: Item;
+  item: Item;
 };
 
 ////////////////////////////////////////////////////////////////////////
 
-export class DataSet {
-  private readonly list: Array<Item>;
-  public readonly xmin: number;
-  public readonly xmax: number;
-  public readonly ymin: number;
-  public readonly ymax: number;
-
-  constructor(public readonly length: number) {
-    this.list = DataSet.dataset(length);
-    this.xmin = Math.min(...this.list.map((i) => i.x));
-    this.xmax = Math.max(...this.list.map((i) => i.x));
-    this.ymin = Math.min(...this.list.map((i) => i.y));
-    this.ymax = Math.max(...this.list.map((i) => i.y));
-  }
-
-  /** Generate random Dataset */
-  static dataset(length: number): Array<Item> {
-    return [...Array(length)].map(() => {
-      return { x: DataSet.rand, y: DataSet.rand };
-    });
-  }
-
-  /** Generate random integer between -100 and 100 */
-  static get rand(): number {
-    return Math.round(-100 + 200 * Math.random());
-  }
-
-  /** All items */
-  public get values(): Array<Item> {
-    return this.list;
-  }
-}
-
-////////////////////////////////////////////////////////////////////////
-
-/** Boxes can be inserted and ejected from slots */
+/** A Slot can have a box inserted and ejected */
 class Slot {
   private box: Box | undefined;
 
@@ -93,8 +62,8 @@ class Slot {
   }
 
   /** Look at item in box */
-  public get content(): Item | undefined {
-    return this.box?.content;
+  public get item(): Item | undefined {
+    return this.box?.item;
   }
 
   /** Look at target for item in box */
@@ -109,12 +78,22 @@ export class Grid {
   private readonly matrix: Matrix;
   private readonly colcount: number;
   private readonly rowcount: number;
+  private readonly xmin: number;
+  private readonly xmax: number;
+  private readonly ymin: number;
+  private readonly ymax: number;
 
-  constructor(private readonly set: DataSet) {
-    this.matrix = Grid.generateMatrix(set);
+  constructor(list: DataSet) {
+    this.matrix = Grid.generateMatrix(list);
+
     this.colcount = this.matrix[0]?.length || 0;
     this.rowcount = this.matrix.length;
-    for (const item of set.values) this.insert(item);
+    this.xmin = Math.min(...list.map((i) => i.x));
+    this.xmax = Math.max(...list.map((i) => i.x));
+    this.ymin = Math.min(...list.map((i) => i.y));
+    this.ymax = Math.max(...list.map((i) => i.y));
+
+    for (const item of list) this.insert(item);
   }
 
   /** Generate a matrix of empty slots */
@@ -135,12 +114,12 @@ export class Grid {
 
   /** Calculate target in Matrix for item */
   private targetPosition(item: Item): Position {
-    const xwid: number = (this.set.xmax - this.set.xmin) * 1.001;
-    const yhei: number = (this.set.ymax - this.set.ymin) * 1.001;
+    const xwid: number = (this.xmax - this.xmin) * 1.001;
+    const yhei: number = (this.ymax - this.ymin) * 1.001;
     const cwid: number = xwid / this.colcount;
     const rhei: number = yhei / this.rowcount;
-    const x: number = cwid == 0 ? 0.5 : (item.x - this.set.xmin) / cwid;
-    const y: number = rhei == 0 ? 0.5 : (item.y - this.set.ymin) / rhei;
+    const x: number = cwid == 0 ? 0.5 : (item.x - this.xmin) / cwid;
+    const y: number = rhei == 0 ? 0.5 : (item.y - this.ymin) / rhei;
     return { x, y };
   }
 
@@ -158,7 +137,7 @@ export class Grid {
   /** Insert Item in Matrix at any free slot */
   private insert(item: Item): void {
     // Generate a box
-    const box: Box = { content: item, target: this.targetPosition(item) };
+    const box: Box = { item, target: this.targetPosition(item) };
     // Insert box in an empty slot
     this.emptySlot.insert(box);
   }
@@ -175,7 +154,7 @@ export class Grid {
       return;
     }
 
-    // Content in both slots
+    // Iitem in both slots
     const dist = a.displacement() + b.displacement();
     const test = a.displacement(b.target) + b.displacement(a.target);
     if (test < dist) a.swap(b);
@@ -201,7 +180,7 @@ export class Grid {
     this.minimize(flat[0], flat[1]);
   }
 
-  /** Swap content of slots until displacement no longer changes*/
+  /** Swap slots until displacement no longer changes*/
   public optimize(): void {
     let prev = Infinity;
     while (this.displacement < prev) {
@@ -210,14 +189,14 @@ export class Grid {
     }
   }
 
-  /** Print content of matrix */
+  /** Print matrix */
   public print(): void {
     const table = [];
     for (let r = 0; r < this.rowcount; r++) {
       const row = [];
       for (let c = 0; c < this.colcount; c++) {
         const slot: Slot = this.matrix[r][c];
-        row.push({ ...slot.content, dist: slot.displacement().toPrecision(3) });
+        row.push({ ...slot.item, dist: +slot.displacement().toPrecision(3) });
       }
       table.unshift(row);
     }
