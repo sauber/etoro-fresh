@@ -23,27 +23,25 @@ type Box = {
 
 /** A Slot can have a box inserted and ejected */
 class Slot {
-  private box: Box | undefined;
+  private box: Box[] = [];
 
   constructor(private readonly position: Position) {}
 
   /** Insert a box in slot */
   public insert(box: Box): void {
-    if (this.box) throw new Error("Inserting box in occupied slot");
-    this.box = box;
+    if (! this.isEmpty) throw new Error("Inserting box in occupied slot");
+    this.box.push(box);
   }
 
   /** Eject box from slot */
   public eject(): Box {
-    if (!this.box) throw new Error("Removing non-existing box from slot");
-    const box = this.box;
-    this.box = undefined;
-    return box;
+    if (this.isEmpty) throw new Error("Removing non-existing box from slot");
+    return this.box.pop() as Box;
   }
 
   /** Check if a box is in slot */
   public get isEmpty(): boolean {
-    return this.box === undefined;
+    return (this.box.length == 0);
   }
 
   /** Swap box with another slot */
@@ -54,21 +52,24 @@ class Slot {
   }
 
   /** How far away from target is box */
-  public displacement(target: Position | undefined = this.box?.target): number {
-    if (!target) return 0;
+  public displacement(box?: Box): number {
+    let target: Position;
+    if ( box ) target = box.target;
+    else if ( this.isEmpty) return 0;
+    else target = this.target;
     const x = 0.5 + this.position.x - target.x;
     const y = 0.5 + this.position.y - target.y;
     return Math.sqrt(x * x + y * y);
   }
 
   /** Look at item in box */
-  public get item(): Item | undefined {
-    return this.box?.item;
+  public get item(): Item {
+    return this.box[0].item;
   }
 
   /** Look at target for item in box */
-  public get target(): Position | undefined {
-    return this.box?.target;
+  public get target(): Position {
+    return this.box[0].target;
   }
 }
 
@@ -149,14 +150,14 @@ export class Grid {
       if (a.isEmpty) return; // Both are empty
       // Slot b is empty
       const dist = a.displacement();
-      const test = b.displacement(a.target);
+      const test = b.displacement(a);
       if (test < dist) b.insert(a.eject());
       return;
     }
 
     // Iitem in both slots
     const dist = a.displacement() + b.displacement();
-    const test = a.displacement(b.target) + b.displacement(a.target);
+    const test = a.displacement(b) + b.displacement(a);
     if (test < dist) a.swap(b);
   }
 
@@ -196,7 +197,10 @@ export class Grid {
       const row = [];
       for (let c = 0; c < this.colcount; c++) {
         const slot: Slot = this.matrix[r][c];
-        row.push({ ...slot.item, dist: +slot.displacement().toPrecision(3) });
+        if ( slot.isEmpty )
+          row.push(null);
+        else
+          row.push({ ...slot.item, dist: +slot.displacement().toPrecision(3) });
       }
       table.unshift(row);
     }

@@ -58,7 +58,7 @@ Deno.test("Optimize Many Items", () => {
 });
 
 Deno.test("Visualize before and after", () => {
-  const g = new Grid(dataset(10));
+  const g = new Grid(dataset(5));
   g.print();
   g.optimize();
   g.print();
