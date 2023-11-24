@@ -1,6 +1,5 @@
 import { assertEquals, assertInstanceOf } from "assert";
 import { RepoHeapBackend } from "/repository/repo-heap.ts";
-import { Sequential, tensor1D } from "netsaur";
 import { Model } from "./model.ts";
 import type { Input, Output } from "./model.ts";
 
@@ -35,6 +34,7 @@ Deno.test("Validate", { ignore: false }, async () => {
   const model = new Model(repo);
 
   // Validate
-  const out: Output = await model.predict(input);
+  const out = await model.predict(input);
+  //console.log(out);
   assertEquals(input.length, out.length);
 });

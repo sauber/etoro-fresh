@@ -1,6 +1,10 @@
 import { decodeBase64, encodeBase64 } from "base64";
 import {
+  AdamOptimizer,
+  Array1D,
+  Array2D,
   BatchNorm1DLayer,
+  Cost,
   DenseLayer,
   ReluLayer,
   Sequential,
@@ -8,7 +12,6 @@ import {
   SigmoidLayer,
   tensor1D,
   tensor2D,
-  Array2D,
   WASM,
 } from "netsaur";
 import { Asset, RepoBackend } from "/repository/mod.ts";
@@ -18,7 +21,8 @@ type ModelTS = Uint8Array;
 export type Input = Array2D;
 type Profit = number;
 type SharpeRatio = number;
-export type Output = Array<[Profit, SharpeRatio]>;
+export type Prediction = [Profit, SharpeRatio];
+export type Output = Array<Prediction>;
 
 // Convert days to ms
 const Days = 60 * 60 * 1000;
@@ -28,6 +32,7 @@ export class Model {
   private readonly asset: Asset<ModelTS>;
   private readonly assetname = "ranking.model";
   private readonly expire = 30 * Days;
+  private _sequential: Sequential | undefined;
 
   constructor(private readonly repo: RepoBackend) {
     this.asset = this.repo.asset(this.assetname);
@@ -65,22 +70,35 @@ export class Model {
         SigmoidLayer(),
         DenseLayer({ size: [outputSize] }),
       ],
+
+      // The cost function used for training the network is the mean squared error (MSE).
+      cost: Cost.MSE,
+
+      // Use Adam optimizer
+      optimizer: AdamOptimizer(),
     });
   }
 
   /** Load model if exists, otherwise create one */
   private async loadOrCreate(): Promise<Sequential> {
-    console.log("Loading model");
-    if (await this.repo.has(this.assetname)) return this.loadModel();
-    console.log("Loading failed. Creating model instead.");
-    return this.createModel();
+    return (await this.repo.has(this.assetname))
+      ? this.loadModel()
+      : this.createModel();
+  }
+
+  /** Prepare model */
+  private async init(): Promise<Sequential> {
+    if (!this._sequential) {
+      await this.setupBackend();
+      this._sequential = await this.loadOrCreate();
+    }
+    return this._sequential;
   }
 
   /** Encode Model as Base64 and save in repository */
   private async save(model: Sequential): Promise<void> {
     const uint8arr: Uint8Array = await model.save();
     const str = encodeBase64(uint8arr);
-    //console.log(str);
     return this.repo.store(this.assetname, { model: str });
   }
 
@@ -89,36 +107,33 @@ export class Model {
     input: Input,
     output: Output,
   ): Promise<void> {
-    // Setup backend
-    await this.setupBackend();
-
     // Load existing or create new model
-    const model: Sequential = await this.loadOrCreate();
+    const model: Sequential = await this.init();
 
     // Train model
     model.train(
       [{ inputs: tensor2D(input), outputs: tensor2D(output) }],
       // The number of iterations is set to 10000.
       10000,
+      // Batches
+      25,
+      // Learning Rate
+      0.01,
     );
 
     // Save trained model
     return this.save(model);
   }
 
-  public async predict(input: Input): Promise<Output> {
-    // Setup backend
-    await this.setupBackend();
+  /** Make prediction for one row of input */
+  private async predictOne(parameters: Array1D): Promise<Prediction> {
+    const model: Sequential = await this.init();
+    const values = (await model.predict(tensor1D(parameters))).data;
+    return [values[0], values[1]] as [Profit, SharpeRatio];
+  }
 
-    // Load existing model
-    const model: Sequential = await this.loadModel();
-
-    // Generate predictions
-    const output: Output = [];
-    for ( const i of input ) {
-      const o = (await model.predict(tensor1D(i))).data;
-      output.push([o[0], o[1]] as [Profit, SharpeRatio]);
-    }
-    return output;
+  /** Predict a set of inputs in parallel */
+  public predict(input: Input): Promise<Output> {
+    return Promise.all(input.map((i: Array1D) => this.predictOne(i)));
   }
 }
