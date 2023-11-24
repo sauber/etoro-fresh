@@ -1,6 +1,6 @@
 import { RepoDiskBackend } from "/repository/repo-disk.ts";
 import { Community } from "/investor/mod.ts";
-import { Ranking } from "./ranking.ts";
+import { Features } from "./features.ts";
 import { DataFrame } from "/utils/dataframe.ts";
 
 import {
@@ -24,12 +24,12 @@ import {
 const path: string = Deno.args[0];
 const backend: RepoDiskBackend = new RepoDiskBackend(path);
 export const community = new Community(backend);
-const rank = new Ranking(community);
+const rank = new Features(community);
 rank.days = 30;
 const features: DataFrame = await rank.data();
 
 // Split into training and validation set
-const validation_ratio = 0.1;
+const validation_ratio = 0.2;
 const validation_length = Math.round(features.length * validation_ratio);
 const training = features.slice(0, features.length - validation_length);
 const validation = features.slice(
@@ -115,7 +115,7 @@ async function predict(rows: Array2D): Promise<Array2D> {
  * Train the network on the given data.
  */
 const time = performance.now();
-for (let i = 0; i < 50; i++) {
+for (let i = 0; i < 1; i++) {
   const shuffled = training.shuffle;
   const train_x = shuffled.exclude([...xf, "VirtualCopiers"]);
   const train_y = shuffled.include(xf);
@@ -124,9 +124,9 @@ for (let i = 0; i < 50; i++) {
   net.train(
     [{ inputs, outputs }],
     // The number of iterations is set to 10000.
-    100,
+    10000,
     // Batches
-    50,
+    25,
     // Learning Rate
     0.01
   );

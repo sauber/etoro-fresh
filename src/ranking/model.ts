@@ -126,7 +126,7 @@ export class Model {
   }
 
   /** Make prediction for one row of input */
-  private async predictOne(parameters: Array1D): Promise<Prediction> {
+  public async predictOne(parameters: Array1D): Promise<Prediction> {
     const model: Sequential = await this.init();
     const values = (await model.predict(tensor1D(parameters))).data;
     return [values[0], values[1]] as [Profit, SharpeRatio];
