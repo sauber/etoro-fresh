@@ -26,7 +26,6 @@ function series(array: Array<unknown>): SeriesClasses | undefined {
 
 /** A collection of series with same length */
 export class DataFrame {
-  public readonly names: ColumnNames;
   private readonly index: Index;
   //public readonly length: number;
 
@@ -37,15 +36,15 @@ export class DataFrame {
     index?: Index,
   ) {
     // Names of columns
-    this.names = Object.keys(columns);
+    const names: ColumnNames = Object.keys(columns);
 
     // Index
     if (index) {
       this.index = index;
       //this.length = index.length;
     } else {
-      if (this.names.length) {
-        const first = columns[this.names[0]];
+      if (names.length) {
+        const first = columns[names[0]];
         //this.length = first.length;
         this.index = Array.from(Array(first.length).keys());
       } else {
@@ -162,6 +161,11 @@ export class DataFrame {
     return this.reindex(this.index.sort(() => Math.random() - 0.5));
   }
 
+  /** Combine with series from other DataFrame */
+  public join(other: DataFrame): DataFrame {
+    return new DataFrame(Object.assign({}, this.columns, other.columns));
+  }
+
   /** Values and columns names from all series at index */
   private record(index: number): RowRecord {
     return Object.assign(
@@ -183,6 +187,11 @@ export class DataFrame {
   /** Export data to matrix */
   public get grid(): Array<RowValues> {
     return this.index.map((i: number) => this.line(i));
+  }
+
+  /** Names of Columns */
+  public get names(): ColumnNames {
+    return Object.keys(this.columns);
   }
 
   /** Lookup a particular column */
