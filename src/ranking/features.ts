@@ -168,10 +168,10 @@ export class Features {
   public async data(): Promise<DataFrame> {
     const list: FeatureData[] = [];
     const names: Names = await this.names();
-    const bar = new ProgressBar("Loading", names.size);
-    await Promise.all(Array.from(names).map((name: string) => this.addInvestor(list, name, bar)));
+    const bar = new ProgressBar("Loading investor data", names.size);
+    await Promise.all(Array.from(names).map((name) => this.addInvestor(list, name as string, bar)));
     bar.finish();
-    console.log(`Found ${list.length} valid investors`);
+    //console.log(`Found ${list.length} valid investors`);
 
     return DataFrame.fromRecords(list);
   }
