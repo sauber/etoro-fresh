@@ -14,10 +14,11 @@ export type SeriesTypes = number | string | boolean;
 export type SeriesClasses = Series | TextSeries | BoolSeries;
 
 abstract class DataSeries<T> implements SeriesInterface<T> {
-  public readonly length;
 
-  constructor(public readonly values: Array<T> = []) {
-    this.length = values.length;
+  constructor(public readonly values: Array<T> = []) {}
+
+  public get length(): number {
+    return this.values.length;
   }
 
   public get first(): T {

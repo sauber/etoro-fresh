@@ -4,8 +4,8 @@ import type { SeriesClasses, SeriesTypes } from "./series.ts";
 
 type Column = Series | TextSeries | BoolSeries;
 type Columns = Record<string, Column>;
-type RowRecord = Record<string, SeriesTypes>;
-type RowRecords = Array<RowRecord>;
+export type RowRecord = Record<string, SeriesTypes>;
+export type RowRecords = Array<RowRecord>;
 type RowValues = Array<SeriesTypes>;
 type Index = number[];
 type ColumnNames = string[];
@@ -28,13 +28,13 @@ function series(array: Array<unknown>): SeriesClasses | undefined {
 export class DataFrame {
   public readonly names: ColumnNames;
   private readonly index: Index;
-  public readonly length: number;
+  //public readonly length: number;
 
   constructor(
     // Data Series
     private readonly columns: Columns = {},
     // Ordering of rows
-    index?: Index
+    index?: Index,
   ) {
     // Names of columns
     this.names = Object.keys(columns);
@@ -42,15 +42,15 @@ export class DataFrame {
     // Index
     if (index) {
       this.index = index;
-      this.length = index.length;
+      //this.length = index.length;
     } else {
       if (this.names.length) {
         const first = columns[this.names[0]];
-        this.length = first.length;
+        //this.length = first.length;
         this.index = Array.from(Array(first.length).keys());
       } else {
         this.index = [];
-        this.length = 0;
+        //this.length = 0;
       }
     }
   }
@@ -62,43 +62,20 @@ export class DataFrame {
         {},
         ...Object.keys(records[0]).map((name: string) => {
           const array = records.map(
-            (rec: Record<string, unknown>) => rec[name]
+            (rec: Record<string, unknown>) => rec[name],
           );
           const ser = series(array);
           if (ser) return { [name]: ser };
-        })
-      )
+        }),
+      ),
     );
-  }
-
-  /** Values and columns names from all series at index */
-  private record(index: number): RowRecord {
-    return Object.assign(
-      {},
-      ...this.names.map((x) => ({ [x]: this.columns[x].values[index] }))
-    );
-  }
-
-  /** Export data to list of records */
-  public get records(): RowRecords {
-    return this.index.map((i: number) => this.record(i));
-  }
-
-  /** Values from all series at index */
-  private line(index: number): RowValues {
-    return this.names.map((x) => this.columns[x].values[index]);
-  }
-
-  /** Export data to matrix */
-  public get grid(): Array<RowValues> {
-    return this.index.map((i: number) => this.line(i));
   }
 
   /** A new dataframe with subset of columns */
   public include(names: ColumnNames): DataFrame {
     return new DataFrame(
       Object.assign({}, ...names.map((x) => ({ [x]: this.column(x) }))),
-      this.index
+      this.index,
     );
   }
 
@@ -106,11 +83,6 @@ export class DataFrame {
   public exclude(names: ColumnNames): DataFrame {
     const keep: ColumnNames = this.names.filter((n) => !names.includes(n));
     return this.include(keep);
-  }
-
-  /** Lookup a particular column */
-  public column(name: string): Column {
-    return this.columns[name];
   }
 
   /** Correlation of each series to each series on other dataframe */
@@ -134,7 +106,7 @@ export class DataFrame {
     return new DataFrame(columns);
   }
 
-  /** Display count of significant digits */
+  /** Reduce count of significant digits */
   public digits(units: number, names: string[] = this.names): DataFrame {
     const columns: Columns = {};
     names.forEach((name) => {
@@ -146,24 +118,13 @@ export class DataFrame {
     return new DataFrame(columns, this.index);
   }
 
-  /** Pretty print as ascii table */
-  public print(title?: string): void {
-    const table = new Table();
-    if (title) table.title = title;
-    table.headers = this.names;
-    table.rows = this.grid;
-    console.log("\n" + table.toString());
-  }
-
   /** Sort rows by columns */
   public sort(colname: string): DataFrame {
     // TODO: only rearrange incides
     const index: Index = this.index;
     const value: SeriesTypes[] = this.column(colname).values;
     const zip: Array<SortElement> = index.map((i: number) => [i, value[i]]);
-    const sorted: Array<SortElement> = zip.sort((a, b) =>
-      a[1] < b[1] ? -1 : 1
-    );
+    const sorted: Array<SortElement> = zip.sort((a, b) => a[1] < b[1] ? -1 : 1);
     const order: Index = sorted.map((a: SortElement) => a[0]);
     return new DataFrame(this.columns, order);
   }
@@ -199,5 +160,47 @@ export class DataFrame {
   /** Rows in random order */
   public get shuffle(): DataFrame {
     return this.reindex(this.index.sort(() => Math.random() - 0.5));
+  }
+
+  /** Values and columns names from all series at index */
+  private record(index: number): RowRecord {
+    return Object.assign(
+      {},
+      ...this.names.map((x) => ({ [x]: this.columns[x].values[index] })),
+    );
+  }
+
+  /** Export data to list of records */
+  public get records(): RowRecords {
+    return this.index.map((i: number) => this.record(i));
+  }
+
+  /** Values from all series at index */
+  private line(index: number): RowValues {
+    return this.names.map((x) => this.columns[x].values[index]);
+  }
+
+  /** Export data to matrix */
+  public get grid(): Array<RowValues> {
+    return this.index.map((i: number) => this.line(i));
+  }
+
+  /** Lookup a particular column */
+  public column(name: string): Column {
+    return this.columns[name];
+  }
+
+  /** Count of records */
+  public get length(): number {
+    return this.index.length;
+  }
+
+  /** Pretty print as ascii table */
+  public print(title?: string): void {
+    const table = new Table();
+    if (title) table.title = title;
+    table.headers = this.names;
+    table.rows = this.grid;
+    console.log("\n" + table.toString());
   }
 }
