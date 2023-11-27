@@ -1,21 +1,29 @@
 import { assertEquals, assertInstanceOf } from "assert";
 import { RepoHeapBackend } from "/repository/repo-heap.ts";
 import { Model } from "./model.ts";
-import type { Input, Output } from "./model.ts";
+import { DataFrame } from "/utils/dataframe.ts";
+import type { RowRecords } from "/utils/dataframe.ts";
 
 const repo: RepoHeapBackend = new RepoHeapBackend();
 
 // Testdata
+const keys = [...Array(26)].map((_, i) => String.fromCharCode('A'.charCodeAt(0) + i));
+const r: RowRecords = [];
+for ( let i = 1; i<=5; i++ ) {
+  const s = Object.fromEntries(keys.map(key => [key, i]));
+  r.push(s);
+}
+const input: DataFrame = DataFrame.fromRecords(r);
+
 // y1 = (2x - 1)/10
 // y2 = (x*x -1)/100
-const input: Input = [[1], [2], [3], [4], [5]];
-const output: Output = [
-  [0.1, 0],
-  [0.3, 0.03],
-  [0.5, 0.08],
-  [0.7, 0.15],
-  [0.9, 0.24],
-];
+const output: DataFrame = DataFrame.fromRecords([
+  {l: 0.1, e: 0},
+  {l: 0.3, e: 0.03},
+  {l: 0.5, e: 0.08},
+  {l: 0.7, e: 0.15},
+  {l: 0.8, e: 0.24},
+]);
 
 Deno.test("Initialize", () => {
   const model = new Model(repo);

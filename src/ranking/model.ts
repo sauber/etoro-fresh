@@ -16,13 +16,15 @@ import {
 } from "netsaur";
 import { Asset, RepoBackend } from "/repository/mod.ts";
 import type { JSONObject } from "/repository/mod.ts";
+import { DataFrame } from "/utils/dataframe.ts";
+import type { RowRecord, RowRecords } from "/utils/dataframe.ts";
 
 type ModelTS = Uint8Array;
-export type Input = Array2D;
+//export type Input = Array2D;
 type Profit = number;
 type SharpeRatio = number;
 export type Prediction = [Profit, SharpeRatio];
-export type Output = Array<Prediction>;
+//export type Output = Array<Prediction>;
 
 // Convert days to ms
 const Days = 60 * 60 * 1000;
@@ -32,6 +34,8 @@ export class Model {
   private readonly asset: Asset<ModelTS>;
   private readonly assetname = "ranking.model";
   private readonly expire = 30 * Days;
+  private readonly inputSize = 26; // Stats parameters
+  private readonly outputSize = 2; // Profit and SharpeRatio
   private _sequential: Sequential | undefined;
 
   constructor(private readonly repo: RepoBackend) {
@@ -45,6 +49,7 @@ export class Model {
 
   /** Load existing model */
   private async loadModel(): Promise<Sequential> {
+    console.log("Loading existing model");
     const loaded: JSONObject | null = await this.repo.retrieve(this.assetname);
     if (loaded) {
       const model: Uint8Array = decodeBase64(loaded.model as string);
@@ -55,20 +60,23 @@ export class Model {
 
   /** Create a sequential model with layers */
   private createModel(): Sequential {
-    const outputSize = 2; // Profit and SharpeRatio
+    console.log("Creating new model");
+
+    const hiddenSize = this.outputSize + Math.round(Math.sqrt(this.inputSize));
+
     return new Sequential({
       // Number of minibatches, and size of output
-      size: [128, outputSize],
+      size: [128, this.inputSize],
 
-      // The silent option is set to true, which means that the network will not output any logs during trainin
+      // The silent option is set to true, which means that the network will not output any logs during training
       silent: true,
 
       layers: [
         BatchNorm1DLayer({ momentum: 0.9 }),
         ReluLayer(),
-        DenseLayer({ size: [outputSize] }),
+        DenseLayer({ size: [hiddenSize] }),
         SigmoidLayer(),
-        DenseLayer({ size: [outputSize] }),
+        DenseLayer({ size: [this.outputSize] }),
       ],
 
       // The cost function used for training the network is the mean squared error (MSE).
@@ -104,15 +112,26 @@ export class Model {
 
   /** Train model with input and output data */
   public async train(
-    input: Input,
-    output: Output,
+    input: DataFrame,
+    output: DataFrame,
   ): Promise<void> {
     // Load existing or create new model
     const model: Sequential = await this.init();
 
+    // Reshape data as tensors
+    if (input.names.length != this.inputSize) {
+      throw new Error("Wrong number of columns in input");
+    }
+    if (output.names.length != this.outputSize) {
+      throw new Error("Wrong number of columns in output");
+    }
+    const inputs = tensor2D(input.grid as Array2D);
+    const outputs = tensor2D(output.grid as Array2D);
+    //console.log({xs, ys});
+
     // Train model
     model.train(
-      [{ inputs: tensor2D(input), outputs: tensor2D(output) }],
+      [{ inputs, outputs }],
       // The number of iterations is set to 10000.
       10000,
       // Batches
@@ -122,18 +141,32 @@ export class Model {
     );
 
     // Save trained model
-    return this.save(model);
+    //return this.save(model);
   }
 
   /** Make prediction for one row of input */
-  public async predictOne(parameters: Array1D): Promise<Prediction> {
+  private async predictOne(parameters: Array1D): Promise<Prediction> {
     const model: Sequential = await this.init();
     const values = (await model.predict(tensor1D(parameters))).data;
     return [values[0], values[1]] as [Profit, SharpeRatio];
   }
 
+  private async predictRecord(record: RowRecord): Promise<RowRecord> {
+    const input = Object.values(record) as Array1D;
+    const output = await this.predictOne(input);
+    const result = { Profit: output[0], SharpeRatio: output[1] };
+    return result;
+  }
+
   /** Predict a set of inputs in parallel */
-  public predict(input: Input): Promise<Output> {
-    return Promise.all(input.map((i: Array1D) => this.predictOne(i)));
+  public async predict(input: DataFrame): Promise<DataFrame> {
+    if (input.names.length != this.inputSize) {
+      throw new Error("Wrong number of columns in input");
+    }
+    const output: RowRecords = await Promise.all(
+      input.records.map((r: RowRecord) => this.predictRecord(r)),
+    );
+    const df = DataFrame.fromRecords(output);
+    return df;
   }
 }
