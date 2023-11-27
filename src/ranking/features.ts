@@ -51,7 +51,7 @@ class FeatureLoader {
 }
 
 /** Extract features impacting ranking for an investor */
-class Extract {
+export class Extract {
   constructor(
     private readonly chart: ChartSeries,
     private readonly stats: StatsData

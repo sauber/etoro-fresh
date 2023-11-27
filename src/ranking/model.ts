@@ -104,10 +104,13 @@ export class Model {
   }
 
   /** Encode Model as Base64 and save in repository */
-  private async save(model: Sequential): Promise<void> {
-    const uint8arr: Uint8Array = await model.save();
-    const str = encodeBase64(uint8arr);
-    return this.repo.store(this.assetname, { model: str });
+  public async save(): Promise<void> {
+    if ( this._sequential) {
+      const uint8arr: Uint8Array = await this._sequential.save();
+      const str = encodeBase64(uint8arr);
+      return this.repo.store(this.assetname, { model: str });
+    }
+    return Promise.reject('No model loaded or created. Cannot save.');
   }
 
   /** Train model with input and output data */

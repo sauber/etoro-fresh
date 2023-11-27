@@ -2,7 +2,7 @@ import { assertEquals, assertInstanceOf } from "assert";
 import { repoBackend } from "/repository/testdata.ts";
 import { investorId } from "/investor/testdata.ts";
 import { Ranking } from "./ranking.ts";
-//import type { Input, Output } from "./model.ts";
+import { DataFrame } from "/utils/dataframe.ts";
 
 Deno.test("Initialize", () => {
   const rank = new Ranking(repoBackend);
@@ -21,7 +21,10 @@ Deno.test("Validate", { ignore: false }, async () => {
   const rank = new Ranking(repoBackend);
 
   // Validate
-  const out = await rank.rank(investorId.UserName);
+  const names = DataFrame.fromRecords([{UserName: investorId.UserName}]);
+  //console.log(names);
+  const out = await rank.predict(names);
+  //out.print('Prediction');
   assertEquals(out.length, 1);
-  assertEquals(out.names.length, 2);
+  assertEquals(out.names.length, 3);
 });
