@@ -121,6 +121,7 @@ for (let i = 0; i < 1; i++) {
   const train_y = shuffled.include(xf);
   const inputs = tensor2D(train_x.grid as Array2D);
   const outputs = tensor2D(train_y.grid as Array2D);
+  console.log({inputs, outputs});
   net.train(
     [{ inputs, outputs }],
     // The number of iterations is set to 10000.
