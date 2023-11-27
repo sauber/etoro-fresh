@@ -2,6 +2,7 @@ import { RepoBackend } from "/repository/mod.ts";
 import { DateFormat } from "/utils/time/mod.ts";
 import { Investor } from "./investor.ts";
 
+// TODO: Return DataFrames instead
 export type Names = Set<string>;
 
 /** Handle Community I/O requests to local repository */
@@ -47,11 +48,13 @@ export class Community {
   public async last(): Promise<Names> {
     const end: DateFormat | null = await this.end();
     if (end) {
-      const names: Names = new Set(await this.repo.assetsByDate(end));
+      const names: Names = new Set(await this.namesByDate(end));
       return names;
     } else return new Set();
   }
 
+  /** The last directory where names exists */
+  // TODO: Look backwards until directory has at least on name
   public end(): Promise<DateFormat | null> {
     return this.repo.end();
   }
