@@ -9,7 +9,7 @@ type Position = {
   y: number;
 };
 
-type Item = {
+export type Item = {
   x: number;
   y: number;
   content: unknown;

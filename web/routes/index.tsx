@@ -1,4 +1,5 @@
-import InvestorList from "../islands/investor/InvestorList.tsx";
+//import InvestorList from "../islands/investor/InvestorList.tsx";
+import Rankgrid from "../islands/investor/RankGrid.tsx";
 
 export default function Home() {
   const date = new Date();
@@ -10,7 +11,7 @@ export default function Home() {
         Welcome to `🥤 Fresh Blogs 🍋`!
       </h1>
       <p class="my-6">Fresh ideas everyday</p>
-      <InvestorList/>
+      <Rankgrid/>
     </div>
   );
 }

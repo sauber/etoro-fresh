@@ -2,12 +2,11 @@
 import ListItem from "../../islands/investor/InvestorItem.tsx";
 import { useEffect, useState } from "preact/hooks";
 
-
 export default function InvestorList() {
   const [investorNames, setInvestorName] = useState([]);
 
   const loadCommunity = async () => {
-    const url = "/api/investor/names/last";
+    const url = "/api/investor/names";
     const fetchOptions = {
       headers: {
         accept: "application/json",
@@ -42,7 +41,11 @@ export default function InvestorList() {
     <div>
       <h2>List of investors: {investorNames.length}</h2>
       <ul>
-        {investorNames.map((name: string) => <li><ListItem UserName={name} /></li>)}
+        {investorNames.map((name: string) => (
+          <li>
+            <ListItem UserName={name} />
+          </li>
+        ))}
       </ul>
     </div>
   );
