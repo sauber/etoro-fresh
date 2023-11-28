@@ -1,0 +1,3038 @@
+{
+  "simulation": {
+    "oneYearAgo": {
+      "period": "OneYearAgo",
+      "chart": [
+        {
+          "timestamp": "2021-02-01T00:00:00Z",
+          "credit": 10000.0,
+          "investment": 0.0,
+          "pnL": 0.0,
+          "equity": 10000.0,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-02T00:00:00Z",
+          "credit": 10000.0,
+          "investment": 0.0,
+          "pnL": 0.0,
+          "equity": 10000.0,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-03T00:00:00Z",
+          "credit": 10000.0,
+          "investment": 0.0,
+          "pnL": 0.0,
+          "equity": 10000.0,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-04T00:00:00Z",
+          "credit": 10000.0,
+          "investment": 0.0,
+          "pnL": 0.0,
+          "equity": 10000.0,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-05T00:00:00Z",
+          "credit": 10000.0,
+          "investment": 0.0,
+          "pnL": 0.0,
+          "equity": 10000.0,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-06T00:00:00Z",
+          "credit": 10000.0,
+          "investment": 0.0,
+          "pnL": 0.0,
+          "equity": 10000.0,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-07T00:00:00Z",
+          "credit": 10000.0,
+          "investment": 0.0,
+          "pnL": 0.0,
+          "equity": 10000.0,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-08T00:00:00Z",
+          "credit": 10000.0,
+          "investment": 0.0,
+          "pnL": 0.0,
+          "equity": 10000.0,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-09T00:00:00Z",
+          "credit": 10000.0,
+          "investment": 0.0,
+          "pnL": 0.0,
+          "equity": 10000.0,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-10T00:00:00Z",
+          "credit": 10000.0,
+          "investment": 0.0,
+          "pnL": 0.0,
+          "equity": 10000.0,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-11T00:00:00Z",
+          "credit": 10000.0,
+          "investment": 0.0,
+          "pnL": 0.0,
+          "equity": 10000.0,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-12T00:00:00Z",
+          "credit": 1792.63,
+          "investment": 8207.37,
+          "pnL": -17.59,
+          "equity": 9982.41,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-13T00:00:00Z",
+          "credit": 1605.01,
+          "investment": 8394.99,
+          "pnL": -29.80,
+          "equity": 9970.20,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-14T00:00:00Z",
+          "credit": 1605.01,
+          "investment": 8394.99,
+          "pnL": -29.80,
+          "equity": 9970.20,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-15T00:00:00Z",
+          "credit": 1605.01,
+          "investment": 8394.99,
+          "pnL": -5.40,
+          "equity": 9994.60,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-16T00:00:00Z",
+          "credit": 1605.01,
+          "investment": 8394.99,
+          "pnL": 57.68,
+          "equity": 10057.68,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-17T00:00:00Z",
+          "credit": 1175.13,
+          "investment": 8824.87,
+          "pnL": 26.97,
+          "equity": 10026.97,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-18T00:00:00Z",
+          "credit": 1175.13,
+          "investment": 8824.87,
+          "pnL": -120.81,
+          "equity": 9879.19,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-19T00:00:00Z",
+          "credit": 1175.13,
+          "investment": 8824.87,
+          "pnL": -93.40,
+          "equity": 9906.60,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-20T00:00:00Z",
+          "credit": 1175.13,
+          "investment": 8824.87,
+          "pnL": -93.40,
+          "equity": 9906.60,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-21T00:00:00Z",
+          "credit": 1175.13,
+          "investment": 8824.87,
+          "pnL": -93.47,
+          "equity": 9906.53,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-22T00:00:00Z",
+          "credit": 1175.13,
+          "investment": 8824.87,
+          "pnL": -253.61,
+          "equity": 9746.39,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-23T00:00:00Z",
+          "credit": 1175.13,
+          "investment": 8824.87,
+          "pnL": -315.23,
+          "equity": 9684.77,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-24T00:00:00Z",
+          "credit": 1175.13,
+          "investment": 8824.87,
+          "pnL": -265.32,
+          "equity": 9734.68,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-25T00:00:00Z",
+          "credit": 9484.53,
+          "investment": 0.0,
+          "pnL": 0.0,
+          "equity": 9484.53,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-26T00:00:00Z",
+          "credit": 9484.53,
+          "investment": 0.0,
+          "pnL": 0.0,
+          "equity": 9484.53,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-27T00:00:00Z",
+          "credit": 9484.53,
+          "investment": 0.0,
+          "pnL": 0.0,
+          "equity": 9484.53,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-02-28T00:00:00Z",
+          "credit": 8225.29,
+          "investment": 1259.23,
+          "pnL": -38.37,
+          "equity": 9446.16,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-01T00:00:00Z",
+          "credit": 7985.44,
+          "investment": 1499.09,
+          "pnL": 58.66,
+          "equity": 9543.19,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-02T00:00:00Z",
+          "credit": 5150.81,
+          "investment": 4329.52,
+          "pnL": -5.91,
+          "equity": 9474.42,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-03T00:00:00Z",
+          "credit": 5150.80,
+          "investment": 4329.52,
+          "pnL": -40.03,
+          "equity": 9440.29,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-04T00:00:00Z",
+          "credit": 6105.22,
+          "investment": 3373.52,
+          "pnL": -165.05,
+          "equity": 9313.69,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-05T00:00:00Z",
+          "credit": 6195.53,
+          "investment": 3254.35,
+          "pnL": -97.80,
+          "equity": 9352.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-06T00:00:00Z",
+          "credit": 5769.58,
+          "investment": 3649.43,
+          "pnL": -49.13,
+          "equity": 9369.88,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-07T00:00:00Z",
+          "credit": 5769.58,
+          "investment": 3649.43,
+          "pnL": -14.33,
+          "equity": 9404.67,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-08T00:00:00Z",
+          "credit": 5769.58,
+          "investment": 3649.43,
+          "pnL": -25.37,
+          "equity": 9393.63,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-09T00:00:00Z",
+          "credit": 7211.67,
+          "investment": 2225.86,
+          "pnL": 74.72,
+          "equity": 9512.25,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-10T00:00:00Z",
+          "credit": 6793.89,
+          "investment": 2643.32,
+          "pnL": 43.25,
+          "equity": 9480.46,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-11T00:00:00Z",
+          "credit": 7050.04,
+          "investment": 2398.92,
+          "pnL": 48.73,
+          "equity": 9497.69,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-12T00:00:00Z",
+          "credit": 7049.91,
+          "investment": 2398.92,
+          "pnL": 49.68,
+          "equity": 9498.51,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-13T00:00:00Z",
+          "credit": 7728.70,
+          "investment": 1773.05,
+          "pnL": -16.43,
+          "equity": 9485.33,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-14T00:00:00Z",
+          "credit": 7728.70,
+          "investment": 1773.05,
+          "pnL": -32.04,
+          "equity": 9469.72,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-15T00:00:00Z",
+          "credit": 7728.70,
+          "investment": 1773.05,
+          "pnL": -62.44,
+          "equity": 9439.32,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-16T00:00:00Z",
+          "credit": 8032.17,
+          "investment": 1382.93,
+          "pnL": 15.13,
+          "equity": 9430.22,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-17T00:00:00Z",
+          "credit": 8032.03,
+          "investment": 1382.93,
+          "pnL": 13.43,
+          "equity": 9428.39,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-18T00:00:00Z",
+          "credit": 9410.40,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9410.40,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-19T00:00:00Z",
+          "credit": 9410.40,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9410.40,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-20T00:00:00Z",
+          "credit": 9410.40,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9410.40,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-21T00:00:00Z",
+          "credit": 9410.40,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9410.40,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-22T00:00:00Z",
+          "credit": 9410.40,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9410.40,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-23T00:00:00Z",
+          "credit": 9410.40,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9410.40,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-24T00:00:00Z",
+          "credit": 9410.40,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9410.40,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-25T00:00:00Z",
+          "credit": 9410.40,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9410.40,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-26T00:00:00Z",
+          "credit": 9410.40,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9410.40,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-27T00:00:00Z",
+          "credit": 9410.40,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9410.40,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-28T00:00:00Z",
+          "credit": 9410.40,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9410.40,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-29T00:00:00Z",
+          "credit": 9410.40,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9410.40,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-30T00:00:00Z",
+          "credit": 9410.40,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9410.40,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-03-31T00:00:00Z",
+          "credit": 9410.40,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9410.40,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-01T00:00:00Z",
+          "credit": 343.57,
+          "investment": 9066.83,
+          "pnL": 136.88,
+          "equity": 9547.28,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-02T00:00:00Z",
+          "credit": 343.57,
+          "investment": 9066.83,
+          "pnL": 141.12,
+          "equity": 9551.53,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-03T00:00:00Z",
+          "credit": 343.57,
+          "investment": 9066.83,
+          "pnL": 137.92,
+          "equity": 9548.32,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-04T00:00:00Z",
+          "credit": 343.57,
+          "investment": 9066.83,
+          "pnL": 139.64,
+          "equity": 9550.04,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-05T00:00:00Z",
+          "credit": 343.57,
+          "investment": 9066.83,
+          "pnL": 169.46,
+          "equity": 9579.86,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-06T00:00:00Z",
+          "credit": 248.62,
+          "investment": 9161.78,
+          "pnL": 256.46,
+          "equity": 9666.86,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-07T00:00:00Z",
+          "credit": 248.62,
+          "investment": 9161.78,
+          "pnL": 172.18,
+          "equity": 9582.58,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-08T00:00:00Z",
+          "credit": 248.62,
+          "investment": 9161.78,
+          "pnL": 200.02,
+          "equity": 9610.42,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-09T00:00:00Z",
+          "credit": 276.96,
+          "investment": 9139.26,
+          "pnL": 140.32,
+          "equity": 9556.54,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-10T00:00:00Z",
+          "credit": 323.49,
+          "investment": 9092.54,
+          "pnL": 143.93,
+          "equity": 9559.96,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-11T00:00:00Z",
+          "credit": 323.49,
+          "investment": 9092.54,
+          "pnL": 144.35,
+          "equity": 9560.38,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-12T00:00:00Z",
+          "credit": 323.49,
+          "investment": 9092.54,
+          "pnL": 60.29,
+          "equity": 9476.32,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-13T00:00:00Z",
+          "credit": 273.77,
+          "investment": 9141.32,
+          "pnL": 122.29,
+          "equity": 9537.39,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-14T00:00:00Z",
+          "credit": 757.88,
+          "investment": 8682.17,
+          "pnL": 57.61,
+          "equity": 9497.66,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-15T00:00:00Z",
+          "credit": 768.96,
+          "investment": 8682.35,
+          "pnL": 58.15,
+          "equity": 9509.46,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-16T00:00:00Z",
+          "credit": 619.79,
+          "investment": 8831.52,
+          "pnL": 90.64,
+          "equity": 9541.95,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-17T00:00:00Z",
+          "credit": 572.31,
+          "investment": 8879.00,
+          "pnL": 89.40,
+          "equity": 9540.70,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-18T00:00:00Z",
+          "credit": 617.53,
+          "investment": 8831.71,
+          "pnL": 92.13,
+          "equity": 9541.37,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-19T00:00:00Z",
+          "credit": 617.53,
+          "investment": 8831.71,
+          "pnL": -13.34,
+          "equity": 9435.90,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-20T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-21T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-22T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-23T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-24T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-25T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-26T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-27T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-28T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-29T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-04-30T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-01T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-02T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-03T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-04T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-05T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-06T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-07T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-08T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-09T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-10T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-11T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-12T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-13T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-14T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-15T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-16T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-17T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-18T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-19T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-20T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-21T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-22T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-23T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-24T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-25T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-26T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-27T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-28T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-29T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-30T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-05-31T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-01T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-02T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-03T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-04T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-05T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-06T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-07T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-08T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-09T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-10T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-11T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-12T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-13T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-14T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-15T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-16T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-17T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-18T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-19T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-20T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-21T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-22T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-23T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-24T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-25T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-26T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-27T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-28T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-29T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-06-30T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-01T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-02T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-03T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-04T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-05T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-06T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-07T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-08T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-09T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-10T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-11T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-12T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-13T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-14T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-15T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-16T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-17T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-18T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-19T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-20T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-21T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-22T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-23T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-24T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-25T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-26T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-27T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-28T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-29T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-30T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-07-31T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-01T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-02T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-03T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-04T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-05T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-06T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-07T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-08T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-09T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-10T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-11T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-12T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-13T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-14T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-15T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-16T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-17T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-18T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-19T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-20T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-21T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-22T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-23T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-24T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-25T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-26T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-27T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-28T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-29T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-30T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-08-31T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-01T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-02T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-03T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-04T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-05T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-06T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-07T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-08T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-09T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-10T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-11T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-12T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-13T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-14T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-15T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-16T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-17T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-18T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-19T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-20T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-21T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-22T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-23T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-24T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-25T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-26T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-27T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-28T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-29T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-09-30T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-01T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-02T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-03T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-04T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-05T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-06T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-07T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-08T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-09T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-10T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-11T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-12T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-13T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-14T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-15T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-16T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-17T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-18T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-19T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-20T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-21T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-22T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-23T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-24T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-25T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-26T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-27T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-28T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-29T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-30T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-10-31T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-01T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-02T00:00:00Z",
+          "credit": 9570.09,
+          "investment": 0.00,
+          "pnL": 0.0,
+          "equity": 9570.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-03T00:00:00Z",
+          "credit": 1513.74,
+          "investment": 8056.35,
+          "pnL": 32.92,
+          "equity": 9603.01,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-04T00:00:00Z",
+          "credit": 1002.50,
+          "investment": 8567.59,
+          "pnL": 56.58,
+          "equity": 9626.67,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-05T00:00:00Z",
+          "credit": 1002.50,
+          "investment": 8567.59,
+          "pnL": 79.97,
+          "equity": 9650.05,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-06T00:00:00Z",
+          "credit": 1002.50,
+          "investment": 8567.59,
+          "pnL": 79.97,
+          "equity": 9650.05,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-07T00:00:00Z",
+          "credit": 1002.50,
+          "investment": 8567.59,
+          "pnL": 79.98,
+          "equity": 9650.06,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-08T00:00:00Z",
+          "credit": 1002.50,
+          "investment": 8567.59,
+          "pnL": 145.14,
+          "equity": 9715.23,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-09T00:00:00Z",
+          "credit": 1002.50,
+          "investment": 8567.59,
+          "pnL": 141.03,
+          "equity": 9711.11,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-10T00:00:00Z",
+          "credit": 1002.50,
+          "investment": 8567.59,
+          "pnL": 67.51,
+          "equity": 9637.59,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-11T00:00:00Z",
+          "credit": 1062.58,
+          "investment": 8507.98,
+          "pnL": 158.53,
+          "equity": 9729.09,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-12T00:00:00Z",
+          "credit": 1062.58,
+          "investment": 8507.98,
+          "pnL": 248.75,
+          "equity": 9819.31,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-13T00:00:00Z",
+          "credit": 1062.58,
+          "investment": 8507.98,
+          "pnL": 248.75,
+          "equity": 9819.31,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-14T00:00:00Z",
+          "credit": 1062.58,
+          "investment": 8507.98,
+          "pnL": 248.75,
+          "equity": 9819.31,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-15T00:00:00Z",
+          "credit": 1062.58,
+          "investment": 8507.98,
+          "pnL": 228.44,
+          "equity": 9799.00,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-16T00:00:00Z",
+          "credit": 1062.58,
+          "investment": 8507.98,
+          "pnL": 228.48,
+          "equity": 9799.04,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-17T00:00:00Z",
+          "credit": 1062.58,
+          "investment": 8507.98,
+          "pnL": 208.28,
+          "equity": 9778.85,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-18T00:00:00Z",
+          "credit": 1043.02,
+          "investment": 8533.26,
+          "pnL": 87.27,
+          "equity": 9663.56,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-19T00:00:00Z",
+          "credit": 1043.02,
+          "investment": 8533.26,
+          "pnL": 92.28,
+          "equity": 9668.56,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-20T00:00:00Z",
+          "credit": 1043.02,
+          "investment": 8533.26,
+          "pnL": 92.28,
+          "equity": 9668.56,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-21T00:00:00Z",
+          "credit": 1043.02,
+          "investment": 8533.26,
+          "pnL": 92.25,
+          "equity": 9668.54,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-22T00:00:00Z",
+          "credit": 1043.02,
+          "investment": 8533.26,
+          "pnL": 18.61,
+          "equity": 9594.89,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-23T00:00:00Z",
+          "credit": 1043.02,
+          "investment": 8533.26,
+          "pnL": 1.81,
+          "equity": 9578.10,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-24T00:00:00Z",
+          "credit": 1043.02,
+          "investment": 8533.26,
+          "pnL": 23.37,
+          "equity": 9599.65,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-25T00:00:00Z",
+          "credit": 1043.02,
+          "investment": 8533.26,
+          "pnL": 26.86,
+          "equity": 9603.15,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-26T00:00:00Z",
+          "credit": 1043.02,
+          "investment": 8533.26,
+          "pnL": -155.34,
+          "equity": 9420.95,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-27T00:00:00Z",
+          "credit": 1043.02,
+          "investment": 8533.26,
+          "pnL": -155.34,
+          "equity": 9420.95,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-28T00:00:00Z",
+          "credit": 1043.02,
+          "investment": 8533.26,
+          "pnL": -155.15,
+          "equity": 9421.14,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-29T00:00:00Z",
+          "credit": 1043.02,
+          "investment": 8533.26,
+          "pnL": -100.16,
+          "equity": 9476.12,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-11-30T00:00:00Z",
+          "credit": 1043.02,
+          "investment": 8533.26,
+          "pnL": -241.35,
+          "equity": 9334.94,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-01T00:00:00Z",
+          "credit": 1086.90,
+          "investment": 8482.23,
+          "pnL": -238.31,
+          "equity": 9330.82,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-02T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -196.16,
+          "equity": 9377.74,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-03T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -356.31,
+          "equity": 9217.59,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-04T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -356.31,
+          "equity": 9217.59,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-05T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -356.34,
+          "equity": 9217.56,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-06T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -277.60,
+          "equity": 9296.30,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-07T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -102.27,
+          "equity": 9471.64,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-08T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -39.91,
+          "equity": 9533.99,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-09T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -122.03,
+          "equity": 9451.87,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-10T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -150.69,
+          "equity": 9423.21,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-11T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -150.69,
+          "equity": 9423.21,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-12T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -150.70,
+          "equity": 9423.20,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-13T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -216.36,
+          "equity": 9357.54,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-14T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -268.07,
+          "equity": 9305.83,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-15T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -217.03,
+          "equity": 9356.87,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-16T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -221.53,
+          "equity": 9352.37,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-17T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -244.16,
+          "equity": 9329.74,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-18T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -244.16,
+          "equity": 9329.74,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-19T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -244.13,
+          "equity": 9329.77,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-20T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -395.58,
+          "equity": 9178.32,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-21T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -232.49,
+          "equity": 9341.41,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-22T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -185.33,
+          "equity": 9388.57,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-23T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -131.65,
+          "equity": 9442.25,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-24T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -115.37,
+          "equity": 9458.53,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-25T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -115.37,
+          "equity": 9458.53,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-26T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -115.31,
+          "equity": 9458.59,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-27T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -99.57,
+          "equity": 9474.34,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-28T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -132.97,
+          "equity": 9440.93,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-29T00:00:00Z",
+          "credit": 1133.72,
+          "investment": 8440.18,
+          "pnL": -152.41,
+          "equity": 9421.49,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-30T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -92.64,
+          "equity": 9466.00,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2021-12-31T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -122.33,
+          "equity": 9436.31,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-01T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -122.33,
+          "equity": 9436.31,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-02T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -122.36,
+          "equity": 9436.28,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-03T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -50.16,
+          "equity": 9508.48,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-04T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -80.13,
+          "equity": 9478.51,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-05T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -227.76,
+          "equity": 9330.88,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-06T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -265.78,
+          "equity": 9292.86,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-07T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -262.57,
+          "equity": 9296.07,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-08T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -262.57,
+          "equity": 9296.07,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-09T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -262.62,
+          "equity": 9296.02,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-10T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -244.17,
+          "equity": 9314.47,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-11T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -145.87,
+          "equity": 9412.77,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-12T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -97.61,
+          "equity": 9461.03,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-13T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -189.62,
+          "equity": 9369.02,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-14T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -229.33,
+          "equity": 9329.31,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-15T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -229.33,
+          "equity": 9329.31,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-16T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -229.35,
+          "equity": 9329.29,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-17T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -242.51,
+          "equity": 9316.13,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-18T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -393.94,
+          "equity": 9164.70,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-19T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -355.43,
+          "equity": 9203.21,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-20T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -368.44,
+          "equity": 9190.20,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-21T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -524.96,
+          "equity": 9033.68,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-22T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -524.96,
+          "equity": 9033.68,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-23T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -524.99,
+          "equity": 9033.64,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-24T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -620.36,
+          "equity": 8938.28,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-25T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -671.98,
+          "equity": 8886.66,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-26T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -666.34,
+          "equity": 8892.30,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-27T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -746.60,
+          "equity": 8812.04,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-28T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -665.86,
+          "equity": 8892.78,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-29T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -665.86,
+          "equity": 8892.78,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-30T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -665.84,
+          "equity": 8892.80,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-01-31T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -482.38,
+          "equity": 9076.26,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-02-01T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -390.63,
+          "equity": 9168.01,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-02-02T00:00:00Z",
+          "credit": 1199.53,
+          "investment": 8359.11,
+          "pnL": -348.30,
+          "equity": 9210.33,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-02-03T00:00:00Z",
+          "credit": 1246.27,
+          "investment": 8310.46,
+          "pnL": -550.94,
+          "equity": 9005.79,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-02-04T00:00:00Z",
+          "credit": 1246.27,
+          "investment": 8310.46,
+          "pnL": -472.53,
+          "equity": 9084.21,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-02-05T00:00:00Z",
+          "credit": 1246.27,
+          "investment": 8310.46,
+          "pnL": -472.53,
+          "equity": 9084.21,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-02-06T00:00:00Z",
+          "credit": 1246.27,
+          "investment": 8310.46,
+          "pnL": -472.47,
+          "equity": 9084.26,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-02-07T00:00:00Z",
+          "credit": 1246.27,
+          "investment": 8310.46,
+          "pnL": -460.79,
+          "equity": 9095.94,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-02-08T00:00:00Z",
+          "credit": 1246.27,
+          "investment": 8310.46,
+          "pnL": -403.03,
+          "equity": 9153.70,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-02-09T00:00:00Z",
+          "credit": 1246.27,
+          "investment": 8310.46,
+          "pnL": -227.34,
+          "equity": 9329.40,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-02-10T00:00:00Z",
+          "credit": 1246.27,
+          "investment": 8310.46,
+          "pnL": -329.18,
+          "equity": 9227.55,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-02-11T00:00:00Z",
+          "credit": 1246.27,
+          "investment": 8310.46,
+          "pnL": -362.62,
+          "equity": 9194.11,
+          "totalDividends": 0.0
+        },
+        {
+          "timestamp": "2022-02-12T00:00:00Z",
+          "credit": 1246.27,
+          "investment": 8310.46,
+          "pnL": -362.62,
+          "equity": 9194.11,
+          "totalDividends": 0.0
+        }
+      ],
+      "auditTrail": [],
+      "assets": null,
+      "stats": {
+        "gain": 0.92,
+        "standardDeviation": 187.72,
+        "dailyDrawDown": -0.03,
+        "weeklyDrawDown": -0.05,
+        "peakToValleyDrawDown": -0.12,
+        "dailyDrawDownStart": "2021-02-24T00:00:00Z",
+        "weeklyDrawDownStart": "2021-02-21T00:00:00Z",
+        "peakToValleyStart": "2021-02-16T00:00:00Z",
+        "peakToValleyEnd": "2022-01-27T00:00:00Z"
+      }
+    }
+  }
+}
