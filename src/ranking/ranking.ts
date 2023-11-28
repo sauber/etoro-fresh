@@ -3,7 +3,7 @@ import { Model } from "./model.ts";
 import { Features, Extract } from "./features.ts";
 import { Community } from "/investor/mod.ts";
 import { DataFrame } from "/utils/dataframe.ts";
-import { Series } from "/utils/series.ts";
+import { TextSeries } from "/utils/series.ts";
 
 export class Ranking {
   private readonly model: Model;
@@ -20,7 +20,7 @@ export class Ranking {
   public async train(): Promise<void> {
     const training: DataFrame = await this.features.data();
     const xf = ["Profit", "SharpeRatio"];
-    const train_x = training.exclude([...xf, "VirtualCopiers"]);
+    const train_x = training.exclude(xf);
     const train_y = training.include(xf);
     return this.model.train(train_x, train_y);
   }
@@ -31,17 +31,17 @@ export class Ranking {
   }
 
   /** Predicted profit and SharpeRatio for investors */
-  public async predict(names: DataFrame): Promise<DataFrame> {
-    const usernames = names.column('UserName').values as string[];
+  public async predict(names: TextSeries): Promise<DataFrame> {
     const features = await Promise.all(
-      usernames.map((username: string) => this.features.features(username)),
+      names.values.map((username: string) => this.features.features(username)),
     );
     const inputs = features.map((feature: Extract) => feature.input);
-    const indf = DataFrame.fromRecords(inputs).exclude(['VirtualCopiers']);
+    const indf = DataFrame.fromRecords(inputs);
     const prediction = await this.model.predict(indf);
+    const result = new DataFrame({
+      UserName: names,
+    }).join(prediction);
 
-    const with_names = names.join(prediction);
-
-    return with_names;
+    return result;
   }
 }

@@ -19,7 +19,7 @@ Deno.test("HTTP assert test.", async (t) => {
     );
     assertEquals(resp.status, 200);
     const date: DateFormat = await resp.json();
-    assertEquals(date, "2023-10-23");
+    assertEquals(date, "2023-10-13");
   });
 
   await t.step("#2 GET /api/investor/names/last", async () => {

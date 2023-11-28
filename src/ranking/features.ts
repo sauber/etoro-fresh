@@ -54,7 +54,7 @@ class FeatureLoader {
 export class Extract {
   constructor(
     private readonly chart: ChartSeries,
-    private readonly stats: StatsData
+    private readonly stats: StatsData,
   ) {}
 
   /** Number of days between start and end */
@@ -80,7 +80,6 @@ export class Extract {
       MaxMonthlyRiskScore: d.MaxMonthlyRiskScore,
       Copiers: d.Copiers,
       CopiersGain: d.CopiersGain,
-      VirtualCopiers: d.VirtualCopiers,
       AUMTier: d.AUMTier,
       AUMTierV2: d.AUMTierV2,
       Trades: d.Trades,
@@ -152,7 +151,7 @@ export class Features {
   private async addInvestor(
     list: FeatureData[],
     username: string,
-    bar: ProgressBar
+    bar: ProgressBar,
   ): Promise<void> {
     await bar.inc();
     if (await this.investor(username).isValid()) {
@@ -168,8 +167,12 @@ export class Features {
   public async data(): Promise<DataFrame> {
     const list: FeatureData[] = [];
     const names: Names = await this.names();
-    const bar = new ProgressBar("Loading investor data", names.size);
-    await Promise.all(Array.from(names).map((name) => this.addInvestor(list, name as string, bar)));
+    const bar = new ProgressBar("Loading investor data", names.length);
+    await Promise.all(
+      names.values.map((name: string) =>
+        this.addInvestor(list, name as string, bar)
+      ),
+    );
     bar.finish();
     //console.log(`Found ${list.length} valid investors`);
 

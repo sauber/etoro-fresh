@@ -3,6 +3,7 @@ import { repoBackend } from "/repository/testdata.ts";
 import { investorId } from "/investor/testdata.ts";
 import { Ranking } from "./ranking.ts";
 import { DataFrame } from "/utils/dataframe.ts";
+import { TextSeries } from "/utils/series.ts";
 
 Deno.test("Initialize", () => {
   const rank = new Ranking(repoBackend);
@@ -21,10 +22,10 @@ Deno.test("Validate", { ignore: false }, async () => {
   const rank = new Ranking(repoBackend);
 
   // Validate
-  const names = DataFrame.fromRecords([{UserName: investorId.UserName}]);
+  const names = new TextSeries([investorId.UserName]);
   //console.log(names);
   const out = await rank.predict(names);
-  //out.print('Prediction');
+  out.print('Prediction');
   assertEquals(out.length, 1);
   assertEquals(out.names.length, 3);
 });

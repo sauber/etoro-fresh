@@ -20,11 +20,9 @@ import { DataFrame } from "/utils/dataframe.ts";
 import type { RowRecord, RowRecords } from "/utils/dataframe.ts";
 
 type ModelTS = Uint8Array;
-//export type Input = Array2D;
 type Profit = number;
 type SharpeRatio = number;
-export type Prediction = [Profit, SharpeRatio];
-//export type Output = Array<Prediction>;
+type Prediction = [Profit, SharpeRatio];
 
 // Convert days to ms
 const Days = 60 * 60 * 1000;
@@ -105,12 +103,12 @@ export class Model {
 
   /** Encode Model as Base64 and save in repository */
   public async save(): Promise<void> {
-    if ( this._sequential) {
+    if (this._sequential) {
       const uint8arr: Uint8Array = await this._sequential.save();
       const str = encodeBase64(uint8arr);
       return this.repo.store(this.assetname, { model: str });
     }
-    return Promise.reject('No model loaded or created. Cannot save.');
+    return Promise.reject("No model loaded or created. Cannot save.");
   }
 
   /** Train model with input and output data */
@@ -130,7 +128,6 @@ export class Model {
     }
     const inputs = tensor2D(input.grid as Array2D);
     const outputs = tensor2D(output.grid as Array2D);
-    //console.log({xs, ys});
 
     // Train model
     model.train(
@@ -142,9 +139,6 @@ export class Model {
       // Learning Rate
       0.01,
     );
-
-    // Save trained model
-    //return this.save(model);
   }
 
   /** Make prediction for one row of input */

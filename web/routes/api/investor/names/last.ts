@@ -5,8 +5,7 @@ export const handler: Handlers<null, { community: Community }> = {
   async GET(_req, ctx) {
     const community: Community = ctx.state.community;
     const names: Names = await community.names();
-    //console.log('names/last handler: ', names);
-    return new Response(JSON.stringify([...names]), {
+    return new Response(JSON.stringify(names.values), {
       headers: { "Content-Type": "application/json" },
     });
   },

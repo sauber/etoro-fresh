@@ -42,6 +42,11 @@ export class TextSeries
   constructor(values?: Array<string>) {
     super(values);
   }
+
+  /** Sort alphabetically */
+  public get sort(): TextSeries {
+    return new TextSeries(this.values.sort(Intl.Collator().compare));
+  }
 }
 
 /** Series of booleans */
