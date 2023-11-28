@@ -1,13 +1,14 @@
 //import { Handlers, PageProps } from "$fresh/server.ts";
-import ListItem from "../../islands/investor/InvestorItem.tsx";
+import ListItem from "../../islands/investor/InvestorCell.tsx";
 import { useEffect, useState } from "preact/hooks";
 import { Grid, Item } from "/utils/grid.ts";
+import { bgBrightRed } from "$std/fmt/colors.ts";
 
 export default function InvestorList() {
   const [getGrid, setGrid] = useState([]);
   const [ counter, setCounter ] = useState(0);
 
-  const increment = () => setCount(counter + 1);
+  const increment = () => setCounter(counter + 1);
 
   const loadRank = async () => {
     const url = "/api/investor/rank";
@@ -45,10 +46,10 @@ export default function InvestorList() {
   useEffect(() => {
     const fetchData = async () => {
       increment();
-      //const rank = await loadRank();
-      //const grid = createGrid(rank);
-      //console.log('grid:', grid.table);
-      //setGrid(grid.table);
+      const rank = await loadRank();
+      const grid = createGrid(rank);
+      console.log('grid:', grid.table);
+      setGrid(grid.table);
     };
     fetchData();
     increment();
@@ -58,14 +59,12 @@ export default function InvestorList() {
     <div>
       <p>CountER: {counter}</p>
       <h2>Rank of investors</h2>
-      {getGrid.toString()}
-      <table class="border-collapse border border-slate-400">
+      <table class="border-collapse border-2 border-slate-400">
         {getGrid.map((row) => (
           <tr>
             {row.map((cell) => (
               <td>
-                {cell.toString()}
-                <ListItem UserName={cell.content.UserName} />
+                <ListItem UserName={cell ? cell.content.UserName : 'null'} />
               </td>
             ))}
           </tr>
