@@ -1,7 +1,7 @@
 import { useSignal } from "@preact/signals";
 import { useEffect } from "preact/hooks";
 import type { InvestorExport } from "../../../src/investor/mod.ts";
-import InvestorAvatar from "./InvestorAvatar.tsx";
+import Avatar from "../../components/investor/Avatar.tsx";
 
 interface Props {
   UserName: string;
@@ -41,7 +41,11 @@ export default function InvestorItem({ UserName }: Props) {
 
   if (InvestorData.value == null) return <div>Loading {UserName}...</div>;
   else {return (
-      <div class="h-8">
-        {UserName}</div>
+      <div>
+        <div class="w-10 h-10 block">
+          <Avatar CustomerId={0} />
+        </div>
+        <div class="inline">{UserName}</div>
+      </div>
     );}
 }
