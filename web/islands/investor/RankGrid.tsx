@@ -63,12 +63,14 @@ export default function InvestorList() {
         {getGrid.map((row) => (
           <tr>
             {row.map((cell) => (
-              <td>
-                <ListItem
-                  UserName={cell
-                    ? (cell.content as Record<string, string>).UserName
-                    : "null"}
-                />
+              <td class="border-2 border-slate-200">
+                {cell !== null &&
+                  (
+                    <ListItem
+                      UserName={(cell.content as Record<string, string>)
+                        .UserName}
+                    />
+                  )}
               </td>
             ))}
           </tr>
