@@ -56,26 +56,31 @@ export default function InvestorList() {
   }, []);
 
   return (
-    <div>
-      <p>CountER: {counter}</p>
-      <h2>Rank of investors</h2>
-      <table class="border-collapse border-2 border-slate-400">
-        {getGrid.map((row) => (
-          <tr>
-            {row.map((cell) => (
-              <td class="border-2 border-slate-200">
-                {cell !== null &&
-                  (
-                    <ListItem
-                      UserName={(cell.content as Record<string, string>)
-                        .UserName}
-                    />
-                  )}
-              </td>
-            ))}
-          </tr>
-        ))}
-      </table>
-    </div>
+    <article class="flex justify-start items-start group">
+      <div class="bg-white 
+      border border(gray-500 opacity-50) rounded-lg 
+      shadow-md hover:(shadow-lg border-gray-400)
+      transition transition[colors,shadow] duration-200 ease-out
+      overflow-hidden">
+        <h2>Rank of investors</h2>
+        <table class="border-collapse border-2 border-slate-400">
+          {getGrid.map((row) => (
+            <tr>
+              {row.map((cell) => (
+                <td class="border-2 border-slate-200">
+                  {cell !== null &&
+                    (
+                      <ListItem
+                        UserName={(cell.content as Record<string, string>)
+                          .UserName}
+                      />
+                    )}
+                </td>
+              ))}
+            </tr>
+          ))}
+        </table>
+      </div>
+    </article>
   );
 }

@@ -4,20 +4,21 @@
 
 import * as $0 from "./routes/_404.tsx";
 import * as $1 from "./routes/_app.tsx";
-import * as $2 from "./routes/api/investor/[username]/last.ts";
-import * as $3 from "./routes/api/investor/_middleware.ts";
-import * as $4 from "./routes/api/investor/end.ts";
-import * as $5 from "./routes/api/investor/names.ts";
-import * as $6 from "./routes/api/investor/rank.ts";
-import * as $7 from "./routes/api/joke.ts";
-import * as $8 from "./routes/api/login.ts";
-import * as $9 from "./routes/greet/[name].tsx";
-import * as $10 from "./routes/index.tsx";
-import * as $11 from "./routes/login.tsx";
-import * as $12 from "./routes/posts.tsx";
-import * as $13 from "./routes/posts/[id]/edit.tsx";
-import * as $14 from "./routes/posts/[id]/index.tsx";
-import * as $15 from "./routes/posts/new.tsx";
+import * as $2 from "./routes/_layout.tsx";
+import * as $3 from "./routes/api/investor/[username]/last.ts";
+import * as $4 from "./routes/api/investor/_middleware.ts";
+import * as $5 from "./routes/api/investor/end.ts";
+import * as $6 from "./routes/api/investor/names.ts";
+import * as $7 from "./routes/api/investor/rank.ts";
+import * as $8 from "./routes/api/joke.ts";
+import * as $9 from "./routes/api/login.ts";
+import * as $10 from "./routes/greet/[name].tsx";
+import * as $11 from "./routes/index.tsx";
+import * as $12 from "./routes/login.tsx";
+import * as $13 from "./routes/posts.tsx";
+import * as $14 from "./routes/posts/[id]/edit.tsx";
+import * as $15 from "./routes/posts/[id]/index.tsx";
+import * as $16 from "./routes/posts/new.tsx";
 import * as $$0 from "./islands/Counter.tsx";
 import * as $$1 from "./islands/LoginForm.tsx";
 import * as $$2 from "./islands/PostItem.tsx";
@@ -32,20 +33,21 @@ const manifest = {
   routes: {
     "./routes/_404.tsx": $0,
     "./routes/_app.tsx": $1,
-    "./routes/api/investor/[username]/last.ts": $2,
-    "./routes/api/investor/_middleware.ts": $3,
-    "./routes/api/investor/end.ts": $4,
-    "./routes/api/investor/names.ts": $5,
-    "./routes/api/investor/rank.ts": $6,
-    "./routes/api/joke.ts": $7,
-    "./routes/api/login.ts": $8,
-    "./routes/greet/[name].tsx": $9,
-    "./routes/index.tsx": $10,
-    "./routes/login.tsx": $11,
-    "./routes/posts.tsx": $12,
-    "./routes/posts/[id]/edit.tsx": $13,
-    "./routes/posts/[id]/index.tsx": $14,
-    "./routes/posts/new.tsx": $15,
+    "./routes/_layout.tsx": $2,
+    "./routes/api/investor/[username]/last.ts": $3,
+    "./routes/api/investor/_middleware.ts": $4,
+    "./routes/api/investor/end.ts": $5,
+    "./routes/api/investor/names.ts": $6,
+    "./routes/api/investor/rank.ts": $7,
+    "./routes/api/joke.ts": $8,
+    "./routes/api/login.ts": $9,
+    "./routes/greet/[name].tsx": $10,
+    "./routes/index.tsx": $11,
+    "./routes/login.tsx": $12,
+    "./routes/posts.tsx": $13,
+    "./routes/posts/[id]/edit.tsx": $14,
+    "./routes/posts/[id]/index.tsx": $15,
+    "./routes/posts/new.tsx": $16,
   },
   islands: {
     "./islands/Counter.tsx": $$0,

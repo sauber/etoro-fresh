@@ -1,3 +1,5 @@
+import { asset, Head } from "$fresh/runtime.ts";
+
 //import InvestorList from "../islands/investor/InvestorList.tsx";
 import Rankgrid from "../islands/investor/RankGrid.tsx";
 
@@ -6,12 +8,15 @@ export default function Home() {
   date.setMinutes(date.getMinutes() + 1);
 
   return (
-    <div class="p-4 mx-auto max-w-screen-md">
-      <h1 class="my-6 text-3xl">
-        Welcome to `🥤 Fresh Blogs 🍋`!
-      </h1>
-      <p class="my-6">Fresh ideas everyday</p>
-      <Rankgrid/>
-    </div>
+    <>
+      <Head>
+        <title>Dashboard</title>
+      </Head>
+      <main class="bg-gray-200 px-2 py-2 pb-6">
+        <div class="container mx-auto">
+          <Rankgrid />
+        </div>
+      </main>
+    </>
   );
 }
