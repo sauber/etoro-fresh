@@ -1,6 +1,4 @@
 export default function Avatar(CustomerID: number) {
-  //return <img class="max-w-none" src="/8991202.png" />;
-
   return (
     <div class="flex items-center">
       <img
