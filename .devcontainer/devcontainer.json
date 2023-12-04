@@ -45,6 +45,9 @@
         },
         "[css]": {
           "editor.defaultFormatter": "vscode.css-language-features"
+        },
+        "editor.quickSuggestions": {
+          "strings": "on"
         }
       }
     }
