@@ -2,7 +2,7 @@
   "recommendations": [
     "akil-s.tokyo-light",
     "denoland.vscode-deno",
-    "sastan.twind-intellisense",
+    "bradlc.vscode-tailwindcss",
     "esbenp.prettier-vscode"
   ]
 }

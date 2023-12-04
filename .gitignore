@@ -8,5 +8,8 @@
 # Fresh build directory
 _fresh/
 
-# tmpfiles
+# Generated files
 ranking.model.json
+
+# Node Modules
+node_modules/
