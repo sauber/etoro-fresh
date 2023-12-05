@@ -1,4 +1,4 @@
-export default function Avatar(CustomerID: number) {
+export default function Avatar(CustomerId: number) {
   return (
     <div class="flex items-center">
       <img
@@ -6,10 +6,6 @@ export default function Avatar(CustomerID: number) {
         src="/8991202.png"
         alt="Avatar of Writer"
       />
-      <div class="text-sm">
-        <p class="text-gray-900 leading-none">Rafael Martin</p>
-        <p class="text-gray-600">Aug 9</p>
-      </div>
     </div>
   );
 }

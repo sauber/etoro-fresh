@@ -27,7 +27,6 @@ import * as $investor_InvestorCell from "./islands/investor/InvestorCell.tsx";
 import * as $investor_InvestorItem from "./islands/investor/InvestorItem.tsx";
 import * as $investor_InvestorList from "./islands/investor/InvestorList.tsx";
 import * as $investor_List from "./islands/investor/List.tsx";
-import * as $investor_RankGrid from "./islands/investor/RankGrid.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -59,7 +58,6 @@ const manifest = {
     "./islands/investor/InvestorItem.tsx": $investor_InvestorItem,
     "./islands/investor/InvestorList.tsx": $investor_InvestorList,
     "./islands/investor/List.tsx": $investor_List,
-    "./islands/investor/RankGrid.tsx": $investor_RankGrid,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

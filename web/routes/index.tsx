@@ -3,17 +3,18 @@ import { Handlers, PageProps } from "$fresh/server.ts";
 import { asset, Head } from "$fresh/runtime.ts";
 import { load } from "dotenv";
 
-import { RepoDiskBackend } from "/repository/mod.ts";
+import { RepoDiskBackend } from "📚/repository/mod.ts";
 
-import Rankgrid from "../islands/investor/RankGrid.tsx";
-import Updated from "../components/community/updated.tsx";
-import { Community } from "/investor/mod.ts";
-import { Ranking } from "/ranking/mod.ts";
-import { DateFormat } from "🛠️/time/mod.ts";
+import Rankgrid from "../components/community/RankGrid.tsx";
+import Value from "../components/visualization/Value.tsx";
+import Card from "📦/Card.tsx";
+import { Community, Names } from "📚/investor/mod.ts";
+import { Ranking } from "📚/ranking/mod.ts";
+import { DateFormat } from "📚/utils/time/mod.ts";
+import { DataFrame } from "📚/utils/dataframe.ts";
 
 interface HomeProps {
-  community: Community;
-  ranking: Ranking;
+  prediction: DataFrame;
   updated: DateFormat;
 }
 
@@ -27,8 +28,12 @@ export const handler: Handlers<HomeProps> = {
     const ranking = new Ranking(backend);
     const updated = await community.end() as DateFormat;
 
+    // TODO, only return names from last dir
+    const names: Names = await community.names();
+    const prediction: DataFrame = await ranking.predict(names);
+
     const res: HomeProps = {
-      community, ranking, updated
+      updated, prediction
     };
     //console.log({res});
 
@@ -37,7 +42,7 @@ export const handler: Handlers<HomeProps> = {
 };
 
 export default function Home({ data }: PageProps<HomeProps>) {
-  console.log(data);
+  //console.log(data);
   return (
     <>
       <Head>
@@ -45,8 +50,12 @@ export default function Home({ data }: PageProps<HomeProps>) {
       </Head>
       <main class="bg-gray-200 px-2 py-2 pb-6">
         <div class="container mx-auto">
-          <Updated date={data.updated}/>
-          <Rankgrid />
+          <Card>
+            <Value label="Updated" value={data.updated}/>
+          </Card>
+          <Card>
+            <Rankgrid rank={data.prediction} />
+          </Card>
         </div>
       </main>
     </>

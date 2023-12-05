@@ -37,10 +37,9 @@
     "printf": "https://deno.land/std@0.200.0/fmt/printf.ts",
     "semaphore": "https://deno.land/x/semaphore@v1.1.2/semaphore.ts",
     "yaml": "https://deno.land/std@0.200.0/yaml/mod.ts",
-    "🛠️/": "./src/utils/",
+    "📚/": "./src/",
     "📦/": "./web/components/",
-    "🏝️/": "./web/islands/",
-    "💽/": "./web/data/"
+    "🏝️/": "./web/islands/"
   },
   "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" },
   "exclude": ["**/_fresh/*"]
