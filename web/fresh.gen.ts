@@ -5,6 +5,7 @@
 import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $_layout from "./routes/_layout.tsx";
+import * as $about from "./routes/about.tsx";
 import * as $api_investor_username_last from "./routes/api/investor/[username]/last.ts";
 import * as $api_investor_middleware from "./routes/api/investor/_middleware.ts";
 import * as $api_investor_end from "./routes/api/investor/end.ts";
@@ -12,6 +13,7 @@ import * as $api_investor_names from "./routes/api/investor/names.ts";
 import * as $api_investor_rank from "./routes/api/investor/rank.ts";
 import * as $api_joke from "./routes/api/joke.ts";
 import * as $api_login from "./routes/api/login.ts";
+import * as $community from "./routes/community.tsx";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $login from "./routes/login.tsx";
@@ -34,6 +36,7 @@ const manifest = {
     "./routes/_404.tsx": $_404,
     "./routes/_app.tsx": $_app,
     "./routes/_layout.tsx": $_layout,
+    "./routes/about.tsx": $about,
     "./routes/api/investor/[username]/last.ts": $api_investor_username_last,
     "./routes/api/investor/_middleware.ts": $api_investor_middleware,
     "./routes/api/investor/end.ts": $api_investor_end,
@@ -41,6 +44,7 @@ const manifest = {
     "./routes/api/investor/rank.ts": $api_investor_rank,
     "./routes/api/joke.ts": $api_joke,
     "./routes/api/login.ts": $api_login,
+    "./routes/community.tsx": $community,
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
     "./routes/login.tsx": $login,

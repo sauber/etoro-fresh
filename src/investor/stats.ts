@@ -1,5 +1,4 @@
 import { assert } from "assert";
-import { InvestorId } from "./mod.ts";
 
 export type StatsExport = Record<
   string,
@@ -38,7 +37,7 @@ export type StatsData = {
     ActiveWeeksPct: number;
     WeeksSinceRegistration: number;
   };
-}
+};
 
 export class Stats {
   constructor(private readonly raw: StatsData) {}
@@ -49,7 +48,7 @@ export class Stats {
     return true;
   }
 
-  /** Export essential data */
+  /** Export all data */
   public export(): StatsExport {
     return this.raw.Data;
   }

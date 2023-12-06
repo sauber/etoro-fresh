@@ -1,16 +1,11 @@
-import { defineLayout } from "$fresh/server.ts";
-import AppHeader from "📦/Navbar.tsx";
+import { PageProps } from "$fresh/server.ts";
+import Header from "📦/Header.tsx";
 
-export default defineLayout(async (req, ctx) => {
-  const { pathname } = new URL(req.url);
-  const isHome = pathname === "/";
-
+export default function Layout({ Component, state }: PageProps) {
   return (
-    <div class="relative bg-neutral-500 min-h-screen flex flex-col">
-      <AppHeader {...{ isHome }} />
-      <div className="flex-grow z-0">
-        <ctx.Component />
-      </div>
+    <div class="h-screen bg-gray-500">
+      <Header />
+      <Component />
     </div>
   );
-});
+}

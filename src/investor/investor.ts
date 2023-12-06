@@ -1,10 +1,10 @@
 import { Asset } from "/repository/mod.ts";
 import type {
   ChartData,
-  PortfolioData,
-  StatsData,
   InvestorExport,
   InvestorId,
+  PortfolioData,
+  StatsData,
 } from "./mod.ts";
 import { ChartSeries } from "./chart-series.ts";
 import { Chart } from "./chart.ts";
@@ -16,7 +16,7 @@ export class Investor {
   constructor(
     private readonly chartSeries: Asset<ChartData>,
     private readonly portfolioSeries: Asset<PortfolioData>,
-    public readonly statsSeries: Asset<StatsData>
+    public readonly statsSeries: Asset<StatsData>,
   ) {}
 
   /** Load chart and extract series */
@@ -88,5 +88,15 @@ export class Investor {
     if (stats_end < chart_start) return false;
     if (stats_start > chart_end) return false;
     return true;
+  }
+
+  /** Lookup CustomerId */
+  public async CustomerId(): Promise<number> {
+    return (await this.stats()).CustomerId as number;
+  }
+
+  /** Lookup CustomerId */
+  public async FullName(): Promise<string> {
+    return (await this.stats()).FullName as string;
   }
 }

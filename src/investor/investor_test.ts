@@ -5,17 +5,20 @@ import { Asset } from "/repository/mod.ts";
 import { ChartSeries } from "./chart-series.ts";
 import type {
   ChartData,
+  InvestorExport,
   PortfolioData,
   StatsData,
-  InvestorExport,
 } from "./mod.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
 import type { InvestorId } from "/investor/mod.ts";
 
 const username = "FundManagerZech";
+const CustomerId = 5125148;
+const FullName = "Zheng Bin";
+
 const charts = repoBackend.asset(username + ".chart") as Asset<ChartData>;
 const portfolios = repoBackend.asset(
-  username + ".portfolio"
+  username + ".portfolio",
 ) as Asset<PortfolioData>;
 const stats = repoBackend.asset(username + ".stats") as Asset<StatsData>;
 
@@ -39,4 +42,16 @@ Deno.test("Combined Export", async () => {
   assertInstanceOf(dump.mirrors, Array<InvestorId>);
   assertInstanceOf(dump.stats, Object);
   assertEquals(dump.stats.UserName, username);
+});
+
+Deno.test("CustomerId", async () => {
+  const investor: Investor = new Investor(charts, portfolios, stats);
+  const id: number = await investor.CustomerId();
+  assertEquals(id, CustomerId);
+});
+
+Deno.test("Full Name", async () => {
+  const investor: Investor = new Investor(charts, portfolios, stats);
+  const name: string = await investor.FullName();
+  assertEquals(name, FullName);
 });

@@ -1,13 +1,12 @@
 import Card from "📦/investor/Summary.tsx";
 import { Grid, Item, Table } from "📚/utils/grid.ts";
-import { DataFrame, RowRecords, RowRecord } from "📚/utils/dataframe.ts";
+import { DataFrame, RowRecord, RowRecords } from "📚/utils/dataframe.ts";
 
 export interface ComponentProps {
-  rank: DataFrame;
+  rank: Community;
 }
 
-export default function InvestorList(  { rank }: ComponentProps,
-  ) {
+export default function InvestorList({ rank }: ComponentProps) {
   const records: RowRecords = rank.records;
 
   const griddata = records.map((i) => {
@@ -18,7 +17,6 @@ export default function InvestorList(  { rank }: ComponentProps,
   const table: Table = grid.table;
   //console.table(grid.table);
   //return grid;
-
 
   return (
     <article class="flex justify-start items-start group">
