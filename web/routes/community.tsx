@@ -17,6 +17,7 @@ import { DataFrame } from "📚/utils/dataframe.ts";
 interface HomeProps {
   prediction: DataFrame;
   updated: DateFormat;
+  customerId: Record<string, number>;
 }
 
 export const handler: Handlers<HomeProps> = {
@@ -33,17 +34,28 @@ export const handler: Handlers<HomeProps> = {
     const names: Names = await community.names();
     const prediction: DataFrame = await ranking.predict(names);
 
+    // Map UserName to CustomerId
+    const ids: number[] = await Promise.all(
+      names.values.map((name: string) => community.investor(name).CustomerId()),
+    );
+    const customerId: Record<string, number> = Object.assign(
+      {},
+      ...names.values.map((name: string, index: number) => ({
+        [name]: ids[index],
+      })),
+    );
+
     const res: HomeProps = {
-      updated, prediction
+      updated,
+      prediction,
+      customerId,
     };
-    //console.log({res});
 
     return ctx.render(res);
   },
 };
 
 export default function Home({ data }: PageProps<HomeProps>) {
-  //console.log(data);
   return (
     <>
       <Head>
@@ -52,13 +64,13 @@ export default function Home({ data }: PageProps<HomeProps>) {
       <main class="bg-gray-200 px-2 py-2 pb-6">
         <div class="container mx-auto">
           <Card>
-            <Value label="Updated" value={data.updated}/>
+            <Value label="Updated" value={data.updated} />
           </Card>
           <Card>
             ID: <CustomerId />
           </Card>
           <Card>
-            <Rankgrid rank={data.prediction} />
+            <Rankgrid investors={data.customerId} rank={data.prediction} />
           </Card>
         </div>
       </main>

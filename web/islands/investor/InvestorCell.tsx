@@ -1,7 +1,7 @@
 import { useSignal } from "@preact/signals";
 import { useEffect } from "preact/hooks";
-import type { InvestorExport } from "../../../src/investor/mod.ts";
-import Avatar from "../../components/investor/Avatar.tsx";
+import type { InvestorExport } from "📚/investor/mod.ts";
+import Avatar from "🏝️/investor/InvestorAvatar.tsx";
 
 interface Props {
   UserName: string;
@@ -12,7 +12,7 @@ export default function InvestorItem({ UserName }: Props) {
   const InvestorData = useSignal<InvestorExport | null>(null);
 
   const loadInvestor = async () => {
-    const url = `/api/investor/${UserName}/last`;
+    const url = `/api/investor/${UserName}/stats`;
     const fetchOptions = {
       headers: {
         accept: "application/json",
@@ -40,12 +40,17 @@ export default function InvestorItem({ UserName }: Props) {
   }, []);
 
   if (InvestorData.value == null) return <div>Loading {UserName}...</div>;
-  else {return (
+  else {
+    const stats = InvestorData.value.stats;
+    return (
       <div>
         <div class="w-10 h-10 block">
-          <Avatar CustomerId={0} />
+          <Avatar CustomerId={CustomerId} />
         </div>
-        <div class="inline">{UserName}</div>
+        <div class="inline">
+          {stats.FullName}, {UserName}, {stats.PopularInvestor.toString()}
+        </div>
       </div>
-    );}
+    );
+  }
 }

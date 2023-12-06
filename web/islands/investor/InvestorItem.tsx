@@ -12,7 +12,7 @@ export default function InvestorItem({ UserName }: Props) {
   const InvestorData = useSignal<InvestorExport | null>(null);
 
   const loadInvestor = async () => {
-    const url = `/api/investor/${UserName}/last`;
+    const url = `/api/investor/${UserName}/stats`;
     const fetchOptions = {
       headers: {
         accept: "application/json",
