@@ -13,10 +13,6 @@
   }
   table {
   }
-  th,
-  td {
-    @apply py-3 px-2.5 text-sm text-left border-y border-gray-200;
-  }
   thead {
     @apply bg-neutral-100;
   }
