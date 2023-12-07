@@ -1,3 +1,4 @@
+import { Semaphore } from "semaphore";
 import { decodeBase64, encodeBase64 } from "base64";
 import {
   AdamOptimizer,
@@ -35,6 +36,7 @@ export class Model {
   private readonly inputSize = 26; // Stats parameters
   private readonly outputSize = 2; // Profit and SharpeRatio
   private _sequential: Sequential | undefined;
+  private semaphore = new Semaphore(1);
 
   constructor(private readonly repo: RepoBackend) {
     this.asset = this.repo.asset(this.assetname);
@@ -94,11 +96,13 @@ export class Model {
 
   /** Prepare model */
   private async init(): Promise<Sequential> {
-    if (!this._sequential) {
-      await this.setupBackend();
-      this._sequential = await this.loadOrCreate();
-    }
-    return this._sequential;
+    return await this.semaphore.use(async () => {
+      if (!this._sequential) {
+        await this.setupBackend();
+        this._sequential = await this.loadOrCreate();
+      }
+      return this._sequential;
+    });
   }
 
   /** Encode Model as Base64 and save in repository */

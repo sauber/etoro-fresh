@@ -1,6 +1,6 @@
 import { RepoBackend } from "/repository/mod.ts";
 import { Model } from "./model.ts";
-import { Features, Extract } from "./features.ts";
+import { Extract, Features } from "./features.ts";
 import { Community } from "/investor/mod.ts";
 import { DataFrame } from "/utils/dataframe.ts";
 import { TextSeries } from "/utils/series.ts";

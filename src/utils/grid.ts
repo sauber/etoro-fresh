@@ -2,7 +2,8 @@
 export type DataSet = Array<Item>;
 
 // Output
-export type Table = Array<Array<Item | null>>;
+export type Line = Array<Item | null>;
+export type Table = Array<Line>;
 
 type Position = {
   x: number;
