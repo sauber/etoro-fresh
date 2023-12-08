@@ -6,7 +6,7 @@
   html {
     font-family: "Jost", sans-serif;
     line-height: 1.3;
-    @apply text-gray-900 leading-tight;
+    @apply text-gray-900 leading-tight text-sm;
   }
   body {
     @apply min-h-screen bg-gray-100;

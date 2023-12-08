@@ -11,7 +11,7 @@ export default function InvestorSummary({ investor, color }: ComponentProps) {
   const stats: StatsExport = investor.stats;
 
   return (
-    <div style={"background-color: " + color}>
+    <div style={{ backgroundColor: color }}>
       <div class="w-20 h-20 inline-block rounded-lg overflow-hidden">
         {stats.HasAvatar && <InvestorAvatar CustomerId={stats.CustomerId} />}
       </div>

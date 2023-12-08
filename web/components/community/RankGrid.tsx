@@ -34,15 +34,11 @@ export default function InvestorGrid({ rank, investors }: ComponentProps) {
   // Decide a color code for each item
   const ProfitRange = MinMax(records.map((i: RowRecord) => i.Profit));
   const SharpeRange = MinMax(records.map((i: RowRecord) => i.SharpeRatio));
-
   records.forEach((i: RowRecord) => {
-    //console.log(i);
     const profitMax = ProfitRange[i.Profit >= 0 ? 1 : 0];
-    //const sharpeMax = SharpeRange[i.SharpeRatio >= 0 ? 1 : 0];
     const h = i.Profit > 0 ? 75 : 0;
     const l = 10 + 50 * i.Profit / profitMax;
     let s = 0;
-    //const s = 10 + 70 * i.SharpeRatio / sharpeMax;
     if (i.Profit >= 0) {
       s = 1 -
         (i.SharpeRatio - SharpeRange[0]) / (SharpeRange[1] - SharpeRange[0]);
@@ -52,26 +48,27 @@ export default function InvestorGrid({ rank, investors }: ComponentProps) {
     s = 100 * s;
     const rgb = HSLToHex({ h, s, l });
     i.color = rgb;
-    //console.log(i.UserName, rgb);
-    //console.log({ i, h, s, l });
   });
-  //console.log({ ProfitRange, SharpeRange });
 
+  // Distribute investors into a grid
   const griddata = records.map((i: RowRecord) => {
     return { y: i.Profit, x: i.SharpeRatio, content: i };
   });
   const grid = new Grid(griddata);
   grid.optimize();
   const table: Table = grid.table;
-  //console.table(grid.table);
-  //return grid;
+
+  // Size of grid
+  const rowCount: number = table.length;
+  const colCount: number = table[0].length;
 
   return (
     <>
       <h2>Rank of investors</h2>
       <table class="border-collapse border-2 border-slate-400">
-        {table.map((row: Line) => (
+        {table.map((row: Line, index: number) => (
           <tr>
+            {index == 0 && <th rowspan={rowCount} class="transform rotate-180" style={{ writingMode: 'vertical-rl' }}>Predicted Profit</th>}
             {row.map((cell: Item) => (
               <td class="border-2 border-slate-200">
                 {cell && (
@@ -84,6 +81,7 @@ export default function InvestorGrid({ rank, investors }: ComponentProps) {
             ))}
           </tr>
         ))}
+        <tr><td /><th colspan={colCount}>Predicted Sharpe Ratio</th></tr>
       </table>
     </>
   );
