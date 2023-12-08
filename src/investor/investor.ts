@@ -1,4 +1,4 @@
-import { Asset } from "/repository/mod.ts";
+import { Asset, RepoBackend } from "/repository/mod.ts";
 import type {
   ChartData,
   InvestorExport,
@@ -13,11 +13,15 @@ import type { DateFormat } from "/utils/time/mod.ts";
 import { Portfolio } from "./portfolio.ts";
 
 export class Investor {
-  constructor(
-    private readonly chartSeries: Asset<ChartData>,
-    private readonly portfolioSeries: Asset<PortfolioData>,
-    public readonly statsSeries: Asset<StatsData>,
-  ) {}
+  private readonly chartSeries: Asset<ChartData>;
+  private readonly portfolioSeries: Asset<PortfolioData>;
+  public readonly statsSeries: Asset<StatsData>;
+
+  constructor(private readonly UserName: string, repo: RepoBackend) {
+    this.chartSeries = repo.asset(this.UserName + ".chart");
+    this.portfolioSeries = repo.asset(this.UserName + ".portfolio");
+    this.statsSeries = repo.asset(this.UserName + ".stats");
+  }
 
   /** Load chart and extract series */
   private async series(date: DateFormat): Promise<ChartSeries> {

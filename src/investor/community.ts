@@ -63,9 +63,10 @@ export class Community {
   public investor(username: string): Investor {
     if (!(username in this._loaded)) {
       this._loaded[username] = new Investor(
-        this.repo.asset(username + ".chart"),
-        this.repo.asset(username + ".portfolio"),
-        this.repo.asset(username + ".stats"),
+        //this.repo.asset(username + ".chart"),
+        //his.repo.asset(username + ".portfolio"),
+        //this.repo.asset(username + ".stats"),
+        username, this.repo
       );
     }
     return this._loaded[username];
