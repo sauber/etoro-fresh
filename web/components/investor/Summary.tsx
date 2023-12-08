@@ -1,4 +1,4 @@
-import Avatar from "📦/investor/Avatar.tsx";
+//import Avatar from "📦/investor/Avatar.tsx";
 import InvestorAvatar from "🏝️/investor/InvestorAvatar.tsx";
 import { InvestorExport, StatsExport } from "📚/investor/mod.ts";
 
@@ -22,7 +22,7 @@ export default function InvestorSummary({ investor, color }: ComponentProps) {
       </p>
       <p>
         {stats.FullName ? stats.FullName + ", " : ""}
-        <span class="font-mono">{stats.UserName}</span>
+        <a href={"/investor/" + stats.UserName} class="font-mono cursor-pointer">{stats.UserName}</a>
       </p>
     </div>
   );

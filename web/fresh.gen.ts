@@ -16,6 +16,7 @@ import * as $api_login from "./routes/api/login.ts";
 import * as $community from "./routes/community.tsx";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
+import * as $investor_username_ from "./routes/investor/[username].tsx";
 import * as $login from "./routes/login.tsx";
 import * as $posts from "./routes/posts.tsx";
 import * as $posts_id_edit from "./routes/posts/[id]/edit.tsx";
@@ -47,6 +48,7 @@ const manifest = {
     "./routes/community.tsx": $community,
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
+    "./routes/investor/[username].tsx": $investor_username_,
     "./routes/login.tsx": $login,
     "./routes/posts.tsx": $posts,
     "./routes/posts/[id]/edit.tsx": $posts_id_edit,
