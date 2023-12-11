@@ -10,3 +10,5 @@ _fresh/
 
 # tmpfiles
 rank.json
+
+node_modules/
