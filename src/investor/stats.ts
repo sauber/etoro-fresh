@@ -1,5 +1,3 @@
-import { assert } from "assert";
-
 export type StatsExport = Record<
   string,
   string | number | boolean | Array<number>
@@ -44,7 +42,7 @@ export class Stats {
 
   /** Confirm stats include CustomerId */
   public validate(): boolean {
-    assert(this.raw.Data.CustomerId, `CustomerId missing`);
+    if ( ! this.raw.Data.CustomerId ) throw new Error(`CustomerId missing`);
     return true;
   }
 

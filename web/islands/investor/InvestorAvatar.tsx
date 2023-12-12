@@ -3,7 +3,7 @@ import { useEffect } from "preact/hooks";
 import type { Signal } from "@preact/signals";
 
 interface Props {
-  CustomerId: Signal<null | number>;
+  CustomerId: number;
 }
 
 export default function InvestorItem({ CustomerId }: Props) {

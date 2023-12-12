@@ -1,7 +1,7 @@
 //import Avatar from "📦/investor/Avatar.tsx";
 import ChartIsland from "🏝️/Chart.tsx";
 import InvestorAvatar from "🏝️/investor/InvestorAvatar.tsx";
-import { CHartExport, InvestorExport, StatsExport } from "📚/investor/mod.ts";
+import { ChartExport, InvestorExport, StatsExport } from "📚/investor/mod.ts";
 //import Chart from "📦/chart/Small.tsx";
 
 export interface ComponentProps {
@@ -31,7 +31,7 @@ export default function InvestorSummary({ investor, color }: ComponentProps) {
           }}
         />
     <div class="w-20 h-20 inline-block rounded-lg overflow-hidden">
-        {stats.HasAvatar && <InvestorAvatar CustomerId={stats.CustomerId} />}
+        {stats.HasAvatar && <InvestorAvatar CustomerId={stats.CustomerId as number} />}
       </div>
       <div class="inline-block">
       <p>

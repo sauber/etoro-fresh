@@ -1,8 +1,9 @@
 import { createHandler, ServeHandlerInfo } from "$fresh/server.ts";
 import manifest from "../fresh.gen.ts";
-import { assertEquals } from "$std/testing/asserts.ts";
+import config from "../fresh.config.ts";
+import { assertEquals, assertInstanceOf } from "$std/testing/asserts.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
-import { assertInstanceOf } from "assert";
+//import { assertInstanceOf, assertEquals } from "assert";
 import type { InvestorExport, Names } from "/investor/mod.ts";
 
 const CONN_INFO: ServeHandlerInfo = {
@@ -32,15 +33,17 @@ Deno.test("HTTP assert test.", async (t) => {
     assertInstanceOf(names, Array<string>);
   });
 
-  await t.step("#3 GET /api/investor/FundManagerZech/last", async () => {
+  await t.step("#3 GET /api/investor/FundManagerZech/stats", async () => {
     const resp = await handler(
-      new Request("http://127.0.0.1/api/investor/FundManagerZech/last"),
+      new Request("http://127.0.0.1/api/investor/FundManagerZech/stats"),
       CONN_INFO,
     );
     assertEquals(resp.status, 200);
     const data = await resp.json() as InvestorExport;
     assertEquals(data.stats.UserName, "FundManagerZech");
   });
+  /*
+*/
 
   /*
   await t.step("#2 POST /", async () => {

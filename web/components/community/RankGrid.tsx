@@ -1,10 +1,11 @@
-import { Grid, Item, Line, Table } from "📚/utils/grid.ts";
+import { Grid, Item, Line, Table, DataSet } from "📚/utils/grid.ts";
 import { DataFrame, RowRecord, RowRecords } from "📚/utils/dataframe.ts";
+import type { InvestorExport } from "📚/investor/mod.ts";
 import Card from "📦/investor/Summary.tsx";
 
 export interface ComponentProps {
   rank: DataFrame;
-  investors: Record<string, number>;
+  investors: Record<string, InvestorExport>;
 }
 
 function HSLToHex(hsl: { h: number; s: number; l: number }): string {
@@ -32,18 +33,20 @@ export default function InvestorGrid({ rank, investors }: ComponentProps) {
   const records: RowRecords = rank.records;
 
   // Decide a color code for each item
-  const ProfitRange = MinMax(records.map((i: RowRecord) => i.Profit));
-  const SharpeRange = MinMax(records.map((i: RowRecord) => i.SharpeRatio));
+  const ProfitRange: [number, number] = MinMax(records.map((i: RowRecord) => i.Profit as number));
+  const SharpeRange: [number, number] = MinMax(records.map((i: RowRecord) => i.SharpeRatio as number));
   records.forEach((i: RowRecord) => {
-    const profitMax = ProfitRange[i.Profit >= 0 ? 1 : 0];
-    const h = i.Profit > 0 ? 75 : 0;
-    const l = 10 + 50 * i.Profit / profitMax;
+    const profit = i.Profit as number;
+    const sharperatio = i.SharpeRatio as number;
+    const profitMax = ProfitRange[profit >= 0 ? 1 : 0];
+    const h = profit > 0 ? 75 : 0;
+    const l = 10 + 50 * profit / profitMax;
     let s = 0;
-    if (i.Profit >= 0) {
+    if (profit >= 0) {
       s = 1 -
-        (i.SharpeRatio - SharpeRange[0]) / (SharpeRange[1] - SharpeRange[0]);
+        (sharperatio - SharpeRange[0]) / (SharpeRange[1] - SharpeRange[0]);
     } else {
-      s = (i.SharpeRatio - SharpeRange[0]) / (SharpeRange[1] - SharpeRange[0]);
+      s = (sharperatio - SharpeRange[0]) / (SharpeRange[1] - SharpeRange[0]);
     }
     s = 100 * s;
     const rgb = HSLToHex({ h, s, l });
@@ -51,8 +54,8 @@ export default function InvestorGrid({ rank, investors }: ComponentProps) {
   });
 
   // Distribute investors into a grid
-  const griddata = records.map((i: RowRecord) => {
-    return { y: i.Profit, x: i.SharpeRatio, content: i };
+  const griddata: DataSet = records.map((i: RowRecord) => {
+    return { y: (i.Profit as number), x: (i.SharpeRatio as number), content: i };
   });
   const grid = new Grid(griddata);
   grid.optimize();
@@ -69,12 +72,12 @@ export default function InvestorGrid({ rank, investors }: ComponentProps) {
         {table.map((row: Line, index: number) => (
           <tr>
             {index == 0 && <th rowspan={rowCount} class="transform rotate-180" style={{ writingMode: 'vertical-rl' }}>Predicted Profit</th>}
-            {row.map((cell: Item) => (
+            {row.map((cell: Item | null) => (
               <td class="border-2 border-slate-200">
                 {cell && (
                   <Card
-                    investor={investors[cell.content.UserName]}
-                    color={cell.content.color}
+                    investor={investors[(cell.content as RowRecord).UserName as string]}
+                    color={(cell.content as RowRecord).color as string}
                   />
                 )}
               </td>

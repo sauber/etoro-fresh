@@ -43,7 +43,7 @@ export default function InvestorItem({ UserName }: Props) {
   else {return (
       <div class="h-8">
         {InvestorData.value.stats.HasAvatar
-          ? <InvestorAvatar CustomerId={CustomerId} />
+          ? <InvestorAvatar CustomerId={CustomerId.value as number} />
           : ""}
 
         {UserName}, CustomerID: {CustomerId}, Gain:

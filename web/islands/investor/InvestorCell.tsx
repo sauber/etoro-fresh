@@ -45,7 +45,7 @@ export default function InvestorItem({ UserName }: Props) {
     return (
       <div>
         <div class="w-10 h-10 block">
-          <Avatar CustomerId={CustomerId} />
+          <Avatar CustomerId={CustomerId.value as number} />
         </div>
         <div class="inline">
           {stats.FullName}, {UserName}, {stats.PopularInvestor.toString()}

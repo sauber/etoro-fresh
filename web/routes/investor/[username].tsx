@@ -41,7 +41,7 @@ export default defineRoute(async (req: Request, ctx: RouteContext) => {
         <div class="flex">
           <div>
             {data.stats.HasAvatar && (
-              <InvestorAvatar CustomerId={data.stats.CustomerId} />
+              <InvestorAvatar CustomerId={data.stats.CustomerId as number} />
             )}
           </div>
           <div>

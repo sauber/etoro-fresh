@@ -1,4 +1,3 @@
-import { assert } from "assert";
 import { InvestorId } from "./mod.ts";
 
 type Position = {
@@ -48,10 +47,11 @@ export class Portfolio {
   constructor(private readonly raw: PortfolioData) {}
 
   public validate(): boolean {
-    assert(
-      this.raw.CreditByRealizedEquity >= 0,
-      `Portfolio CreditByRealizedEquity is ${this.raw.CreditByRealizedEquity}`
-    );
+    if (this.raw.CreditByRealizedEquity < 0) {
+      throw new Error(
+        `Portfolio CreditByRealizedEquity is negative (${this.raw.CreditByRealizedEquity})`,
+      );
+    }
     return true;
   }
 
