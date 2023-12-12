@@ -12,8 +12,10 @@ export type InvestorId = {
   UserName: string;
 }
 
+export type ChartExport = [DateFormat[], number[]];
+
 export type InvestorExport = {
-  chart: [DateFormat[], number[]];
+  chart: ChartExport;
   mirrors: InvestorId[];
   stats: StatsExport;
 }

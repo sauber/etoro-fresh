@@ -13,7 +13,9 @@ import * as $api_investor_names from "./routes/api/investor/names.ts";
 import * as $api_investor_rank from "./routes/api/investor/rank.ts";
 import * as $api_joke from "./routes/api/joke.ts";
 import * as $api_login from "./routes/api/login.ts";
+import * as $chart from "./routes/chart.tsx";
 import * as $community from "./routes/community.tsx";
+import * as $examples from "./routes/examples.tsx";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $investor_username_ from "./routes/investor/[username].tsx";
@@ -22,6 +24,7 @@ import * as $posts from "./routes/posts.tsx";
 import * as $posts_id_edit from "./routes/posts/[id]/edit.tsx";
 import * as $posts_id_index from "./routes/posts/[id]/index.tsx";
 import * as $posts_new from "./routes/posts/new.tsx";
+import * as $Chart from "./islands/Chart.tsx";
 import * as $Counter from "./islands/Counter.tsx";
 import * as $LoginForm from "./islands/LoginForm.tsx";
 import * as $PostItem from "./islands/PostItem.tsx";
@@ -45,7 +48,9 @@ const manifest = {
     "./routes/api/investor/rank.ts": $api_investor_rank,
     "./routes/api/joke.ts": $api_joke,
     "./routes/api/login.ts": $api_login,
+    "./routes/chart.tsx": $chart,
     "./routes/community.tsx": $community,
+    "./routes/examples.tsx": $examples,
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
     "./routes/investor/[username].tsx": $investor_username_,
@@ -56,6 +61,7 @@ const manifest = {
     "./routes/posts/new.tsx": $posts_new,
   },
   islands: {
+    "./islands/Chart.tsx": $Chart,
     "./islands/Counter.tsx": $Counter,
     "./islands/LoginForm.tsx": $LoginForm,
     "./islands/PostItem.tsx": $PostItem,

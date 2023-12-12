@@ -42,7 +42,7 @@ export default function InvestorItem({ CustomerId }: Props) {
     const url = localStorage.getItem(key);
 
     // A previous URL is cached
-    if (url !== undefined) return url.length ? new URL(url) : null;
+    if ( url?.length ) return url.length ? new URL(url) : null;
 
     // No cached URL, search for one
     const searched: URL | null = await searchUrl();

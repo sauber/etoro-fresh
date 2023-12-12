@@ -3,7 +3,7 @@ import Header from "📦/Header.tsx";
 
 export default function Layout({ Component, state }: PageProps) {
   return (
-    <div class="h-screen bg-gray-500">
+    <div class="h-screen bg-[url('/chartbg.jpg')]">
       <Header />
       <Component />
     </div>
