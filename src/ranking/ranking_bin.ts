@@ -12,6 +12,6 @@ await rank.save();
 
 // Validation
 const community = new Community(backend);
-const usernames: Names = await community.names();
+const usernames: Names = await community.valid();
 const prediction = await rank.predict(usernames);
-prediction.sort("SharpeRatio").reverse.print();
+prediction.sort("SharpeRatio").reverse.slice(0,5).print();

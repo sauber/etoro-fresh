@@ -59,13 +59,26 @@ export class Community {
     else return this.allNames();
   }
 
+  public validName(username: string): Promise<boolean> {
+    return this.investor(username).isValid();
+  }
+
+  /** List of names with underlying valid data optionally on a certain date  */
+  public async valid(date?: DateFormat): Promise<Names> {
+    const allNames: Names = await this.names(date);
+    const validVector: Array<boolean> = await Promise.all(
+      allNames.values.map((name) => this.investor(name).isValid() )
+    );
+    const validNames: string[] = allNames.values.filter((_name, index) => validVector[index]);
+    const result: Names = new TextSeries(validNames);
+    return result;
+  }
+
   private _loaded: Record<string, Investor> = {};
+  /** Create and cache Investor object */
   public investor(username: string): Investor {
     if (!(username in this._loaded)) {
       this._loaded[username] = new Investor(
-        //this.repo.asset(username + ".chart"),
-        //his.repo.asset(username + ".portfolio"),
-        //this.repo.asset(username + ".stats"),
         username, this.repo
       );
     }

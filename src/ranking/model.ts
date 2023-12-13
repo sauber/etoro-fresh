@@ -141,7 +141,7 @@ export class Model {
       // Batches
       25,
       // Learning Rate
-      0.01,
+      0.1,
     );
   }
 

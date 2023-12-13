@@ -21,12 +21,12 @@ export default defineRoute(async (req: Request, ctx: RouteContext) => {
   const community = new Community(backend);
 
   // TODO, only return names from last dir
-  const names: Names = await community.names();
+  const updated = await community.end() as DateFormat;
+  const names: Names = await community.valid(updated);
 
   // Ranking
   const ranking = new Ranking(backend);
-  await ranking.train();
-  const updated = await community.end() as DateFormat;
+  //await ranking.train();
   const prediction: DataFrame = await ranking.predict(names);
 
   // Load all data for each investor
