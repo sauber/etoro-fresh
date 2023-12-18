@@ -16,5 +16,6 @@ Deno.test("Instance", () => {
 Deno.test("Run", () => {
   const sim = new Simulation(start, end, community, NullStrategy);
   sim.run();
-  assertEquals(sim.gain, 0);
+  const chart = sim.chart;
+  assertEquals(chart.gain(start, end), 0);
 });

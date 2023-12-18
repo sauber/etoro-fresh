@@ -23,7 +23,7 @@ export class Investor {
     this.statsSeries = repo.asset(this.UserName + ".stats");
   }
 
-  /** Load chart and extract series */
+  /** Load one chart files and extract series */
   private async series(date: DateFormat): Promise<ChartSeries> {
     const data: ChartData = await this.chartSeries.value(date);
     const chart: Chart = new Chart(data);
@@ -41,7 +41,7 @@ export class Investor {
     let start: DateFormat = series.start();
 
     // Prepend older charts
-    // Search backwards for the chart oldest chart with overlap
+    // Search backwards to find oldest chart with overlap
     for (let i = dates.length - 2; i >= 0; i--) {
       const date = dates[i];
       if (date < start) break; // Too old to overlap

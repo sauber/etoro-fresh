@@ -1,5 +1,5 @@
 import { DateFormat, nextDate } from "/utils/time/mod.ts";
-import { Community, Investor } from "/investor/mod.ts";
+import { Community, Investor, ChartSeries } from "/investor/mod.ts";
 
 export type Position = {
   date: DateFormat;
@@ -15,19 +15,6 @@ export type Position = {
 
 export type Positions = Array<Position>;
 
-// export abstract class Strategy {
-//   constructor(
-//     protected readonly positions: Positions,
-//     protected readonly community: Community
-//   ) {}
-
-//   /** Generate list of existing positions to close */
-//   abstract close(): Positions;
-
-//   /** Generate list of new orders to open */
-//   abstract open(): Positions;
-// }
-
 interface Strategy {
   open(): Positions;
   close(): Positions;
@@ -36,14 +23,6 @@ interface Strategy {
 interface StrategyConstructor {
   new (positions: Positions, community: Community): Strategy;
 }
-
-/*
-const StrategyFactory = (
-  cstra: StrategyConstructor,
-  positions: Positions,
-  community: Community
-) => { return new cstra(positions, community) }
-*/
 
 export class NullStrategy implements Strategy {
   constructor(
@@ -71,20 +50,21 @@ type Journal = Array<Transaction>;
 
 /** Summary value for a day */
 type Valuation = {
+  date: DateFormat;
   cash: number;
   invested: number;
   value: number;
 };
 
 /** Valuation day by day */
-type Performance = Record<DateFormat, Valuation>;
+type Performance = Array<Valuation>;
 
 /** Simulate trading over a period */
 export class Simulation {
   private readonly journal: Journal = [];
   private readonly positions: Positions = [];
   private invested = 0;
-  private readonly performance: Performance = {};
+  private readonly performance: Performance = [];
 
   constructor(
     private readonly start: DateFormat,
@@ -100,7 +80,7 @@ export class Simulation {
   private profit(position: Position, _end: DateFormat): number {
     const amount = position.amount;
     // TODO
-    //const gain = position.investor.gain(position.date, end);
+    //const gain = await position.investor.gain(position.date, end);
     const gain = 0;
     const profit = amount + amount * gain;
     return profit;
@@ -113,13 +93,15 @@ export class Simulation {
       const profit: number = this.profit(position, date);
       invested += position.amount + profit;
     });
-    this.performance[date] = {
+    this.performance.push({
+      date: date,
       cash: this.cash,
       invested: invested,
       value: this.cash + invested,
-    };
+    });
   }
 
+  // TODO
   /** Close any positions hitting limits */
   private limit(_date: DateFormat): void {}
 
@@ -165,7 +147,6 @@ export class Simulation {
   private trade(date: DateFormat): void {
     const strategyClass = this.strategy;
     const strategy = new strategyClass(this.positions, this.community);
-    //console.log(strategyClass, strategy);
     strategy.open().forEach((order) => this.open(date, order));
     strategy.close().forEach((order) => this.close(date, order));
   }
@@ -187,11 +168,11 @@ export class Simulation {
     }
   }
 
-  /** Overall summary */
-  public get gain(): number {
-    const first: number = this.performance[this.start].value;
-    const last: number = this.performance[this.end].value;
-    const ratio: number = last / first - 1;
-    return ratio;
+  /** Export daily performance as chart */
+  public get chart(): ChartSeries {
+    return new ChartSeries(
+      this.performance.map((r) => r.value),
+      this.start
+    );
   }
 }
