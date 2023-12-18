@@ -44,11 +44,26 @@ export class Community {
     else return Promise.resolve(new TextSeries());
   }
 
+  /** Confirm if there are any names in a directory */
+  private async dateHasNames(date: DateFormat): Promise<boolean> {
+    if ((await this.namesByDate(date)).length) return true;
+    return false;
+  }
+
+  /** The first directory where names exists */
+  public async start(): Promise<DateFormat | null> {
+    const dates: DateFormat[] = await this.repo.dates();
+    for (const date of dates) {
+      if ((await this.dateHasNames(date))) return date;
+    }
+    return null;
+  }
+
   /** The last directory where names exists */
   public async end(): Promise<DateFormat | null> {
     const dates: DateFormat[] = await this.repo.dates();
     for (const date of dates.reverse()) {
-      if ((await this.namesByDate(date)).length) return date;
+      if ((await this.dateHasNames(date))) return date;
     }
     return null;
   }

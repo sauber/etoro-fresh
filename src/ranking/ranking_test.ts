@@ -2,7 +2,6 @@ import { assertEquals, assertInstanceOf } from "assert";
 import { repoBackend } from "/repository/testdata.ts";
 import { investorId } from "/investor/testdata.ts";
 import { Ranking } from "./ranking.ts";
-import { DataFrame } from "/utils/dataframe.ts";
 import { TextSeries } from "/utils/series.ts";
 
 Deno.test("Initialize", () => {

@@ -84,7 +84,7 @@ Deno.test("Combine non-overlapping series", () => {
   );
 });
 
-Deno.test("From date", () => {
+Deno.test("Range from date", () => {
   const start = "2023-10-31";
   const cut = "2023-11-01";
   const end = "2023-11-02";
@@ -96,10 +96,17 @@ Deno.test("From date", () => {
   assertEquals(from.end(), end);
 });
 
-Deno.test("Until date", () => {
+Deno.test("Range until date", () => {
   const date = "2023-10-31";
   const chart = new ChartSeries([10, 20], date);
   const until = chart.until(date);
   assertEquals(until.start(), until.end());
   assertEquals(until.end(), date);
+});
+
+Deno.test("Gain", () => {
+  const date = "2023-10-31";
+  const chart = new ChartSeries([10, 20], date);
+  const gain = chart.gain(date, nextDate(date));
+  assertEquals(gain, 1);
 });

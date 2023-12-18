@@ -157,4 +157,12 @@ export class ChartSeries implements DateSeries<number> {
     //console.log({profit, benchmark, volatility, sharpe});
     return sharpe;
   }
+
+  /** Ratio of gain from arbitrary date to another */
+  public gain(start: DateFormat, end: DateFormat): number {
+    const first: number = this.value(start);
+    const last: number = this.value(end);
+    const ratio = last / first -1;
+    return ratio;
+  }
 }

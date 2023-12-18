@@ -17,7 +17,7 @@ export class Investor {
   private readonly portfolioSeries: Asset<PortfolioData>;
   public readonly statsSeries: Asset<StatsData>;
 
-  constructor(private readonly UserName: string, repo: RepoBackend) {
+  constructor(public readonly UserName: string, repo: RepoBackend) {
     this.chartSeries = repo.asset(this.UserName + ".chart");
     this.portfolioSeries = repo.asset(this.UserName + ".portfolio");
     this.statsSeries = repo.asset(this.UserName + ".stats");
@@ -102,5 +102,10 @@ export class Investor {
   /** Lookup CustomerId */
   public async FullName(): Promise<string> {
     return (await this.stats()).FullName as string;
+  }
+
+  /** Gain from start date to end date */
+  public async gain(start: DateFormat, end: DateFormat): Promise<number> {
+    return (await this.chart()).gain(start, end);
   }
 }
