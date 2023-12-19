@@ -15,25 +15,26 @@ export type Position = {
 
 export type Positions = Array<Position>;
 
-interface Strategy {
-  open(): Positions;
-  close(): Positions;
-}
-
-interface StrategyConstructor {
-  new (positions: Positions, community: Community): Strategy;
-}
-
-export class NullStrategy implements Strategy {
+abstract class Strategy {
   constructor(
     private readonly positions: Positions,
     private readonly community: Community
   ) {}
-  open(): Positions {
-    return [];
+  abstract open(): Promise<Positions>;
+  abstract close(): Promise<Positions>;
+}
+
+interface StrategyClass {
+  new (positions: Positions, community: Community): Strategy;
+}
+
+/** Never buy, never sell */
+export class NullStrategy extends Strategy {
+  public open(): Promise<Positions> {
+    return Promise.resolve([]);
   }
-  close(): Positions {
-    return [];
+  public close(): Promise<Positions> {
+    return Promise.resolve([]);
   }
 }
 
@@ -70,7 +71,7 @@ export class Simulation {
     private readonly start: DateFormat,
     private readonly end: DateFormat,
     private readonly community: Community,
-    private readonly strategy: StrategyConstructor,
+    private readonly strategy: StrategyClass,
     private cash: number = 100000
   ) {
     //console.log(this.strategy);
@@ -144,26 +145,26 @@ export class Simulation {
   }
 
   /** Open or close positions */
-  private trade(date: DateFormat): void {
+  private async trade(date: DateFormat): Promise<void> {
     const strategyClass = this.strategy;
     const strategy = new strategyClass(this.positions, this.community);
-    strategy.open().forEach((order) => this.open(date, order));
-    strategy.close().forEach((order) => this.close(date, order));
+    (await strategy.open()).forEach((order) => this.open(date, order));
+    (await strategy.close()).forEach((order) => this.close(date, order));
   }
 
   /** Run a trading session on a particlar date */
-  private step(date: DateFormat): void {
+  private async step(date: DateFormat): Promise<void> {
     this.valuate(date);
     this.limit(date);
-    this.trade(date);
+    await this.trade(date);
   }
 
   /** Run a trading sesssion each day in period */
-  public run(): void {
+  public async run(): Promise<void> {
     let date = this.start;
     while (date <= this.end) {
       //console.log(date);
-      this.step(date);
+      await this.step(date);
       date = nextDate(date);
     }
   }

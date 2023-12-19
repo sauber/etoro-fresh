@@ -1,7 +1,7 @@
 import { assertInstanceOf, assertEquals } from "assert";
 import { community } from "./testdata.ts";
 import { Simulation, NullStrategy } from "./simulation.ts";
-import { DateFormat } from "/utils/time/mod.ts";
+import { DateFormat, diffDate } from "/utils/time/mod.ts";
 
 const [start, end] = (await Promise.all([
   community.start(),
@@ -13,9 +13,11 @@ Deno.test("Instance", () => {
   assertInstanceOf(sim, Simulation);
 });
 
-Deno.test("Run", () => {
+Deno.test("Run", async () => {
   const sim = new Simulation(start, end, community, NullStrategy);
-  sim.run();
+  await sim.run();
   const chart = sim.chart;
+  const days = 1 + diffDate(start, end);
   assertEquals(chart.gain(start, end), 0);
+  assertEquals(chart.length, days);
 });
