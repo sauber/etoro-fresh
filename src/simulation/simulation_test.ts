@@ -1,6 +1,7 @@
 import { assertInstanceOf, assertEquals,assertNotEquals  } from "assert";
 import { community } from "./testdata.ts";
-import { Simulation, NullStrategy, RandomStrategy } from "./simulation.ts";
+import { Simulation } from "./simulation.ts";
+import { NullStrategy, RandomStrategy } from "./strategy.ts";
 import { DateFormat, diffDate } from "/utils/time/mod.ts";
 
 const [start, end] = (await Promise.all([
@@ -16,15 +17,17 @@ Deno.test("Instance", () => {
 Deno.test("Null Strategy", async () => {
   const sim = new Simulation(start, end, community, NullStrategy);
   await sim.run();
+  //sim.book.export.print("Null Strategy");
   const chart = sim.chart;
   const days = 1 + diffDate(start, end);
   assertEquals(chart.gain(start, end), 0);
   assertEquals(chart.length, days);
 });
 
-Deno.test("Random Strategy", async () => {
+Deno.test.only("Random Strategy", async () => {
   const sim = new Simulation(start, end, community, RandomStrategy);
   await sim.run();
+  //sim.book.export.print("Null Strategy");
   const chart = sim.chart;
   const days = 1 + diffDate(start, end);
   assertNotEquals(chart.gain(start, end), 0);

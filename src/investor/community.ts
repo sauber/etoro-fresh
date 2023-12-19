@@ -111,4 +111,11 @@ export class Community {
     }
     return this._loaded[username];
   }
+
+  /** Get random investor */
+  public async any(): Promise<Investor> {
+    const names: Names = await this.names();
+    const name: string = names.any;
+    return this.investor(name);
+  }
 }
