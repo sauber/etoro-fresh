@@ -8,10 +8,13 @@ export interface SeriesInterface<T> {
 
   /** First value */
   last: T;
+
+  /** Random value */
+  any: T;
 }
 
 export type SeriesTypes = number | string | boolean;
-export type SeriesClasses = Series | TextSeries | BoolSeries | ObjectSeries;
+export type SeriesClasses = Series | TextSeries | BoolSeries | ObjectSeries<object>;
 
 abstract class DataSeries<T> implements SeriesInterface<T> {
 
@@ -27,6 +30,11 @@ abstract class DataSeries<T> implements SeriesInterface<T> {
 
   public get last(): T {
     return this.values[this.values.length - 1];
+  }
+
+  public get any(): T {
+    const index: number = Math.floor(this.values.length*Math.random());
+    return this.values[index];
   }
 
   public get isNumber(): boolean {
@@ -60,11 +68,11 @@ export class BoolSeries
 }
 
 /** Series of objects */
-export class ObjectSeries
-  extends DataSeries<object>
-  implements SeriesInterface<object>
+export class ObjectSeries<T>
+  extends DataSeries<T>
+  implements SeriesInterface<T>
 {
-  constructor(values?: Array<object>) {
+  constructor(values?: Array<T>) {
     super(values);
   }
 }

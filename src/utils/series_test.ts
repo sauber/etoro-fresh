@@ -27,6 +27,11 @@ Deno.test("First and last", () => {
   assertEquals(s.last, 20);
 });
 
+Deno.test("Any item", () => {
+  const s = new Series([10]);
+  assertEquals(s.any, 10);
+});
+
 Deno.test("Correlation", () => {
   const tests: Array<[Array<number>, Array<number>, number]> = [
     [[1, 2, 3], [1, 2, 3], 1],
