@@ -11,7 +11,7 @@ export interface SeriesInterface<T> {
 }
 
 export type SeriesTypes = number | string | boolean;
-export type SeriesClasses = Series | TextSeries | BoolSeries;
+export type SeriesClasses = Series | TextSeries | BoolSeries | ObjectSeries;
 
 abstract class DataSeries<T> implements SeriesInterface<T> {
 
@@ -55,6 +55,16 @@ export class BoolSeries
   implements SeriesInterface<boolean>
 {
   constructor(values?: Array<boolean>) {
+    super(values);
+  }
+}
+
+/** Series of objects */
+export class ObjectSeries
+  extends DataSeries<object>
+  implements SeriesInterface<object>
+{
+  constructor(values?: Array<object>) {
     super(values);
   }
 }

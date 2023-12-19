@@ -1,5 +1,5 @@
 import { assertEquals, assertInstanceOf } from "assert";
-import { BoolSeries, Series, TextSeries } from "./series.ts";
+import { BoolSeries, Series, TextSeries, ObjectSeries } from "./series.ts";
 
 Deno.test("Numbers", () => {
   const s = new Series();
@@ -9,6 +9,16 @@ Deno.test("Numbers", () => {
 Deno.test("Text", () => {
   const s = new TextSeries();
   assertInstanceOf(s, TextSeries);
+});
+
+Deno.test("Boolean", () => {
+  const s = new BoolSeries();
+  assertInstanceOf(s, BoolSeries);
+});
+
+Deno.test("Object", () => {
+  const s = new ObjectSeries();
+  assertInstanceOf(s, ObjectSeries);
 });
 
 Deno.test("First and last", () => {

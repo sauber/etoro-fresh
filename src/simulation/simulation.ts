@@ -1,5 +1,7 @@
 import { DateFormat, nextDate } from "/utils/time/mod.ts";
-import { Community, Investor, ChartSeries } from "/investor/mod.ts";
+import { Community, Investor, ChartSeries, Names } from "/investor/mod.ts";
+
+type Investors = Array<Investor>;
 
 export type Position = {
   date: DateFormat;
@@ -18,14 +20,14 @@ export type Positions = Array<Position>;
 abstract class Strategy {
   constructor(
     private readonly positions: Positions,
-    private readonly community: Community
+    private readonly investors: Investors
   ) {}
   abstract open(): Promise<Positions>;
   abstract close(): Promise<Positions>;
 }
 
 interface StrategyClass {
-  new (positions: Positions, community: Community): Strategy;
+  new (positions: Positions, investors: Investors): Strategy;
 }
 
 /** Never buy, never sell */
@@ -147,7 +149,11 @@ export class Simulation {
   /** Open or close positions */
   private async trade(date: DateFormat): Promise<void> {
     const strategyClass = this.strategy;
-    const strategy = new strategyClass(this.positions, this.community);
+
+    const names: Names = await this.community.active(date);
+    console.log({date, names});
+    const investors: Investors = await Promise.all(names.values.map(name => this.community.investor(name)));
+    const strategy = new strategyClass(this.positions, investors);
     (await strategy.open()).forEach((order) => this.open(date, order));
     (await strategy.close()).forEach((order) => this.close(date, order));
   }

@@ -13,7 +13,7 @@ export class Community {
   private async allNames(): Promise<Names> {
     const dates: DateFormat[] = await this.repo.dates();
     const allDates: Names[] = await Promise.all(
-      dates.map((date) => this.namesByDate(date)),
+      dates.map((date) => this.namesByDate(date))
     );
     const allNames: string[][] = allDates.map((date) => date.values);
     const merged = new Set(allNames.flat());
@@ -37,7 +37,6 @@ export class Community {
   }
 
   /** Get list of names on last date available in repo */
-  // TODO: Should this be in public interface?
   public async last(): Promise<Names> {
     const end: DateFormat | null = await this.end();
     if (end) return this.namesByDate(end);
@@ -54,7 +53,7 @@ export class Community {
   public async start(): Promise<DateFormat | null> {
     const dates: DateFormat[] = await this.repo.dates();
     for (const date of dates) {
-      if ((await this.dateHasNames(date))) return date;
+      if (await this.dateHasNames(date)) return date;
     }
     return null;
   }
@@ -63,7 +62,7 @@ export class Community {
   public async end(): Promise<DateFormat | null> {
     const dates: DateFormat[] = await this.repo.dates();
     for (const date of dates.reverse()) {
-      if ((await this.dateHasNames(date))) return date;
+      if (await this.dateHasNames(date)) return date;
     }
     return null;
   }
@@ -82,9 +81,24 @@ export class Community {
   public async valid(date?: DateFormat): Promise<Names> {
     const allNames: Names = await this.names(date);
     const validVector: Array<boolean> = await Promise.all(
-      allNames.values.map((name) => this.investor(name).isValid() )
+      allNames.values.map((name) => this.investor(name).isValid())
     );
-    const validNames: string[] = allNames.values.filter((_name, index) => validVector[index]);
+    const validNames: string[] = allNames.values.filter(
+      (_name, index) => validVector[index]
+    );
+    const result: Names = new TextSeries(validNames);
+    return result;
+  }
+
+  /** All investors where date is within active range */
+  public async active(date: DateFormat): Promise<Names> {
+    const allNames: Names = await this.names();
+    const validVector: Array<boolean> = await Promise.all(
+      allNames.values.map((name) => this.investor(name).active(date))
+    );
+    const validNames: string[] = allNames.values.filter(
+      (_name, index) => validVector[index]
+    );
     const result: Names = new TextSeries(validNames);
     return result;
   }
@@ -93,9 +107,7 @@ export class Community {
   /** Create and cache Investor object */
   public investor(username: string): Investor {
     if (!(username in this._loaded)) {
-      this._loaded[username] = new Investor(
-        username, this.repo
-      );
+      this._loaded[username] = new Investor(username, this.repo);
     }
     return this._loaded[username];
   }
