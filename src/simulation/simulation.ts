@@ -78,11 +78,11 @@ export class Simulation {
   }
 
   /** By which amount is a position in profit */
-  private profit(position: Position, _end: DateFormat): number {
+  private async profit(position: Position, end: DateFormat): Promise<number> {
     const amount = position.amount;
     // TODO
-    //const gain = await position.investor.gain(position.date, end);
-    const gain = 0;
+    const gain = await position.investor.gain(position.date, end);
+    //const gain = 0;
     const profit = amount + amount * gain;
     return profit;
   }
@@ -90,8 +90,8 @@ export class Simulation {
   /** Calculate value of portfolio */
   private valuate(date: DateFormat): void {
     let invested = 0;
-    this.positions.forEach((position: Position) => {
-      const profit: number = this.profit(position, date);
+    this.positions.forEach(async (position: Position) => {
+      const profit: number = await this.profit(position, date);
       invested += position.amount + profit;
     });
     this.performance.push({
@@ -125,9 +125,9 @@ export class Simulation {
   /** Close all matching positions */
   private close(date: DateFormat, position: Position): void {
     const username = position.investor.UserName;
-    this.positions.forEach((position: Position, index: number) => {
+    this.positions.forEach( async (position: Position, index: number) => {
       if (position.investor.UserName == username) {
-        const profit = this.profit(position, date);
+        const profit = await this.profit(position, date);
         const amount = position.amount + profit;
         this.cash += amount;
         this.invested -= amount;
