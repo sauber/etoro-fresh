@@ -1,8 +1,13 @@
-import { assertInstanceOf, assertEquals, assertAlmostEquals } from "assert";
+import {
+  assertInstanceOf,
+  assertEquals,
+  assertAlmostEquals,
+  assertLess,
+} from "$std/assert/mod.ts";
 import { Position } from "./position.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
 import { Exchange } from "./exchange.ts";
-import { community, username, chart } from "./testdata.ts";
+import { username, chart } from "./testdata.ts";
 
 // Position data
 const start: DateFormat = chart.start();
@@ -15,23 +20,31 @@ const spread = 0.02;
 const amount = 1000;
 
 Deno.test("Instance", () => {
-  const ex = new Exchange(community);
+  const ex = new Exchange();
   assertInstanceOf(ex, Exchange);
 });
 
-Deno.test("Buy and Sell", async () => {
-  const ex = new Exchange(community, spread);
-  const pos: Position = await ex.buy(username, start, amount);
+Deno.test("Pricing", () => {
+  const ex = new Exchange(spread);
+  assertEquals(ex.buying_price(amount), amount * (1+spread));
+  assertAlmostEquals(ex.selling_price(amount), amount * (1-spread));
+});
+
+Deno.test("Buy and Sell", () => {
+  const ex = new Exchange(spread);
+  const pos: Position = ex.buy(start, username, chart, amount);
 
   // Buying
-  const expected_value: number = amount - amount * spread;
-  assertEquals(pos.value(start), expected_value);
+  const buying_price: number = first * (1 + spread);
+  const opening_value: number = (amount * first) / buying_price;
+  assertLess(opening_value, amount);
+  assertAlmostEquals(pos.value(start), opening_value);
 
   //Selling
-  const actual_payout: number = ex.sell(pos, end);
-  const opening_value: number = amount - amount * spread;
-  const closing_value: number = (last / first) * opening_value;
-  const closing_fee: number = closing_value * spread;
-  const expected_payout: number = closing_value - closing_fee;
-  assertAlmostEquals(actual_payout, expected_payout);
+  const actual_payout: number = ex.sell(end, pos);
+  const selling_price: number = last * (1 - spread);
+  const nominal_value: number = pos.value(end);
+  const closing_value: number = (nominal_value * selling_price) / last;
+  assertAlmostEquals(actual_payout, closing_value);
+  assertLess(closing_value, nominal_value);
 });

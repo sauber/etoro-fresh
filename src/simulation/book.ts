@@ -3,49 +3,17 @@ import { Position } from "./position.ts";
 import { Portfolio } from "./portfolio.ts";
 import { DataFrame } from "/utils/dataframe.ts";
 
-type Deposit = {
-  _type: 'Deposit',
-  date: DateFormat;
-  amount: number;
-};
-
-type Open = {
-  _type: 'Open',
-  date: DateFormat;
-  position: Position;
-  amount: number;
-};
-
 type Reasons = "sell" | "expire" | "limit";
+type Actions = "deposit" | "valuate" | "buy" | Reasons;
 
-type Close = {
-  _type: 'Close',
+type Transaction = {
   date: DateFormat;
-  reason: Reasons;
-  position: Position;
-  amount: number;
-  profit: number;
-};
-
-type Valuation = {
-  _type: 'Valuation',
-  date: DateFormat;
+  action: Actions;
+  name?: string;
+  amount?: number;
   invested: number;
   profit: number;
-  balance: number;
-  value: number;
-};
-
-type Transaction = Deposit | Open | Close | Valuation;
-
-type TableRecord = {
-  date: DateFormat;
-  action: Reasons | "deposit" | "buy" | "value";
-  investor: string;
-  amount: number;
-  invested: number;
-  profit: number;
-  balance: number;
+  cash: number;
   value: number;
 };
 
@@ -55,54 +23,67 @@ export type Journal = Array<Transaction>;
 export class Book {
   private readonly journal: Journal = [];
   public readonly portfolio = new Portfolio();
-  private balance = 0;
+  public readonly balance = {
+    invested: 0,
+    profit: 0,
+    cash: 0,
+    value: 0,
+  };
 
   /** Increase cash balance */
-  public deposit(amount: number, date: DateFormat): void {
-    const transaction: Deposit = { date, amount, _type: 'Deposit' };
-    this.journal.push(transaction);
-    this.balance += amount;
-  }
-
-  /** Most recent transaction */
-  private get last(): Transaction {
-    return this.journal[this.journal.length - 1];
-  }
-
-  /** Current value */
-  public get value(): number {
-    const last: Transaction = this.last;
-    const end: DateFormat = last.date;
-    const value: number = this.balance + this.portfolio.value(end);
-    return value;
+  public deposit(date: DateFormat, amount: number): void {
+    this.balance.cash += amount;
+    this.balance.value += amount;
+    this.journal.push({
+      date,
+      action: "deposit",
+      name: "cash",
+      amount,
+      ...this.balance,
+    });
   }
 
   /** Add position */
-  public add(position: Position): boolean {
-    const transaction: Open = {
-      date: position.date,
-      position: position,
-      amount: position.amount,
-      _type: 'Open'
-    };
+  public add(date: DateFormat, position: Position): boolean {
+    // Add to portfolio
     this.portfolio.add(position);
-    this.journal.push(transaction);
-    this.balance -= position.amount;
+
+    // Add to transactions
+    const amount = position.amount;
+    const name = position.name;
+    this.balance.cash -= amount;
+    this.balance.invested += amount;
+    this.journal.push({ date, action: "buy", name, amount, ...this.balance });
+
     return true;
   }
 
   /** Remove position at date for reason */
   public remove(
-    position: Position,
     date: DateFormat,
-    reason: Reasons
+    position: Position,
+    action: Reasons,
+    price: number
   ): boolean {
     if (this.portfolio.remove(position)) {
-      const amount = position.value(date);
-      const profit = position.profit(date);
-      const transaction: Close = { date, reason, position, amount, profit, _type: 'Close' };
-      this.journal.push(transaction);
-      this.balance += amount;
+      // Adjust balance
+      const profit: number = position.amount * (price / position.price - 1);
+      const amount: number = position.amount + profit;
+      this.balance.cash += amount;
+      this.balance.invested -= position.amount;
+      this.balance.profit += profit;
+      this.balance.value += profit;
+
+      // Add transaction
+      const name = position.name;
+      this.journal.push({
+        date,
+        action,
+        name,
+        amount,
+        ...this.balance,
+        profit,
+      });
       return true;
     }
     return false;
@@ -110,74 +91,19 @@ export class Book {
 
   /** Calculate value on date */
   public valuate(date: DateFormat): void {
-    const profit: number = this.portfolio.profit(date);
-    const value = this.portfolio.value(date);
-    const invested = this.portfolio.invested;
-    const balance = this.balance;
-    const transaction: Valuation = { date, invested, value, profit, balance, _type: 'Valuation' };
-    this.journal.push(transaction);
+    this.balance.invested = this.portfolio.invested;
+    this.balance.profit = this.portfolio.profit(date);
+    this.balance.value =
+      this.balance.invested + this.balance.profit + this.balance.cash;
+    this.journal.push({ date, action: "valuate", ...this.balance });
+  }
+
+  public get length(): number {
+    return this.journal.length;
   }
 
   /** Export transactions as dataframe */
   public get export(): DataFrame {
-    const records: Array<TableRecord> = [];
-    for ( const transaction of this.journal ) {
-      const record: TableRecord = (() => {
-        switch(transaction._type) {
-          case 'Deposit': return {
-            date: transaction.date,
-            action: "deposit",
-            investor: '',
-            amount: transaction.amount,
-            invested: 0,
-            profit: 0,
-            balance: 0,
-            value: 0
-          };
-          case 'Open': return {
-            date: transaction.date,
-            action: "buy",
-            investor: transaction.position.name,
-            amount: transaction.amount,
-            invested: 0,
-            profit: 0,
-            balance: 0,
-            value: 0
-          };
-          case 'Close': return {
-            date: transaction.date,
-            action: transaction.reason,
-            investor: transaction.position.name,
-            amount: parseFloat(transaction.amount.toFixed(2)),
-            invested: 0,
-            profit: parseFloat(transaction.profit.toFixed(2)),
-            balance: 0,
-            value: 0
-          };
-          case 'Valuation': return {
-            date: transaction.date,
-            action: "value",
-            investor: '',
-            amount: 0,
-            invested: transaction.invested,
-            profit: transaction.profit,
-            balance: transaction.balance,
-            value: transaction.value
-          };
-          default: return {
-            date: '',
-            action: "value",
-            investor: '',
-            amount: 0,
-            invested: 0,
-            profit: 0,
-            balance: 0,
-            value: 0
-          };
-        }
-      })();
-      records.push(record);
-    }
-    return DataFrame.fromRecords(records);
+    return DataFrame.fromRecords(this.journal);
   }
 }

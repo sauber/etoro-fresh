@@ -33,7 +33,7 @@ export class DataFrame {
     // Data Series
     private readonly columns: Columns = {},
     // Ordering of rows
-    index?: Index,
+    index?: Index
   ) {
     // Names of columns
     const names: ColumnNames = Object.keys(columns);
@@ -61,12 +61,12 @@ export class DataFrame {
         {},
         ...Object.keys(records[0]).map((name: string) => {
           const array = records.map(
-            (rec: Record<string, unknown>) => rec[name],
+            (rec: Record<string, unknown>) => rec[name]
           );
           const ser = series(array);
           if (ser) return { [name]: ser };
-        }),
-      ),
+        })
+      )
     );
   }
 
@@ -74,7 +74,7 @@ export class DataFrame {
   public include(names: ColumnNames): DataFrame {
     return new DataFrame(
       Object.assign({}, ...names.map((x) => ({ [x]: this.column(x) }))),
-      this.index,
+      this.index
     );
   }
 
@@ -123,7 +123,9 @@ export class DataFrame {
     const index: Index = this.index;
     const value: SeriesTypes[] = this.column(colname).values;
     const zip: Array<SortElement> = index.map((i: number) => [i, value[i]]);
-    const sorted: Array<SortElement> = zip.sort((a, b) => a[1] < b[1] ? -1 : 1);
+    const sorted: Array<SortElement> = zip.sort((a, b) =>
+      (a[1] || 0) < (b[1] || 0) ? -1 : 1
+    );
     const order: Index = sorted.map((a: SortElement) => a[0]);
     return new DataFrame(this.columns, order);
   }
@@ -137,6 +139,13 @@ export class DataFrame {
     if (ser) {
       return new DataFrame(Object.assign({}, this.columns, { [name]: ser }));
     } else return this;
+  }
+
+  /** Select only matching rows */
+  public select(callback: RowCallback): DataFrame {
+    return this.reindex(
+      this.index.filter((index: number) => callback(this.record(index)))
+    );
   }
 
   /** Rearrange rows */
@@ -170,7 +179,7 @@ export class DataFrame {
   private record(index: number): RowRecord {
     return Object.assign(
       {},
-      ...this.names.map((x) => ({ [x]: this.columns[x].values[index] })),
+      ...this.names.map((x) => ({ [x]: this.columns[x].values[index] }))
     );
   }
 

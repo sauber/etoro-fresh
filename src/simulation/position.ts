@@ -2,58 +2,49 @@ import type { DateFormat } from "/utils/time/mod.ts";
 import { ChartSeries } from "/investor/mod.ts";
 import { nanoid } from "nanoid";
 
-type PositionData = {
-  // Name of investori
-  name: string;
-  
-  // Date of opening position
-  open: DateFormat;
-
-  // The last date where data is available
-  expire: DateFormat;
-
-  // Price chart
-  chart: ChartSeries;
-
-  // Size of position
-  amount: number;
-
-  // TODO:
-  // takeprofit?: number;
-  // stoploss?: number;
-  // trailing?: boolean;
-  // days_min?: number;
-  // days_max?: number;
-};
+// TODO:
+// takeprofit?: number;
+// stoploss?: number;
+// trailing?: boolean;
+// days_min?: number;
+// days_max?: number;
 
 /** Information about a position */
 export class Position {
-  public readonly amount: number;
-  public readonly date: DateFormat;
+  // Generate uniq ID
   public readonly id: string = nanoid();
-  public readonly name: string;
 
-  constructor(private readonly data: PositionData) {
-    this.amount = data.amount;
-    this.date = data.open;
-    this.name = data.name;
-  }
+  constructor(
+    // Date of opening
+    public readonly date: DateFormat,
+
+    // Investor Name
+    public readonly name: string,
+
+    // Chart for investor
+    private readonly chart: ChartSeries,
+
+    // Price (nomimal + spread) at time of opening
+    public readonly price: number,
+
+    // Amount invested
+    public readonly amount: number
+  ) {}
 
   /** Calculate profits since opening until date */
   public profit(date: DateFormat): number {
-    const chart = this.data.chart;
-    const gain = chart.gain(this.data.open, date);
-    const profit = this.data.amount * gain;
+    const last = this.chart.value(date);
+    const profit = this.amount * (last / this.price - 1);
     return profit;
   }
 
   /** Value of position on date (amount + profit) */
   public value(date: DateFormat): number {
-    return this.data.amount + this.profit(date);
+    return this.amount + this.profit(date);
   }
 
   /** Confirm if position is within date range of available investor data */
   public valid(date: DateFormat): boolean {
-    return date <= this.data.expire;
+    return date <= this.chart.end();
   }
 }

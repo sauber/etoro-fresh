@@ -1,4 +1,4 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { BoolSeries, Series, TextSeries, ObjectSeries } from "./series.ts";
 
 Deno.test("Numbers", () => {

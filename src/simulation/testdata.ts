@@ -10,17 +10,11 @@ export const community = new Community(repoBackend);
 const investor: Investor = await community.any();
 export const username: string = investor.UserName;
 
-// Extract chart data
+// Chart data
 export const chart: ChartSeries = await investor.chart();
 const open: DateFormat = chart.start();
-const expire: DateFormat = chart.end();
+const price: number = chart.first() * 1.000; // No spread
 
 // Position data
 const amount = 1000;
-export const position = new Position({
-  name: username,
-  open,
-  expire,
-  chart,
-  amount,
-});
+export const position = new Position(open, username, chart, price, amount);

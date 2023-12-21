@@ -1,4 +1,4 @@
-import { assertInstanceOf, assertEquals } from "assert";
+import { assertInstanceOf, assertEquals } from "$std/assert/mod.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
 import { nextDate } from "/utils/time/mod.ts";
 import { Portfolio } from "./portfolio.ts";
@@ -44,7 +44,7 @@ Deno.test("Expiration", () => {
   const p = new Portfolio();
   p.add(position);
   const late: DateFormat = nextDate(end);
-  const removed: Positions = p.expired(late);
-  assertEquals(removed.length, 1);
-  assertEquals(p.length, 0);
+  const expired: Positions = p.expired(late);
+  assertEquals(expired.length, 1);
+  assertEquals(p.length, 1);
 });

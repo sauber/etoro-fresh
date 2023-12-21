@@ -1,38 +1,35 @@
-import { DateFormat } from "📚/utils/time/mod.ts";
-import { Community, Investor, ChartSeries } from "/investor/mod.ts";
+import type { DateFormat } from "/utils/time/mod.ts";
+import { ChartSeries } from "/investor/mod.ts";
 import { Position } from "./position.ts";
 
 /** An exchange is a place where cash and positions are swapped for a fee */
 export class Exchange {
-  constructor(
-    private readonly community: Community,
-    private readonly spread: number = 0.001
-  ) {}
+  constructor(private readonly spread: number = 0.001) {}
+
+  /** Nominal price + spread */
+  public buying_price(price: number) {
+    return price * (1 + this.spread);
+  }
+
+  /** Nominal price - spread */
+  public selling_price(price: number) {
+    return price * (1 - this.spread);
+  }
 
   /** Generate a position from cash */
-  public async buy(
-    username: string,
+  public buy(
     date: DateFormat,
+    name: string,
+    chart: ChartSeries,
     amount: number
-  ): Promise<Position> {
-    const investor: Investor = this.community.investor(username);
-    const chart: ChartSeries = await investor.chart();
-    const fee = amount * this.spread;
-    const deducted = amount - fee;
-    const position = new Position({
-      name: username,
-      open: date,
-      expire: chart.end(),
-      chart: chart,
-      amount: deducted
-    });
+  ): Position {
+    const price: number = this.buying_price(chart.value(date));
+    const position: Position = new Position(date, name, chart, price, amount);
     return position;
   }
 
   /** Sell a position on a date, return cash */
-  public sell(position: Position, date: DateFormat): number {
-    const value = position.value(date);
-    const deducted = value - value * this.spread;
-    return deducted;
+  public sell(date: DateFormat, position: Position): number {
+    return this.selling_price( position.value(date) );
   }
 }

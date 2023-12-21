@@ -1,4 +1,4 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { DataFrame } from "./dataframe.ts";
 import type { SeriesTypes } from "/utils/series.ts";
 
@@ -77,7 +77,7 @@ Deno.test("Sorting", () => {
 
 Deno.test("Generate Column", () => {
   const df = DataFrame.fromRecords(testdata);
-  const amend = df.amend("neg", (r) => -r.n);
+  const amend = df.amend("neg", (r) => (r.n !== undefined ? -r.n : undefined));
   assertEquals(amend.column("neg").values, [-1, -2]);
 });
 
@@ -89,6 +89,12 @@ Deno.test("Reverse Rows", () => {
 
 Deno.test("Reduce Rows", () => {
   const df = DataFrame.fromRecords(testdata);
-  const rev = df.slice(0,1);
+  const rev = df.slice(0, 1);
+  assertEquals(rev.records, [testdata[0]]);
+});
+
+Deno.test("Filter Rows", () => {
+  const df = DataFrame.fromRecords(testdata);
+  const rev = df.select((r) => r.b);
   assertEquals(rev.records, [testdata[0]]);
 });

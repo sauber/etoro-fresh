@@ -1,4 +1,4 @@
-import { assertInstanceOf, assertEquals, assertNotEquals } from "assert";
+import { assertInstanceOf, assertEquals } from "$std/assert/mod.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
 import { Book } from "./book.ts";
 import { position, chart } from "./testdata.ts";
@@ -14,22 +14,26 @@ Deno.test("Instance", () => {
 Deno.test("Deposit", () => {
   const book = new Book();
   const amount = 100000;
-  book.deposit(amount, start);
-  assertEquals(book.value, amount);
+  book.deposit(start, amount);
+  assertEquals(book.balance.cash, amount);
+  assertEquals(book.balance.value, amount);
 });
 
 Deno.test("Add/Remove position", () => {
   const book = new Book();
-  assertEquals(book.add(position), true);
-  assertEquals(book.value, 0);
-  assertEquals(book.remove(position, end, "sell"), true);
-  assertNotEquals(book.value, 0);
-  //book.export.print("Buy/Sell");
+  assertEquals(book.add(start, position), true);
+  assertEquals(book.balance.invested, position.amount);
+  assertEquals(book.balance.profit, 0);
+  const profit: number = position.amount * (chart.last() / chart.first()-1);
+  assertEquals(book.remove(end, position, "sell", chart.last()), true);
+  assertEquals(book.balance.invested, 0);
+  assertEquals(book.balance.profit, profit);
+
 });
 
 Deno.test("Valuation", () => {
   const book = new Book();
-  book.valuate(chart.start());
-  assertEquals(book.value, 0);
-  //book.export.print("Valuation");
+  book.valuate(start);
+  assertEquals(book.balance.value, 0);
+  assertEquals(book.length, 1);
 });
