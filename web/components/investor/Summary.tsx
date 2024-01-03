@@ -2,14 +2,17 @@
 import ChartIsland from "🏝️/Chart.tsx";
 import InvestorAvatar from "🏝️/investor/InvestorAvatar.tsx";
 import { ChartExport, InvestorExport, StatsExport } from "📚/investor/mod.ts";
+import { portfolioData } from "📚/investor/testdata.ts";
 //import Chart from "📦/chart/Small.tsx";
 
 export interface ComponentProps {
   investor: InvestorExport;
   color: string;
+  sharpeRatio: number;
+  profit: number;
 }
 
-export default function InvestorSummary({ investor, color }: ComponentProps) {
+export default function InvestorSummary({ investor, color, sharpeRatio, profit }: ComponentProps) {
   const stats: StatsExport = investor.stats;
   const chart: ChartExport = investor.chart;
 
@@ -48,6 +51,7 @@ export default function InvestorSummary({ investor, color }: ComponentProps) {
           {stats.UserName}
         </a>
       </p>
+      <p>SharpeRatio: {sharpeRatio.toFixed(2)}, Profit: {profit.toFixed(2)}</p>
       </div>
     </div>
   );

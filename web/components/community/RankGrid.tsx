@@ -78,6 +78,8 @@ export default function InvestorGrid({ rank, investors }: ComponentProps) {
                   <Card
                     investor={investors[(cell.content as RowRecord).UserName as string]}
                     color={(cell.content as RowRecord).color as string}
+                    sharpeRatio={cell.x}
+                    profit={cell.y}
                   />
                 )}
               </td>
