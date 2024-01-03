@@ -119,7 +119,7 @@ export class Table {
       case "number":
         return bl.repeat(pad) + rich;
       default:
-        return "";
+        return bl.repeat(pad);
     }
   }
 
