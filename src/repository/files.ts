@@ -64,7 +64,7 @@ async function files(path: string): Promise<string[]> {
 
 /** Create a temporary directory */
 function mktmpdir(): Promise<string> {
-  return Deno.makeTempDir();
+  return Deno.makeTempDir({dir: 'tmp'});
 }
 
 /** Recursively remove directory */
