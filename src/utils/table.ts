@@ -10,7 +10,7 @@ type Theme = {
 /** Markup text in ansi */
 function ansi(
   style: "normal" | "bold" | "dim" | "italic" | "underline" | "strikethrough",
-  text: string
+  text: string,
 ): string {
   const styles = [
     "normal",
@@ -78,8 +78,9 @@ export class Table {
 
   /** Render cell content as a string */
   private cast(content: CellTypes): string {
-    if ( content !== undefined && typeof content.toString === 'function') return content.toString()
-    else return '';
+    if (content !== undefined && typeof content.toString === "function") {
+      return content.toString();
+    } else return "";
   }
 
   /** Render table title */
@@ -101,7 +102,7 @@ export class Table {
   private renderCell(
     content: CellTypes,
     cellWidth: number,
-    isHeader = false
+    isHeader = false,
   ): string {
     const str = this.cast(content);
     const rich: string = isHeader ? ansi("bold", str) : str; // Bold text

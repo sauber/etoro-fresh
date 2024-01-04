@@ -21,7 +21,7 @@ export class Exchange {
     date: DateFormat,
     name: string,
     chart: ChartSeries,
-    amount: number
+    amount: number,
   ): Position {
     const price: number = this.buying_price(chart.value(date));
     const position: Position = new Position(date, name, chart, price, amount);
@@ -30,6 +30,6 @@ export class Exchange {
 
   /** Sell a position on a date, return cash */
   public sell(date: DateFormat, position: Position): number {
-    return this.selling_price( position.value(date) );
+    return this.selling_price(position.value(date));
   }
 }

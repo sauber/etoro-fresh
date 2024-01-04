@@ -17,18 +17,14 @@ export class Position {
   constructor(
     // Date of opening
     public readonly date: DateFormat,
-
     // Investor Name
     public readonly name: string,
-
     // Chart for investor
     private readonly chart: ChartSeries,
-
     // Price (nomimal + spread) at time of opening
     public readonly price: number,
-
     // Amount invested
-    public readonly amount: number
+    public readonly amount: number,
   ) {}
 
   /** Calculate profits since opening until date */

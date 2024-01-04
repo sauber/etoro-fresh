@@ -39,7 +39,7 @@ export class Portfolio {
   public get invested(): number {
     return this.positions.reduce(
       (sum: number, position: Position) => sum + position.amount,
-      0
+      0,
     );
   }
 
@@ -47,7 +47,7 @@ export class Portfolio {
   public profit(date: DateFormat): number {
     return this.positions.reduce(
       (sum: number, position: Position) => sum + position.profit(date),
-      0
+      0,
     );
   }
 

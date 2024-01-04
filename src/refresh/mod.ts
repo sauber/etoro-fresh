@@ -14,10 +14,10 @@ export interface FetchBackend {
 
   /** Fetch stats of investor  */
   stats(investor: InvestorId): Promise<JSONObject>;
-};
+}
 
 export type DiscoverFilter = {
   risk: number;
   daily: number;
   weekly: number;
-}
+};

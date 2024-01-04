@@ -116,14 +116,14 @@ export class Investor {
   public async isValid(): Promise<boolean> {
     // Confirm start exists
     const start = await this.start();
-    if ( ! start ) return false;
+    if (!start) return false;
 
     // Confirm end exists
     const end = await this.end();
-    if ( ! end ) return false;
+    if (!end) return false;
 
     // Confirm start is before end
-    if ( start > end ) return false;
+    if (start > end) return false;
 
     // All conditions met
     return true;
@@ -148,13 +148,13 @@ export class Investor {
   public async active(date: DateFormat): Promise<boolean> {
     // Confirm start exists and prior to date
     const start = await this.start();
-    if ( ! start ) return false;
-    if ( date < start ) return false;
+    if (!start) return false;
+    if (date < start) return false;
 
     // Confirm end exists and after date
     const end = await this.end();
-    if ( ! end ) return false;
-    if ( end < date ) return false;
+    if (!end) return false;
+    if (end < date) return false;
 
     // Date is within start and end
     return true;

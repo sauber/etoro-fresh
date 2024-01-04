@@ -1,9 +1,9 @@
-import { assertInstanceOf, assertEquals } from "$std/assert/mod.ts";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
 import { nextDate } from "/utils/time/mod.ts";
 import { Portfolio } from "./portfolio.ts";
 import type { Positions } from "./portfolio.ts";
-import { position, chart } from "./testdata.ts";
+import { chart, position } from "./testdata.ts";
 
 const start: DateFormat = chart.start();
 const end: DateFormat = chart.end();

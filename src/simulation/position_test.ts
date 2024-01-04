@@ -1,4 +1,4 @@
-import { assertInstanceOf, assertEquals } from "$std/assert/mod.ts";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { Position } from "./position.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
 import { nextDate } from "/utils/time/mod.ts";

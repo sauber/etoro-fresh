@@ -1,13 +1,13 @@
 import {
-  assertInstanceOf,
-  assertEquals,
   assertAlmostEquals,
+  assertEquals,
+  assertInstanceOf,
   assertLess,
 } from "$std/assert/mod.ts";
 import { Position } from "./position.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
 import { Exchange } from "./exchange.ts";
-import { username, chart } from "./testdata.ts";
+import { chart, username } from "./testdata.ts";
 
 // Position data
 const start: DateFormat = chart.start();
@@ -26,8 +26,8 @@ Deno.test("Instance", () => {
 
 Deno.test("Pricing", () => {
   const ex = new Exchange(spread);
-  assertEquals(ex.buying_price(amount), amount * (1+spread));
-  assertAlmostEquals(ex.selling_price(amount), amount * (1-spread));
+  assertEquals(ex.buying_price(amount), amount * (1 + spread));
+  assertAlmostEquals(ex.selling_price(amount), amount * (1 - spread));
 });
 
 Deno.test("Buy and Sell", () => {

@@ -1,4 +1,4 @@
-import { assertInstanceOf, assertEquals } from "$std/assert/mod.ts";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { community } from "./testdata.ts";
 import { Simulation } from "./simulation.ts";
 import { NullStrategy, RandomStrategy } from "./strategy.ts";
@@ -24,16 +24,10 @@ Deno.test("Null Strategy", async () => {
 });
 
 Deno.test("Random Strategy", async () => {
-  const stop = '2022-04-27';
+  const stop = "2022-04-27";
   const sim = new Simulation(start, stop, community, RandomStrategy);
   await sim.run();
   sim.book.export.digits(2).print("Random Strategy");
-  //const chart = sim.chart;
-  //const days = 1 + diffDate(start, end);
   const positions: number = sim.book.portfolio.length;
-  console.log(sim.book.portfolio);
   assertEquals(positions, 0);
-
-  //assertNotEquals(chart.gain(start, end), 0);
-  //assertEquals(chart.length, days);
 });

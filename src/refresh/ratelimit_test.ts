@@ -1,9 +1,9 @@
-import { assert, assertInstanceOf } from "$std/assert/mod.ts";
+import { assert, assertInstanceOf, assertLess } from "$std/assert/mod.ts";
 import { RateLimit } from "./ratelimit.ts";
 const rate = 1000;
 
-const callback = function () {
-  return new Promise((resolve) => resolve(Math.random()));
+const callback = function (): Promise<number> {
+  return Promise.resolve(Math.random());
 };
 
 Deno.test("Blank Initialization", () => {
@@ -18,21 +18,19 @@ Deno.test("Sequential", async (t) => {
   await t.step("first limit", async () => {
     const start = new Date();
     const result = (await rl.limit(callback)) as number;
-    //console.log('result: ', result);
+    assertLess(result, 1);
     await new Promise((resolve) => setTimeout(resolve, 100));
     const end = new Date();
     const diff = end.getTime() - start.getTime();
-    //console.log('First diff: ', diff);
     assert(diff < rate);
   });
 
   await t.step("second limit", async () => {
     const start = new Date();
     const result = (await rl.limit(callback)) as number;
-    //console.log('result: ', result);
+    assertLess(result, 1);
     const end = new Date();
     const diff = end.getTime() - start.getTime();
-    //console.log('second diff: ', diff);
     assert(diff < rate, `Diff should be less that rate: ${diff} < ${rate}`);
     assert(
       end.getTime() - begin.getTime() >= rate,
@@ -42,10 +40,9 @@ Deno.test("Sequential", async (t) => {
 
   await t.step("third limit", async () => {
     const result = (await rl.limit(callback)) as number;
-    //console.log('result: ', result);
+    assertLess(result, 1);
     const end = new Date();
     const diff = end.getTime() - begin.getTime();
-    //console.log('third diff: ', diff);
     assert(diff >= 2 * rate, `diff ${diff} >= 2 * rate ${rate}`);
   });
 });
@@ -61,7 +58,6 @@ Deno.test("Parallel", async (t) => {
     await Promise.all([prom1, prom2, prom3]);
     const end = new Date();
     const diff = end.getTime() - start.getTime();
-    //console.log({ diff, rate });
     assert(diff >= 2 * rate);
     assert(diff < 3 * rate);
   });

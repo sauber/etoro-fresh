@@ -15,7 +15,7 @@ Deno.test("Persistency", async () => {
   await assertRejects(
     async () => await repo.delete(),
     Error,
-    "Refuse to delete persistent disk repository"
+    "Refuse to delete persistent disk repository",
   );
 });
 

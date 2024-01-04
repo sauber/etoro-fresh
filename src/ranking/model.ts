@@ -138,7 +138,7 @@ export class Model {
       // Batches
       25,
       // Learning Rate
-      0.1
+      0.1,
     );
   }
 
@@ -162,7 +162,7 @@ export class Model {
       throw new Error("Wrong number of columns in input");
     }
     const output: RowRecords = await Promise.all(
-      input.records.map((r: RowRecord) => this.predictRecord(r))
+      input.records.map((r: RowRecord) => this.predictRecord(r)),
     );
     const df = DataFrame.fromRecords(output);
     return df;

@@ -1,5 +1,5 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
-import { BoolSeries, Series, TextSeries, ObjectSeries } from "./series.ts";
+import { BoolSeries, ObjectSeries, Series, TextSeries } from "./series.ts";
 
 Deno.test("Numbers", () => {
   const s = new Series();

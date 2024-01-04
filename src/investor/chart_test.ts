@@ -1,7 +1,7 @@
 import {
   assertEquals,
-  assertNotEquals,
   assertInstanceOf,
+  assertNotEquals,
 } from "$std/assert/mod.ts";
 import { Chart } from "./chart.ts";
 import { chartData } from "./testdata.ts";

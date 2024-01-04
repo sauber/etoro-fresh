@@ -1,7 +1,7 @@
 import {
   assertEquals,
-  assertInstanceOf,
   assertGreaterOrEqual,
+  assertInstanceOf,
 } from "$std/assert/mod.ts";
 import { Investor } from "./investor.ts";
 import { repoBackend } from "/repository/testdata.ts";

@@ -11,9 +11,9 @@ const backend: RepoDiskBackend = new RepoDiskBackend(path);
 const repo: Repo = new Repo(backend);
 
 const config: Config = repo.config;
-const id = await config.get('investor') as InvestorId;
-const filter = await config.get('discover') as DiscoverFilter;
-const rate = await config.get('rate') as number;
+const id = await config.get("investor") as InvestorId;
+const filter = await config.get("discover") as DiscoverFilter;
+const rate = await config.get("rate") as number;
 
 const fetcher: FetchWebBackend = new FetchWebBackend(rate);
 const refresh: Refresh = new Refresh(backend, fetcher, id, filter);

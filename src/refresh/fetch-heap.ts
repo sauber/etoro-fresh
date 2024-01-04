@@ -10,18 +10,18 @@ export class FetchHeapBackend implements FetchBackend {
   constructor(private readonly assets: Assets) {}
 
   public discover(_filter: DiscoverFilter): Promise<JSONObject> {
-    return new Promise((resolve) => resolve(this.assets.discover));    
+    return new Promise((resolve) => resolve(this.assets.discover));
   }
 
   public chart(_investor: InvestorId): Promise<JSONObject> {
-    return new Promise((resolve) => resolve(this.assets.chart));    
+    return new Promise((resolve) => resolve(this.assets.chart));
   }
 
   public portfolio(_investor: InvestorId): Promise<JSONObject> {
-    return new Promise((resolve) => resolve(this.assets.portfolio));    
+    return new Promise((resolve) => resolve(this.assets.portfolio));
   }
 
   public stats(_investor: InvestorId): Promise<JSONObject> {
-    return new Promise((resolve) => resolve(this.assets.stats));    
+    return new Promise((resolve) => resolve(this.assets.stats));
   }
 }

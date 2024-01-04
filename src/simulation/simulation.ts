@@ -1,5 +1,5 @@
 import { DateFormat, nextDate } from "/utils/time/mod.ts";
-import { Community, Investor, ChartSeries, Names } from "/investor/mod.ts";
+import { ChartSeries, Community, Investor, Names } from "/investor/mod.ts";
 import { ObjectSeries } from "/utils/series.ts";
 import { Strategy, StrategyClass } from "./strategy.ts";
 import type { Orders } from "./strategy.ts";
@@ -23,7 +23,7 @@ export class Simulation {
     private readonly end: DateFormat,
     private readonly community: Community,
     private readonly strategy: StrategyClass,
-    private cash: number = 100000
+    private cash: number = 100000,
   ) {
     this.exchange = new Exchange();
     this.book = new Book();
@@ -36,7 +36,7 @@ export class Simulation {
     const strategyClass = this.strategy;
     const names: Names = await this.community.active(date);
     const objects: Array<Investor> = await Promise.all(
-      names.values.map((name) => this.community.investor(name))
+      names.values.map((name) => this.community.investor(name)),
     );
     const investors: Investors = new ObjectSeries(objects);
     const strategy: Strategy = new strategyClass(this.portfolio, investors);
@@ -55,7 +55,7 @@ export class Simulation {
         date,
         name,
         chart,
-        order.amount
+        order.amount,
       );
       this.book.add(date, position);
     }
@@ -77,7 +77,7 @@ export class Simulation {
     const yesterday: DateFormat = nextDate(date, -1);
     for (const position of expired) {
       const selling_price: number = this.exchange.selling_price(
-        position.value(yesterday)
+        position.value(yesterday),
       );
       //console.log('book.remove', date, position, selling_price);
       //throw new Error('Simulation Expire');
@@ -111,7 +111,9 @@ export class Simulation {
   // /** Export daily performance as chart */
   public get chart(): ChartSeries {
     const df: DataFrame = this.book.export;
-    const values = df.select(r => r.action === "valuate").records.map(r => r.value) as number[];
+    const values = df
+      .select((r) => r.action === "valuate")
+      .records.map((r) => r.value) as number[];
     return new ChartSeries(values, this.start);
   }
 }

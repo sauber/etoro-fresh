@@ -42,7 +42,7 @@ export class Stats {
 
   /** Confirm stats include CustomerId */
   public validate(): boolean {
-    if ( ! this.raw.Data.CustomerId ) throw new Error(`CustomerId missing`);
+    if (!this.raw.Data.CustomerId) throw new Error(`CustomerId missing`);
     return true;
   }
 

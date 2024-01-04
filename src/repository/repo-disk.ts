@@ -1,4 +1,4 @@
-import { today, DateFormat } from "/utils/time/mod.ts";
+import { DateFormat, today } from "/utils/time/mod.ts";
 import { JSONObject } from "./mod.ts";
 import { RepoBackend } from "./repo-backend.ts";
 import { Files } from "./files.ts";
@@ -28,7 +28,7 @@ export class RepoDiskBackend extends RepoBackend {
   }
 
   public async has(assetname: string): Promise<boolean> {
-     return (await this.assetEnd(assetname) !== undefined) ? true : false;
+    return (await this.assetEnd(assetname) !== undefined) ? true : false;
   }
 
   public async store(assetname: string, data: JSONObject): Promise<void> {
@@ -81,7 +81,7 @@ export class RepoDiskBackend extends RepoBackend {
 
   public async retrieve(
     assetname: string,
-    date?: DateFormat
+    date?: DateFormat,
   ): Promise<JSONObject | null> {
     if (!date) date = await this.assetEnd(assetname);
     if (!date) return null;

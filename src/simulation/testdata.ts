@@ -1,6 +1,6 @@
 import type { DateFormat } from "/utils/time/mod.ts";
 import { repoBackend } from "/repository/testdata.ts";
-import { Community, Investor, ChartSeries } from "/investor/mod.ts";
+import { ChartSeries, Community, Investor } from "/investor/mod.ts";
 import { Position } from "./position.ts";
 
 // Testdata based Community

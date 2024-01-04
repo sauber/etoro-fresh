@@ -1,11 +1,11 @@
 import {
-  assertEquals,
-  assertNotEquals,
-  assertInstanceOf,
   assert,
+  assertEquals,
+  assertInstanceOf,
+  assertNotEquals,
 } from "$std/assert/mod.ts";
 import { RepoHeapBackend } from "./repo-heap.ts";
-import { today, DateFormat } from "/utils/time/mod.ts";
+import { DateFormat, today } from "/utils/time/mod.ts";
 import { JSONObject } from "./mod.ts";
 
 Deno.test("Initialization", () => {
@@ -77,8 +77,9 @@ Deno.test("Store and retrive objects", async (t) => {
   await t.step("Age of most recent asset", async () => {
     const ms: number | null = await repo.age(assetname);
     assertNotEquals(ms, null);
-    if (ms != null)
+    if (ms != null) {
       assert(ms > 0 && ms < 1000, `Age should be 0-1000ms, is ${ms}ms`);
+    }
   });
 
   await t.step("End date", async () => {

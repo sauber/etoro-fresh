@@ -31,5 +31,4 @@ export class RateLimit {
       return callback();
     });
   }
-
 }

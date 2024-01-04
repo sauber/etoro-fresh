@@ -1,8 +1,8 @@
 import {
   assert,
-  assertRejects,
-  assertInstanceOf,
   assertEquals,
+  assertInstanceOf,
+  assertRejects,
 } from "$std/assert/mod.ts";
 import { Discover, DiscoverData } from "./discover.ts";
 import type { InvestorId } from "/investor/mod.ts";
@@ -39,6 +39,6 @@ Deno.test("Discover invalid", async () => {
       assert(discover.validate());
     },
     Error,
-    "TotalRows 0 < 1"
+    "TotalRows 0 < 1",
   );
 });

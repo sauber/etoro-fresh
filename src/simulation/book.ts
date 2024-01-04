@@ -12,7 +12,7 @@ type Transaction = {
   name?: string;
   amount?: number;
   invested: number;
-  profit: number;
+  profit?: number;
   cash: number;
   value: number;
 };
@@ -53,7 +53,15 @@ export class Book {
     const name = position.name;
     this.balance.cash -= amount;
     this.balance.invested += amount;
-    this.journal.push({ date, action: "buy", name, amount, ...this.balance });
+    this.journal.push({
+      date,
+      action: "buy",
+      name,
+      amount,
+      cash: this.balance.cash,
+      invested: this.balance.invested,
+      value: this.balance.value,
+    });
 
     return true;
   }
@@ -63,7 +71,7 @@ export class Book {
     date: DateFormat,
     position: Position,
     action: Reasons,
-    amount: number
+    amount: number,
   ): boolean {
     if (this.portfolio.remove(position)) {
       // Adjust balance
@@ -92,8 +100,8 @@ export class Book {
   public valuate(date: DateFormat): void {
     this.balance.invested = this.portfolio.invested;
     this.balance.profit = this.portfolio.profit(date);
-    this.balance.value =
-      this.balance.invested + this.balance.profit + this.balance.cash;
+    this.balance.value = this.balance.invested + this.balance.profit +
+      this.balance.cash;
     this.journal.push({ date, action: "valuate", ...this.balance });
   }
 

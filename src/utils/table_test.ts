@@ -23,7 +23,7 @@ Deno.test("Display Headers", () => {
   //console.log(t.toString());
   assertEquals(
     t.toString(),
-    "╔═══╤═══╗\n" + "║ \x1b[1ma\x1b[0m │ \x1b[1mb\x1b[0m ║\n" + "╚═══╧═══╝"
+    "╔═══╤═══╗\n" + "║ \x1b[1ma\x1b[0m │ \x1b[1mb\x1b[0m ║\n" + "╚═══╧═══╝",
   );
 });
 

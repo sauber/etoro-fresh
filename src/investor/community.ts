@@ -13,7 +13,7 @@ export class Community {
   private async allNames(): Promise<Names> {
     const dates: DateFormat[] = await this.repo.dates();
     const allDates: Names[] = await Promise.all(
-      dates.map((date) => this.namesByDate(date))
+      dates.map((date) => this.namesByDate(date)),
     );
     const allNames: string[][] = allDates.map((date) => date.values);
     const merged = new Set(allNames.flat());
@@ -81,10 +81,10 @@ export class Community {
   public async valid(date?: DateFormat): Promise<Names> {
     const allNames: Names = await this.names(date);
     const validVector: Array<boolean> = await Promise.all(
-      allNames.values.map((name) => this.investor(name).isValid())
+      allNames.values.map((name) => this.investor(name).isValid()),
     );
     const validNames: string[] = allNames.values.filter(
-      (_name, index) => validVector[index]
+      (_name, index) => validVector[index],
     );
     const result: Names = new TextSeries(validNames);
     return result;
@@ -94,10 +94,10 @@ export class Community {
   public async active(date: DateFormat): Promise<Names> {
     const allNames: Names = await this.names();
     const validVector: Array<boolean> = await Promise.all(
-      allNames.values.map((name) => this.investor(name).active(date))
+      allNames.values.map((name) => this.investor(name).active(date)),
     );
     const validNames: string[] = allNames.values.filter(
-      (_name, index) => validVector[index]
+      (_name, index) => validVector[index],
     );
     const result: Names = new TextSeries(validNames);
     return result;

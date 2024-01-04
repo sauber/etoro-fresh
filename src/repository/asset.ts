@@ -54,8 +54,8 @@ export class Asset<AssetType> implements DateSeriesAsync<AssetType> {
       if (available <= date) return available;
     }
 
-    console.log(this.assetname, {dates, start, end,  date});
-    throw new Error('This code should never be reached');
+    console.log(this.assetname, { dates, start, end, date });
+    throw new Error("This code should never be reached");
   }
 
   /** Search for asset no sooner than date */
@@ -78,7 +78,7 @@ export class Asset<AssetType> implements DateSeriesAsync<AssetType> {
       if (available >= date) return available;
     }
 
-    throw new Error('This code should never be reached');
+    throw new Error("This code should never be reached");
   }
 
   public async value(date: DateFormat): Promise<AssetType> {

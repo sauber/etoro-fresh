@@ -1,5 +1,5 @@
 import type { DateFormat } from "/utils/time/mod.ts";
-import { today, formatDate } from "/utils/time/mod.ts";
+import { formatDate, today } from "/utils/time/mod.ts";
 import { ChartSeries } from "./chart-series.ts";
 
 type ChartEntry = {
@@ -41,7 +41,7 @@ export class Chart {
   public validate(): boolean {
     const todayDate = today();
     if (this.count <= 365) throw new Error("Too few dates in chart");
-    if( this.end > todayDate) throw new Error( "Last date is in the future");
+    if (this.end > todayDate) throw new Error("Last date is in the future");
     return true;
   }
 

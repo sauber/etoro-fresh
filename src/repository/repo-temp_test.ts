@@ -1,8 +1,8 @@
 import {
-  assertEquals,
-  assertNotEquals,
-  assertInstanceOf,
   assert,
+  assertEquals,
+  assertInstanceOf,
+  assertNotEquals,
 } from "$std/assert/mod.ts";
 import { RepoTempBackend } from "./repo-temp.ts";
 import type { JSONObject } from "./mod.ts";
@@ -38,8 +38,9 @@ Deno.test("Asset", async (t) => {
   await t.step("age", async () => {
     const ms: number | null = await repo.age(assetname);
     assertNotEquals(ms, null);
-    if (ms != null)
+    if (ms != null) {
       assert(ms > 1 && ms < 1000, `Age should be 1-1000ms, is ${ms}ms`);
+    }
   });
 
   await t.step("write", async () => {

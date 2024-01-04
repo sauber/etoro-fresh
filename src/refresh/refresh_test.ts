@@ -1,7 +1,7 @@
-import { assertInstanceOf, assertEquals } from "$std/assert/mod.ts";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { FetchHeapBackend } from "./fetch-heap.ts";
 import { Refresh } from "./refresh.ts";
-import { testAssets, investorId, discoverFilter } from "./testdata.ts";
+import { discoverFilter, investorId, testAssets } from "./testdata.ts";
 import { RepoHeapBackend } from "/repository/repo-heap.ts";
 
 Deno.test("Initialize", async () => {
@@ -11,7 +11,7 @@ Deno.test("Initialize", async () => {
     repo,
     fetcher,
     investorId,
-    discoverFilter
+    discoverFilter,
   );
   assertInstanceOf(refresh, Refresh);
   await repo.delete();

@@ -46,10 +46,8 @@ abstract class DataSeries<T> implements SeriesInterface<T> {
 }
 
 /** Series of strings */
-export class TextSeries
-  extends DataSeries<string>
-  implements SeriesInterface<string>
-{
+export class TextSeries extends DataSeries<string>
+  implements SeriesInterface<string> {
   constructor(values?: Array<string>) {
     super(values);
   }
@@ -61,30 +59,24 @@ export class TextSeries
 }
 
 /** Series of booleans */
-export class BoolSeries
-  extends DataSeries<boolean>
-  implements SeriesInterface<boolean>
-{
+export class BoolSeries extends DataSeries<boolean>
+  implements SeriesInterface<boolean> {
   constructor(values?: Array<boolean>) {
     super(values);
   }
 }
 
 /** Series of objects */
-export class ObjectSeries<T>
-  extends DataSeries<T>
-  implements SeriesInterface<T>
-{
+export class ObjectSeries<T> extends DataSeries<T>
+  implements SeriesInterface<T> {
   constructor(values?: Array<T>) {
     super(values);
   }
 }
 
 /** Series of numbers */
-export class Series
-  extends DataSeries<number | undefined>
-  implements SeriesInterface<number | undefined>
-{
+export class Series extends DataSeries<number | undefined>
+  implements SeriesInterface<number | undefined> {
   //public readonly isNumber = true;
 
   constructor(values?: Array<number | undefined>) {
@@ -94,7 +86,7 @@ export class Series
   /** Generate new Series: n => n*n */
   public get pow2(): Series {
     return new Series(
-      this.values.map((n) => (n !== undefined ? n * n : undefined))
+      this.values.map((n) => (n !== undefined ? n * n : undefined)),
     );
   }
 
@@ -113,14 +105,14 @@ export class Series
     return new Series(
       this.values.map((n) =>
         n !== undefined ? parseFloat(n.toFixed(unit)) : undefined
-      )
+      ),
     );
   }
 
   /** Convert to absolute numbers */
   public get abs(): Series {
     return new Series(
-      this.values.map((n) => (n !== undefined ? Math.abs(n) : undefined))
+      this.values.map((n) => (n !== undefined ? Math.abs(n) : undefined)),
     );
   }
 
@@ -133,7 +125,7 @@ export class Series
     // return sum;
     return this.values.reduce(
       (sum: number, a) => sum + (a !== undefined ? a : 0),
-      0
+      0,
     );
   }
 
@@ -145,8 +137,8 @@ export class Series
     const x2: number = this.pow2.sum;
     const y2: number = other.pow2.sum;
     const xy: number = this.multiply(other).sum;
-    const r: number =
-      (n * xy - x * y) / Math.sqrt((n * x2 - x * x) * (n * y2 - y * y));
+    const r: number = (n * xy - x * y) /
+      Math.sqrt((n * x2 - x * x) * (n * y2 - y * y));
     return r;
   }
 }
