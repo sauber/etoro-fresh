@@ -79,6 +79,8 @@ export class Simulation {
       const selling_price: number = this.exchange.selling_price(
         position.value(yesterday)
       );
+      //console.log('book.remove', date, position, selling_price);
+      //throw new Error('Simulation Expire');
       this.book.remove(date, position, "expire", selling_price);
     }
   }

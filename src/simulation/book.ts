@@ -67,7 +67,7 @@ export class Book {
   ): boolean {
     if (this.portfolio.remove(position)) {
       // Adjust balance
-      const profit: number = position.amount * (price / position.price - 1);
+      const profit: number = price - position.amount;
       const amount: number = position.amount + profit;
       this.balance.cash += amount;
       this.balance.invested -= position.amount;
