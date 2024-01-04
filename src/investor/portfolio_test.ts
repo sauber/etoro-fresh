@@ -1,4 +1,4 @@
-import { assertInstanceOf, assert, assertEquals } from "assert";
+import { assertInstanceOf, assert, assertEquals } from "$std/assert/mod.ts";
 import { Portfolio } from "./portfolio.ts";
 import { portfolioData } from "./testdata.ts";
 import { InvestorId } from "./mod.ts";
@@ -10,7 +10,7 @@ Deno.test("Initialization", () => {
     AggregatedMirrors: [],
     AggregatedPositions: [],
     AggregatedPositionsByInstrumentTypeID: [],
-    AggregatedPositionsByStockIndustryID: []
+    AggregatedPositionsByStockIndustryID: [],
   });
   assertInstanceOf(portfolio, Portfolio);
 });
@@ -22,7 +22,7 @@ Deno.test("Portfolio", async (t) => {
     assertEquals(portfolio.validate(), true);
   });
 
-  await  t.step("mirrors", () => {
+  await t.step("mirrors", () => {
     const inv: InvestorId[] = portfolio.investors();
     assert(inv.length > 0);
   });

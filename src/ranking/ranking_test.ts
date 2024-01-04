@@ -1,4 +1,4 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { repoBackend } from "/repository/testdata.ts";
 import { investorId } from "/investor/testdata.ts";
 import { Ranking } from "./ranking.ts";
@@ -24,7 +24,7 @@ Deno.test("Validate", { ignore: false }, async () => {
   const names = new TextSeries([investorId.UserName]);
   //console.log(names);
   const out = await rank.predict(names);
-  out.print('Prediction');
+  out.print("Prediction");
   assertEquals(out.length, 1);
   assertEquals(out.names.length, 3);
 });

@@ -1,6 +1,5 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { Files } from "./files.ts";
-
 
 Deno.test("create and remove tmpdir", async () => {
   const files: Files = await Files.tmp();
@@ -10,8 +9,8 @@ Deno.test("create and remove tmpdir", async () => {
 
 Deno.test("write a file", async (t) => {
   const files: Files = await Files.tmp();
-  const filename = 'foo';
-  const content = 'bar';
+  const filename = "foo";
+  const content = "bar";
 
   await t.step("write", async () => {
     await files.write(filename, content);
@@ -21,7 +20,6 @@ Deno.test("write a file", async (t) => {
     const filenames: string[] = await files.files();
     assertEquals(filenames, [filename]);
   });
-
 
   await t.step("read", async () => {
     const content = await files.read(filename);
@@ -33,7 +31,7 @@ Deno.test("write a file", async (t) => {
 
 Deno.test("Create a directory", async (t) => {
   const files: Files = await Files.tmp();
-  const dirname = 'dir';
+  const dirname = "dir";
 
   await t.step("write", async () => {
     await files.sub(dirname).create();
@@ -49,7 +47,5 @@ Deno.test("Create a directory", async (t) => {
     assertEquals(last, dirname);
   });
 
-
   await files.delete();
 });
-

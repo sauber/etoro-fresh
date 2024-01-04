@@ -1,4 +1,8 @@
-import { assertEquals, assertInstanceOf, assertThrows } from "assert";
+import {
+  assertEquals,
+  assertInstanceOf,
+  assertThrows,
+} from "$std/assert/mod.ts";
 import { ChartSeries } from "./chart-series.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
 import { nextDate } from "/utils/time/mod.ts";

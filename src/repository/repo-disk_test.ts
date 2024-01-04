@@ -1,8 +1,8 @@
-import { assertInstanceOf, assertRejects } from "assert";
+import { assertInstanceOf, assertRejects } from "$std/assert/mod.ts";
 import { RepoDiskBackend } from "./repo-disk.ts";
 import { JSONObject } from "./mod.ts";
 
-const path = "testdata"
+const path = "testdata";
 
 Deno.test("Initialization", () => {
   const repo = new RepoDiskBackend(path);

@@ -1,4 +1,9 @@
-import { assertEquals, assertNotEquals, assertInstanceOf, assert } from "assert";
+import {
+  assertEquals,
+  assertNotEquals,
+  assertInstanceOf,
+  assert,
+} from "$std/assert/mod.ts";
 import { RepoHeapBackend } from "./repo-heap.ts";
 import { today, DateFormat } from "/utils/time/mod.ts";
 import { JSONObject } from "./mod.ts";
@@ -29,10 +34,9 @@ Deno.test("Empty repo", async (t) => {
   });
 
   await t.step("End date", async () => {
-    const date: DateFormat|null = await repo.end();
+    const date: DateFormat | null = await repo.end();
     assertEquals(date, null);
   });
-
 });
 
 Deno.test("Store and retrive objects", async (t) => {
@@ -51,7 +55,7 @@ Deno.test("Store and retrive objects", async (t) => {
   });
 
   await t.step("Retrieve", async () => {
-    const response = await repo.retrieve(assetname) as JSONObject;
+    const response = (await repo.retrieve(assetname)) as JSONObject;
     assertEquals(response, data);
   });
 
@@ -71,14 +75,14 @@ Deno.test("Store and retrive objects", async (t) => {
   });
 
   await t.step("Age of most recent asset", async () => {
-    const ms: number|null = await repo.age(assetname);
+    const ms: number | null = await repo.age(assetname);
     assertNotEquals(ms, null);
-    if ( ms != null )
+    if (ms != null)
       assert(ms > 0 && ms < 1000, `Age should be 0-1000ms, is ${ms}ms`);
   });
 
   await t.step("End date", async () => {
-    const date: DateFormat|null = await repo.end();
+    const date: DateFormat | null = await repo.end();
     assertEquals(date, today());
   });
 

@@ -1,4 +1,4 @@
-import { assertEquals } from "assert";
+import { assertEquals } from "$std/assert/mod.ts";
 import { Stats } from "./stats.ts";
 import { statsData } from "./testdata.ts";
 

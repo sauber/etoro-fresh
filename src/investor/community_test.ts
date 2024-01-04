@@ -1,4 +1,4 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { Community } from "./community.ts";
 import { RepoHeapBackend } from "/repository/repo-heap.ts";
 import { today } from "/utils/time/mod.ts";

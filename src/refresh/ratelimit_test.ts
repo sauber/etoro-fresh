@@ -1,10 +1,10 @@
-import { assert, assertInstanceOf } from "assert";
+import { assert, assertInstanceOf } from "$std/assert/mod.ts";
 import { RateLimit } from "./ratelimit.ts";
 const rate = 1000;
 
-const callback = function() {
+const callback = function () {
   return new Promise((resolve) => resolve(Math.random()));
-}
+};
 
 Deno.test("Blank Initialization", () => {
   const f = new RateLimit(0);
@@ -17,7 +17,7 @@ Deno.test("Sequential", async (t) => {
 
   await t.step("first limit", async () => {
     const start = new Date();
-    const result = await rl.limit(callback) as number;
+    const result = (await rl.limit(callback)) as number;
     //console.log('result: ', result);
     await new Promise((resolve) => setTimeout(resolve, 100));
     const end = new Date();
@@ -28,7 +28,7 @@ Deno.test("Sequential", async (t) => {
 
   await t.step("second limit", async () => {
     const start = new Date();
-    const result = await rl.limit(callback) as number;
+    const result = (await rl.limit(callback)) as number;
     //console.log('result: ', result);
     const end = new Date();
     const diff = end.getTime() - start.getTime();
@@ -36,12 +36,12 @@ Deno.test("Sequential", async (t) => {
     assert(diff < rate, `Diff should be less that rate: ${diff} < ${rate}`);
     assert(
       end.getTime() - begin.getTime() >= rate,
-      `Diff since beginning should be more than rate: ${end.getTime()} - ${begin.getTime()} > ${rate}`,
+      `Diff since beginning should be more than rate: ${end.getTime()} - ${begin.getTime()} > ${rate}`
     );
   });
 
   await t.step("third limit", async () => {
-    const result = await rl.limit(callback) as number;
+    const result = (await rl.limit(callback)) as number;
     //console.log('result: ', result);
     const end = new Date();
     const diff = end.getTime() - begin.getTime();

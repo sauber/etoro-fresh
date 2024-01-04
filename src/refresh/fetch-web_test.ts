@@ -1,4 +1,4 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { FetchWebBackend } from "./fetch-web.ts";
 import { discoverFilter } from "./testdata.ts";
 import { investorId } from "/investor/testdata.ts";

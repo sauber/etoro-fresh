@@ -1,4 +1,8 @@
-import { assertEquals, assertInstanceOf, assertGreaterOrEqual } from "assert";
+import {
+  assertEquals,
+  assertInstanceOf,
+  assertGreaterOrEqual,
+} from "$std/assert/mod.ts";
 import { Investor } from "./investor.ts";
 import { repoBackend } from "/repository/testdata.ts";
 import { ChartSeries } from "./chart-series.ts";
@@ -47,9 +51,9 @@ Deno.test("Full Name", async () => {
 
 Deno.test("Start/End", async () => {
   const investor: Investor = new Investor(username, repoBackend);
-  const start: DateFormat|null = await investor.start();
+  const start: DateFormat | null = await investor.start();
   assertEquals(start, "2021-12-29");
-  const end: DateFormat|null = await investor.end();
+  const end: DateFormat | null = await investor.end();
   assertEquals(end, "2022-04-25");
   assertGreaterOrEqual(end, start);
 });
@@ -61,7 +65,6 @@ Deno.test("Active Range", async () => {
   const inactive: boolean = await investor.active("2021-12-28");
   assertEquals(inactive, false);
 });
-
 
 Deno.test("Validate", async () => {
   const investor: Investor = new Investor(username, repoBackend);
