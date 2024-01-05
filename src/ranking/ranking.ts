@@ -18,12 +18,12 @@ export class Ranking {
 
   /** Train model with extracted features */
   public async train(): Promise<void> {
-    console.log('Loading Features');
+    console.log("Loading Features");
     const training: DataFrame = await this.features.data();
     const xf = ["Profit", "SharpeRatio"];
     const train_x = training.exclude(xf);
     const train_y = training.include(xf);
-    console.log('Training model');
+    console.log("Training model");
     return this.model.train(train_x, train_y);
   }
 

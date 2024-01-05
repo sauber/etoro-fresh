@@ -8,13 +8,19 @@ export interface SeriesInterface<T> {
 
   /** First value */
   last: T;
+
+  /** Random value */
+  any: T;
 }
 
-export type SeriesTypes = number | string | boolean;
-export type SeriesClasses = Series | TextSeries | BoolSeries;
+export type SeriesTypes = number | string | boolean | undefined;
+export type SeriesClasses =
+  | Series
+  | TextSeries
+  | BoolSeries
+  | ObjectSeries<object>;
 
 abstract class DataSeries<T> implements SeriesInterface<T> {
-
   constructor(public readonly values: Array<T> = []) {}
 
   public get length(): number {
@@ -29,16 +35,19 @@ abstract class DataSeries<T> implements SeriesInterface<T> {
     return this.values[this.values.length - 1];
   }
 
+  public get any(): T {
+    const index: number = Math.floor(this.values.length * Math.random());
+    return this.values[index];
+  }
+
   public get isNumber(): boolean {
     return typeof this.first === "number";
   }
 }
 
 /** Series of strings */
-export class TextSeries
-  extends DataSeries<string>
-  implements SeriesInterface<string>
-{
+export class TextSeries extends DataSeries<string>
+  implements SeriesInterface<string> {
   constructor(values?: Array<string>) {
     super(values);
   }
@@ -50,57 +59,74 @@ export class TextSeries
 }
 
 /** Series of booleans */
-export class BoolSeries
-  extends DataSeries<boolean>
-  implements SeriesInterface<boolean>
-{
+export class BoolSeries extends DataSeries<boolean>
+  implements SeriesInterface<boolean> {
   constructor(values?: Array<boolean>) {
     super(values);
   }
 }
 
+/** Series of objects */
+export class ObjectSeries<T> extends DataSeries<T>
+  implements SeriesInterface<T> {
+  constructor(values?: Array<T>) {
+    super(values);
+  }
+}
+
 /** Series of numbers */
-export class Series
-  extends DataSeries<number>
-  implements SeriesInterface<number>
-{
+export class Series extends DataSeries<number | undefined>
+  implements SeriesInterface<number | undefined> {
   //public readonly isNumber = true;
 
-  constructor(values?: Array<number>) {
+  constructor(values?: Array<number | undefined>) {
     super(values);
   }
 
   /** Generate new Series: n => n*n */
   public get pow2(): Series {
-    return new Series(this.values.map((n) => n * n));
+    return new Series(
+      this.values.map((n) => (n !== undefined ? n * n : undefined)),
+    );
   }
 
   /** Multiply each items in this series with item at other series: n[i] = x[i] * y[i] */
   public multiply(other: Series): Series {
     const values = [];
     for (let i = 0; i < this.values.length; i++) {
-      values.push(this.values[i] * other.values[i]);
+      const [x, y] = [this.values[i], other.values[i]];
+      values.push(x !== undefined && y !== undefined ? x * y : undefined);
     }
     return new Series(values);
   }
 
-  /** Number of significant decimals in float */
+  /** Number of decimals in float */
   public digits(unit: number): Series {
-    return new Series(this.values.map((n) => +n.toPrecision(unit)));
+    return new Series(
+      this.values.map((n) =>
+        n !== undefined ? parseFloat(n.toFixed(unit)) : undefined
+      ),
+    );
   }
 
   /** Convert to absolute numbers */
   public get abs(): Series {
-    return new Series(this.values.map((n) => Math.abs(n)));
+    return new Series(
+      this.values.map((n) => (n !== undefined ? Math.abs(n) : undefined)),
+    );
   }
 
   /** Calculate sum of numbers in series */
   public get sum(): number {
-    const arr = this.values;
-    let sum = 0;
-    let i = arr.length;
-    while (i--) sum += arr[i];
-    return sum;
+    // const arr = this.values;
+    // let sum = 0;
+    // let i = arr.length;
+    // while (i--) sum += arr[i];
+    // return sum;
+    return this.values.reduce(
+      (sum: number, a) => sum + (a !== undefined ? a : 0),
+      0,
+    );
   }
 
   /** Calculate Pearson Correlation Coefficient to other series */
@@ -111,8 +137,8 @@ export class Series
     const x2: number = this.pow2.sum;
     const y2: number = other.pow2.sum;
     const xy: number = this.multiply(other).sum;
-    const r: number =
-      (n * xy - x * y) / Math.sqrt((n * x2 - x * x) * (n * y2 - y * y));
+    const r: number = (n * xy - x * y) /
+      Math.sqrt((n * x2 - x * x) * (n * y2 - y * y));
     return r;
   }
 }

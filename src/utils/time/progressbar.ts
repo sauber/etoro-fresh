@@ -43,7 +43,7 @@ export class ProgressBar {
   public async update(count: number): Promise<void> {
     if (count > 0) {
       const widgetText: string = this.formatLine(count);
-      const text: string = `\r${widgetText}\x1b[?25l`;
+      const text = `\r${widgetText}\x1b[?25l`;
       await Deno.stdout.write(this.encoder.encode(text));
     }
   }
@@ -52,13 +52,13 @@ export class ProgressBar {
   public sync_update(count: number): void {
     if (count > 0) {
       const widgetText: string = this.formatLine(count);
-      const text: string = `${widgetText}\x1b[?25l`;
+      const text = `${widgetText}\x1b[?25l`;
       console.log(text);
     }
   }
 
   /** Increment count by amount, and write progress bar */
-  public async inc(amount = 1): Promise<void> {
+  public inc(amount = 1): Promise<void> {
     this.counter += amount;
     return this.update(this.counter);
   }

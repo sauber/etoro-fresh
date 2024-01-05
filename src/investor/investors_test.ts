@@ -1,11 +1,11 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { Investors } from "./investors.ts";
 import { investorId } from "./testdata.ts";
 
 Deno.test("Investors", async (t) => {
   const investors: Investors = new Investors();
   assertInstanceOf(investors, Investors);
-  assertEquals(investors.length, 0)
+  assertEquals(investors.length, 0);
 
   await t.step("add investor", () => {
     investors.add(investorId);
@@ -17,4 +17,3 @@ Deno.test("Investors", async (t) => {
     assertEquals(investors.length, 1);
   });
 });
-

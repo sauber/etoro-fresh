@@ -10,7 +10,7 @@ import type { StatsExport } from "./stats.ts";
 export type InvestorId = {
   CustomerId: number;
   UserName: string;
-}
+};
 
 export type ChartExport = [DateFormat[], number[]];
 
@@ -18,4 +18,4 @@ export type InvestorExport = {
   chart: ChartExport;
   mirrors: InvestorId[];
   stats: StatsExport;
-}
+};

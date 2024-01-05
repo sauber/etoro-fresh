@@ -1,4 +1,4 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { FetchHeapBackend } from "./fetch-heap.ts";
 import { testAssets } from "./testdata.ts";
 import { investorId } from "/investor/testdata.ts";
@@ -12,8 +12,8 @@ Deno.test("Fetching", { ignore: false }, async (t) => {
   const f: FetchHeapBackend = new FetchHeapBackend(testAssets);
 
   await t.step("discover", async () => {
-    const data = await f.discover({risk: 1, daily: 1, weekly: 1});
-    assertEquals(data.Status, 'OK');
+    const data = await f.discover({ risk: 1, daily: 1, weekly: 1 });
+    assertEquals(data.Status, "OK");
   });
 
   await t.step("chart", async () => {
@@ -30,5 +30,4 @@ Deno.test("Fetching", { ignore: false }, async (t) => {
     const data = await f.stats(investorId);
     assertInstanceOf(data.Data, Object);
   });
-
 });

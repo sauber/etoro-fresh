@@ -17,13 +17,13 @@ export class Investor {
   private readonly portfolioSeries: Asset<PortfolioData>;
   public readonly statsSeries: Asset<StatsData>;
 
-  constructor(private readonly UserName: string, repo: RepoBackend) {
+  constructor(public readonly UserName: string, repo: RepoBackend) {
     this.chartSeries = repo.asset(this.UserName + ".chart");
     this.portfolioSeries = repo.asset(this.UserName + ".portfolio");
     this.statsSeries = repo.asset(this.UserName + ".stats");
   }
 
-  /** Load chart and extract series */
+  /** Load one chart files and extract series */
   private async series(date: DateFormat): Promise<ChartSeries> {
     const data: ChartData = await this.chartSeries.value(date);
     const chart: Chart = new Chart(data);
@@ -41,7 +41,7 @@ export class Investor {
     let start: DateFormat = series.start();
 
     // Prepend older charts
-    // Search backwards for the chart oldest chart with overlap
+    // Search backwards to find oldest chart with overlap
     for (let i = dates.length - 2; i >= 0; i--) {
       const date = dates[i];
       if (date < start) break; // Too old to overlap
@@ -78,19 +78,54 @@ export class Investor {
     };
   }
 
-  /** Confirm if any charts exists, and stats within chart range */
-  public async isValid(): Promise<boolean> {
+  /** First date of chart or first date of stats */
+  public async start(): Promise<DateFormat | null> {
     const dates: DateFormat[] = await this.chartSeries.dates();
-    if (dates.length < 1) return false;
+    if (dates.length < 1) return null;
+
+    // First date in chart
     const chart = await this.chart();
     const chart_start: DateFormat = chart.start();
-    const chart_end: DateFormat = chart.end();
-    const stats = await this.statsSeries;
+
+    // First date of stats
+    const stats = this.statsSeries;
     const stats_start: DateFormat = await stats.start();
-    const stats_end: DateFormat = await stats.end();
-    //console.log({chart_start, chart_end, stats_start, stats_end});
-    if (stats_end < chart_start) return false;
-    if (stats_start > chart_end) return false;
+
+    // At least on stat must come before end of chart
+    return stats_start <= chart_start ? chart_start : stats_start;
+  }
+
+  /** Last date of chart */
+  public async end(): Promise<DateFormat | null> {
+    const dates: DateFormat[] = await this.chartSeries.dates();
+    if (dates.length < 1) return null;
+
+    // Last date in chart
+    const chart = await this.chart();
+    const chart_end: DateFormat = chart.end();
+
+    // First date of stats
+    const stats = this.statsSeries;
+    const stats_start: DateFormat = await stats.start();
+
+    // At least on stat must come before end of chart
+    return stats_start <= chart_end ? chart_end : null;
+  }
+
+  /** Confirm if any charts exists, and stats within chart range */
+  public async isValid(): Promise<boolean> {
+    // Confirm start exists
+    const start = await this.start();
+    if (!start) return false;
+
+    // Confirm end exists
+    const end = await this.end();
+    if (!end) return false;
+
+    // Confirm start is before end
+    if (start > end) return false;
+
+    // All conditions met
     return true;
   }
 
@@ -102,5 +137,26 @@ export class Investor {
   /** Lookup CustomerId */
   public async FullName(): Promise<string> {
     return (await this.stats()).FullName as string;
+  }
+
+  /** Gain from start date to end date */
+  public async gain(start: DateFormat, end: DateFormat): Promise<number> {
+    return (await this.chart()).gain(start, end);
+  }
+
+  /** Confirm if valid data exists on date */
+  public async active(date: DateFormat): Promise<boolean> {
+    // Confirm start exists and prior to date
+    const start = await this.start();
+    if (!start) return false;
+    if (date < start) return false;
+
+    // Confirm end exists and after date
+    const end = await this.end();
+    if (!end) return false;
+    if (end < date) return false;
+
+    // Date is within start and end
+    return true;
   }
 }

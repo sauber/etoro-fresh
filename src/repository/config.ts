@@ -5,7 +5,10 @@ type Defaults = Record<string, JSONValue>;
 export class Config {
   static assetname = "config";
 
-  constructor(private readonly backend: RepoBackend, private readonly defaults: Defaults = {}) {}
+  constructor(
+    private readonly backend: RepoBackend,
+    private readonly defaults: Defaults = {},
+  ) {}
 
   /** create new Config object with default values */
   public withDefaults(defaults: Defaults): Config {
@@ -13,7 +16,9 @@ export class Config {
   }
 
   private async latest(): Promise<JSONObject> {
-    const data: JSONObject | null = await this.backend.retrieve(Config.assetname);
+    const data: JSONObject | null = await this.backend.retrieve(
+      Config.assetname,
+    );
     return data || {};
   }
 

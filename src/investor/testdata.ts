@@ -7,7 +7,12 @@ import type { StatsData } from "./stats.ts";
 export const investorId = await config.get("investor") as InvestorId;
 
 // TODO: Use generic type function
-export const chartData = await repoBackend.retrieve(investorId.UserName + '.chart') as ChartData;
-export const portfolioData = await repoBackend.retrieve(investorId.UserName + '.portfolio') as PortfolioData;
-export const statsData = await repoBackend.retrieve(investorId.UserName + '.stats') as StatsData;
-
+export const chartData = await repoBackend.retrieve(
+  investorId.UserName + ".chart",
+) as ChartData;
+export const portfolioData = await repoBackend.retrieve(
+  investorId.UserName + ".portfolio",
+) as PortfolioData;
+export const statsData = await repoBackend.retrieve(
+  investorId.UserName + ".stats",
+) as StatsData;

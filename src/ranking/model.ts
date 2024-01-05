@@ -116,10 +116,7 @@ export class Model {
   }
 
   /** Train model with input and output data */
-  public async train(
-    input: DataFrame,
-    output: DataFrame,
-  ): Promise<void> {
+  public async train(input: DataFrame, output: DataFrame): Promise<void> {
     // Load existing or create new model
     const model: Sequential = await this.init();
 

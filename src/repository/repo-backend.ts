@@ -13,13 +13,16 @@ export abstract class RepoBackend {
   abstract store(assetname: string, data: JSONObject): Promise<void>;
 
   /** Retrieve asset and specific date, or latest available */
-  abstract retrieve(assetname: string, date?: DateFormat): Promise<JSONObject | null>;
+  abstract retrieve(
+    assetname: string,
+    date?: DateFormat,
+  ): Promise<JSONObject | null>;
 
   /** Age of latest storage of asset */
   abstract age(assetname: string): Promise<number | null>;
 
   /** Last date any asset is stored in repository */
-  abstract end(): Promise<DateFormat|null>;
+  abstract end(): Promise<DateFormat | null>;
 
   /** All dates in repository */
   abstract dates(): Promise<DateFormat[]>;

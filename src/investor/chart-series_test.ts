@@ -1,4 +1,8 @@
-import { assertEquals, assertInstanceOf, assertThrows } from "assert";
+import {
+  assertEquals,
+  assertInstanceOf,
+  assertThrows,
+} from "$std/assert/mod.ts";
 import { ChartSeries } from "./chart-series.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
 import { nextDate } from "/utils/time/mod.ts";
@@ -35,8 +39,9 @@ Deno.test("Series of values", () => {
   assertEquals(chart.end(), dates[dates.length - 1]);
   assertEquals(chart.dates(), dates);
 
-  for (let i = 0; i < values.length; i++)
+  for (let i = 0; i < values.length; i++) {
     assertEquals(chart.value(dates[i]), values[i]);
+  }
 });
 
 Deno.test("Invalid range", () => {
@@ -53,14 +58,14 @@ Deno.test("Invalid range", () => {
   assertThrows(
     () => chart.value(nextDate(dates[0], -1)),
     Error,
-    "Date not in range: 2023-10-30 < 2023-10-29 < 2023-11-02"
+    "Date not in range: 2023-10-30 < 2023-10-29 < 2023-11-02",
   );
 
   // After range
   assertThrows(
     () => chart.value(nextDate(dates[dates.length - 1], 1)),
     Error,
-    "Date not in range: 2023-10-30 < 2023-11-03 < 2023-11-02"
+    "Date not in range: 2023-10-30 < 2023-11-03 < 2023-11-02",
   );
 });
 
@@ -80,11 +85,11 @@ Deno.test("Combine non-overlapping series", () => {
   assertThrows(
     () => later.combine(sooner),
     Error,
-    "Chart Series do not overlap: 2023-10-31:2023-11-01 < 2023-11-31:2023-12-02"
+    "Chart Series do not overlap: 2023-10-31:2023-11-01 < 2023-11-31:2023-12-02",
   );
 });
 
-Deno.test("From date", () => {
+Deno.test("Range from date", () => {
   const start = "2023-10-31";
   const cut = "2023-11-01";
   const end = "2023-11-02";
@@ -96,10 +101,17 @@ Deno.test("From date", () => {
   assertEquals(from.end(), end);
 });
 
-Deno.test("Until date", () => {
+Deno.test("Range until date", () => {
   const date = "2023-10-31";
   const chart = new ChartSeries([10, 20], date);
   const until = chart.until(date);
   assertEquals(until.start(), until.end());
   assertEquals(until.end(), date);
+});
+
+Deno.test("Gain", () => {
+  const date = "2023-10-31";
+  const chart = new ChartSeries([10, 20], date);
+  const gain = chart.gain(date, nextDate(date));
+  assertEquals(gain, 1);
 });

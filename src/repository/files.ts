@@ -16,7 +16,6 @@ const exists = async (filename: string): Promise<boolean> => {
   }
 };
 
-
 /** Wrapper for stat system call */
 function stat(path: string) {
   return Deno.stat(path);
@@ -46,8 +45,9 @@ async function mkdir(path: string): Promise<void> {
 async function dirs(path: string): Promise<string[]> {
   const dirNames: string[] = [];
 
-  for await (const dirEntry of Deno.readDir(path))
+  for await (const dirEntry of Deno.readDir(path)) {
     if (dirEntry.isDirectory) dirNames.push(dirEntry.name);
+  }
 
   return dirNames.sort();
 }
@@ -64,7 +64,7 @@ async function files(path: string): Promise<string[]> {
 
 /** Create a temporary directory */
 function mktmpdir(): Promise<string> {
-  return Deno.makeTempDir();
+  return Deno.makeTempDir({dir: 'tmp'});
 }
 
 /** Recursively remove directory */
@@ -93,7 +93,7 @@ export class Files {
 
   /** List of all subdirectories */
   public dirs(): Promise<string[]> {
-    return dirs(this.path)
+    return dirs(this.path);
   }
 
   /** List of all subdirectories */

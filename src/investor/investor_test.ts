@@ -1,28 +1,19 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import {
+  assertEquals,
+  assertGreaterOrEqual,
+  assertInstanceOf,
+} from "$std/assert/mod.ts";
 import { Investor } from "./investor.ts";
 import { repoBackend } from "/repository/testdata.ts";
-import { Asset } from "/repository/mod.ts";
 import { ChartSeries } from "./chart-series.ts";
-import type {
-  ChartData,
-  InvestorExport,
-  PortfolioData,
-  StatsData,
-} from "./mod.ts";
+import type { InvestorExport } from "./mod.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
 import type { InvestorId } from "/investor/mod.ts";
 
+// Test Data
 const username = "FundManagerZech";
 const CustomerId = 5125148;
 const FullName = "Zheng Bin";
-
-/*
-const charts = repoBackend.asset(username + ".chart") as Asset<ChartData>;
-const portfolios = repoBackend.asset(
-  username + ".portfolio",
-) as Asset<PortfolioData>;
-const stats = repoBackend.asset(username + ".stats") as Asset<StatsData>;
-*/
 
 Deno.test("Blank Initialization", () => {
   const investor: Investor = new Investor(username, repoBackend);
@@ -56,4 +47,27 @@ Deno.test("Full Name", async () => {
   const investor: Investor = new Investor(username, repoBackend);
   const name: string = await investor.FullName();
   assertEquals(name, FullName);
+});
+
+Deno.test("Start/End", async () => {
+  const investor: Investor = new Investor(username, repoBackend);
+  const start: DateFormat | null = await investor.start();
+  assertEquals(start, "2021-12-29");
+  const end: DateFormat | null = await investor.end();
+  assertEquals(end, "2022-04-25");
+  assertGreaterOrEqual(end, start);
+});
+
+Deno.test("Active Range", async () => {
+  const investor: Investor = new Investor(username, repoBackend);
+  const active: boolean = await investor.active("2021-12-30");
+  assertEquals(active, true);
+  const inactive: boolean = await investor.active("2021-12-28");
+  assertEquals(inactive, false);
+});
+
+Deno.test("Validate", async () => {
+  const investor: Investor = new Investor(username, repoBackend);
+  const valid: boolean = await investor.isValid();
+  assertEquals(valid, true);
 });

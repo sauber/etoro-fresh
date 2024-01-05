@@ -1,4 +1,4 @@
-import { assertEquals, assertInstanceOf } from "assert";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { Table } from "./table.ts";
 
 Deno.test("Blank Initialization", () => {
@@ -31,16 +31,16 @@ Deno.test("Display Rows", () => {
   const t = new Table();
   t.rows = [["a", "b"]];
   //console.log(t.toString());
-  assertEquals(
-    t.toString(),
-    "╔═══╤═══╗\n" + "║ a │ b ║\n" + "╚═══╧═══╝",
-  );
+  assertEquals(t.toString(), "╔═══╤═══╗\n" + "║ a │ b ║\n" + "╚═══╧═══╝");
 });
 
 Deno.test("Display Headers and Rows", { ignore: true }, () => {
   const t = new Table();
   t.theme = t.roundTheme;
   t.headers = ["text", "number", "boolean"];
-  t.rows = [["a", 0, true], ["bb", 10, false]];
+  t.rows = [
+    ["a", 0, true],
+    ["bb", 10, false],
+  ];
   console.log(t.toString());
 });

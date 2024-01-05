@@ -3,9 +3,9 @@ import type { RepoBackend } from "./mod.ts";
 
 /** Factory of objects based on assets in inventory */
 export class Repo {
-  constructor(private readonly backend: RepoBackend){}
+  constructor(private readonly backend: RepoBackend) {}
 
-  get config(){
+  get config() {
     return new Config(this.backend);
   }
 

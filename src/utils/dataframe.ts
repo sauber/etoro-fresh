@@ -123,7 +123,9 @@ export class DataFrame {
     const index: Index = this.index;
     const value: SeriesTypes[] = this.column(colname).values;
     const zip: Array<SortElement> = index.map((i: number) => [i, value[i]]);
-    const sorted: Array<SortElement> = zip.sort((a, b) => a[1] < b[1] ? -1 : 1);
+    const sorted: Array<SortElement> = zip.sort((a, b) =>
+      (a[1] || 0) < (b[1] || 0) ? -1 : 1
+    );
     const order: Index = sorted.map((a: SortElement) => a[0]);
     return new DataFrame(this.columns, order);
   }
@@ -137,6 +139,13 @@ export class DataFrame {
     if (ser) {
       return new DataFrame(Object.assign({}, this.columns, { [name]: ser }));
     } else return this;
+  }
+
+  /** Select only matching rows */
+  public select(callback: RowCallback): DataFrame {
+    return this.reindex(
+      this.index.filter((index: number) => callback(this.record(index))),
+    );
   }
 
   /** Rearrange rows */

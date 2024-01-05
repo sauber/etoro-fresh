@@ -1,4 +1,4 @@
-import { assertEquals, assertInstanceOf, assert } from "assert";
+import { assert, assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { Asset } from "./asset.ts";
 import { repoBackend } from "./testdata.ts";
 import { DateFormat } from "/utils/time/mod.ts";
@@ -19,7 +19,7 @@ Deno.test("Properties of discovery asset", async (t) => {
       6,
       "6 copies of discover.json in testdata repository",
     );
-    assert(dates[0] < dates[dates.length-1], "dates are sorted");
+    assert(dates[0] < dates[dates.length - 1], "dates are sorted");
   });
 
   await t.step("Start date", async () => {
@@ -46,5 +46,4 @@ Deno.test("Properties of discovery asset", async (t) => {
     const data: DiscoverData = await discover.value("2022-03-01");
     assertEquals(data.TotalRows, 23);
   });
-
 });

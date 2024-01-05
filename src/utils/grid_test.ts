@@ -3,7 +3,7 @@ import {
   assertAlmostEquals,
   assertEquals,
   assertInstanceOf,
-} from "assert";
+} from "$std/assert/mod.ts";
 import { DataSet, Grid } from "./grid.ts";
 
 /** Generate a random dataset */

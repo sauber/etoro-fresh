@@ -13,3 +13,7 @@ ranking.model.json
 
 # Node Modules
 node_modules/
+
+# V8 profiling output
+isolate-*.log
+profile.txt

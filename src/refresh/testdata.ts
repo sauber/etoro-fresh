@@ -3,8 +3,10 @@ export { config } from "/repository/testdata.ts";
 import type { JSONObject } from "../repository/mod.ts";
 import { Assets } from "./fetch-heap.ts";
 import { investorId } from "/investor/testdata.ts";
-export { investorId } from "/investor/testdata.ts";import type { DiscoverFilter } from "./mod.ts";
-export const discoverFilter: DiscoverFilter = (await config.get("discover")) as DiscoverFilter;
+export { investorId } from "/investor/testdata.ts";
+import type { DiscoverFilter } from "./mod.ts";
+export const discoverFilter: DiscoverFilter =
+  (await config.get("discover")) as DiscoverFilter;
 
 // Pull from repo a collection of assets
 export const testAssets: Assets = {
@@ -13,16 +15,16 @@ export const testAssets: Assets = {
 
   // chart
   chart: (await repoBackend.retrieve(
-    investorId.UserName + ".chart"
+    investorId.UserName + ".chart",
   )) as JSONObject,
 
   // portfolio
   portfolio: (await repoBackend.retrieve(
-    investorId.UserName + ".portfolio"
+    investorId.UserName + ".portfolio",
   )) as JSONObject,
 
   // stats
   stats: (await repoBackend.retrieve(
-    investorId.UserName + ".stats"
+    investorId.UserName + ".stats",
   )) as JSONObject,
 };

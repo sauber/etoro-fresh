@@ -53,7 +53,9 @@ export class ChartSeries implements DateSeries<number> {
     // Non overlap
     if (sooner.end() < later.start()) {
       //return later;
-      throw new Error(`Chart Series do not overlap: ${sooner.start()}:${sooner.end()} < ${later.start()}:${later.end()}`);
+      throw new Error(
+        `Chart Series do not overlap: ${sooner.start()}:${sooner.end()} < ${later.start()}:${later.end()}`,
+      );
     }
 
     // 'later' fully overlaps 'sooner'
@@ -156,5 +158,13 @@ export class ChartSeries implements DateSeries<number> {
     const sharpe = (profit - benchmark) / volatility;
     //console.log({profit, benchmark, volatility, sharpe});
     return sharpe;
+  }
+
+  /** Ratio of gain from arbitrary date to another */
+  public gain(start: DateFormat, end: DateFormat): number {
+    const first: number = this.value(start);
+    const last: number = this.value(end);
+    const ratio = last / first - 1;
+    return ratio;
   }
 }

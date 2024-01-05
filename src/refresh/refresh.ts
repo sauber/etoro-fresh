@@ -5,7 +5,7 @@ import type { DiscoverFilter } from "./mod.ts";
 import { Discover } from "/discover/mod.ts";
 import type { DiscoverData } from "/discover/mod.ts";
 import { Chart, Portfolio } from "/investor/mod.ts";
-import type { InvestorId, ChartData, PortfolioData } from "/investor/mod.ts";
+import type { ChartData, InvestorId, PortfolioData } from "/investor/mod.ts";
 import { today } from "/utils/time/mod.ts";
 
 type Range = {
@@ -45,7 +45,7 @@ export class Refresh {
     private readonly repo: RepoBackend,
     private readonly fetcher: FetchBackend,
     private readonly investor: InvestorId,
-    private readonly filter: DiscoverFilter
+    private readonly filter: DiscoverFilter,
   ) // TODO: Expire
   // TODO: Discover Range
   {}
@@ -55,7 +55,7 @@ export class Refresh {
     assetname: string,
     expire: number,
     download: () => Promise<JSONObject>,
-    validate?: (data: JSONObject) => boolean
+    validate?: (data: JSONObject) => boolean,
   ): Promise<boolean> {
     // Skip if not expired in repo
     const age: number | null = await this.repo.age(assetname);
@@ -83,10 +83,11 @@ export class Refresh {
     const validate = function (loaded: JSONObject) {
       const discover: Discover = new Discover(loaded as DiscoverData);
       const count: number = discover.count;
-      if (count < range.min || count > range.max)
+      if (count < range.min || count > range.max) {
         throw new Error(
-          `Count of discovered investors is ${count}, should be ${range.min}-${range.max}`
+          `Count of discovered investors is ${count}, should be ${range.min}-${range.max}`,
         );
+      }
       console.log(`Count of discovered investors is ${count}`);
       return true;
     };
@@ -97,7 +98,7 @@ export class Refresh {
       "discover",
       expire.discover,
       () => this.fetcher.discover(this.filter),
-      validate
+      validate,
     );
     if (available) {
       const data = (await this.repo.retrieve("discover")) as DiscoverData;
@@ -117,7 +118,7 @@ export class Refresh {
       }
       if (chart.end != today()) {
         console.warn(
-          `Warning: ${investor.UserName} chart end ${chart.end} is not today`
+          `Warning: ${investor.UserName} chart end ${chart.end} is not today`,
         );
         return false;
       }
@@ -128,25 +129,29 @@ export class Refresh {
       investor.UserName + ".chart",
       this.expire.chart,
       () => this.fetcher.chart(investor),
-      validate
+      validate,
     );
   }
 
   private portfolio(investor: InvestorId, expire: number): Promise<boolean> {
-    return this.recent(investor.UserName + ".portfolio", expire, () =>
-      this.fetcher.portfolio(investor)
+    return this.recent(
+      investor.UserName + ".portfolio",
+      expire,
+      () => this.fetcher.portfolio(investor),
     );
   }
 
   private stats(investor: InvestorId): Promise<boolean> {
-    return this.recent(investor.UserName + ".stats", this.expire.stats, () =>
-      this.fetcher.stats(investor)
+    return this.recent(
+      investor.UserName + ".stats",
+      this.expire.stats,
+      () => this.fetcher.stats(investor),
     );
   }
 
   private loadInvestor(
     investor: InvestorId,
-    expire: number = this.expire.portfolio
+    expire: number = this.expire.portfolio,
   ): Promise<boolean[]> {
     return Promise.all([
       this.chart(investor),
@@ -158,7 +163,7 @@ export class Refresh {
   private async mirrors(): Promise<InvestorId[]> {
     await this.loadInvestor(this.investor, this.expire.mirror);
     const data = (await this.repo.retrieve(
-      this.investor.UserName + ".portfolio"
+      this.investor.UserName + ".portfolio",
     )) as PortfolioData;
     const portfolio: Portfolio = new Portfolio(data);
     return portfolio.investors();
@@ -168,7 +173,7 @@ export class Refresh {
     function onlyUnique(value: InvestorId, index: number, self: InvestorId[]) {
       return (
         index ===
-        self.findIndex((elem: InvestorId) => elem.UserName === value.UserName)
+          self.findIndex((elem: InvestorId) => elem.UserName === value.UserName)
       );
     }
 
@@ -181,7 +186,7 @@ export class Refresh {
 
     // Run in parallel
     await Promise.all(
-      uniq.map((investor: InvestorId) => this.loadInvestor(investor))
+      uniq.map((investor: InvestorId) => this.loadInvestor(investor)),
     );
 
     return this.fetchCount;
