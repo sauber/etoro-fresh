@@ -20,7 +20,7 @@ export class RepoHeapBackend extends RepoBackend {
     });
   }
 
-  public async has(assetname: string): Promise<boolean> {
+  public has(assetname: string): Promise<boolean> {
     return Promise.resolve(
       this.cache.some((asset: Asset) => (asset.name == assetname)),
     );
@@ -30,7 +30,7 @@ export class RepoHeapBackend extends RepoBackend {
     return new Promise((resolve) => {
       const date: DateFormat = today();
 
-      // Delete previous entry with same name/date;
+      // Delete previous entry with same name and date;
       const index = this.cache.findIndex((
         asset: Asset,
       ) => (asset.name == assetname && asset.date == date));

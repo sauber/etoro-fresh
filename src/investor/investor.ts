@@ -108,7 +108,7 @@ export class Investor {
     const stats = this.statsSeries;
     const stats_start: DateFormat = await stats.start();
 
-    // At least on stat must come before end of chart
+    // At least one stat must come before end of chart
     return stats_start <= chart_end ? chart_end : null;
   }
 

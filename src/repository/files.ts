@@ -96,7 +96,7 @@ export class Files {
     return dirs(this.path);
   }
 
-  /** List of all subdirectories */
+  /** List of all files in directory */
   public files(): Promise<string[]> {
     return files(this.path);
   }
@@ -143,5 +143,10 @@ export class Files {
     const mtime: Date | null = file.mtime;
     if (!mtime) throw new Error(`Cannot get mtime for ${fullPath}`);
     return (new Date()).getTime() - mtime.getTime();
+  }
+
+  /** Test if file exists */
+  public exists(filename: string): Promise<boolean> {
+    return exists(join(this.path, filename));
   }
 }

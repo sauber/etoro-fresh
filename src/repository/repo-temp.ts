@@ -12,8 +12,9 @@ export class RepoTempBackend extends RepoDiskBackend {
     return this._files;
   }
 
+  /** Delete files if created */
   public delete(): Promise<void> {
     if (this._files) return this._files.delete();
-    return new Promise((resolve) => resolve());
+    else return Promise.resolve();
   }
 }

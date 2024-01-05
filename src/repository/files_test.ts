@@ -12,8 +12,18 @@ Deno.test("write a file", async (t) => {
   const filename = "foo";
   const content = "bar";
 
+  await t.step("unwritten", async () => {
+    const exists = await files.exists(filename);
+    assertEquals(exists, false);
+  });
+
   await t.step("write", async () => {
     await files.write(filename, content);
+  });
+
+  await t.step("written", async () => {
+    const exists = await files.exists(filename);
+    assertEquals(exists, true);
   });
 
   await t.step("list files", async () => {
