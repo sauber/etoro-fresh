@@ -1,7 +1,7 @@
-import { TempBackend } from "📚/community/temp-backend.ts";
-import { Backend, InvestorObject } from "📚/community/backend.ts";
+import { TempBackend } from "./temp-backend.ts";
+import { Backend, InvestorObject } from "./backend.ts";
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
-import { investorData } from "📚/community/testdata.ts";
+import { investorData } from "./testdata.ts";
 
 Deno.test("Initialization", () => {
   const repo: Backend = new TempBackend();

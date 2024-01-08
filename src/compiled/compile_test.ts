@@ -1,8 +1,8 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { repoBackend } from "📚/repository/testdata.ts";
-import { Compile } from "📚/community/compile.ts";
-import { HeapBackend } from "📚/community/heap-backend.ts";
-import { TempBackend } from "📚/community/temp-backend.ts";
+import { Compile } from "./compile.ts";
+import { HeapBackend } from "./heap-backend.ts";
+import { TempBackend } from "./temp-backend.ts";
 
 // const dest = new HeapBackend();
 const dest = new TempBackend();

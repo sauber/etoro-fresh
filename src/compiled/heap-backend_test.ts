@@ -1,5 +1,5 @@
-import { HeapBackend } from "📚/community/heap-backend.ts";
-import { Backend, InvestorObject } from "📚/community/backend.ts";
+import { HeapBackend } from "./heap-backend.ts";
+import { Backend, InvestorObject } from "./backend.ts";
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 
 const data: InvestorObject = {

@@ -1,4 +1,4 @@
-import { Backend, InvestorObject } from "📚/community/backend.ts";
+import { Backend, InvestorObject } from "./backend.ts";
 import { TextSeries } from "📚/utils/series.ts";
 import { Files } from "📚/repository/files.ts";
 

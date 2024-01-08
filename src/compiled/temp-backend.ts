@@ -1,5 +1,5 @@
 import { Files } from "📚/repository/files.ts";
-import { DiskBackend } from "📚/community/disk-backend.ts";
+import { DiskBackend } from "./disk-backend.ts";
 
 export class TempBackend extends DiskBackend {
   constructor() {super("")}
