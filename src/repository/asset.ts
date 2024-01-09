@@ -13,15 +13,20 @@ export class Asset<AssetType> {
 
   /** On which dates is asset available */
   public async dates(): Promise<DateFormat[]> {
-    return (await this.repo.dirs()).filter(async (date: DateFormat) => {
-      const sub: Backend = await this.repo.sub(date);
-      return await sub.has(this.assetname);
-    });
+    const allDates: DateFormat[] = await this.repo.dirs();
+    const hasAsset: boolean[] = await Promise.all(
+      allDates.map((date) =>
+        this.repo.sub(date).then((sub) => sub.has(this.assetname))
+      )
+    );
+    const presentDates = allDates.filter((_date, index) => hasAsset[index]);
+    return presentDates;
   }
 
   /** At least one date must exist */
   private async validatedDates(): Promise<DateFormat[]> {
     const dates = await this.dates();
+    //console.log("Dates for", this.assetname, dates);
     if (dates.length < 1)
       throw new Error(`Asset ${this.assetname} is unavailable`);
     return dates;

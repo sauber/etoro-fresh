@@ -1,7 +1,6 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { FetchHeapBackend } from "./fetch-heap.ts";
-import { testAssets } from "./testdata.ts";
-import { investorId } from "/investor/testdata.ts";
+import { testAssets, investorId } from "./testdata.ts";
 
 Deno.test("Initialization", () => {
   const f: FetchHeapBackend = new FetchHeapBackend(testAssets);

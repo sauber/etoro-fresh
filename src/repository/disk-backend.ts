@@ -42,7 +42,10 @@ export class DiskBackend implements Backend {
   }
 
   public async has(assetname: AssetName): Promise<boolean> {
-    return exists(await this.filename(assetname));
+    const result: boolean = await exists(await this.filename(assetname))
+    //console.log('Backend', await this.path(), 'has', assetname, ':', result);
+    //return exists(await this.filename(assetname));
+    return result;
   }
 
   public async names(): Promise<AssetNames> {

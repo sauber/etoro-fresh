@@ -1,7 +1,7 @@
 import type { DiscoverFilter } from "./mod.ts";
 import { FetchBackend } from "./mod.ts";
 import type { JSONObject } from "/repository/mod.ts";
-import type { InvestorId } from "/investor/mod.ts";
+import type { InvestorId } from "./mod.ts";
 
 export type Assets = Record<string, JSONObject>;
 
@@ -10,18 +10,18 @@ export class FetchHeapBackend implements FetchBackend {
   constructor(private readonly assets: Assets) {}
 
   public discover(_filter: DiscoverFilter): Promise<JSONObject> {
-    return new Promise((resolve) => resolve(this.assets.discover));
+    return Promise.resolve(this.assets.discover);
   }
 
   public chart(_investor: InvestorId): Promise<JSONObject> {
-    return new Promise((resolve) => resolve(this.assets.chart));
+    return Promise.resolve(this.assets.chart);
   }
 
   public portfolio(_investor: InvestorId): Promise<JSONObject> {
-    return new Promise((resolve) => resolve(this.assets.portfolio));
+    return Promise.resolve(this.assets.portfolio);
   }
 
   public stats(_investor: InvestorId): Promise<JSONObject> {
-    return new Promise((resolve) => resolve(this.assets.stats));
+    return Promise.resolve(this.assets.stats);
   }
 }
