@@ -19,6 +19,20 @@ export class Asset<AssetType> {
     });
   }
 
+  /** At least one date must exist */
+  private async validatedDates(): Promise<DateFormat[]> {
+    const dates = await this.dates();
+    if (dates.length < 1)
+      throw new Error(`Asset ${this.assetname} is unavailable`);
+    return dates;
+  }
+
+  /** Verify if least one date exists */
+  public async exists(): Promise<boolean> {
+    if ((await this.dates()).length > 0) return true;
+    else return false;
+  }
+
   public async store(content: AssetType): Promise<void> {
     const sub: Backend = await this.repo.sub(today());
     return sub.store(this.assetname, content as JSONObject);
@@ -30,12 +44,12 @@ export class Asset<AssetType> {
   }
 
   public async start(): Promise<DateFormat> {
-    const dates: DateFormat[] = await this.dates();
+    const dates: DateFormat[] = await this.validatedDates();
     return dates[0];
   }
 
   public async end(): Promise<DateFormat> {
-    const dates: DateFormat[] = await this.dates();
+    const dates: DateFormat[] = await this.validatedDates();
     return dates.reverse()[0];
   }
 
@@ -50,7 +64,7 @@ export class Asset<AssetType> {
   /** Search for asset no later than date */
   public async before(date: DateFormat): Promise<AssetType> {
     // Available dates
-    const dates: DateFormat[] = await this.dates();
+    const dates: DateFormat[] = await this.validatedDates();
     const start: DateFormat = dates[0];
     const end: DateFormat = dates[dates.length - 1];
 
@@ -74,7 +88,7 @@ export class Asset<AssetType> {
   /** Search for asset no sooner than date */
   public async after(date: DateFormat): Promise<AssetType> {
     // Available dates
-    const dates: DateFormat[] = await this.dates();
+    const dates: DateFormat[] = await this.validatedDates();
     const start: DateFormat = dates[0];
     const end: DateFormat = dates[dates.length - 1];
 

@@ -17,15 +17,17 @@ export class Config {
     return new Config(this.repo, defaults);
   }
 
-  private last(): Promise<JSONObject> {
-    return this.asset.last();
+  /** Most recent saved config, or new blank */
+  private async last(): Promise<JSONObject> {
+    if (await this.asset.exists()) return this.asset.last();
+    else return {};
   }
 
   /** Return a single value */
-  async get(key: string): Promise<JSONValue> {
+  public async get(key: string): Promise<JSONValue> {
     // Attempt to read from file
     const data: JSONObject = await this.last();
-    if (data && key in data) return data[key];
+    if (key in data) return data[key];
 
     // Defaults defined?
     if (key in this.defaults) return this.defaults[key];
@@ -35,14 +37,9 @@ export class Config {
   }
 
   /** Set or overwrite a single value */
-  async set(key: string, value: JSONValue): Promise<void> {
+  public async set(key: string, value: JSONValue): Promise<void> {
     const data: JSONObject = await this.last();
-    if (data) {
-      data[key] = value;
-      return this.asset.store(data);
-    } else {
-      console.log('Storing new config object');
-      return this.asset.store({ key: value });
-    }
+    data[key] = value;
+    return this.asset.store(data);
   }
 }

@@ -26,19 +26,13 @@ Deno.test("Store and retrieve asset", async (t) => {
 
   await t.step("No initial dates", async () => {
     assertEquals(await asset.dates(), []);
+    assertEquals(await asset.exists(), false);
   });
-
-  await t.step("Retrieve before defined", async () => {
-    const last: TestAsset = await asset.last();
-    assertEquals(last, undefined);
-    assertEquals(await asset.dates(), []);
-  });
-
-
 
   await t.step("Store data", async () => {
     const date: DateFormat = today();
     asset.store(content);
+    assertEquals(await asset.exists(), true);
     assertEquals(await asset.dates(), [date]);
     assertEquals(await asset.start(), date);
     assertEquals(await asset.end(), date);
