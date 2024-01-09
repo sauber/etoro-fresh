@@ -11,6 +11,9 @@ _fresh/
 # Cache of node modules
 node_modules
 
-# Profiling
+# Generated files
+ranking.model.json
+
+# V8 profiling output
 isolate-*.log
 profile.txt

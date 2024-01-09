@@ -2,45 +2,76 @@
 // This file SHOULD be checked into source version control.
 // This file is automatically updated during development when running `dev.ts`.
 
-import * as $0 from "./routes/_404.tsx";
-import * as $1 from "./routes/_app.tsx";
-import * as $2 from "./routes/api/investor/_middleware.ts";
-import * as $3 from "./routes/api/investor/end.ts";
-import * as $4 from "./routes/api/investor/names/last.ts";
-import * as $5 from "./routes/api/joke.ts";
-import * as $6 from "./routes/api/login.ts";
-import * as $7 from "./routes/greet/[name].tsx";
-import * as $8 from "./routes/index.tsx";
-import * as $9 from "./routes/login.tsx";
-import * as $10 from "./routes/posts/[id]/edit.tsx";
-import * as $11 from "./routes/posts/[id]/index.tsx";
-import * as $12 from "./routes/posts/new.tsx";
-import * as $$0 from "./islands/Counter.tsx";
-import * as $$1 from "./islands/LoginForm.tsx";
-import * as $$2 from "./islands/investor/List.tsx";
+import * as $_404 from "./routes/_404.tsx";
+import * as $_app from "./routes/_app.tsx";
+import * as $_layout from "./routes/_layout.tsx";
+import * as $about from "./routes/about.tsx";
+import * as $api_investor_username_stats from "./routes/api/investor/[username]/stats.ts";
+import * as $api_investor_middleware from "./routes/api/investor/_middleware.ts";
+import * as $api_investor_end from "./routes/api/investor/end.ts";
+import * as $api_investor_names from "./routes/api/investor/names.ts";
+import * as $api_investor_rank from "./routes/api/investor/rank.ts";
+import * as $api_joke from "./routes/api/joke.ts";
+import * as $api_login from "./routes/api/login.ts";
+import * as $chart from "./routes/chart.tsx";
+import * as $community from "./routes/community.tsx";
+import * as $examples from "./routes/examples.tsx";
+import * as $greet_name_ from "./routes/greet/[name].tsx";
+import * as $index from "./routes/index.tsx";
+import * as $investor_username_ from "./routes/investor/[username].tsx";
+import * as $login from "./routes/login.tsx";
+import * as $posts from "./routes/posts.tsx";
+import * as $posts_id_edit from "./routes/posts/[id]/edit.tsx";
+import * as $posts_id_index from "./routes/posts/[id]/index.tsx";
+import * as $posts_new from "./routes/posts/new.tsx";
+import * as $Chart from "./islands/Chart.tsx";
+import * as $Counter from "./islands/Counter.tsx";
+import * as $LoginForm from "./islands/LoginForm.tsx";
+import * as $PostItem from "./islands/PostItem.tsx";
+import * as $investor_InvestorAvatar from "./islands/investor/InvestorAvatar.tsx";
+import * as $investor_InvestorCell from "./islands/investor/InvestorCell.tsx";
+import * as $investor_InvestorItem from "./islands/investor/InvestorItem.tsx";
+import * as $investor_InvestorList from "./islands/investor/InvestorList.tsx";
+import * as $investor_List from "./islands/investor/List.tsx";
+import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
   routes: {
-    "./routes/_404.tsx": $0,
-    "./routes/_app.tsx": $1,
-    "./routes/api/investor/_middleware.ts": $2,
-    "./routes/api/investor/end.ts": $3,
-    "./routes/api/investor/names/last.ts": $4,
-    "./routes/api/joke.ts": $5,
-    "./routes/api/login.ts": $6,
-    "./routes/greet/[name].tsx": $7,
-    "./routes/index.tsx": $8,
-    "./routes/login.tsx": $9,
-    "./routes/posts/[id]/edit.tsx": $10,
-    "./routes/posts/[id]/index.tsx": $11,
-    "./routes/posts/new.tsx": $12,
+    "./routes/_404.tsx": $_404,
+    "./routes/_app.tsx": $_app,
+    "./routes/_layout.tsx": $_layout,
+    "./routes/about.tsx": $about,
+    "./routes/api/investor/[username]/stats.ts": $api_investor_username_stats,
+    "./routes/api/investor/_middleware.ts": $api_investor_middleware,
+    "./routes/api/investor/end.ts": $api_investor_end,
+    "./routes/api/investor/names.ts": $api_investor_names,
+    "./routes/api/investor/rank.ts": $api_investor_rank,
+    "./routes/api/joke.ts": $api_joke,
+    "./routes/api/login.ts": $api_login,
+    "./routes/chart.tsx": $chart,
+    "./routes/community.tsx": $community,
+    "./routes/examples.tsx": $examples,
+    "./routes/greet/[name].tsx": $greet_name_,
+    "./routes/index.tsx": $index,
+    "./routes/investor/[username].tsx": $investor_username_,
+    "./routes/login.tsx": $login,
+    "./routes/posts.tsx": $posts,
+    "./routes/posts/[id]/edit.tsx": $posts_id_edit,
+    "./routes/posts/[id]/index.tsx": $posts_id_index,
+    "./routes/posts/new.tsx": $posts_new,
   },
   islands: {
-    "./islands/Counter.tsx": $$0,
-    "./islands/LoginForm.tsx": $$1,
-    "./islands/investor/List.tsx": $$2,
+    "./islands/Chart.tsx": $Chart,
+    "./islands/Counter.tsx": $Counter,
+    "./islands/LoginForm.tsx": $LoginForm,
+    "./islands/PostItem.tsx": $PostItem,
+    "./islands/investor/InvestorAvatar.tsx": $investor_InvestorAvatar,
+    "./islands/investor/InvestorCell.tsx": $investor_InvestorCell,
+    "./islands/investor/InvestorItem.tsx": $investor_InvestorItem,
+    "./islands/investor/InvestorList.tsx": $investor_InvestorList,
+    "./islands/investor/List.tsx": $investor_List,
   },
   baseUrl: import.meta.url,
-};
+} satisfies Manifest;
 
 export default manifest;

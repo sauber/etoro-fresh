@@ -1,11 +1,11 @@
-import { assert } from "assert";
+import { assert } from "$std/assert/mod.ts";
 import type { InvestorId } from "/investor/mod.ts";
 
 export type DiscoverData = {
   Status: string;
   TotalRows: number;
   Items: InvestorId[];
-}
+};
 
 export class Discover {
   constructor(private readonly raw: DiscoverData) {}

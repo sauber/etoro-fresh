@@ -1,8 +1,10 @@
-export { Config } from "./config.ts";
-export { Repo } from "./repo.ts";
-export { RepoDiskBackend } from "./repo-disk.ts";
-export { RepoBackend } from "./repo-backend.ts";
-export { Asset } from "./asset.ts";
+export { Journal } from "📚/repository/journal.ts";
+export { Asset } from "📚/repository/asset.ts";
+export { Backend } from "📚/repository/backend.ts";
+export { DiskBackend } from "📚/repository/disk-backend.ts";
+export { TempBackend } from "📚/repository/temp-backend.ts";
+export { HeapBackend } from "📚/repository/heap-backend.ts";
+
 
 export type JSONValue =
   | string
@@ -15,3 +17,6 @@ export type JSONValue =
 export type JSONObject = {
   [key: string]: JSONValue;
 };
+
+export type AssetName = string;
+export type AssetNames = Array<AssetName>;

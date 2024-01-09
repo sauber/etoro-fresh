@@ -1,16 +1,32 @@
-import { DateFormat, DateSeriesAsync } from "/utils/time/mod.ts";
-import { RepoBackend } from "./mod.ts";
+import type { DateFormat } from "/utils/time/mod.ts";
+import { today } from "📚/utils/time/mod.ts";
+import { Backend } from "./backend.ts";
+import type { AssetName } from "📚/repository/mod.ts";
+import type { JSONObject } from "📚/repository/mod.ts";
 
 /** A named asset in repo on all the dates it is available */
-export class Asset<AssetType> implements DateSeriesAsync<AssetType> {
-  constructor(private readonly repo: RepoBackend, private readonly assetname: string) {}
+export class Asset<AssetType> {
+  constructor(
+    private readonly assetname: AssetName,
+    private readonly repo: Backend
+  ) {}
 
-  private async load(date: DateFormat): Promise<AssetType> {
-    return (await this.repo.retrieve(this.assetname, date)) as AssetType;
+  /** On which dates is asset available */
+  public async dates(): Promise<DateFormat[]> {
+    return (await this.repo.dirs()).filter(async (date: DateFormat) => {
+      const sub: Backend = await this.repo.sub(date);
+      return await sub.has(this.assetname);
+    });
   }
 
-  public dates(): Promise<DateFormat[]> {
-    return this.repo.datesByAsset(this.assetname);
+  public async store(content: AssetType): Promise<void> {
+    const sub: Backend = await this.repo.sub(today());
+    return sub.store(this.assetname, content as JSONObject);
+  }
+
+  private async retrieve(date: DateFormat): Promise<AssetType> {
+    const sub: Backend = await this.repo.sub(date);
+    return (await sub.retrieve(this.assetname)) as AssetType;
   }
 
   public async start(): Promise<DateFormat> {
@@ -24,26 +40,57 @@ export class Asset<AssetType> implements DateSeriesAsync<AssetType> {
   }
 
   public async first(): Promise<AssetType> {
-    return this.load(await this.start());
+    return this.retrieve(await this.start());
   }
 
   public async last(): Promise<AssetType> {
-    return this.load(await this.end());
+    return this.retrieve(await this.end());
   }
 
   /** Search for asset no later than date */
-  public async value(date: DateFormat): Promise<AssetType> {
-    // After range
-    if ( date >= await this.end() ) return this.last();
-
-    // In range
+  public async before(date: DateFormat): Promise<AssetType> {
+    // Available dates
     const dates: DateFormat[] = await this.dates();
-    for ( const available of dates.reverse() ) {
-      if ( available <= date ) return this.load(available);
+    const start: DateFormat = dates[0];
+    const end: DateFormat = dates[dates.length - 1];
+
+    // Outside range
+    if (date >= end) return this.retrieve(end);
+    if (date < start) {
+      throw new Error(
+        `´Searching for asset before ${date} but first date is ${start}`
+      );
     }
 
-    // Before range (dummy code never called, to satisfy return type)
-    return this.first();
+    // In range
+    for (const available of dates.reverse()) {
+      if (available <= date) return this.retrieve(available);
+    }
+
+    console.log(this.assetname, { dates, start, end, date });
+    throw new Error("This code should never be reached");
   }
 
+  /** Search for asset no sooner than date */
+  public async after(date: DateFormat): Promise<AssetType> {
+    // Available dates
+    const dates: DateFormat[] = await this.dates();
+    const start: DateFormat = dates[0];
+    const end: DateFormat = dates[dates.length - 1];
+
+    // Outside range
+    if (date > end) {
+      throw new Error(
+        `´Searching for ${this.assetname} after ${date} but latest date is ${end}`
+      );
+    }
+    if (date <= start) return this.retrieve(start);
+
+    // In range
+    for (const available of dates) {
+      if (available >= date) return this.retrieve(available);
+    }
+
+    throw new Error("This code should never be reached");
+  }
 }

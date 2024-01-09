@@ -2,7 +2,7 @@
   "deno.enable": true,
   "deno.lint": true,
   "deno.config": "./deno.json",
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.defaultFormatter": "denoland.vscode-deno",
   "[typescriptreact]": {
     "editor.defaultFormatter": "denoland.vscode-deno"
   },
@@ -17,5 +17,8 @@
   },
   "[css]": {
     "editor.defaultFormatter": "vscode.css-language-features"
+  },
+  "editor.quickSuggestions": {
+    "strings": "on"
   }
 }

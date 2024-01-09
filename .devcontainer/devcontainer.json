@@ -19,10 +19,9 @@
       }
     },
     "extensions": [
-      "akil-s.tokyo-light",
       "denoland.vscode-deno",
-      "sastan.twind-intellisense",
-      "esbenp.prettier-vscode"
+      "bradlc.vscode-tailwindcss",
+      "ms-vscode.vscode-typescript-next"
     ],
     "vscode": {
       "settings": {
@@ -44,8 +43,11 @@
         },
         "[css]": {
           "editor.defaultFormatter": "vscode.css-language-features"
+        },
+        "editor.quickSuggestions": {
+          "strings": "on"
         }
       }
     }
-  }
+	}
 }

@@ -1,13 +1,14 @@
-import { assert } from "assert";
-import { DateFormat, today } from "/utils/time/mod.ts";
+import type { DateFormat } from "/utils/time/mod.ts";
+import { formatDate, today } from "/utils/time/mod.ts";
+import { ChartSeries } from "./chart-series.ts";
 
 type ChartEntry = {
-  "timestamp": string;
-  "credit": number;
-  "investment": number;
-  "pnL": number;
-  "equity": number;
-  "totalDividends": number;
+  timestamp: string;
+  credit: number;
+  investment: number;
+  pnL: number;
+  equity: number;
+  totalDividends: number;
 };
 
 export type ChartData = {
@@ -39,8 +40,17 @@ export class Chart {
 
   public validate(): boolean {
     const todayDate = today();
-    assert(this.count > 365, "Too few dates in chart");
-    assert(this.end <= todayDate, "Last date is in the future");
+    if (this.count <= 365) throw new Error("Too few dates in chart");
+    if (this.end > todayDate) throw new Error("Last date is in the future");
     return true;
+  }
+
+  /** All values as a DateSeries */
+  public series(): ChartSeries {
+    const entries: ChartEntry[] = this.list;
+    const timestamp: string = entries[0].timestamp;
+    const firstDate: DateFormat = formatDate(new Date(timestamp).getTime());
+    const values = entries.map((entry) => entry.equity);
+    return new ChartSeries(values, firstDate);
   }
 }

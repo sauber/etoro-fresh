@@ -1,8 +1,6 @@
 {
   "recommendations": [
-    "akil-s.tokyo-light",
     "denoland.vscode-deno",
-    "sastan.twind-intellisense",
-    "esbenp.prettier-vscode"
+    "bradlc.vscode-tailwindcss",
   ]
 }

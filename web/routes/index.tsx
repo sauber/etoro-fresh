@@ -1,16 +1,12 @@
-import InvestorList from "../islands/investor/List.tsx";
+import Feature from "📦/Feature.tsx";
 
-export default function Home() {
-  const date = new Date();
-  date.setMinutes(date.getMinutes() + 1);
-
+export default function IndexPage() {
   return (
-    <div class="p-4 mx-auto max-w-screen-md">
-      <h1 class="my-6 text-3xl">
-        Welcome to `🥤 Fresh Blogs 🍋`!
-      </h1>
-      <p class="my-6">Fresh ideas everyday</p>
-      <InvestorList target={date.toISOString()} />
-    </div>
+    <main>
+      <Feature>
+        <h1>Welcome</h1>
+        <p>Analyse investors on Etoro and assist in picking which to copy.</p>
+      </Feature>
+    </main>
   );
 }

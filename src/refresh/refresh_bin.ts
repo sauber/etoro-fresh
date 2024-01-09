@@ -1,31 +1,21 @@
 import { RepoDiskBackend } from "/repository/repo-disk.ts";
-import { FetchRateLimitingBackend } from "/repository/fetch-ratelimit.ts";
+import { FetchWebBackend } from "./fetch-web.ts";
 import { Refresh } from "./refresh.ts";
-import type { DiscoverParams } from "/discover/discover.d.ts";
-import type { InvestorId } from "/investor/investor.d.ts";
-import { Config } from "/repository/config.ts";
+import { Config } from "../config/config.ts";
 import { Repo } from "/repository/repo.ts";
+import type { InvestorId } from "/investor/mod.ts";
+import type { DiscoverFilter } from "./mod.ts";
 
-const path = Deno.args[0];
-const backend = new RepoDiskBackend(path);
-const repo = new Repo(backend);
+const path: string = Deno.args[0];
+const backend: RepoDiskBackend = new RepoDiskBackend(path);
+const repo: Repo = new Repo(backend);
 
 const config: Config = repo.config;
+const id = await config.get("investor") as InvestorId;
+const filter = await config.get("discover") as DiscoverFilter;
+const rate = await config.get("rate") as number;
 
-const UserName = await config.get("UserName") as string;
-const CustomerId = await config.get("CustomerId") as number;
-const investorId: InvestorId = { UserName, CustomerId };
-
-const risk = await config.get("discover_risk") as number;
-const daily = await config.get("discover_daily") as number;
-const weekly = await config.get("discover_daily") as number;
-const discoverOptions: DiscoverParams = { risk, daily, weekly };
-
-const rate = await config.get("fetch_delay") as number;
-console.log(`Fetch delay is ${rate}`);
-const fetcher: FetchRateLimitingBackend = new FetchRateLimitingBackend(rate);
-
-const refresh = new Refresh(backend, fetcher, investorId, discoverOptions);
-
+const fetcher: FetchWebBackend = new FetchWebBackend(rate);
+const refresh: Refresh = new Refresh(backend, fetcher, id, filter);
 const count: number = await refresh.run();
 console.log(`Assets downloaded: ${count}`);
