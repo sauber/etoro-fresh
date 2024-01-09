@@ -1,5 +1,5 @@
 import type { DateFormat } from "/utils/time/mod.ts";
-import { repoBackend } from "/repository/testdata.ts";
+import { repoBackend } from "../repository/old/testdata.ts";
 import { ChartSeries, Community, Investor } from "/investor/mod.ts";
 import { Position } from "./position.ts";
 

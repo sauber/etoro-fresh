@@ -1,5 +1,5 @@
-import { config, repoBackend } from "/repository/testdata.ts";
-export { config } from "/repository/testdata.ts";
+import { config, repoBackend } from "../repository/old/testdata.ts";
+export { config } from "../repository/old/testdata.ts";
 import type { JSONObject } from "../repository/mod.ts";
 import { Assets } from "./fetch-heap.ts";
 import { investorId } from "/investor/testdata.ts";

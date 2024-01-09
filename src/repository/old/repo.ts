@@ -1,4 +1,4 @@
-import { Config } from "./config.ts";
+import { Config } from "../config/config.ts";
 import type { RepoBackend } from "./mod.ts";
 
 /** Factory of objects based on assets in inventory */

@@ -1,7 +1,7 @@
 import { assertInstanceOf } from "$std/assert/mod.ts";
-import { RepoHeapBackend } from "./repo-heap.ts";
-import { Repo } from "./repo.ts";
-import { Config } from "./config.ts";
+import { RepoHeapBackend } from "../old/repo-heap.ts";
+import { Repo } from "../old/repo.ts";
+import { Config } from "../../config/config.ts";
 
 Deno.test("Initialization", () => {
   const backend = new RepoHeapBackend();

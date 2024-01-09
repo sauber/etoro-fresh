@@ -1,5 +1,5 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
-import { repoBackend } from "📚/repository/testdata.ts";
+import { repoBackend } from "../repository/old/testdata.ts";
 import { Compile } from "./compile.ts";
 import { HeapBackend } from "./heap-backend.ts";
 import { TempBackend } from "./temp-backend.ts";

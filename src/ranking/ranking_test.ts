@@ -1,5 +1,5 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
-import { repoBackend } from "/repository/testdata.ts";
+import { repoBackend } from "../repository/old/testdata.ts";
 import { investorId } from "/investor/testdata.ts";
 import { Ranking } from "./ranking.ts";
 import { TextSeries } from "/utils/series.ts";

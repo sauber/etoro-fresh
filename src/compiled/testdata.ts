@@ -1,5 +1,5 @@
-import { InvestorObject } from "./backend.ts";
-export { repoBackend as rawBackend } from "📚/repository/testdata.ts";
+import { InvestorObject } from "../repository/backend.ts";
+export { repoBackend as rawBackend } from "../repository/old/testdata.ts";
 
 export const investorData: InvestorObject = {
   UserName: "foo",

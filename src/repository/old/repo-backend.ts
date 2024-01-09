@@ -1,6 +1,6 @@
 import { DateFormat } from "/utils/time/mod.ts";
-import { JSONObject } from "./mod.ts";
-import { Asset } from "./asset.ts";
+import { JSONObject } from "../mod.ts";
+import { Asset } from "../asset.ts";
 
 export abstract class RepoBackend {
   /** Delete whole repo */
@@ -15,7 +15,7 @@ export abstract class RepoBackend {
   /** Retrieve asset and specific date, or latest available */
   abstract retrieve(
     assetname: string,
-    date?: DateFormat,
+    date?: DateFormat
   ): Promise<JSONObject | null>;
 
   /** Age of latest storage of asset */

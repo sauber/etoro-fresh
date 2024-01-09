@@ -1,5 +1,5 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
-import { Files } from "./files.ts";
+import { Files } from "../files.ts";
 
 Deno.test("create and remove tmpdir", async () => {
   const files: Files = await Files.tmp();

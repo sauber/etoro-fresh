@@ -1,11 +1,11 @@
 import { assertEquals } from "$std/assert/mod.ts";
-import { RepoHeapBackend } from "./repo-heap.ts";
-import { JSONValue } from "./mod.ts";
-import { Config } from "./config.ts";
+import { HeapBackend } from "📚/repository/mod.ts";
+import type { JSONValue } from "../repository/mod.ts";
+import { Config } from "📚/config/config.ts";
 
 Deno.test("Config", async (t) => {
-  const backend = new RepoHeapBackend();
-  const config: Config = new Config(backend);
+  const repo = new HeapBackend();
+  const config: Config = new Config(repo);
 
   await t.step("get unknown value", async () => {
     const value: JSONValue = await config.get("foo");
@@ -14,6 +14,7 @@ Deno.test("Config", async (t) => {
 
   await t.step("set and get value", async () => {
     await config.set("foo", "bar");
+    console.log(config);
     const value: JSONValue = await config.get("foo");
     assertEquals(value, "bar");
   });

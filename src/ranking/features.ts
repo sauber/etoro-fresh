@@ -1,7 +1,7 @@
 import { DateFormat } from "/utils/time/mod.ts";
 import { ChartSeries, Community, Investor } from "/investor/mod.ts";
 import type { Names, StatsData } from "/investor/mod.ts";
-import { Asset } from "/repository/mod.ts";
+import { JournaledAsset } from "/repository/mod.ts";
 import { ProgressBar } from "/utils/time/progressbar.ts";
 import { DataFrame } from "/utils/dataframe.ts";
 
@@ -10,7 +10,7 @@ type FeatureData = Record<string, number>;
 /** Load raw data for investor */
 class FeatureLoader {
   /** List of all stats files */
-  private readonly allStats: Asset<StatsData>;
+  private readonly allStats: JournaledAsset<StatsData>;
 
   constructor(private readonly investor: Investor) {
     this.allStats = investor.statsSeries;
@@ -54,7 +54,7 @@ class FeatureLoader {
 export class Extract {
   constructor(
     private readonly chart: ChartSeries,
-    private readonly stats: StatsData,
+    private readonly stats: StatsData
   ) {}
 
   /** Number of days between start and end */
@@ -151,7 +151,7 @@ export class Features {
   private async addInvestor(
     list: FeatureData[],
     username: string,
-    bar: ProgressBar,
+    bar: ProgressBar
   ): Promise<void> {
     await bar.inc();
     if (await this.investor(username).isValid()) {
@@ -171,7 +171,7 @@ export class Features {
     await Promise.all(
       names.values.map((name: string) =>
         this.addInvestor(list, name as string, bar)
-      ),
+      )
     );
     bar.finish();
     //console.log(`Found ${list.length} valid investors`);

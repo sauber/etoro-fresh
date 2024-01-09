@@ -6,7 +6,7 @@ import {
 } from "$std/assert/mod.ts";
 import { Discover, DiscoverData } from "./discover.ts";
 import type { InvestorId } from "/investor/mod.ts";
-import { repoBackend } from "/repository/testdata.ts";
+import { repoBackend } from "../repository/old/testdata.ts";
 
 Deno.test("Discover", async (t) => {
   const discover: Discover = new Discover({

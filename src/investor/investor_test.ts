@@ -4,7 +4,7 @@ import {
   assertInstanceOf,
 } from "$std/assert/mod.ts";
 import { Investor } from "./investor.ts";
-import { repoBackend } from "/repository/testdata.ts";
+import { repoBackend } from "../repository/old/testdata.ts";
 import { ChartSeries } from "./chart-series.ts";
 import type { InvestorExport } from "./mod.ts";
 import type { DateFormat } from "/utils/time/mod.ts";

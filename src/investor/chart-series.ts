@@ -144,7 +144,10 @@ export class ChartSeries implements DateSeries<number> {
     );
   }
 
-  /** Sharpe Ratio, riskfree is annual riskfree return, for example 0.05 */
+  /** 
+   * Sharpe Ratio, riskfree is annual riskfree return, for example 0.05
+   * TODO: Research if other similar indicator are better for this project
+   */
   public sharpeRatio(riskfree: number): number {
     // Daily benchmark and daily average profit
     const profit = (this.last() / this.first() - 1) / (this.length - 1);

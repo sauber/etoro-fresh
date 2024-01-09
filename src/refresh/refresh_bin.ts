@@ -1,7 +1,7 @@
 import { RepoDiskBackend } from "/repository/repo-disk.ts";
 import { FetchWebBackend } from "./fetch-web.ts";
 import { Refresh } from "./refresh.ts";
-import { Config } from "/repository/config.ts";
+import { Config } from "../config/config.ts";
 import { Repo } from "/repository/repo.ts";
 import type { InvestorId } from "/investor/mod.ts";
 import type { DiscoverFilter } from "./mod.ts";

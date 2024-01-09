@@ -1,4 +1,4 @@
-import { config, repoBackend } from "/repository/testdata.ts";
+import { config, repoBackend } from "../repository/old/testdata.ts";
 import type { InvestorId } from "/investor/mod.ts";
 import type { ChartData } from "./chart.ts";
 import type { PortfolioData } from "./portfolio.ts";

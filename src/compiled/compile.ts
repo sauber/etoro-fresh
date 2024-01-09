@@ -1,11 +1,11 @@
 import { RepoBackend } from "📚/repository/repo-backend.ts";
-import { Backend } from "./backend.ts";
+import { Backend } from "../repository/backend.ts";
 import type { Names } from "📚/investor/mod.ts";
 import type { DateFormat } from "📚/utils/time/mod.ts";
 import { TextSeries } from "📚/utils/series.ts";
 import { Investor } from "📚/investor/mod.ts";
 import type { StatsData as RawStats } from "📚/investor/mod.ts";
-import type { InvestorObject, InvestorStats } from "./backend.ts";
+import type { InvestorObject, InvestorStats } from "../repository/backend.ts";
 
 /** Scan all date directories and assemble investor objects */
 export class Compile {
