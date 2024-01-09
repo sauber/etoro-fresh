@@ -14,7 +14,6 @@ Deno.test("Config", async (t) => {
 
   await t.step("set and get value", async () => {
     await config.set("foo", "bar");
-    console.log(config);
     const value: JSONValue = await config.get("foo");
     assertEquals(value, "bar");
   });

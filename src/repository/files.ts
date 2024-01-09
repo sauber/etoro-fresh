@@ -31,14 +31,14 @@ export function write(path: string, content: string): Promise<void> {
 }
 
 /** Wrapper for creating directory */
-// async function mkdir(path: string): Promise<void> {
-//   try {
-//     await Deno.stat(path);
-//   } catch {
-//     await Deno.mkdir(path, { recursive: true });
-//     await Deno.stat(path);
-//   }
-// }
+async function mkdir(path: string): Promise<void> {
+  try {
+    await Deno.stat(path);
+  } catch {
+    await Deno.mkdir(path, { recursive: true });
+    await Deno.stat(path);
+  }
+}
 
 /** Get list of sub-directories, sorted */
 export async function dirs(path: string): Promise<string[]> {
@@ -62,7 +62,8 @@ export async function files(path: string): Promise<string[]> {
 }
 
 /** Create a temporary directory */
-export function mktmpdir(): Promise<string> {
+export async function mktmpdir(): Promise<string> {
+  await mkdir('tmp');
   return Deno.makeTempDir({ dir: "tmp" });
 }
 
