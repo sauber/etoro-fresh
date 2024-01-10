@@ -15,11 +15,6 @@ export async function exists(filename: string): Promise<boolean> {
   }
 }
 
-/** Wrapper for stat system call */
-// function stat(path: string) {
-//   return Deno.stat(path);
-// }
-
 /** Read a file */
 export function read(path: string): Promise<string> {
   return Deno.readTextFile(path);
@@ -31,7 +26,7 @@ export function write(path: string, content: string): Promise<void> {
 }
 
 /** Wrapper for creating directory */
-async function mkdir(path: string): Promise<void> {
+export async function mkdir(path: string): Promise<void> {
   try {
     await Deno.stat(path);
   } catch {
@@ -63,7 +58,7 @@ export async function files(path: string): Promise<string[]> {
 
 /** Create a temporary directory */
 export async function mktmpdir(): Promise<string> {
-  await mkdir('tmp');
+  await mkdir("tmp");
   return Deno.makeTempDir({ dir: "tmp" });
 }
 
@@ -72,12 +67,11 @@ export function rmdir(path: string): Promise<void> {
   return Deno.remove(path, { recursive: true });
 }
 
-  /** Age of most recent file in milliseconds */
+/** Age of most recent file in milliseconds */
 export async function age(path: string): Promise<number> {
-    const file = await Deno.stat(path);
-    const mtime: Date | null = file.mtime;
-    if (!mtime) throw new Error(`Stat for ${path} has no mtime`);
-    const now = new Date().getTime();
-    return now - mtime.getTime();
-  }
-
+  const file = await Deno.stat(path);
+  const mtime: Date | null = file.mtime;
+  if (!mtime) throw new Error(`Stat for ${path} has no mtime`);
+  const now = new Date().getTime();
+  return now - mtime.getTime();
+}
