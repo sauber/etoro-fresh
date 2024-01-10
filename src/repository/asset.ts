@@ -38,6 +38,13 @@ export class Asset<AssetType> {
     else return false;
   }
 
+  /** Age of most recent asset */
+  public async age(): Promise<number> {
+    const end: DateFormat = await this.end();
+    const sub: Backend = await this.repo.sub(end);
+    return sub.age(this.assetname);
+  }
+
   public async store(content: AssetType): Promise<void> {
     const sub: Backend = await this.repo.sub(today());
     return sub.store(this.assetname, content as JSONObject);
