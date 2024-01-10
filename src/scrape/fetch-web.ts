@@ -10,7 +10,6 @@ import type { StatsData } from "./stats.ts";
 import { DiscoverFilter, FetchBackend } from "./mod.ts";
 import type { InvestorId } from "./mod.ts";
 
-
 /** Fetch objects from eToro API */
 export class FetchWebBackend implements FetchBackend {
   private readonly url = new FetchURL();

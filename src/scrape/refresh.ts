@@ -166,7 +166,7 @@ export class Refresh {
     );
   }
 
-    /** Load all data for an investor */
+  /** Load all data for an investor */
   private loadInvestor(
     investor: InvestorId,
     expire: number = this.expire.portfolio
@@ -178,7 +178,7 @@ export class Refresh {
     ]);
   }
 
-    /** Extract list of mirrors for root investor */
+  /** Extract list of mirrors for root investor */
   private async mirrors(): Promise<InvestorId[]> {
     // First download updated data for investor and save to repo
     await this.loadInvestor(this.investor, this.expire.mirror);
@@ -192,7 +192,6 @@ export class Refresh {
     const portfolio: Portfolio = new Portfolio(data);
     return portfolio.investors();
   }
-
 
   public async run(max?: number): Promise<number> {
     function onlyUnique(value: InvestorId, index: number, self: InvestorId[]) {
