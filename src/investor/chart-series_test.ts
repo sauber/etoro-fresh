@@ -58,34 +58,14 @@ Deno.test("Invalid range", () => {
   assertThrows(
     () => chart.value(nextDate(dates[0], -1)),
     Error,
-    "Date not in range: 2023-10-30 < 2023-10-29 < 2023-11-02",
+    "Date not in range: 2023-10-30 < 2023-10-29 < 2023-11-02"
   );
 
   // After range
   assertThrows(
     () => chart.value(nextDate(dates[dates.length - 1], 1)),
     Error,
-    "Date not in range: 2023-10-30 < 2023-11-03 < 2023-11-02",
-  );
-});
-
-Deno.test("Combine series", () => {
-  const sooner = new ChartSeries([10, 20], "2023-10-31");
-  const later = new ChartSeries([10, 20], "2023-11-01");
-  const combined = later.combine(sooner);
-  assertEquals(combined.values.length, 3);
-  //console.log(combined);
-});
-
-Deno.test("Combine non-overlapping series", () => {
-  const sooner = new ChartSeries([10, 20], "2023-10-31");
-  const later = new ChartSeries([10, 20], "2023-11-31");
-
-  // Ranges do not overlap
-  assertThrows(
-    () => later.combine(sooner),
-    Error,
-    "Chart Series do not overlap: 2023-10-31:2023-11-01 < 2023-11-31:2023-12-02",
+    "Date not in range: 2023-10-30 < 2023-11-03 < 2023-11-02"
   );
 });
 

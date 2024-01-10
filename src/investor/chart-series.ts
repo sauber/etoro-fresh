@@ -43,35 +43,6 @@ export class ChartSeries implements DateSeries<number> {
     return this.values[this.values.length - 1];
   }
 
-  /** Combine two series */
-  public combine(other: ChartSeries): ChartSeries {
-    // Sort by end date
-    const [sooner, later] = other.end() <= this.end()
-      ? [other, this]
-      : [this, other];
-
-    // Non overlap
-    if (sooner.end() < later.start()) {
-      //return later;
-      throw new Error(
-        `Chart Series do not overlap: ${sooner.start()}:${sooner.end()} < ${later.start()}:${later.end()}`,
-      );
-    }
-
-    // 'later' fully overlaps 'sooner'
-    if (sooner.start() >= later.start()) return later;
-
-    // How many days from sooner must be preprended
-    const days = diffDate(sooner.start(), later.start());
-    // How much must sooner be scaled
-    const scale = later.first() / sooner.value(later.start());
-    // Array to be prepended
-    const prepend: number[] = sooner.values
-      .slice(0, days)
-      .map((value) => value * scale);
-    return new ChartSeries([...prepend, ...later.values], sooner.start());
-  }
-
   /** Sub chart with entries starting on date */
   public from(date: DateFormat): ChartSeries {
     const offset = diffDate(this.firstDate, date);

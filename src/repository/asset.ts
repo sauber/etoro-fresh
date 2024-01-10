@@ -45,30 +45,36 @@ export class Asset<AssetType> {
     return sub.age(this.assetname);
   }
 
+  /** Store data today */
   public async store(content: AssetType): Promise<void> {
     const sub: Backend = await this.repo.sub(today());
     return sub.store(this.assetname, content as JSONObject);
   }
 
-  private async retrieve(date: DateFormat): Promise<AssetType> {
+  /** Load data on specific date */
+  public async retrieve(date: DateFormat): Promise<AssetType> {
     const sub: Backend = await this.repo.sub(date);
     return (await sub.retrieve(this.assetname)) as AssetType;
   }
 
+  /** First date */
   public async start(): Promise<DateFormat> {
     const dates: DateFormat[] = await this.validatedDates();
     return dates[0];
   }
 
+  /** Last date */
   public async end(): Promise<DateFormat> {
     const dates: DateFormat[] = await this.validatedDates();
     return dates.reverse()[0];
   }
 
+  /** Data on first date */
   public async first(): Promise<AssetType> {
     return this.retrieve(await this.start());
   }
 
+  /** Data on last date */
   public async last(): Promise<AssetType> {
     return this.retrieve(await this.end());
   }
