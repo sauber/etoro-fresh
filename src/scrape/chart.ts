@@ -1,6 +1,5 @@
 import type { DateFormat } from "/utils/time/mod.ts";
-import { formatDate, today } from "/utils/time/mod.ts";
-import { ChartSeries } from "./chart-series.ts";
+import { today } from "/utils/time/mod.ts";
 
 type ChartEntry = {
   timestamp: string;
@@ -19,6 +18,12 @@ export type ChartData = {
   };
 };
 
+/** Convert scraped timestamps to DateFormat */
+function date(timestamp: string): DateFormat {
+  return timestamp.substring(0, 10);
+}
+
+/** Scraped chart data from eToro */
 export class Chart {
   constructor(private readonly raw: ChartData) {}
 
@@ -26,12 +31,16 @@ export class Chart {
     return this.raw.simulation.oneYearAgo.chart;
   }
 
-  // Last date in chart
+  /** First date in chart */
+  public get start(): DateFormat {
+    const list: ChartEntry[] = this.list;
+    return date(list[0].timestamp);
+  }
+
+  /** Last date in chart */
   public get end(): DateFormat {
     const list: ChartEntry[] = this.list;
-    const length = list.length;
-    const lastDate: DateFormat = list[length - 1].timestamp.substring(0, 10);
-    return lastDate;
+    return date(list[list.length - 1].timestamp);
   }
 
   public get count(): number {
@@ -45,12 +54,9 @@ export class Chart {
     return true;
   }
 
-  /** All values as a DateSeries */
-  public series(): ChartSeries {
-    const entries: ChartEntry[] = this.list;
-    const timestamp: string = entries[0].timestamp;
-    const firstDate: DateFormat = formatDate(new Date(timestamp).getTime());
-    const values = entries.map((entry) => entry.equity);
-    return new ChartSeries(values, firstDate);
+  /** Equity series */
+  public get values(): number[] {
+    const list: ChartEntry[] = this.list;
+    return list.map((entry: ChartEntry) => entry.equity);
   }
 }

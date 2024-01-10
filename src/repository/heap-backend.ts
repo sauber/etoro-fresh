@@ -1,13 +1,18 @@
 import { Backend } from "../repository/backend.ts";
 import type { JSONObject, AssetName, AssetNames } from "../repository/mod.ts";
 
+type Asset = {
+  content: JSONObject;
+  mtime: number;
+};
+
 /** Store data objects in memory */
 export class HeapBackend implements Backend {
-  private readonly heap: Record<string, JSONObject> = {};
+  private readonly heap: Record<string, Asset> = {};
   private readonly partitions: Record<string, HeapBackend> = {};
 
   public sub(name: string): Promise<Backend> {
-    if ( ! (name in this.partitions)) this.partitions[name] = new HeapBackend();
+    if (!(name in this.partitions)) this.partitions[name] = new HeapBackend();
     return Promise.resolve(this.partitions[name]);
   }
 
@@ -20,12 +25,16 @@ export class HeapBackend implements Backend {
   }
 
   public store(assetname: AssetName, data: JSONObject): Promise<void> {
-    this.heap[assetname] = data;
+    this.heap[assetname] = { content: data, mtime: new Date().getTime() };
     return Promise.resolve();
   }
 
   public retrieve(assetname: AssetName): Promise<JSONObject> {
-    return Promise.resolve(this.heap[assetname]);
+    return Promise.resolve(this.heap[assetname].content);
+  }
+
+  public age(assetname: string): Promise<number> {
+    return Promise.resolve(new Date().getTime() - this.heap[assetname].mtime);
   }
 
   public names(): Promise<AssetNames> {

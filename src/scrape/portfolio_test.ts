@@ -1,7 +1,9 @@
 import { assert, assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { Portfolio } from "./portfolio.ts";
-import { portfolioData } from "./testdata.ts";
+import { testAssets } from "./testdata.ts";
 import { InvestorId } from "./mod.ts";
+
+const portfolioData = testAssets.portfolio;
 
 Deno.test("Initialization", () => {
   const portfolio = new Portfolio({

@@ -17,3 +17,6 @@ ranking.model.json
 # V8 profiling output
 isolate-*.log
 profile.txt
+
+# tmp files from tests
+tmp/

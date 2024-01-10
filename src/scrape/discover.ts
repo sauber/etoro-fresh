@@ -1,5 +1,5 @@
 import { assert } from "$std/assert/mod.ts";
-import type { InvestorId } from "/investor/mod.ts";
+import type { InvestorId } from "./mod.ts";
 
 export type DiscoverData = {
   Status: string;
@@ -16,7 +16,10 @@ export class Discover {
   }
 
   public get investors(): InvestorId[] {
-    return this.raw.Items;
+    return this.raw.Items.map((item) => ({
+      UserName: item.UserName,
+      CustomerId: item.CustomerId,
+    }));
   }
 
   public get count(): number {

@@ -18,4 +18,7 @@ export abstract class Backend {
 
   /** List of asset names */
   abstract names(): Promise<AssetNames>;
+
+  /** Number of milliseconds since most recent version stored */
+  abstract age(assetname: AssetName): Promise<number>;
 }

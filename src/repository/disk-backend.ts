@@ -1,6 +1,6 @@
 import type { JSONObject, AssetName, AssetNames } from "../repository/mod.ts";
 import { Backend } from "../repository/mod.ts";
-import { exists, read, write, files, dirs } from "../repository/files.ts";
+import { exists, read, write, files, dirs, age } from "../repository/files.ts";
 import { join } from "path";
 
 /** Store investor objects on disk */
@@ -42,12 +42,17 @@ export class DiskBackend implements Backend {
   }
 
   public async has(assetname: AssetName): Promise<boolean> {
-    const result: boolean = await exists(await this.filename(assetname))
+    const result: boolean = await exists(await this.filename(assetname));
     //console.log('Backend', await this.path(), 'has', assetname, ':', result);
     //return exists(await this.filename(assetname));
     return result;
   }
 
+  public async age(assetname: AssetName): Promise<number> {
+    const filename: string = await this.filename(assetname);
+    return age(filename);
+  }
+  
   public async names(): Promise<AssetNames> {
     if (!(await exists(await this.path()))) return [];
 

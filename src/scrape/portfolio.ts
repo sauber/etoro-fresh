@@ -49,7 +49,7 @@ export class Portfolio {
   public validate(): boolean {
     if (this.raw.CreditByRealizedEquity < 0) {
       throw new Error(
-        `Portfolio CreditByRealizedEquity is negative (${this.raw.CreditByRealizedEquity})`,
+        `Portfolio CreditByRealizedEquity is negative (${this.raw.CreditByRealizedEquity})`
       );
     }
     return true;

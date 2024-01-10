@@ -1,6 +1,9 @@
 import { assertEquals } from "$std/assert/mod.ts";
 import { Stats } from "./stats.ts";
-import { statsData } from "./testdata.ts";
+import { testAssets } from "./testdata.ts";
+import type { StatsData } from "./stats.ts";
+
+const statsData: StatsData = testAssets.stats;
 
 Deno.test("Validate", () => {
   const stats: Stats = new Stats(statsData);

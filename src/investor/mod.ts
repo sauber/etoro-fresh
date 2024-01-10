@@ -1,11 +1,11 @@
 export * from "./community.ts";
-export * from "./chart.ts";
-export * from "./portfolio.ts";
-export * from "./stats.ts";
+export * from "../scrape/chart.ts";
+export * from "../scrape/portfolio.ts";
+export * from "../scrape/stats.ts";
 export * from "./investor.ts";
 export * from "./chart-series.ts";
 import { DateFormat } from "/utils/time/mod.ts";
-import type { StatsExport } from "./stats.ts";
+import type { StatsExport } from "../scrape/stats.ts";
 
 export type InvestorId = {
   CustomerId: number;

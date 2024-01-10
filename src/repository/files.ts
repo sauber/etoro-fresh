@@ -71,3 +71,13 @@ export async function mktmpdir(): Promise<string> {
 export function rmdir(path: string): Promise<void> {
   return Deno.remove(path, { recursive: true });
 }
+
+  /** Age of most recent file in milliseconds */
+export async function age(path: string): Promise<number> {
+    const file = await Deno.stat(path);
+    const mtime: Date | null = file.mtime;
+    if (!mtime) throw new Error(`Stat for ${path} has no mtime`);
+    const now = new Date().getTime();
+    return now - mtime.getTime();
+  }
+

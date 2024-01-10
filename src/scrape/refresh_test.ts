@@ -2,23 +2,22 @@ import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { FetchHeapBackend } from "./fetch-heap.ts";
 import { Refresh } from "./refresh.ts";
 import { discoverFilter, investorId, testAssets } from "./testdata.ts";
-import { RepoHeapBackend } from "/repository/repo-heap.ts";
+import { HeapBackend } from "📚/repository/heap-backend.ts";
 
-Deno.test("Initialize", async () => {
-  const repo: RepoHeapBackend = new RepoHeapBackend();
-  const fetcher: FetchHeapBackend = new FetchHeapBackend({});
+Deno.test("Initialize", () => {
+  const repo: HeapBackend = new HeapBackend();
+  const fetcher: FetchHeapBackend = new FetchHeapBackend(testAssets);
   const refresh: Refresh = new Refresh(
     repo,
     fetcher,
     investorId,
-    discoverFilter,
+    discoverFilter
   );
   assertInstanceOf(refresh, Refresh);
-  await repo.delete();
 });
 
 Deno.test("Fresh", async (t) => {
-  const repo = new RepoHeapBackend();
+  const repo = new HeapBackend();
   const fetcher: FetchHeapBackend = new FetchHeapBackend(testAssets);
   const max = 3;
 
@@ -26,7 +25,7 @@ Deno.test("Fresh", async (t) => {
     const refresh = new Refresh(repo, fetcher, investorId, discoverFilter);
     const count: number = await refresh.run(max);
     //console.log(`Fetch data for ${count} investors`);
-    // three downloads from own invester + 2x3 from mirrors + 1 discover = 10
+    // three downloads from one invester + 2x3 from mirrors + 1 discover = 10
     assertEquals(count, 1 + 3 * max + 3);
   });
 
@@ -36,6 +35,4 @@ Deno.test("Fresh", async (t) => {
     //console.log(`Fetch data for ${count} investors`);
     assertEquals(count, max + 1, "Expired charts will try download again");
   });
-
-  await repo.delete();
 });

@@ -1,6 +1,6 @@
 import { HeapBackend } from "./heap-backend.ts";
 import type { JSONObject, AssetName, AssetNames } from "./mod.ts";
-import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
+import { assertEquals, assertInstanceOf, assertLess } from "$std/assert/mod.ts";
 
 const name: AssetName = 'foo';
 const data: JSONObject = {   name: "bar" };
@@ -27,5 +27,8 @@ Deno.test("Store and Retrieve Asset", async () => {
 
   const investor: JSONObject = await repo.retrieve(name);
   assertEquals(investor, data);
+
+  const age: number = await repo.age(name);
+  assertLess(age, 10);
 });
 

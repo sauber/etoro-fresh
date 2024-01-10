@@ -7,10 +7,10 @@ import type {
   StatsData,
 } from "./mod.ts";
 import { ChartSeries } from "./chart-series.ts";
-import { Chart } from "./chart.ts";
-import { Stats, StatsExport } from "./stats.ts";
+import { Chart } from "../scrape/chart.ts";
+import { Stats, StatsExport } from "../scrape/stats.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
-import { Portfolio } from "./portfolio.ts";
+import { Portfolio } from "../scrape/portfolio.ts";
 
 export class Investor {
   private readonly chartSeries: JournaledAsset<ChartData>;

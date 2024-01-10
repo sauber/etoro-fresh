@@ -3,8 +3,8 @@ import { TempBackend } from "📚/repository/temp-backend.ts";
 import type { JSONObject } from "📚/repository/mod.ts";
 import { Backend } from "📚/repository/backend.ts";
 
-const assetname = 'foo';
-const content = { name: 'bar'};
+const assetname = "foo";
+const content = { name: "bar" };
 
 Deno.test("Initialization", () => {
   const repo: TempBackend = new TempBackend();
@@ -31,12 +31,15 @@ Deno.test("Store and Retrieve", async () => {
   const investor: JSONObject = await repo.retrieve(assetname);
   assertEquals(investor, content);
 
+  // Age is mostly positive number, but sometimes negative
+  const _age: number = await repo.age(assetname);
+
   await repo.delete();
 });
 
 Deno.test("Partition", async () => {
   const repo: TempBackend = new TempBackend();
-  const sub: Backend = await repo.sub('sub');
+  const sub: Backend = await repo.sub("sub");
   const names = await sub.names();
   assertEquals(names.length, 0);
 

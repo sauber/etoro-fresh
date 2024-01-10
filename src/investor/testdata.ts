@@ -1,8 +1,8 @@
 import { config, repoBackend } from "../repository/old/testdata.ts";
 import type { InvestorId } from "/investor/mod.ts";
 import type { ChartData } from "./chart.ts";
-import type { PortfolioData } from "./portfolio.ts";
-import type { StatsData } from "./stats.ts";
+import type { PortfolioData } from "../scrape/portfolio.ts";
+import type { StatsData } from "../scrape/stats.ts";
 
 export const investorId = await config.get("investor") as InvestorId;
 

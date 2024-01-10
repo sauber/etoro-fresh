@@ -3,7 +3,10 @@ import type { DateFormat } from "📚/utils/time/mod.ts";
 import type { AssetName, AssetNames } from "../repository/mod.ts";
 import { Asset } from "📚/repository/asset.ts";
 
-/** Store assets by date */
+/** 
+ * Store assets by date 
+ * TODO: Most likely this class is not needed. A community class will scan for investors, instead.
+ */
 export class Journal {
   constructor(private readonly repo: Backend){}
 
