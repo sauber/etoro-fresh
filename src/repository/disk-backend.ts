@@ -1,6 +1,14 @@
 import type { JSONObject, AssetName, AssetNames } from "../repository/mod.ts";
 import { Backend } from "../repository/mod.ts";
-import { exists, read, write, files, dirs, age } from "../repository/files.ts";
+import {
+  exists,
+  read,
+  write,
+  files,
+  dirs,
+  age,
+  mkdir,
+} from "../repository/files.ts";
 import { join } from "path";
 
 /** Store investor objects on disk */
@@ -31,6 +39,11 @@ export class DiskBackend implements Backend {
   }
 
   public async store(assetname: AssetName, data: JSONObject): Promise<void> {
+    // Ensure dir exists
+    const dir: string = await this.path();
+    if (!(await exists(dir))) await mkdir(dir);
+
+    // Write file
     return write(await this.filename(assetname), JSON.stringify(data));
   }
 
@@ -52,7 +65,7 @@ export class DiskBackend implements Backend {
     const filename: string = await this.filename(assetname);
     return age(filename);
   }
-  
+
   public async names(): Promise<AssetNames> {
     if (!(await exists(await this.path()))) return [];
 
