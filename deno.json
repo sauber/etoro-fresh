@@ -7,7 +7,7 @@
     "preview": "deno run -A main.ts",
     "profile": "deno run --allow-read=testdata --v8-flags=--prof src/simulation/simulation_bin.ts testdata",
     "rank": "deno run --allow-read=testdata,../etoro-data/data --allow-write=testdata,../etoro-data/data --allow-net=github.com,objects.githubusercontent.com src/ranking/ranking_bin.ts",
-    "refresh": "deno run --allow-read=/workspaces/etoro-data/data --allow-write=/workspaces/etoro-data/data --allow-net=www.etoro.com src/refresh/refresh_bin.ts /workspaces/etoro-data/data",
+    "scrape": "deno run --allow-read=../etoro-data/data --allow-write=/workspaces/etoro-data/data --allow-net=www.etoro.com src/refresh/refresh_bin.ts ../etoro-data/data",
     "test": "deno test --allow-write=tmp --allow-read=tmp,testdata --allow-net=www.etoro.com,jsonplaceholder.typicode.com,github.com,objects.githubusercontent.com",
     "webtest": "deno test --allow-env --allow-read=. --allow-net=127.0.0.1",
     "update": "deno run -A -r https://fresh.deno.dev/update ."
