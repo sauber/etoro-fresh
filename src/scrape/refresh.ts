@@ -1,6 +1,5 @@
 import { today } from "📚/utils/time/mod.ts";
-import { Backend } from "📚/repository/mod.ts";
-import type { JSONObject } from "📚/repository/mod.ts";
+import { Backend, Asset } from "📚/repository/mod.ts";
 
 import { Discover } from "./discover.ts";
 import type { DiscoverData } from "./discover.ts";
@@ -35,11 +34,14 @@ const msPerHour = 60 * 60 * 1000;
 
 /** Load all data for all investors */
 export class Refresh {
+  /** Min and max acceptable count of investors */
   private readonly discover_count = {
     min: 70,
     max: 140,
   } as Range;
-  private readonly expire = {
+
+  /** For how long time are old version valid */
+  private readonly expire: Expire = {
     mirror: 16 * msPerHour,
     discover: 50 * msPerHour,
     chart: 24 * msPerHour,
@@ -58,39 +60,40 @@ export class Refresh {
   ) {}
 
   /** Load  asset from web if missing or expired */
-  private async recent(
+  private async recent<DataFormat>(
     assetname: string,
     expire: number,
-    download: () => Promise<JSONObject>,
-    validate?: (data: JSONObject) => boolean
+    download: () => Promise<DataFormat>,
+    validate?: (data: DataFormat) => boolean
   ): Promise<boolean> {
-    // Skip if exists but not expired in repo
-    if (await this.repo.has(assetname)) {
-      const age: number = await this.repo.age(assetname);
+    const asset = new Asset(assetname, this.repo);
+
+    // Skip if exists and still valid in repo
+    if (await asset.exists()) {
+      const age: number = await asset.age();
       if (age < expire) return true;
     }
 
     // Load from web
-    //console.log(`Loading ${assetname} from web`);
-    const data: JSONObject = await download();
+    const data: DataFormat = await download();
     ++this.fetchCount;
 
-    // Validate
+    // Validate content
     if (validate && !validate(data)) {
       console.warn(`Warning: Asset ${assetname} failed validation`);
       return false;
     }
 
     // Store downloaded data
-    await this.repo.store(assetname, data);
+    await asset.store(data);
     return true;
   }
 
   /** Load list of investor ID's from discovery */
   private async discover(): Promise<InvestorId[]> {
     const range: Range = this.discover_count;
-    const validate = function (loaded: JSONObject) {
-      const discover: Discover = new Discover(loaded as DiscoverData);
+    const validate = function (loaded: DiscoverData) {
+      const discover: Discover = new Discover(loaded);
       const count: number = discover.count;
       if (count < range.min || count > range.max) {
         throw new Error(
@@ -101,16 +104,16 @@ export class Refresh {
       return true;
     };
 
-    // TODO: Validate data
     const expire: Expire = this.expire;
-    const available: boolean = await this.recent(
+    const available: boolean = await this.recent<DiscoverData>(
       "discover",
       expire.discover,
       () => this.fetcher.discover(this.filter),
       validate
     );
     if (available) {
-      const data = (await this.repo.retrieve("discover")) as DiscoverData;
+      const asset = new Asset<DiscoverData>("discover", this.repo);
+      const data: DiscoverData = await asset.last();
       const discover: Discover = new Discover(data);
       return discover.investors;
     } else {
@@ -118,9 +121,10 @@ export class Refresh {
     }
   }
 
+  /** Load chart for an investor */
   private chart(investor: InvestorId): Promise<boolean> {
-    const validate = function (loaded: JSONObject) {
-      const chart: Chart = new Chart(loaded as ChartData);
+    const validate = function (loaded: ChartData) {
+      const chart: Chart = new Chart(loaded);
       if (!chart.validate) {
         console.warn(`Warning: Chart for ${investor.UserName} is invalid`);
         return false;
@@ -134,7 +138,7 @@ export class Refresh {
       return true;
     };
 
-    return this.recent(
+    return this.recent<ChartData>(
       investor.UserName + ".chart",
       this.expire.chart,
       () => this.fetcher.chart(investor),
@@ -142,18 +146,27 @@ export class Refresh {
     );
   }
 
+  /** Load portfolio for an investor */
   private portfolio(investor: InvestorId, expire: number): Promise<boolean> {
-    return this.recent(investor.UserName + ".portfolio", expire, () =>
-      this.fetcher.portfolio(investor)
+    return this.recent<PortfolioData>(
+      investor.UserName + ".portfolio",
+      expire,
+      () => this.fetcher.portfolio(investor),
+      (loaded: PortfolioData) => new Portfolio(loaded).validate()
     );
   }
 
+  /** Load stats for an investor */
   private stats(investor: InvestorId): Promise<boolean> {
-    return this.recent(investor.UserName + ".stats", this.expire.stats, () =>
-      this.fetcher.stats(investor)
+    return this.recent<StatsData>(
+      investor.UserName + ".stats",
+      this.expire.stats,
+      () => this.fetcher.stats(investor),
+      (loaded: StatsData) => new Stats(loaded).validate()
     );
   }
 
+    /** Load all data for an investor */
   private loadInvestor(
     investor: InvestorId,
     expire: number = this.expire.portfolio
@@ -165,14 +178,21 @@ export class Refresh {
     ]);
   }
 
+    /** Extract list of mirrors for root investor */
   private async mirrors(): Promise<InvestorId[]> {
+    // First download updated data for investor and save to repo
     await this.loadInvestor(this.investor, this.expire.mirror);
-    const data = (await this.repo.retrieve(
-      this.investor.UserName + ".portfolio"
-    )) as PortfolioData;
+
+    // Load data from repo
+    const asset = new Asset<PortfolioData>(
+      this.investor.UserName + ".portfolio",
+      this.repo
+    );
+    const data: PortfolioData = await asset.last();
     const portfolio: Portfolio = new Portfolio(data);
     return portfolio.investors();
   }
+
 
   public async run(max?: number): Promise<number> {
     function onlyUnique(value: InvestorId, index: number, self: InvestorId[]) {
@@ -182,6 +202,7 @@ export class Refresh {
       );
     }
 
+    // List of uniq investors from discover and mirrors
     const investors: InvestorId[] = [
       ...(await this.mirrors()),
       ...(await this.discover()),
@@ -189,11 +210,12 @@ export class Refresh {
     const subset: InvestorId[] = max ? investors.slice(0, max) : investors;
     const uniq: InvestorId[] = subset.filter(onlyUnique);
 
-    // Run in parallel
+    // In parallel fetch data for all investors
     await Promise.all(
       uniq.map((investor: InvestorId) => this.loadInvestor(investor))
     );
 
+    // Count of updates
     return this.fetchCount;
   }
 }
