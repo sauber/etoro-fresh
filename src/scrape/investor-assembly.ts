@@ -1,37 +1,58 @@
 import type { DateFormat } from "📚/utils/time/mod.ts";
+import { diffDate, nextDate } from "📚/utils/time/calendar.ts";
 import { Asset, Backend } from "/repository/mod.ts";
 
 import type { ChartData } from "./chart.ts";
 import { Chart } from "./chart.ts";
-import { diffDate } from "📚/utils/time/calendar.ts";
 
-// type ChartExtract = {
-//   end: DateFormat;
-//   values: number[];
-// };
+import type { StatsData } from "./stats.ts";
+//import { Stats } from "./stats.ts";
+
+type StatsEssentials = {
+  DailyDD: number;
+  WeeklyDD: number;
+};
+
+type StatsExtract = Record<string, StatsEssentials>;
 
 /** Extract scraped data and compile an investor object */
 export class InvestorAssembly {
   private readonly chartAsset: Asset<ChartData>;
   // private readonly portfolioSeries: Asset<PortfolioData>;
-  // public readonly statsSeries: Asset<StatsData>;
+  private readonly statsAsset: Asset<StatsData>;
 
   constructor(public readonly UserName: string, readonly repo: Backend) {
     this.chartAsset = new Asset<ChartData>(this.UserName + ".chart", repo);
     // this.portfolioSeries = new Asset(this.UserName + ".portfolio");
-    // this.statsSeries = new Asset(this.UserName + ".stats");
+    this.statsAsset = new Asset<StatsData>(this.UserName + ".stats", repo);
   }
 
-  // /** Load one chart files and extract series */
-  // private async series(date: DateFormat): Promise<ChartSeries> {
-  //   const data: ChartData = await this.chartSeries.value(date);
-  //   const chart: Chart = new Chart(data);
-  //   const series: ChartSeries = chart.series();
-  //   return series;
-  // }
+  /** Customer ID */
+  public async CustomerId(): Promise<number> {
+    const stats: StatsData = await this.statsAsset.last();
+    const id: number = stats.Data.CustomerId;
+    return id;
+  }
+
+  /** First date of combined charts */
+  public async start(): Promise<DateFormat> {
+    const chart: number[] = await this.chart();
+    const end: DateFormat = await this.end();
+    const days: number = chart.length;
+    const start: DateFormat = nextDate(end, -days + 1);
+    return start;
+  }
+
+  /** Last date where chart is present */
+  public end(): Promise<DateFormat> {
+    return this.chartAsset.end();
+  }
 
   /** Combination of as few charts as possible from start to end */
+  private _chart: number[] | null = null;
   public async chart(): Promise<number[]> {
+    if (this._chart) return this._chart;
+
     // All dates having a chart
     const dates: DateFormat[] = await this.chartAsset.dates();
 
@@ -74,15 +95,41 @@ export class InvestorAssembly {
 
     // Truncate floating digits to 2
     const price = values.map((v) => +v.toFixed(2));
+    // Caching
+    this._chart = price;
     return price;
   }
 
-  // /** Extract essential latest stats */
-  // public async stats(): Promise<StatsExport> {
-  //   const raw = await this.statsSeries.last();
-  //   const stats = new Stats(raw);
-  //   return stats.export();
-  // }
+  /** Extract essential data from stats on date */
+  private async statsValues(date: DateFormat): Promise<StatsEssentials> {
+    const loaded: StatsData = await this.statsAsset.retrieve(date);
+    const s = loaded.Data;
+    return {
+      DailyDD: s.DailyDD,
+      WeeklyDD: s.WeeklyDD,
+    };
+  }
+
+  /** Extract stats for all available dates within chart range */
+  public async stats(): Promise<StatsExtract> {
+    // Dates
+    const start: DateFormat = await this.start();
+    const end: DateFormat = await this.end();
+    const dates: DateFormat[] = await this.statsAsset.dates();
+    const range: DateFormat[] = dates.filter(
+      (date) => date >= start && date <= end
+    );
+
+    // Data
+    const data: StatsEssentials[] = await Promise.all(
+      range.map((date) => this.statsValues(date))
+    );
+
+    // Zip
+    const zip: StatsExtract = {};
+    range.forEach((date, index) => (zip[date] = data[index]));
+    return zip;
+  }
 
   // /** Latest mirrors */
   // public async mirrors(): Promise<InvestorId[]> {

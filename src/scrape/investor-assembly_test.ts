@@ -1,8 +1,8 @@
 import {
   assertEquals,
-  assertGreaterOrEqual,
   assertInstanceOf,
 } from "$std/assert/mod.ts";
+//import { DateFormat } from "📚/utils/time/mod.ts";
 import { InvestorAssembly } from "./investor-assembly.ts";
 import { repo } from "./testdata.ts";
 // import { ChartSeries } from "./chart-series.ts";
@@ -13,7 +13,7 @@ import { repo } from "./testdata.ts";
 // Test Data
 const username = "FundManagerZech";
 const CustomerId = 5125148;
-const FullName = "Zheng Bin";
+//const FullName = "Zheng Bin";
 
 Deno.test("Blank Initialization", () => {
   const investor: InvestorAssembly = new InvestorAssembly(username, repo);
@@ -23,8 +23,41 @@ Deno.test("Blank Initialization", () => {
 Deno.test("Chart", async () => {
   const investor = new InvestorAssembly(username, repo);
   const series: number[] = await investor.chart();
-  //assertEquals(series.start(), "2020-12-01");
   assertEquals(series.length, 511);
+  assertEquals(series[0], 6443.72);
+  assertEquals(series[series.length - 1], 11044);
+});
+
+Deno.test("Start", async () => {
+  const investor = new InvestorAssembly(username, repo);
+  assertEquals(await investor.start(), "2020-12-01");
+});
+
+Deno.test("End", async () => {
+  const investor = new InvestorAssembly(username, repo);
+  assertEquals(await investor.end(), "2022-04-25");
+});
+
+Deno.test("UserName", () => {
+  const investor = new InvestorAssembly(username, repo);
+  const name: string = investor.UserName;
+  assertEquals(name, username);
+});
+
+Deno.test("CustomerId", async () => {
+  const investor = new InvestorAssembly(username, repo);
+  assertEquals(await investor.CustomerId(), CustomerId);
+});
+
+Deno.test("Stats", async () => {
+  const investor = new InvestorAssembly(username, repo);
+  const stats = await investor.stats();
+  assertEquals(Object.keys(stats), [
+    "2021-12-29",
+    "2022-01-21",
+    "2022-04-18",
+    "2022-04-25",
+  ]);
 });
 
 // Deno.test("Combined Export", async () => {
