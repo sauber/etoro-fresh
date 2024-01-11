@@ -14,7 +14,6 @@ import { repo } from "./testdata.ts";
 // Test Data
 const username = "Schnaub123";
 const customerid = 2792934;
-const fullname = "Zheng Bin";
 
 Deno.test("Blank Initialization", () => {
   const assembly: InvestorAssembly = new InvestorAssembly(username, repo);
@@ -84,8 +83,8 @@ Deno.test("Mirrors", async () => {
   });
 });
 
-// Deno.test("Combined Export", async () => {
-//   const assembly = new InvestorAssembly(username, repo);
-//   const investor: Investor = await assembly.investor();
-//   assertInstanceOf(investor, Investor);
-// });
+Deno.test("Combined Export", async () => {
+  const assembly = new InvestorAssembly(username, repo);
+  const investor: Investor = await assembly.investor();
+  assertInstanceOf(investor, Investor);
+});

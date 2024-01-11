@@ -2,7 +2,7 @@ import type { DateFormat } from "📚/utils/time/mod.ts";
 import { diffDate, nextDate } from "📚/utils/time/calendar.ts";
 import { Asset, Backend } from "/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
-import { Chart } from "📚/chart/mod.ts";
+import { Chart as CompiledChart } from "📚/chart/mod.ts";
 import { InvestorId } from "📚/scrape/mod.ts";
 
 import type { ChartData } from "./chart.ts";
@@ -170,13 +170,13 @@ export class InvestorAssembly {
     return zip;
   }
 
-  /** Generate investor object */
+  /** Combined investor object */
   public async investor(): Promise<Investor> {
     return new Investor(
       this.UserName,
       await this.CustomerId(),
       await this.FullName(),
-      new Chart(await this.chart(), await this.end())
+      new CompiledChart(await this.chart(), await this.end())
     );
   }
 }
