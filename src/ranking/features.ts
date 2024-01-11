@@ -69,7 +69,10 @@ export class Extract {
     return apy;
   }
 
-  /** Values in stats struct that can be translated to numbers */
+  /** 
+   * Values in stats struct that can be translated to numbers 
+   * TODO: Use stats.ts module to extract data
+   */
   public get input(): FeatureData {
     const d = this.stats.Data;
     return {

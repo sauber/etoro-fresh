@@ -55,7 +55,7 @@ export class Portfolio {
     return true;
   }
 
-  public investors(): InvestorId[] {
+  public get investors(): InvestorId[] {
     return this.raw.AggregatedMirrors.map((investor) => {
       return {
         UserName: investor.ParentUsername,

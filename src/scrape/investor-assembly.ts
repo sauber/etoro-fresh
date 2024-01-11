@@ -1,29 +1,31 @@
 import type { DateFormat } from "📚/utils/time/mod.ts";
 import { diffDate, nextDate } from "📚/utils/time/calendar.ts";
 import { Asset, Backend } from "/repository/mod.ts";
+import { InvestorId } from "📚/scrape/mod.ts";
 
 import type { ChartData } from "./chart.ts";
 import { Chart } from "./chart.ts";
 
-import type { StatsData } from "./stats.ts";
-//import { Stats } from "./stats.ts";
+import type { PortfolioData } from "./portfolio.ts";
+import { Portfolio } from "./portfolio.ts";
+export type MirrorsByDate = Record<DateFormat, InvestorId[]>;
 
-type StatsEssentials = {
-  DailyDD: number;
-  WeeklyDD: number;
-};
-
-type StatsExtract = Record<string, StatsEssentials>;
+import type { StatsData, StatsExport } from "./stats.ts";
+import { Stats } from "./stats.ts";
+export type StatsByDate = Record<DateFormat, StatsExport>;
 
 /** Extract scraped data and compile an investor object */
 export class InvestorAssembly {
   private readonly chartAsset: Asset<ChartData>;
-  // private readonly portfolioSeries: Asset<PortfolioData>;
+  private readonly portfolioAsset: Asset<PortfolioData>;
   private readonly statsAsset: Asset<StatsData>;
 
   constructor(public readonly UserName: string, readonly repo: Backend) {
     this.chartAsset = new Asset<ChartData>(this.UserName + ".chart", repo);
-    // this.portfolioSeries = new Asset(this.UserName + ".portfolio");
+    this.portfolioAsset = new Asset<PortfolioData>(
+      this.UserName + ".portfolio",
+      repo
+    );
     this.statsAsset = new Asset<StatsData>(this.UserName + ".stats", repo);
   }
 
@@ -101,17 +103,14 @@ export class InvestorAssembly {
   }
 
   /** Extract essential data from stats on date */
-  private async statsValues(date: DateFormat): Promise<StatsEssentials> {
+  private async statsValues(date: DateFormat): Promise<StatsExport> {
     const loaded: StatsData = await this.statsAsset.retrieve(date);
-    const s = loaded.Data;
-    return {
-      DailyDD: s.DailyDD,
-      WeeklyDD: s.WeeklyDD,
-    };
+    const stats = new Stats(loaded);
+    return stats.value;
   }
 
   /** Extract stats for all available dates within chart range */
-  public async stats(): Promise<StatsExtract> {
+  public async stats(): Promise<StatsByDate> {
     // Dates
     const start: DateFormat = await this.start();
     const end: DateFormat = await this.end();
@@ -120,113 +119,46 @@ export class InvestorAssembly {
       (date) => date >= start && date <= end
     );
 
-    // Data
-    const data: StatsEssentials[] = await Promise.all(
+    // Load Stats axports for eachd date in range
+    const values: StatsExport[] = await Promise.all(
       range.map((date) => this.statsValues(date))
     );
 
-    // Zip
-    const zip: StatsExtract = {};
-    range.forEach((date, index) => (zip[date] = data[index]));
+    // Zip Dates and Stats
+    const zip: StatsByDate = Object.assign(
+      {},
+      ...range.map((date, index) => ({ [date]: values[index] }))
+    );
     return zip;
   }
 
-  // /** Latest mirrors */
-  // public async mirrors(): Promise<InvestorId[]> {
-  //   const raw = await this.portfolioSeries.last();
-  //   const portfolio = new Portfolio(raw);
-  //   return portfolio.investors();
-  // }
+  /** Extract list of investors from portfolio */
+  private async portfolioValues(date: DateFormat): Promise<InvestorId[]> {
+    const loaded: PortfolioData = await this.portfolioAsset.retrieve(date);
+    const portfolio = new Portfolio(loaded);
+    return portfolio.investors;
+  }
 
-  // /** Combine data into one structure */
-  // public async export(): Promise<InvestorExport> {
-  //   const chart = await this.chart();
-  //   return {
-  //     chart: [chart.dates(), chart.values],
-  //     mirrors: await this.mirrors(),
-  //     stats: await this.stats(),
-  //   };
-  // }
+  /** Latest mirrors */
+  public async mirrors(): Promise<MirrorsByDate> {
+    // Dates
+    const start: DateFormat = await this.start();
+    const end: DateFormat = await this.end();
+    const dates: DateFormat[] = await this.portfolioAsset.dates();
+    const range: DateFormat[] = dates.filter(
+      (date) => date >= start && date <= end
+    );
 
-  // /** First date of chart or first date of stats */
-  // public async start(): Promise<DateFormat | null> {
-  //   const dates: DateFormat[] = await this.chartSeries.dates();
-  //   if (dates.length < 1) return null;
+    // Load Stats axports for eachd date in range
+    const values: InvestorId[][] = await Promise.all(
+      range.map((date) => this.portfolioValues(date))
+    );
 
-  //   // First date in chart
-  //   const chart = await this.chart();
-  //   const chart_start: DateFormat = chart.start();
-
-  //   // First date of stats
-  //   const stats = this.statsSeries;
-  //   const stats_start: DateFormat = await stats.start();
-
-  //   // At least on stat must come before end of chart
-  //   return stats_start <= chart_start ? chart_start : stats_start;
-  // }
-
-  // /** Last date of chart */
-  // public async end(): Promise<DateFormat | null> {
-  //   const dates: DateFormat[] = await this.chartSeries.dates();
-  //   if (dates.length < 1) return null;
-
-  //   // Last date in chart
-  //   const chart = await this.chart();
-  //   const chart_end: DateFormat = chart.end();
-
-  //   // First date of stats
-  //   const stats = this.statsSeries;
-  //   const stats_start: DateFormat = await stats.start();
-
-  //   // At least one stat must come before end of chart
-  //   return stats_start <= chart_end ? chart_end : null;
-  // }
-
-  // /** Confirm if any charts exists, and stats within chart range */
-  // public async isValid(): Promise<boolean> {
-  //   // Confirm start exists
-  //   const start = await this.start();
-  //   if (!start) return false;
-
-  //   // Confirm end exists
-  //   const end = await this.end();
-  //   if (!end) return false;
-
-  //   // Confirm start is before end
-  //   if (start > end) return false;
-
-  //   // All conditions met
-  //   return true;
-  // }
-
-  // /** Lookup CustomerId */
-  // public async CustomerId(): Promise<number> {
-  //   return (await this.stats()).CustomerId as number;
-  // }
-
-  // /** Lookup CustomerId */
-  // public async FullName(): Promise<string> {
-  //   return (await this.stats()).FullName as string;
-  // }
-
-  // /** Gain from start date to end date */
-  // public async gain(start: DateFormat, end: DateFormat): Promise<number> {
-  //   return (await this.chart()).gain(start, end);
-  // }
-
-  // /** Confirm if valid data exists on date */
-  // public async active(date: DateFormat): Promise<boolean> {
-  //   // Confirm start exists and prior to date
-  //   const start = await this.start();
-  //   if (!start) return false;
-  //   if (date < start) return false;
-
-  //   // Confirm end exists and after date
-  //   const end = await this.end();
-  //   if (!end) return false;
-  //   if (end < date) return false;
-
-  //   // Date is within start and end
-  //   return true;
-  // }
+    // Zip Dates and Stats
+    const zip: MirrorsByDate = Object.assign(
+      {},
+      ...range.map((date, index) => ({ [date]: values[index] }))
+    );
+    return zip;
+  }
 }

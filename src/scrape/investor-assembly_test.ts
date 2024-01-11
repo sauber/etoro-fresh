@@ -1,9 +1,14 @@
 import {
   assertEquals,
+  assertGreater,
   assertInstanceOf,
+  assertNotEquals,
 } from "$std/assert/mod.ts";
 //import { DateFormat } from "📚/utils/time/mod.ts";
 import { InvestorAssembly } from "./investor-assembly.ts";
+import type { MirrorsByDate, StatsByDate } from "./investor-assembly.ts";
+
+import { InvestorId } from "📚/scrape/mod.ts";
 import { repo } from "./testdata.ts";
 // import { ChartSeries } from "./chart-series.ts";
 // import type { InvestorExport } from "./mod.ts";
@@ -51,13 +56,31 @@ Deno.test("CustomerId", async () => {
 
 Deno.test("Stats", async () => {
   const investor = new InvestorAssembly(username, repo);
-  const stats = await investor.stats();
+  const stats: StatsByDate = await investor.stats();
   assertEquals(Object.keys(stats), [
     "2021-12-29",
     "2022-01-21",
     "2022-04-18",
     "2022-04-25",
   ]);
+});
+
+Deno.test("Mirrors", async () => {
+  const investor = new InvestorAssembly("Schnaub123", repo);
+  const mirrors: MirrorsByDate = await investor.mirrors();
+  assertEquals(Object.keys(mirrors), [
+    "2022-02-05",
+    "2022-02-12",
+    "2022-04-18",
+    "2022-04-25",
+  ]);
+
+  // Confirm at least one mirror each date
+  // Confirm mirrors have UserName
+  Object.values(mirrors).forEach((ids: InvestorId[]) => {
+    assertGreater(ids.length, 0);
+    ids.forEach((id: InvestorId) => assertNotEquals(id.UserName, ""));
+  });
 });
 
 // Deno.test("Combined Export", async () => {
@@ -68,39 +91,4 @@ Deno.test("Stats", async () => {
 //   assertInstanceOf(dump.mirrors, Array<InvestorId>);
 //   assertInstanceOf(dump.stats, Object);
 //   assertEquals(dump.stats.UserName, username);
-// });
-
-// Deno.test("CustomerId", async () => {
-//   const investor: Investor = new InvestorAssembly(username, repoBackend);
-//   const id: number = await investor.CustomerId();
-//   assertEquals(id, CustomerId);
-// });
-
-// Deno.test("Full Name", async () => {
-//   const investor: Investor = new InvestorAssembly(username, repoBackend);
-//   const name: string = await investor.FullName();
-//   assertEquals(name, FullName);
-// });
-
-// Deno.test("Start/End", async () => {
-//   const investor: Investor = new InvestorAssembly(username, repoBackend);
-//   const start: DateFormat | null = await investor.start();
-//   assertEquals(start, "2021-12-29");
-//   const end: DateFormat | null = await investor.end();
-//   assertEquals(end, "2022-04-25");
-//   assertGreaterOrEqual(end, start);
-// });
-
-// Deno.test("Active Range", async () => {
-//   const investor: Investor = new InvestorAssembly(username, repoBackend);
-//   const active: boolean = await investor.active("2021-12-30");
-//   assertEquals(active, true);
-//   const inactive: boolean = await investor.active("2021-12-28");
-//   assertEquals(inactive, false);
-// });
-
-// Deno.test("Validate", async () => {
-//   const investor: Investor = new InvestorAssembly(username, repoBackend);
-//   const valid: boolean = await investor.isValid();
-//   assertEquals(valid, true);
 // });
