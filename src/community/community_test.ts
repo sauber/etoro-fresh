@@ -1,5 +1,5 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
-import { Community } from "./community.ts";
+import { Community } from "../investor./community/community.ts";
 import { RepoHeapBackend } from "/repository/repo-heap.ts";
 import { today } from "/utils/time/mod.ts";
 

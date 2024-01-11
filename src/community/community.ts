@@ -1,6 +1,6 @@
 import { RepoBackend } from "/repository/mod.ts";
 import { DateFormat } from "/utils/time/mod.ts";
-import { Investor } from "./investor.ts";
+import { Investor } from "../investor/investor.ts";
 import { TextSeries } from "/utils/series.ts";
 
 export type Names = TextSeries;

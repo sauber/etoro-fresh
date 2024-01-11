@@ -30,6 +30,8 @@ export type StatsExport = {
 export type StatsImport = StatsExport & {
   CustomerId: number;
   UserName: string;
+  DisplayFullName: boolean;
+  FullName?: string;
   VirtualCopiers: number;
 };
 

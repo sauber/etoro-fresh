@@ -1,73 +1,74 @@
+import { Investor } from "📚/investor/mod.ts";
 import {
   assertEquals,
   assertGreater,
   assertInstanceOf,
   assertNotEquals,
 } from "$std/assert/mod.ts";
-//import { DateFormat } from "📚/utils/time/mod.ts";
 import { InvestorAssembly } from "./investor-assembly.ts";
 import type { MirrorsByDate, StatsByDate } from "./investor-assembly.ts";
 
 import { InvestorId } from "📚/scrape/mod.ts";
 import { repo } from "./testdata.ts";
-// import { ChartSeries } from "./chart-series.ts";
-// import type { InvestorExport } from "./mod.ts";
-// import type { DateFormat } from "/utils/time/mod.ts";
-// import type { InvestorId } from "/investor/mod.ts";
 
 // Test Data
-const username = "FundManagerZech";
-const CustomerId = 5125148;
-//const FullName = "Zheng Bin";
+const username = "Schnaub123";
+const customerid = 2792934;
+const fullname = "Zheng Bin";
 
 Deno.test("Blank Initialization", () => {
-  const investor: InvestorAssembly = new InvestorAssembly(username, repo);
-  assertInstanceOf(investor, InvestorAssembly);
-});
-
-Deno.test("Chart", async () => {
-  const investor = new InvestorAssembly(username, repo);
-  const series: number[] = await investor.chart();
-  assertEquals(series.length, 511);
-  assertEquals(series[0], 6443.72);
-  assertEquals(series[series.length - 1], 11044);
-});
-
-Deno.test("Start", async () => {
-  const investor = new InvestorAssembly(username, repo);
-  assertEquals(await investor.start(), "2020-12-01");
-});
-
-Deno.test("End", async () => {
-  const investor = new InvestorAssembly(username, repo);
-  assertEquals(await investor.end(), "2022-04-25");
+  const assembly: InvestorAssembly = new InvestorAssembly(username, repo);
+  assertInstanceOf(assembly, InvestorAssembly);
 });
 
 Deno.test("UserName", () => {
-  const investor = new InvestorAssembly(username, repo);
-  const name: string = investor.UserName;
+  const assembly = new InvestorAssembly(username, repo);
+  const name: string = assembly.UserName;
   assertEquals(name, username);
 });
 
 Deno.test("CustomerId", async () => {
-  const investor = new InvestorAssembly(username, repo);
-  assertEquals(await investor.CustomerId(), CustomerId);
+  const assembly = new InvestorAssembly(username, repo);
+  assertEquals(await assembly.CustomerId(), customerid);
+});
+
+Deno.test("Full Name", async () => {
+  const assembly = new InvestorAssembly("hech123", repo);
+  assertEquals(await assembly.FullName(), "Martin Stewart Henshaw");
+});
+
+Deno.test("Start", async () => {
+  const assembly = new InvestorAssembly(username, repo);
+  assertEquals(await assembly.start(), "2021-02-01");
+});
+
+Deno.test("End", async () => {
+  const assembly = new InvestorAssembly(username, repo);
+  assertEquals(await assembly.end(), "2022-04-25");
+});
+
+Deno.test("Chart", async () => {
+  const assembly = new InvestorAssembly(username, repo);
+  const series: number[] = await assembly.chart();
+  assertEquals(series.length, 449);
+  assertEquals(series[0], 620.58);
+  assertEquals(series[series.length - 1], 12565.32);
 });
 
 Deno.test("Stats", async () => {
-  const investor = new InvestorAssembly(username, repo);
-  const stats: StatsByDate = await investor.stats();
+  const assembly = new InvestorAssembly(username, repo);
+  const stats: StatsByDate = await assembly.stats();
   assertEquals(Object.keys(stats), [
-    "2021-12-29",
-    "2022-01-21",
+    "2022-02-05",
+    "2022-02-12",
     "2022-04-18",
     "2022-04-25",
   ]);
 });
 
 Deno.test("Mirrors", async () => {
-  const investor = new InvestorAssembly("Schnaub123", repo);
-  const mirrors: MirrorsByDate = await investor.mirrors();
+  const assembly = new InvestorAssembly(username, repo);
+  const mirrors: MirrorsByDate = await assembly.mirrors();
   assertEquals(Object.keys(mirrors), [
     "2022-02-05",
     "2022-02-12",
@@ -84,11 +85,7 @@ Deno.test("Mirrors", async () => {
 });
 
 // Deno.test("Combined Export", async () => {
-//   const investor: Investor = new InvestorAssembly(username, repoBackend);
-//   const dump: InvestorExport = await investor.export();
-//   assertInstanceOf(dump.chart[0], Array<DateFormat>);
-//   assertInstanceOf(dump.chart[1], Array<number>);
-//   assertInstanceOf(dump.mirrors, Array<InvestorId>);
-//   assertInstanceOf(dump.stats, Object);
-//   assertEquals(dump.stats.UserName, username);
+//   const assembly = new InvestorAssembly(username, repo);
+//   const investor: Investor = await assembly.investor();
+//   assertInstanceOf(investor, Investor);
 // });

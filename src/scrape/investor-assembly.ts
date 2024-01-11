@@ -1,6 +1,8 @@
 import type { DateFormat } from "📚/utils/time/mod.ts";
 import { diffDate, nextDate } from "📚/utils/time/calendar.ts";
 import { Asset, Backend } from "/repository/mod.ts";
+import { Investor } from "📚/investor/mod.ts";
+import { Chart } from "📚/chart/mod.ts";
 import { InvestorId } from "📚/scrape/mod.ts";
 
 import type { ChartData } from "./chart.ts";
@@ -34,6 +36,12 @@ export class InvestorAssembly {
     const stats: StatsData = await this.statsAsset.last();
     const id: number = stats.Data.CustomerId;
     return id;
+  }
+
+  /** Customer ID */
+  public async FullName(): Promise<string | undefined> {
+    const stats: StatsData = await this.statsAsset.last();
+    return stats.Data.FullName;
   }
 
   /** First date of combined charts */
@@ -160,5 +168,15 @@ export class InvestorAssembly {
       ...range.map((date, index) => ({ [date]: values[index] }))
     );
     return zip;
+  }
+
+  /** Generate investor object */
+  public async investor(): Promise<Investor> {
+    return new Investor(
+      this.UserName,
+      await this.CustomerId(),
+      await this.FullName(),
+      new Chart(await this.chart(), await this.end())
+    );
   }
 }
