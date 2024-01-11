@@ -1,15 +1,21 @@
-import { DateSeries, diffDate, nextDate } from "/utils/time/mod.ts";
+import { diffDate, nextDate } from "/utils/time/mod.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
 
-export class ChartSeries implements DateSeries<number> {
-  constructor(
-    readonly values: number[],
-    private readonly firstDate: DateFormat,
-  ) {}
+/** Numbers by date */
+export class Chart {
+  public readonly start: DateFormat;
 
-  public dates(): DateFormat[] {
+  constructor(
+    public readonly values: number[],
+    public readonly end: DateFormat
+  ) {
+    this.start = nextDate(this.end, -this.values.length + 1);
+  }
+
+  /** List of all dates */
+  public get dates(): DateFormat[] {
     const dates: DateFormat[] = [];
-    let date = this.firstDate;
+    let date = this.start;
     for (const _value of this.values) {
       dates.push(date);
       date = nextDate(date);
@@ -17,49 +23,37 @@ export class ChartSeries implements DateSeries<number> {
     return dates;
   }
 
+  /** Lookup value on date */
   public value(date: DateFormat): number {
-    const index: number = diffDate(this.firstDate, date);
+    const index: number = diffDate(this.start, date);
     if (index < 0 || index >= this.values.length) {
       throw new Error(
-        `Date not in range: ${this.firstDate} < ${date} < ${this.end()}`,
+        `Date not in range: ${this.start} < ${date} < ${this.end}`
       );
     }
     return this.values[index];
   }
 
-  public start(): DateFormat {
-    return this.firstDate;
-  }
-
-  public end(): DateFormat {
-    return nextDate(this.firstDate, this.values.length - 1);
-  }
-
-  public first(): number {
+  public get first(): number {
     return this.values[0];
   }
 
-  public last(): number {
+  public get last(): number {
     return this.values[this.values.length - 1];
   }
 
   /** Sub chart with entries starting on date */
-  public from(date: DateFormat): ChartSeries {
-    const offset = diffDate(this.firstDate, date);
-    //const count = this.values.length - offset;
-    //const first: DateFormat = this.firstDate;
-    const end: number = this.values.length;
-    //console.log({first, length, date, offset, count});
-    const trimmed = this.values.slice(offset, end);
-    //console.log({trimmed});
-    return new ChartSeries(trimmed, date);
+  public from(date: DateFormat): Chart {
+    const offset = diffDate(this.start, date);
+    const trimmed = this.values.slice(offset);
+    return new Chart(trimmed, this.end);
   }
 
   /** Sub chart with entries until and including date */
-  public until(date: DateFormat): ChartSeries {
-    const count = diffDate(this.firstDate, date);
+  public until(date: DateFormat): Chart {
+    const count = diffDate(this.start, date);
     const trimmed = this.values.slice(0, count + 1);
-    return new ChartSeries(trimmed, this.firstDate);
+    return new Chart(trimmed, this.start);
   }
 
   public get length(): number {
@@ -77,23 +71,26 @@ export class ChartSeries implements DateSeries<number> {
   }
 
   /** Add same number to each value */
-  public add(a: number): ChartSeries {
-    return new ChartSeries(this.values.map((x) => x + a), this.firstDate);
+  public add(a: number): Chart {
+    return new Chart(
+      this.values.map((x) => x + a),
+      this.start
+    );
   }
 
   /** Raise each value to the power of a */
-  public pow(a: number): ChartSeries {
-    return new ChartSeries(
+  public pow(a: number): Chart {
+    return new Chart(
       this.values.map((x) => Math.pow(x, a)),
-      this.firstDate,
+      this.start
     );
   }
 
   /** max(0,a) */
-  public get relu(): ChartSeries {
-    return new ChartSeries(
+  public get relu(): Chart {
+    return new Chart(
       this.values.map((x) => Math.max(0, x)),
-      this.firstDate,
+      this.start
     );
   }
 
@@ -107,30 +104,30 @@ export class ChartSeries implements DateSeries<number> {
   }
 
   /** Value as ratio above previous value */
-  public get win(): ChartSeries {
+  public get win(): Chart {
     const v = this.values;
-    return new ChartSeries(
-      v.map((a, i) => i == 0 ? 0 : a / v[i - 1] - 1).slice(1),
-      nextDate(this.firstDate, -1),
+    return new Chart(
+      v.map((a, i) => (i == 0 ? 0 : a / v[i - 1] - 1)).slice(1),
+      nextDate(this.start, -1)
     );
   }
 
-  /** 
+  /**
    * Sharpe Ratio, riskfree is annual riskfree return, for example 0.05
    * TODO: Research if other similar indicator are better for this project
    */
   public sharpeRatio(riskfree: number): number {
     // Daily benchmark and daily average profit
-    const profit = (this.last() / this.first() - 1) / (this.length - 1);
+    const profit = (this.last / this.first - 1) / (this.length - 1);
     const benchmark = riskfree / 365;
 
     // std of incrementals
     const incrementals = this.win.values.filter((x) => x > 0);
-    const volatility = new ChartSeries(incrementals, this.firstDate).std;
+    const volatility = new Chart(incrementals, this.start).std;
 
     // Sharpe Ratio
     const sharpe = (profit - benchmark) / volatility;
-    //console.log({profit, benchmark, volatility, sharpe});
+
     return sharpe;
   }
 
