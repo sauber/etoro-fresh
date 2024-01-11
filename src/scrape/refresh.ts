@@ -190,7 +190,7 @@ export class Refresh {
     );
     const data: PortfolioData = await asset.last();
     const portfolio: Portfolio = new Portfolio(data);
-    return portfolio.investors();
+    return portfolio.investors;
   }
 
   public async run(max?: number): Promise<number> {
