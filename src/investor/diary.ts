@@ -46,7 +46,7 @@ export class Diary<T> {
       throw new Error(
         `Searching for asset before ${date} but first date is ${this.start}`
       );
-    for (const d of this.dates.reverse()) {
+    for (const d of [...this.dates].reverse()) {
       if (d <= date) return this.cards[d];
     }
 
@@ -59,7 +59,7 @@ export class Diary<T> {
     this.validate();
     if (date > this.end)
       throw new Error(
-        `Searching for asset after ${date} but last date is ${this.start}`
+        `Searching for asset after ${date} but last date is ${this.end}`
       );
     for (const d of this.dates) {
       if (d >= date) return this.cards[d];
