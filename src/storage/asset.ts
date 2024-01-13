@@ -1,6 +1,6 @@
 import type { DateFormat } from "/utils/time/mod.ts";
 import { today } from "📚/utils/time/mod.ts";
-import type { AssetName, JSONObject } from "📚/repository/mod.ts";
+import type { AssetName, JSONObject } from "./mod.ts";
 import { Backend } from "./backend.ts";
 
 /** A named asset in repo on all the dates it is available */

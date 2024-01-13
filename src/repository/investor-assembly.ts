@@ -1,9 +1,9 @@
 import type { DateFormat } from "📚/utils/time/mod.ts";
 import { diffDate, nextDate } from "📚/utils/time/calendar.ts";
-import { Asset, Backend } from "/repository/mod.ts";
+import { Asset, Backend } from "../storage/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import { Chart as CompiledChart } from "📚/chart/mod.ts";
-import { InvestorId } from "📚/scrape/mod.ts";
+import { InvestorId } from "./mod.ts";
 
 import type { ChartData } from "./chart.ts";
 import { Chart } from "./chart.ts";

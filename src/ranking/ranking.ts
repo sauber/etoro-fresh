@@ -1,4 +1,4 @@
-import { RepoBackend } from "/repository/mod.ts";
+import { RepoBackend } from "../storage/mod.ts";
 import { Model } from "./model.ts";
 import { Extract, Features } from "./features.ts";
 import { Community } from "/investor/mod.ts";

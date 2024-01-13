@@ -15,8 +15,8 @@ import {
   tensor2D,
   WASM,
 } from "netsaur";
-import { JournaledAsset, RepoBackend } from "/repository/mod.ts";
-import type { JSONObject } from "/repository/mod.ts";
+import { JournaledAsset, RepoBackend } from "../storage/mod.ts";
+import type { JSONObject } from "../storage/mod.ts";
 import { DataFrame } from "/utils/dataframe.ts";
 import type { RowRecord, RowRecords } from "/utils/dataframe.ts";
 

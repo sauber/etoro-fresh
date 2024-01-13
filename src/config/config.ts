@@ -1,5 +1,5 @@
-import type { JSONObject, JSONValue } from "📚/repository/mod.ts";
-import { Backend, Asset } from "📚/repository/mod.ts";
+import type { JSONObject, JSONValue } from "../storage/mod.ts";
+import { Backend, Asset } from "../storage/mod.ts";
 
 export class Config {
   private static readonly assetname = "config";

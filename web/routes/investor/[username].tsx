@@ -11,7 +11,7 @@ import Feature from "📦/Feature.tsx";
 import ChartIsland from "🏝️/Chart.tsx";
 import InvestorAvatar from "🏝️/investor/InvestorAvatar.tsx";
 
-import { RepoDiskBackend } from "📚/repository/mod.ts";
+import { RepoDiskBackend } from "../../../src/storage/mod.ts";
 import { Investor, InvestorExport, Names } from "📚/investor/mod.ts";
 import { Ranking } from "📚/ranking/mod.ts";
 import { DateFormat } from "📚/utils/time/mod.ts";

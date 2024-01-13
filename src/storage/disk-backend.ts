@@ -1,5 +1,5 @@
-import type { JSONObject, AssetName, AssetNames } from "../repository/mod.ts";
-import { Backend } from "../repository/mod.ts";
+import type { JSONObject, AssetName, AssetNames } from "./mod.ts";
+import { Backend } from "./mod.ts";
 import {
   exists,
   read,
@@ -8,7 +8,7 @@ import {
   dirs,
   age,
   mkdir,
-} from "../repository/files.ts";
+} from "./files.ts";
 import { join } from "path";
 
 /** Store investor objects on disk */

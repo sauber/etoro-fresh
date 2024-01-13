@@ -1,6 +1,6 @@
 import { assertEquals } from "$std/assert/mod.ts";
-import { HeapBackend } from "📚/repository/mod.ts";
-import type { JSONValue } from "../repository/mod.ts";
+import { HeapBackend } from "../storage/mod.ts";
+import type { JSONValue } from "../storage/mod.ts";
 import { Config } from "📚/config/config.ts";
 
 Deno.test("Config", async (t) => {

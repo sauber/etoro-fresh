@@ -9,7 +9,7 @@ import {
 import { InvestorAssembly } from "./investor-assembly.ts";
 import type { MirrorsByDate, StatsByDate } from "./investor-assembly.ts";
 
-import { InvestorId } from "📚/scrape/mod.ts";
+import { InvestorId } from "./mod.ts";
 import { repo } from "./testdata.ts";
 
 // Test Data

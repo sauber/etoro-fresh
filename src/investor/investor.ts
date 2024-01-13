@@ -1,6 +1,6 @@
 import { Chart } from "📚/chart/mod.ts";
 import { Diary } from "📚/investor/diary.ts";
-import type { StatsExport, InvestorId } from "📚/scrape/mod.ts";
+import type { StatsExport, InvestorId } from "../repository/mod.ts";
 
 export class Investor {
   constructor(

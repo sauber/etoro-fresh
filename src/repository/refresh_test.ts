@@ -2,7 +2,7 @@ import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { FetchHeapBackend } from "./fetch-heap.ts";
 import { Refresh } from "./refresh.ts";
 import { discoverFilter, investorId, testAssets } from "./testdata.ts";
-import { HeapBackend } from "📚/repository/heap-backend.ts";
+import { HeapBackend } from "../storage/heap-backend.ts";
 
 Deno.test("Initialize", () => {
   const repo: HeapBackend = new HeapBackend();

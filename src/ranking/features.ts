@@ -1,7 +1,7 @@
 import { DateFormat } from "/utils/time/mod.ts";
 import { ChartSeries, Community, Investor } from "/investor/mod.ts";
 import type { Names, StatsData } from "/investor/mod.ts";
-import { JournaledAsset } from "/repository/mod.ts";
+import { JournaledAsset } from "../storage/mod.ts";
 import { ProgressBar } from "/utils/time/progressbar.ts";
 import { DataFrame } from "/utils/dataframe.ts";
 

@@ -1,4 +1,4 @@
-import { RepoBackend } from "/repository/mod.ts";
+import { RepoBackend } from "../storage/mod.ts";
 import { DateFormat } from "/utils/time/mod.ts";
 import { Investor } from "../investor/investor.ts";
 import { TextSeries } from "/utils/series.ts";

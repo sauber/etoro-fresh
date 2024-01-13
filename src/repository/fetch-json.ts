@@ -1,4 +1,4 @@
-import { JSONObject } from "/repository/mod.ts";
+import { JSONObject } from "../storage/mod.ts";
 
 export function fetchjson(url: string): Promise<JSONObject> {
   console.log(url);
