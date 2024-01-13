@@ -1,5 +1,6 @@
 import { Investor } from "📚/investor/mod.ts";
 import {
+  assert,
   assertEquals,
   assertGreater,
   assertInstanceOf,
@@ -87,4 +88,5 @@ Deno.test("Combined Export", async () => {
   const assembly = new InvestorAssembly(username, repo);
   const investor: Investor = await assembly.investor();
   assertInstanceOf(investor, Investor);
+  assert("UserName" in investor);
 });

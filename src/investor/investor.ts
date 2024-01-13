@@ -1,5 +1,6 @@
 import { Chart } from "📚/chart/mod.ts";
-//import { Stats } from "📚/investor/mod.ts";
+import { Diary } from "📚/investor/diary.ts";
+import type { StatsExport, InvestorId } from "📚/scrape/mod.ts";
 
 export class Investor {
   constructor(
@@ -7,7 +8,7 @@ export class Investor {
     private readonly CustomerID: number,
     private readonly FullName: string | undefined,
     private readonly chart: Chart,
-    //private readonly mirrors: Mirrors,
-    //private readonly stats: Stats,
+    private readonly mirrors: Diary<InvestorId[]>,
+    private readonly stats: Diary<StatsExport>,
   ){}
 }

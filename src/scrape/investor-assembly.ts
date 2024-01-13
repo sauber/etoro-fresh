@@ -14,6 +14,7 @@ export type MirrorsByDate = Record<DateFormat, InvestorId[]>;
 
 import type { StatsData, StatsExport } from "./stats.ts";
 import { Stats } from "./stats.ts";
+import { Diary } from "📚/investor/diary.ts";
 export type StatsByDate = Record<DateFormat, StatsExport>;
 
 /** Extract scraped data and compile an investor object */
@@ -176,7 +177,9 @@ export class InvestorAssembly {
       this.UserName,
       await this.CustomerId(),
       await this.FullName(),
-      new CompiledChart(await this.chart(), await this.end())
+      new CompiledChart(await this.chart(), await this.end()),
+      new Diary<InvestorId[]>(await this.mirrors()),
+      new Diary<StatsExport>(await this.stats()),
     );
   }
 }

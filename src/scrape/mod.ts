@@ -27,3 +27,5 @@ export type InvestorId = {
   UserName: string;
   CustomerId: number;
 };
+
+export type { StatsExport } from "📚/scrape/stats.ts";
