@@ -1,19 +1,20 @@
-import { RepoBackend } from "../storage/mod.ts";
+import { Backend } from "/storage/mod.ts";
 import { DateFormat } from "/utils/time/mod.ts";
-import { Investor } from "../investor/investor.ts";
+import { Investor } from "/investor/investor.ts";
 import { TextSeries } from "/utils/series.ts";
+import { InvestorAssembly } from "📚/repository/investor-assembly.ts";
 
 export type Names = TextSeries;
 
 /** Handle Community I/O requests to local repository */
 export class Community {
-  constructor(private readonly repo: RepoBackend) {}
+  constructor(private readonly repo: Backend) {}
 
   /** Unit set of names across all dates */
   private async allNames(): Promise<Names> {
-    const dates: DateFormat[] = await this.repo.dates();
+    const dates: DateFormat[] = await this.repo.dirs();
     const allDates: Names[] = await Promise.all(
-      dates.map((date) => this.namesByDate(date)),
+      dates.map((date) => this.namesByDate(date))
     );
     const allNames: string[][] = allDates.map((date) => date.values);
     const merged = new Set(allNames.flat());
@@ -22,7 +23,7 @@ export class Community {
 
   /** Identify all investor names on a date */
   public async namesByDate(date: DateFormat): Promise<Names> {
-    const assets: string[] = await this.repo.assetsByDate(date);
+    const assets: string[] = await (await this.repo.sub(date)).names();
     const valid = /(chart|portfolio|stats)$/;
 
     // Catalog which file type exist for each investor name
@@ -51,7 +52,7 @@ export class Community {
 
   /** The first directory where names exists */
   public async start(): Promise<DateFormat | null> {
-    const dates: DateFormat[] = await this.repo.dates();
+    const dates: DateFormat[] = await this.repo.dirs();
     for (const date of dates) {
       if (await this.dateHasNames(date)) return date;
     }
@@ -60,7 +61,7 @@ export class Community {
 
   /** The last directory where names exists */
   public async end(): Promise<DateFormat | null> {
-    const dates: DateFormat[] = await this.repo.dates();
+    const dates: DateFormat[] = await this.repo.dirs();
     for (const date of dates.reverse()) {
       if (await this.dateHasNames(date)) return date;
     }
@@ -73,18 +74,23 @@ export class Community {
     else return this.allNames();
   }
 
+  /**
+   * Confirm that investor has all required properties
+   * TODO
+   */
   public validName(username: string): Promise<boolean> {
-    return this.investor(username).isValid();
+    //return this.investor(username).isValid();
+    return true;
   }
 
   /** List of names with underlying valid data optionally on a certain date  */
   public async valid(date?: DateFormat): Promise<Names> {
     const allNames: Names = await this.names(date);
     const validVector: Array<boolean> = await Promise.all(
-      allNames.values.map((name) => this.investor(name).isValid()),
+      allNames.values.map((name) => this.validName(name))
     );
     const validNames: string[] = allNames.values.filter(
-      (_name, index) => validVector[index],
+      (_name, index) => validVector[index]
     );
     const result: Names = new TextSeries(validNames);
     return result;
@@ -94,10 +100,10 @@ export class Community {
   public async active(date: DateFormat): Promise<Names> {
     const allNames: Names = await this.names();
     const validVector: Array<boolean> = await Promise.all(
-      allNames.values.map((name) => this.investor(name).active(date)),
+      allNames.values.map((name) => (await this.validName(name)).active(date))
     );
     const validNames: string[] = allNames.values.filter(
-      (_name, index) => validVector[index],
+      (_name, index) => validVector[index]
     );
     const result: Names = new TextSeries(validNames);
     return result;
@@ -105,9 +111,10 @@ export class Community {
 
   private _loaded: Record<string, Investor> = {};
   /** Create and cache Investor object */
-  public investor(username: string): Investor {
+  public async investor(username: string): Promise<Investor> {
     if (!(username in this._loaded)) {
-      this._loaded[username] = new Investor(username, this.repo);
+      const assembly = new InvestorAssembly(username, this.repo)
+      this._loaded[username] = await assembly.investor();
     }
     return this._loaded[username];
   }

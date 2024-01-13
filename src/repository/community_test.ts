@@ -1,16 +1,16 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
-import { Community } from "../investor./community/community.ts";
-import { RepoHeapBackend } from "/repository/repo-heap.ts";
+import { Community } from "./community.ts";
+import { HeapBackend } from "/repository/heap-backend.ts";
 import { today } from "/utils/time/mod.ts";
 
 Deno.test("Initialization", () => {
-  const repo = new RepoHeapBackend();
+  const repo = new HeapBackend();
   const community: Community = new Community(repo);
   assertInstanceOf(community, Community);
 });
 
 Deno.test("Latest Names", async (t) => {
-  const repo = new RepoHeapBackend();
+  const repo = new HeapBackend();
   const community: Community = new Community(repo);
   const name = "john";
   const date = today();
