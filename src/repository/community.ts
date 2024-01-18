@@ -11,7 +11,7 @@ export class Community {
   constructor(private readonly repo: Backend) {}
 
   /** Unit set of names across all dates */
-  private async allNames(): Promise<Names> {
+  public async allNames(): Promise<Names> {
     const dates: DateFormat[] = await this.repo.dirs();
     const allDates: Names[] = await Promise.all(
       dates.map((date) => this.namesByDate(date))
@@ -22,7 +22,7 @@ export class Community {
   }
 
   /** Identify all investor names on a date */
-  private async namesByDate(date: DateFormat): Promise<Names> {
+  public async namesByDate(date: DateFormat): Promise<Names> {
     const assets: string[] = await (await this.repo.sub(date)).names();
     const valid = /(chart|portfolio|stats)$/;
 
@@ -38,41 +38,35 @@ export class Community {
   }
 
   /** Get list of names on last date available in repo */
-  public async last(): Promise<Names> {
-    const end: DateFormat | null = await this.end();
-    if (end) return this.namesByDate(end);
-    else return Promise.resolve(new TextSeries());
-  }
-
-  /** Confirm if there are any names in a directory */
-  private async dateHasNames(date: DateFormat): Promise<boolean> {
-    if ((await this.namesByDate(date)).length) return true;
-    return false;
-  }
+  // public async last(): Promise<Names> {
+  //   const end: DateFormat | null = await this.end();
+  //   if (end) return this.namesByDate(end);
+  //   else return Promise.resolve(new TextSeries());
+  // }
 
   /** The first directory where names exists */
-  public async start(): Promise<DateFormat | null> {
-    const dates: DateFormat[] = await this.repo.dirs();
-    for (const date of dates) {
-      if (await this.dateHasNames(date)) return date;
-    }
-    return null;
-  }
+  // public async start(): Promise<DateFormat | null> {
+  //   const dates: DateFormat[] = await this.repo.dirs();
+  //   for (const date of dates) {
+  //     if (await this.dateHasNames(date)) return date;
+  //   }
+  //   return null;
+  // }
 
   /** The last directory where names exists */
   public async end(): Promise<DateFormat | null> {
     const dates: DateFormat[] = await this.repo.dirs();
-    for (const date of dates.reverse()) {
-      if (await this.dateHasNames(date)) return date;
+    for (const date of [...dates].reverse()) {
+      if ((await this.namesByDate(date)).length) return date;
     }
     return null;
   }
 
   /** List of names optionally on a certain date  */
-  public names(date?: DateFormat): Promise<Names> {
-    if (date) return this.namesByDate(date);
-    else return this.allNames();
-  }
+  // public names(date?: DateFormat): Promise<Names> {
+  //   if (date) return this.namesByDate(date);
+  //   else return this.allNames();
+  // }
 
   /**
    * Confirm that investor has all required properties
@@ -84,17 +78,17 @@ export class Community {
   }
 
   /** List of names with underlying valid data optionally on a certain date  */
-  private async valid(date?: DateFormat): Promise<Names> {
-    const allNames: Names = await this.names(date);
-    const validVector: Array<boolean> = await Promise.all(
-      allNames.values.map((name) => this.validName(name))
-    );
-    const validNames: string[] = allNames.values.filter(
-      (_name, index) => validVector[index]
-    );
-    const result: Names = new TextSeries(validNames);
-    return result;
-  }
+  // private async valid(date?: DateFormat): Promise<Names> {
+  //   const allNames: Names = await this.names(date);
+  //   const validVector: Array<boolean> = await Promise.all(
+  //     allNames.values.map((name) => this.validName(name))
+  //   );
+  //   const validNames: string[] = allNames.values.filter(
+  //     (_name, index) => validVector[index]
+  //   );
+  //   const result: Names = new TextSeries(validNames);
+  //   return result;
+  // }
 
   /** Test if investor is active at date */
   private async activeName(
@@ -107,7 +101,7 @@ export class Community {
 
   /** All investors where date is within active range */
   public async active(date: DateFormat): Promise<Names> {
-    const allNames: Names = await this.names();
+    const allNames: Names = await this.allNames();
     const validVector: Array<boolean> = await Promise.all(
       allNames.values.map((name) => this.activeName(name, date))
     );
@@ -130,7 +124,7 @@ export class Community {
 
   /** Get random investor */
   public async any(): Promise<Investor> {
-    const names: Names = await this.names();
+    const names: Names = await this.allNames();
     const name: string = names.any;
     return this.investor(name);
   }

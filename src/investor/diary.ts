@@ -1,6 +1,6 @@
 import type { DateFormat } from "/utils/time/mod.ts";
 
-/** Collection of objects from various dates */
+/** Collection of same objects from various dates */
 export class Diary<T> {
   /** Sorted list of dates where data is available */
   public readonly dates: DateFormat[];
