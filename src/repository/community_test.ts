@@ -1,6 +1,7 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
+import { Asset } from "📚/storage/mod.ts";
 import { Community } from "./community.ts";
-import { HeapBackend } from "/repository/heap-backend.ts";
+import { HeapBackend } from "/storage/heap-backend.ts";
 import { today } from "/utils/time/mod.ts";
 
 Deno.test("Initialization", () => {
@@ -17,15 +18,15 @@ Deno.test("Latest Names", async (t) => {
 
   await t.step("incomplete write", async () => {
     await Promise.all([
-      repo.store(`${name}.chart`, {}),
-      repo.store(`${name}.portfolio`, {}),
+      new Asset(`${name}.chart`, repo).store({}),
+      new Asset(`${name}.portfolio`, repo).store({}),
     ]);
     const names = await community.names(date);
     assertEquals(names.values, [name]);
   });
 
   await t.step("complete write", async () => {
-    await repo.store(`${name}.stats`, {});
+    await new Asset(`${name}.stats`, repo).store({});
     const names = await community.names(date);
     assertEquals(names.values, [name]);
   });

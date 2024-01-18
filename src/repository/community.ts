@@ -22,7 +22,7 @@ export class Community {
   }
 
   /** Identify all investor names on a date */
-  public async namesByDate(date: DateFormat): Promise<Names> {
+  private async namesByDate(date: DateFormat): Promise<Names> {
     const assets: string[] = await (await this.repo.sub(date)).names();
     const valid = /(chart|portfolio|stats)$/;
 
@@ -78,13 +78,13 @@ export class Community {
    * Confirm that investor has all required properties
    * TODO
    */
-  public validName(username: string): Promise<boolean> {
+  private validName(_username: string): Promise<boolean> {
     //return this.investor(username).isValid();
-    return true;
+    return Promise.resolve(true);
   }
 
   /** List of names with underlying valid data optionally on a certain date  */
-  public async valid(date?: DateFormat): Promise<Names> {
+  private async valid(date?: DateFormat): Promise<Names> {
     const allNames: Names = await this.names(date);
     const validVector: Array<boolean> = await Promise.all(
       allNames.values.map((name) => this.validName(name))
@@ -96,11 +96,20 @@ export class Community {
     return result;
   }
 
+  /** Test if investor is active at date */
+  private async activeName(
+    username: string,
+    date: DateFormat
+  ): Promise<boolean> {
+    const investor = await this.investor(username);
+    return investor.active(date);
+  }
+
   /** All investors where date is within active range */
   public async active(date: DateFormat): Promise<Names> {
     const allNames: Names = await this.names();
     const validVector: Array<boolean> = await Promise.all(
-      allNames.values.map((name) => (await this.validName(name)).active(date))
+      allNames.values.map((name) => this.activeName(name, date))
     );
     const validNames: string[] = allNames.values.filter(
       (_name, index) => validVector[index]
@@ -111,9 +120,9 @@ export class Community {
 
   private _loaded: Record<string, Investor> = {};
   /** Create and cache Investor object */
-  public async investor(username: string): Promise<Investor> {
+  private async investor(username: string): Promise<Investor> {
     if (!(username in this._loaded)) {
-      const assembly = new InvestorAssembly(username, this.repo)
+      const assembly = new InvestorAssembly(username, this.repo);
       this._loaded[username] = await assembly.investor();
     }
     return this._loaded[username];
