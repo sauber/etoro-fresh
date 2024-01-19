@@ -18,6 +18,7 @@ export class Community {
     );
     //const allNames: string[][] = allDates.map((date) => date.values);
     const merged = new Set(allNames.flat());
+
     //return new TextSeries([...merged]);
     return Array.from(merged);
   }
@@ -25,6 +26,7 @@ export class Community {
   /** Identify all investor names on a date */
   public async namesByDate(date: DateFormat): Promise<Names> {
     const assets: string[] = await (await this.repo.sub(date)).names();
+    //console.log({date, assets});
     const valid = /(chart|portfolio|stats)$/;
 
     // Catalog which file type exist for each investor name

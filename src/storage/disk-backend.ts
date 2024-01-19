@@ -1,15 +1,7 @@
 import type { JSONObject, AssetName, AssetNames } from "./mod.ts";
 import { Backend } from "./mod.ts";
-import {
-  exists,
-  read,
-  write,
-  files,
-  dirs,
-  age,
-  mkdir,
-} from "./files.ts";
-import { join } from "path";
+import { exists, read, write, files, dirs, age, mkdir } from "./files.ts";
+import { join, parse } from "path";
 
 /** Store investor objects on disk */
 export class DiskBackend implements Backend {
@@ -26,8 +18,7 @@ export class DiskBackend implements Backend {
 
   /** Convert filename to assetname */
   protected assetname(filename: string): string {
-    const [assetname, _ext] = filename.split(".");
-    return assetname;
+    return parse(filename).name;
   }
 
   public async sub(partition: string): Promise<DiskBackend> {

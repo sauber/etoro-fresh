@@ -169,20 +169,43 @@ export class Features {
     // }
     const investor: Investor = await this.community.investor(username);
     const start: DateFormat = investor.stats.start;
-    const stats: StatsExport = investor.stats.first;
+
+    // Confirm minimum amount of data in chart
     const chart: Chart = investor.chart.from(start);
+    if (chart.length < this.days) {
+      //console.log(`${username} chart has ${chart.length} bars, skipping`);
+      await bar.dec();
+      return;
+    }
+
+    // Confirm valid apy
+    const apy: number = chart.apy;
+    if (Number.isNaN(apy) || apy === Infinity || apy === -Infinity) {
+      //console.log(`${username} apy is ${apy}, skipping`);
+      await bar.dec();
+      return;
+    }
+
+    // 5% is annual money market return. TODO: Load from config
+    const sr: number = chart.sharpeRatio(0.05);
+    if (Number.isNaN(sr) || sr === Infinity || sr === -Infinity) {
+      //console.log(`${username} SharpeRatio is ${sr}, skipping`);
+      await bar.dec();
+      return;
+    }
 
     const features: FeatureData = {
-      Profit: chart.apy,
-      // 5% is annual money market return. TODO: Load from config
-      SharpeRatio: chart.sharpeRatio(0.05),
+      Profit: apy,
+      SharpeRatio: sr,
     };
 
+    const stats: StatsExport = investor.stats.first;
     Object.entries(stats).forEach(([key, value]) => {
       features[key] = typeof value === "boolean" ? (value ? 1 : 0) : value;
     });
-    list.push(features);
 
+    // Add investori
+    list.push(features);
     await bar.inc();
 
     return;
@@ -192,15 +215,13 @@ export class Features {
   public async data(): Promise<DataFrame> {
     const list: FeatureData[] = [];
     const names: string[] = await this.community.allNames();
-    console.log(`Features: names: ${names}`);
+    //console.log(`Features: names: ${names}`);
     const bar = new ProgressBar("Loading investor data", names.length);
     await Promise.all(
-      names.map((name: string) =>
-        this.addInvestor(list, name as string, bar)
-      )
+      names.map((name: string) => this.addInvestor(list, name as string, bar))
     );
     bar.finish();
-    console.log(`Features: Found ${list.length} valid investors`);
+    //console.log(`Features: Found ${list.length} valid investors`);
 
     return DataFrame.fromRecords(list);
   }

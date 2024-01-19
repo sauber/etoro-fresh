@@ -1,6 +1,6 @@
 import { Backend } from "../storage/mod.ts";
 import { Model } from "./model.ts";
-import { Extract, Features } from "./features.ts";
+import { Features } from "./features.ts";
 import { Community } from "/repository/mod.ts";
 import { DataFrame } from "/utils/dataframe.ts";
 import { TextSeries } from "/utils/series.ts";
