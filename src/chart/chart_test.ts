@@ -95,3 +95,10 @@ Deno.test("Gain", () => {
   const gain = chart.gain(nextDate(end, -1), end);
   assertEquals(gain, 1);
 });
+
+Deno.test("Average Yearly Profit", () => {
+  const end = "2023-10-31";
+  const chart = new Chart([10, 20], end);
+  const apy: number = chart.apy;
+  assertEquals(apy, 365);
+});

@@ -1,7 +1,7 @@
-import { RepoBackend } from "../storage/mod.ts";
+import { Backend } from "../storage/mod.ts";
 import { Model } from "./model.ts";
 import { Extract, Features } from "./features.ts";
-import { Community } from "/investor/mod.ts";
+import { Community } from "/repository/mod.ts";
 import { DataFrame } from "/utils/dataframe.ts";
 import { TextSeries } from "/utils/series.ts";
 
@@ -9,7 +9,7 @@ export class Ranking {
   private readonly model: Model;
   private readonly features: Features;
 
-  constructor(repo: RepoBackend) {
+  constructor(repo: Backend) {
     this.model = new Model(repo);
     const community = new Community(repo);
     this.features = new Features(community);

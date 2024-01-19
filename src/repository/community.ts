@@ -1,24 +1,25 @@
 import { Backend } from "/storage/mod.ts";
 import { DateFormat } from "/utils/time/mod.ts";
 import { Investor } from "/investor/investor.ts";
-import { TextSeries } from "/utils/series.ts";
+//import { TextSeries } from "/utils/series.ts";
 import { InvestorAssembly } from "📚/repository/investor-assembly.ts";
 
-export type Names = TextSeries;
+type Names = Array<string>;
 
 /** Handle Community I/O requests to local repository */
 export class Community {
   constructor(private readonly repo: Backend) {}
 
-  /** Unit set of names across all dates */
+  /** Unique set of names across all dates */
   public async allNames(): Promise<Names> {
     const dates: DateFormat[] = await this.repo.dirs();
-    const allDates: Names[] = await Promise.all(
+    const allNames: Names[] = await Promise.all(
       dates.map((date) => this.namesByDate(date))
     );
-    const allNames: string[][] = allDates.map((date) => date.values);
+    //const allNames: string[][] = allDates.map((date) => date.values);
     const merged = new Set(allNames.flat());
-    return new TextSeries([...merged]);
+    //return new TextSeries([...merged]);
+    return Array.from(merged);
   }
 
   /** Identify all investor names on a date */
@@ -34,7 +35,8 @@ export class Community {
         const [name, _type] = assetname.split(".");
         names.add(name);
       });
-    return new TextSeries([...names]);
+    //return new TextSeries([...names]);
+    return Array.from(names);
   }
 
   /** Get list of names on last date available in repo */
@@ -103,18 +105,19 @@ export class Community {
   public async active(date: DateFormat): Promise<Names> {
     const allNames: Names = await this.allNames();
     const validVector: Array<boolean> = await Promise.all(
-      allNames.values.map((name) => this.activeName(name, date))
+      allNames.map((name) => this.activeName(name, date))
     );
-    const validNames: string[] = allNames.values.filter(
+    const validNames: string[] = allNames.filter(
       (_name, index) => validVector[index]
     );
-    const result: Names = new TextSeries(validNames);
-    return result;
+    //const result: Names = new TextSeries(validNames);
+    //return result;
+    return Array.from(validNames);
   }
 
   private _loaded: Record<string, Investor> = {};
   /** Create and cache Investor object */
-  private async investor(username: string): Promise<Investor> {
+  public async investor(username: string): Promise<Investor> {
     if (!(username in this._loaded)) {
       const assembly = new InvestorAssembly(username, this.repo);
       this._loaded[username] = await assembly.investor();
@@ -125,7 +128,9 @@ export class Community {
   /** Get random investor */
   public async any(): Promise<Investor> {
     const names: Names = await this.allNames();
-    const name: string = names.any;
+    const count: number = names.length;
+    const index: number = Math.floor(Math.random() * count);
+    const name: string = names[index];
     return this.investor(name);
   }
 }

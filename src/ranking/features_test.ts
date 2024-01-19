@@ -3,6 +3,9 @@ import { community } from "./testdata.ts";
 import { Features } from "./features.ts";
 import { DataFrame } from "/utils/dataframe.ts";
 
+// TODO: confirm some names exists
+console.log({community}, await community.allNames());
+
 Deno.test("Initialization", () => {
   const rank = new Features(community);
   assertInstanceOf(rank, Features);

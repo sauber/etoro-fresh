@@ -138,4 +138,11 @@ export class Chart {
     const ratio = last / first - 1;
     return ratio;
   }
+
+  /** Average yearly Profit */
+  public get apy(): number {
+    const profit: number = this.last / this.first - 1;
+    const apy: number = (365 / (this.length-1)) * profit;
+    return apy;
+  }
 }

@@ -15,7 +15,7 @@ import {
   tensor2D,
   WASM,
 } from "netsaur";
-import { JournaledAsset, RepoBackend } from "../storage/mod.ts";
+import { Asset, Backend } from "../storage/mod.ts";
 import type { JSONObject } from "../storage/mod.ts";
 import { DataFrame } from "/utils/dataframe.ts";
 import type { RowRecord, RowRecords } from "/utils/dataframe.ts";
@@ -30,7 +30,7 @@ const Days = 60 * 60 * 1000;
 
 /** Netsaur Model for predicting Ranking */
 export class Model {
-  private readonly asset: JournaledAsset<ModelTS>;
+  private readonly asset: Asset<ModelTS>;
   private readonly assetname = "ranking.model";
   private readonly expire = 30 * Days;
   private readonly inputSize = 26; // Stats parameters
@@ -38,8 +38,9 @@ export class Model {
   private _sequential: Sequential | undefined;
   private semaphore = new Semaphore(1);
 
-  constructor(private readonly repo: RepoBackend) {
-    this.asset = this.repo.asset(this.assetname);
+  constructor(private readonly repo: Backend) {
+    //this.asset = this.repo.asset(this.assetname);
+    this.asset = new Asset<ModelTS>(this.assetname, repo);
   }
 
   /** Run before creating model, training or predicting */

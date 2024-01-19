@@ -5,12 +5,12 @@ import { DateFormat } from "📚/utils/time/mod.ts";
 
 export class Investor {
   constructor(
-    private readonly UserName: string,
-    private readonly CustomerID: number,
-    private readonly FullName: string | undefined,
-    private readonly chart: Chart,
-    private readonly mirrors: Diary<InvestorId[]>,
-    private readonly stats: Diary<StatsExport>,
+    public readonly UserName: string,
+    public readonly CustomerID: number,
+    public readonly FullName: string | undefined,
+    public readonly chart: Chart,
+    public readonly mirrors: Diary<InvestorId[]>,
+    public readonly stats: Diary<StatsExport>,
   ){}
 
   /** Confirm if investor has valid data on this date */

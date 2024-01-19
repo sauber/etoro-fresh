@@ -21,19 +21,19 @@ Deno.test("Latest Names", async (t) => {
       new Asset(`${name}.chart`, repo).store({}),
       new Asset(`${name}.portfolio`, repo).store({}),
     ]);
-    const names = await community.namesByDate(date);
-    assertEquals(names.values, [name]);
+    const names: string[] = await community.namesByDate(date);
+    assertEquals(names, [name]);
   });
 
   await t.step("complete write", async () => {
     await new Asset(`${name}.stats`, repo).store({});
-    const names = await community.namesByDate(date);
-    assertEquals(names.values, [name]);
+    const names: string[] = await community.namesByDate(date);
+    assertEquals(names, [name]);
   });
 
   await t.step("all names", async () => {
-    const names = await community.allNames();
-    assertEquals(names.values, [name]);
+    const names: string[] = await community.allNames();
+    assertEquals(names, [name]);
   });
 
   await t.step("last date", async () => {
