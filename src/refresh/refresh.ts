@@ -45,9 +45,8 @@ export class Refresh {
     private readonly repo: RepoBackend,
     private readonly fetcher: FetchBackend,
     private readonly investor: InvestorId,
-    private readonly filter: DiscoverFilter
-  ) // TODO: Expire
-  // TODO: Discover Range
+    private readonly filter: DiscoverFilter // TODO: Expire
+  ) // TODO: Discover Range
   {}
 
   /** Load  asset from web if missing or expired */
@@ -111,7 +110,7 @@ export class Refresh {
   private chart(investor: InvestorId): Promise<boolean> {
     const validate = function (loaded: JSONObject) {
       const chart: Chart = new Chart(loaded as ChartData);
-      if (!chart.validate) {
+      if (!chart.validate()) {
         console.warn(`Warning: Chart for ${investor.UserName} is invalid`);
         return false;
       }
