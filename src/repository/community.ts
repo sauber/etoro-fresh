@@ -117,6 +117,12 @@ export class Community {
     return Array.from(validNames);
   }
 
+  /** Verify if sufficient data files exists to load ivnestor */
+  private validate(username: string): Promise<boolean> {
+    const assembly = new InvestorAssembly(username, this.repo);
+    return assembly.validate();
+  }
+
   private _loaded: Record<string, Investor> = {};
   /** Create and cache Investor object */
   public async investor(username: string): Promise<Investor> {
@@ -127,12 +133,25 @@ export class Community {
     return this._loaded[username];
   }
 
-  /** Get random investor */
+  /** Get one random investor */
   public async any(): Promise<Investor> {
     const names: Names = await this.allNames();
     const count: number = names.length;
     const index: number = Math.floor(Math.random() * count);
     const name: string = names[index];
     return this.investor(name);
+  }
+
+  /** Load all valid investor */
+  public async valid(): Promise<Array<Investor>> {
+    const names: Names = await this.allNames();
+
+    const loadable: boolean[] = Promise.all(
+      names.map((name) => this.validate(name))
+    );
+
+    const validNames = names.filter((_name, index) => loadable[index]);
+
+    return Promise.all(validNames.map((name) => this.investor(name)));
   }
 }
