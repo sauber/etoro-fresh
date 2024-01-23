@@ -171,6 +171,30 @@ export class InvestorAssembly {
     return zip;
   }
 
+  public async validate(): Promise<boolean> {
+    // At least on chart file
+    const chartDates: DateFormat[] = await this.chartAsset.dates();
+    if (chartDates.length < 1) return false;
+    const chartStart: DateFormat = await this.chartAsset.start();
+    const chartEnd: DateFormat = await this.chartAsset.end();
+
+    // At least one stats file within range of chart
+    const statsDates: DateFormat[] = await this.chartAsset.dates();
+    const statsInRange = statsDates.filter(
+      (date) => date >= chartStart && date <= chartEnd
+    );
+    if (statsInRange.length < 1) return false;
+
+    // At least one positions file within range of chart
+    const positionsDates: DateFormat[] = await this.chartAsset.dates();
+    const positionsInRange = positionsDates.filter(
+      (date) => date >= chartStart && date <= chartEnd
+    );
+    if (positionsInRange.length < 1) return false;
+
+    return true;
+  }
+
   /** Combined investor object */
   public async investor(): Promise<Investor> {
     return new Investor(
@@ -179,7 +203,7 @@ export class InvestorAssembly {
       await this.FullName(),
       new CompiledChart(await this.chart(), await this.end()),
       new Diary<InvestorId[]>(await this.mirrors()),
-      new Diary<StatsExport>(await this.stats()),
+      new Diary<StatsExport>(await this.stats())
     );
   }
 }

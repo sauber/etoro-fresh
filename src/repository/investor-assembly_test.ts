@@ -84,6 +84,12 @@ Deno.test("Mirrors", async () => {
   });
 });
 
+Deno.test("Validate loadable", async () => {
+  const assembly = new InvestorAssembly(username, repo);
+  const ok: boolean = await assembly.validate();
+  assertEquals(ok, true);
+});
+
 Deno.test("Combined Export", async () => {
   const assembly = new InvestorAssembly(username, repo);
   const investor: Investor = await assembly.investor();
