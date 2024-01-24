@@ -6,17 +6,21 @@
 
 import { DiskBackend } from "../storage/disk-backend.ts";
 import { Community } from "./community.ts";
-//import { Investor } from "/investor/mod.ts";
+import { Investor } from "/investor/mod.ts";
 import { assertEquals } from "$std/assert/mod.ts";
 
 const path: string = Deno.args[0];
 const repo = new DiskBackend(path);
 const community = new Community(repo);
-const start: number = performance.now();
+const p1: number = performance.now();
 
 // Confirm there are no invalid names
 const invalid: string[] = await community.invalidNames();
 assertEquals(invalid, []);
+const p2: number = performance.now();
+console.log("Validation time (ms):", p2 - p1);
 
-const end: number = performance.now();
-console.log("Loading time (ms):", end - start);
+// Load all investors
+const _investors: Investor[] = await community.all();
+const p3: number = performance.now();
+console.log("Loading time (ms):", p3 - p2);
