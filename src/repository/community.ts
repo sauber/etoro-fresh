@@ -142,16 +142,24 @@ export class Community {
     return this.investor(name);
   }
 
-  /** Load all valid investor */
-  public async valid(): Promise<Array<Investor>> {
+  /** Identify investor with invalid data */
+  public async invalidNames(): Promise<Names> {
     const names: Names = await this.allNames();
 
-    const loadable: boolean[] = Promise.all(
+    // Validate each investor
+    const loadable: boolean[] = await Promise.all(
       names.map((name) => this.validate(name))
     );
 
-    const validNames = names.filter((_name, index) => loadable[index]);
+    // Report invalid investors
+    const invalidNames = names.filter((_name, index) => !loadable[index]);
+    return invalidNames;
+  }
 
-    return Promise.all(validNames.map((name) => this.investor(name)));
+  /** Load all investor */
+  public async all(): Promise<Array<Investor>> {
+    const names: Names = await this.allNames();
+
+    return Promise.all(names.map((name) => this.investor(name)));
   }
 }

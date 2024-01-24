@@ -41,8 +41,13 @@ export class DiskBackend implements Backend {
   public async retrieve(assetname: AssetName): Promise<JSONObject> {
     const filename: string = await this.filename(assetname);
     const content: string = await read(filename);
-    const data: JSONObject = JSON.parse(content);
-    return data;
+    try {
+      const data: JSONObject = JSON.parse(content);
+      return data;
+    } catch(err) {
+      console.log(filename, err);
+      return {};
+    }
   }
 
   public async has(assetname: AssetName): Promise<boolean> {

@@ -1,16 +1,17 @@
 {
   "lock": false,
   "tasks": {
-    "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
-    "start": "deno run -A --watch=web/static/,web/routes/,web/islands/ web/dev.ts",
     "build": "deno run -A dev.ts build",
+    "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
+    "community": "deno run --allow-read=testdata,../etoro-data/data src/repository/community_bin.ts ../etoro-data/data",
     "preview": "deno run -A main.ts",
-    "profile": "deno run --allow-read=testdata --v8-flags=--prof src/simulation/simulation_bin.ts testdata",
+    "profile": "deno run --allow-read=testdata,../etoro-data/data --v8-flags=--prof src/repository/community_bin.ts ../etoro-data/data",
     "rank": "deno run --allow-read=testdata,../etoro-data/data --allow-write=testdata,../etoro-data/data --allow-net=github.com,objects.githubusercontent.com src/ranking/ranking_bin.ts",
     "scrape": "deno run --allow-read=../etoro-data/data --allow-write=/workspaces/etoro-data/data --allow-net=www.etoro.com src/scrape/refresh_bin.ts ../etoro-data/data",
+    "start": "deno run -A --watch=web/static/,web/routes/,web/islands/ web/dev.ts",
     "test": "deno test --allow-write=tmp --allow-read=tmp,testdata --allow-net=www.etoro.com,jsonplaceholder.typicode.com,github.com,objects.githubusercontent.com",
-    "webtest": "deno test --allow-env --allow-read=. --allow-net=127.0.0.1",
-    "update": "deno run -A -r https://fresh.deno.dev/update ."
+    "update": "deno run -A -r https://fresh.deno.dev/update .",
+    "webtest": "deno test --allow-env --allow-read=. --allow-net=127.0.0.1"
   },
   "lint": { "rules": { "tags": ["fresh", "recommended"] } },
   "nodeModulesDir": true,

@@ -4,6 +4,7 @@ import { Community } from "./community.ts";
 import { HeapBackend } from "/storage/heap-backend.ts";
 import { today } from "/utils/time/mod.ts";
 import { repo as temprepo } from "📚/repository/testdata.ts";
+import { Investor } from "📚/investor/mod.ts";
 
 Deno.test("Initialization", () => {
   const repo = new HeapBackend();
@@ -46,8 +47,14 @@ Deno.test("Heap repo", async (t) => {
 Deno.test("Disk repo", async (t) => {
   const community: Community = new Community(temprepo);
 
+  await t.step("invalid names", async () => {
+    const names: string[] = await community.invalidNames();
+    assertEquals(names.length, 0);
+  });
+
+
   await t.step("all names", async () => {
-    const names: string[] = await community.allNames();
+    const names: Investor[] = await community.all();
     assertEquals(names.length, 26);
   });
 });
