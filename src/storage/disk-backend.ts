@@ -12,8 +12,14 @@ export class DiskBackend implements Backend {
   }
 
   /** Convert assetname to filename */
+  private readonly normalized: Record<string, string> = {};
   protected async filename(assetname: string): Promise<string> {
-    return join(await this.path(), assetname + ".json");
+    if (!(assetname in this.normalized))
+      this.normalized[assetname] = await join(
+        await this.path(),
+        assetname + ".json"
+      );
+    return this.normalized[assetname];
   }
 
   /** Convert filename to assetname */
@@ -44,7 +50,7 @@ export class DiskBackend implements Backend {
     try {
       const data: JSONObject = JSON.parse(content);
       return data;
-    } catch(err) {
+    } catch (err) {
       console.log(filename, err);
       return {};
     }
@@ -52,8 +58,6 @@ export class DiskBackend implements Backend {
 
   public async has(assetname: AssetName): Promise<boolean> {
     const result: boolean = await exists(await this.filename(assetname));
-    //console.log('Backend', await this.path(), 'has', assetname, ':', result);
-    //return exists(await this.filename(assetname));
     return result;
   }
 

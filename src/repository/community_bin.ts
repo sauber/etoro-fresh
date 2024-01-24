@@ -5,12 +5,14 @@
  */
 
 import { DiskBackend } from "../storage/disk-backend.ts";
+import { CachingBackend } from "../storage/caching-backend.ts";
 import { Community } from "./community.ts";
 import { Investor } from "/investor/mod.ts";
 import { assertEquals } from "$std/assert/mod.ts";
 
 const path: string = Deno.args[0];
-const repo = new DiskBackend(path);
+const disk = new DiskBackend(path);
+const repo = new CachingBackend(disk);
 const community = new Community(repo);
 const p1: number = performance.now();
 
