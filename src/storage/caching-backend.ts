@@ -31,6 +31,7 @@ export class CachingBackend implements Backend {
   }
 
   public retrieve(assetname: string): Promise<JSONObject> {
+    // TODO: Confirm if same asset is read multiple times, and needs caching
     return this.parent.retrieve(assetname);
   }
 

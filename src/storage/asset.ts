@@ -11,15 +11,19 @@ export class Asset<AssetType> {
   ) {}
 
   /** On which dates is asset available */
+  private _dates: DateFormat[] | null = null;
   public async dates(): Promise<DateFormat[]> {
-    const allDates: DateFormat[] = await this.repo.dirs();
-    const hasAsset: boolean[] = await Promise.all(
-      allDates.map((date) =>
-        this.repo.sub(date).then((sub) => sub.has(this.assetname))
-      )
-    );
-    const presentDates = allDates.filter((_date, index) => hasAsset[index]);
-    return presentDates;
+    if (this._dates === null) {
+      const allDates: DateFormat[] = await this.repo.dirs();
+      const hasAsset: boolean[] = await Promise.all(
+        allDates.map((date) =>
+          this.repo.sub(date).then((sub) => sub.has(this.assetname))
+        )
+      );
+      const presentDates = allDates.filter((_date, index) => hasAsset[index]);
+      this._dates = presentDates;
+    }
+    return this._dates;
   }
 
   /** At least one date must exist */
