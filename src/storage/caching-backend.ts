@@ -7,7 +7,8 @@ export class CachingBackend implements Backend {
   private readonly _sub: Record<string, Backend> = {};
   public async sub(partition: string): Promise<Backend> {
     if (!(partition in this._sub))
-      this._sub[partition] = await this.parent.sub(partition);
+      //this._sub[partition] = await this.parent.sub(partition);
+      this._sub[partition] = new CachingBackend(await this.parent.sub(partition));
     return this._sub[partition];
   }
 

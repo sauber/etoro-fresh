@@ -67,12 +67,17 @@ export class DiskBackend implements Backend {
   }
 
   public async names(): Promise<AssetNames> {
-    if (!(await exists(await this.path()))) return [];
+    //if (!(await exists(await this.path()))) return [];
 
-    const filenames: string[] = await files(await this.path());
-    const assetnames: string[] = filenames.map((FileName: string) =>
-      this.assetname(FileName)
-    );
-    return assetnames;
+    const path: string = await this.path();
+    try {
+      const filenames: string[] = await files(path);
+      const assetnames: string[] = filenames.map((FileName: string) =>
+        this.assetname(FileName)
+      );
+      return assetnames;
+    } catch (err) {
+      return [];
+    }
   }
 }

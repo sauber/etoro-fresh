@@ -24,6 +24,7 @@ export class InvestorAssembly {
   private readonly statsAsset: Asset<StatsData>;
 
   constructor(public readonly UserName: string, readonly repo: Backend) {
+    //console.log('InvestorAssembly', {repo});
     this.chartAsset = new Asset<ChartData>(this.UserName + ".chart", repo);
     this.portfolioAsset = new Asset<PortfolioData>(
       this.UserName + ".portfolio",
