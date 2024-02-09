@@ -48,9 +48,15 @@ export class Asset<AssetType> {
     return sub.age(this.assetname);
   }
 
-  /** Store data today */
-  public async store(content: AssetType): Promise<void> {
-    const sub: Backend = await this.repo.sub(today());
+  /** Store data at date, default today */
+  public async store(content: AssetType, date: DateFormat = today()): Promise<void> {
+    // Append date to cached dates
+    const dates = new Set<DateFormat>(await this.dates());
+    dates.add(date);
+    this._dates = Array.from(dates);
+
+    // Store data
+    const sub: Backend = await this.repo.sub(date);
     return sub.store(this.assetname, content as JSONObject);
   }
 
@@ -80,6 +86,18 @@ export class Asset<AssetType> {
   /** Data on last date */
   public async last(): Promise<AssetType> {
     return this.retrieve(await this.end());
+  }
+
+  /** Delete all occurences */
+  public await erase(): Promise<void> {
+    const dates: DateFormat[] = await this.dates();
+
+    dates.forEach(date => {
+      const sub: Backend = await this.repo.sub(date);
+      return sub.delete(this.assetname);
+    })
+
+    this._dates = [];
   }
 
   /** Search for asset no later than date */

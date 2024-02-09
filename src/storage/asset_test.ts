@@ -31,7 +31,7 @@ Deno.test("Store and retrieve asset", async (t) => {
 
   await t.step("Store data", async () => {
     const date: DateFormat = today();
-    asset.store(content);
+    await asset.store(content);
     assertEquals(await asset.exists(), true);
     assertEquals(await asset.dates(), [date]);
     assertEquals(await asset.start(), date);
@@ -41,4 +41,12 @@ Deno.test("Store and retrieve asset", async (t) => {
     // assertEquals(await asset.before(date), content);
     // assertEquals(await asset.after(date), content);
   });
+
+  
+  await t.step("Erase data", async () => {
+    await asset.erase();
+    assertEquals(await asset.dates(), []);
+    assertEquals(await asset.exists(), false);
+  });
+
 });

@@ -15,6 +15,7 @@ export type MirrorsByDate = Record<DateFormat, InvestorId[]>;
 import type { StatsData, StatsExport } from "./stats.ts";
 import { Stats } from "./stats.ts";
 import { Diary } from "📚/investor/diary.ts";
+import type { InvestorExport } from "📚/investor/investor.ts";
 export type StatsByDate = Record<DateFormat, StatsExport>;
 
 /** Extract scraped data and compile an investor object */
@@ -22,6 +23,7 @@ export class InvestorAssembly {
   private readonly chartAsset: Asset<ChartData>;
   private readonly portfolioAsset: Asset<PortfolioData>;
   private readonly statsAsset: Asset<StatsData>;
+  private readonly compiledAsset: Asset<InvestorExport>;
 
   constructor(public readonly UserName: string, readonly repo: Backend) {
     //console.log('InvestorAssembly', {repo});
@@ -31,6 +33,10 @@ export class InvestorAssembly {
       repo
     );
     this.statsAsset = new Asset<StatsData>(this.UserName + ".stats", repo);
+    this.compiledAsset = new Asset<StatsData>(
+      this.UserName + ".compiled",
+      repo
+    );
   }
 
   /** Customer ID */
@@ -206,5 +212,27 @@ export class InvestorAssembly {
       new Diary<InvestorId[]>(await this.mirrors()),
       new Diary<StatsExport>(await this.stats())
     );
+  }
+
+  /** Load previously compiled investor, or generate */
+  public async compiled(): Promise<Investor> {
+    const end: DateFormat = await this.end();
+    if (await this.compiledAsset.exists()) {
+      if (end > (await this.compiledAsset.end())) {
+        // Newer data exists, expire all previous compiled files
+        //this.compiledAsset.erase();
+      } else {
+        // Old compiled investor is still valid
+        const data: InvestorExport = await this.compiledAsset.last();
+        const investor: Investor = Investor.import(data);
+        return investor;
+      }
+    }
+
+    // Generate new compiled investor, and save at end date
+    const investor: Investor = await this.investor();
+    //const data = investor.export;
+    //this.compiledAsset.inject(data, end);
+    return investor;
   }
 }
