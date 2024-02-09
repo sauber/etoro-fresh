@@ -30,13 +30,14 @@ export class CachingBackend implements Backend {
     return;
   }
 
-  public retrieve(assetname: string): Promise<JSONObject> {
-    // TODO: Confirm if same asset is read multiple times, and needs caching
-    return this.parent.retrieve(assetname);
+  private readonly _assets: Record<string, JSONObject> = {}
+  public async retrieve(assetname: string): Promise<JSONObject> {
+    if ( ! (assetname in this._assets)) this._assets[assetname] = await this.parent.retrieve(assetname);
+    return this._assets[assetname];
   }
 
   public async has(assetname: string): Promise<boolean> {
-    const names: string[] = await this.names();
+    const names: AssetNames = await this.names();
     return names.includes(assetname);
   }
 
