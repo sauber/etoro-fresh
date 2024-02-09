@@ -157,7 +157,7 @@ export class InvestorAssembly {
       (date) => date >= start && date <= end
     );
 
-    // Load Stats axports for eachd date in range
+    // Load Stats exports for each date in range
     const values: InvestorId[][] = await Promise.all(
       range.map((date) => this.portfolioValues(date))
     );
