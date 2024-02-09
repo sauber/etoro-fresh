@@ -68,4 +68,6 @@ export class Diary<T> {
     console.log({ date, dates: this.dates, start: this.start, end: this.end });
     throw new Error("This code should never be reached");
   }
+
+  public get export(): Record<DateFormat, T> { return this.cards };
 }

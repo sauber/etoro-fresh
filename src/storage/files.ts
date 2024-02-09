@@ -1,6 +1,6 @@
 /** Confirm if a file exists */
 export async function exists(filename: string): Promise<boolean> {
-  throw new Error('Files::exists() should never be called');
+  //throw new Error('Files::exists() should never be called');
   try {
     await Deno.stat(filename);
     // successful, file or directory must exist
