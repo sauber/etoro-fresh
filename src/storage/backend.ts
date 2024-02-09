@@ -1,4 +1,4 @@
-import type { JSONObject, AssetName, AssetNames } from "../repository/mod.ts";
+import type { JSONObject, AssetName, AssetNames } from "./mod.ts";
 
 export abstract class Backend {
   /** A partition of assets */

@@ -1,9 +1,9 @@
 import type { DateFormat } from "📚/utils/time/mod.ts";
 import { diffDate, nextDate } from "📚/utils/time/calendar.ts";
-import { Asset, Backend } from "/repository/mod.ts";
+import { Asset, Backend } from "../storage/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import { Chart as CompiledChart } from "📚/chart/mod.ts";
-import { InvestorId } from "📚/scrape/mod.ts";
+import { InvestorId } from "./mod.ts";
 
 import type { ChartData } from "./chart.ts";
 import { Chart } from "./chart.ts";
@@ -14,6 +14,7 @@ export type MirrorsByDate = Record<DateFormat, InvestorId[]>;
 
 import type { StatsData, StatsExport } from "./stats.ts";
 import { Stats } from "./stats.ts";
+import { Diary } from "📚/investor/diary.ts";
 export type StatsByDate = Record<DateFormat, StatsExport>;
 
 /** Extract scraped data and compile an investor object */
@@ -23,6 +24,7 @@ export class InvestorAssembly {
   private readonly statsAsset: Asset<StatsData>;
 
   constructor(public readonly UserName: string, readonly repo: Backend) {
+    //console.log('InvestorAssembly', {repo});
     this.chartAsset = new Asset<ChartData>(this.UserName + ".chart", repo);
     this.portfolioAsset = new Asset<PortfolioData>(
       this.UserName + ".portfolio",
@@ -170,13 +172,39 @@ export class InvestorAssembly {
     return zip;
   }
 
+  public async validate(): Promise<boolean> {
+    // At least on chart file
+    const chartDates: DateFormat[] = await this.chartAsset.dates();
+    if (chartDates.length < 1) return false;
+    const chartStart: DateFormat = await this.chartAsset.start();
+    const chartEnd: DateFormat = await this.chartAsset.end();
+
+    // At least one stats file within range of chart
+    const statsDates: DateFormat[] = await this.chartAsset.dates();
+    const statsInRange = statsDates.filter(
+      (date) => date >= chartStart && date <= chartEnd
+    );
+    if (statsInRange.length < 1) return false;
+
+    // At least one positions file within range of chart
+    const positionsDates: DateFormat[] = await this.chartAsset.dates();
+    const positionsInRange = positionsDates.filter(
+      (date) => date >= chartStart && date <= chartEnd
+    );
+    if (positionsInRange.length < 1) return false;
+
+    return true;
+  }
+
   /** Combined investor object */
   public async investor(): Promise<Investor> {
     return new Investor(
       this.UserName,
       await this.CustomerId(),
       await this.FullName(),
-      new CompiledChart(await this.chart(), await this.end())
+      new CompiledChart(await this.chart(), await this.end()),
+      new Diary<InvestorId[]>(await this.mirrors()),
+      new Diary<StatsExport>(await this.stats())
     );
   }
 }

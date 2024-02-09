@@ -1,7 +1,7 @@
-import { RepoBackend } from "/repository/mod.ts";
+import { Backend } from "../storage/mod.ts";
 import { Model } from "./model.ts";
-import { Extract, Features } from "./features.ts";
-import { Community } from "/investor/mod.ts";
+import { Features } from "./features.ts";
+import { Community } from "/repository/mod.ts";
 import { DataFrame } from "/utils/dataframe.ts";
 import { TextSeries } from "/utils/series.ts";
 
@@ -9,7 +9,7 @@ export class Ranking {
   private readonly model: Model;
   private readonly features: Features;
 
-  constructor(repo: RepoBackend) {
+  constructor(repo: Backend) {
     this.model = new Model(repo);
     const community = new Community(repo);
     this.features = new Features(community);
@@ -34,9 +34,11 @@ export class Ranking {
 
   /** Predicted profit and SharpeRatio for investors */
   public async predict(names: TextSeries): Promise<DataFrame> {
-    const features: Array<Extract> = await Promise.all(
-      names.values.map((username: string) => this.features.features(username)),
-    );
+    // const features: Array<DataFrame> = await Promise.all(
+    //   names.values.map((username: string) => this.features.data(username)),
+    // );
+
+    const features: DataFrame = await this.features.data(names);
     const inputs = features.map((feature: Extract) => feature.input);
     const indf = DataFrame.fromRecords(inputs);
     const prediction = await this.model.predict(indf);

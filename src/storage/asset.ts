@@ -1,6 +1,6 @@
 import type { DateFormat } from "/utils/time/mod.ts";
 import { today } from "📚/utils/time/mod.ts";
-import type { AssetName, JSONObject } from "📚/repository/mod.ts";
+import type { AssetName, JSONObject } from "./mod.ts";
 import { Backend } from "./backend.ts";
 
 /** A named asset in repo on all the dates it is available */
@@ -11,15 +11,19 @@ export class Asset<AssetType> {
   ) {}
 
   /** On which dates is asset available */
+  private _dates: DateFormat[] | null = null;
   public async dates(): Promise<DateFormat[]> {
-    const allDates: DateFormat[] = await this.repo.dirs();
-    const hasAsset: boolean[] = await Promise.all(
-      allDates.map((date) =>
-        this.repo.sub(date).then((sub) => sub.has(this.assetname))
-      )
-    );
-    const presentDates = allDates.filter((_date, index) => hasAsset[index]);
-    return presentDates;
+    if (this._dates === null) {
+      const allDates: DateFormat[] = await this.repo.dirs();
+      const hasAsset: boolean[] = await Promise.all(
+        allDates.map((date) =>
+          this.repo.sub(date).then((sub) => sub.has(this.assetname))
+        )
+      );
+      const presentDates = allDates.filter((_date, index) => hasAsset[index]);
+      this._dates = presentDates;
+    }
+    return this._dates;
   }
 
   /** At least one date must exist */
@@ -79,49 +83,49 @@ export class Asset<AssetType> {
   }
 
   /** Search for asset no later than date */
-  public async before(date: DateFormat): Promise<AssetType> {
-    // Available dates
-    const dates: DateFormat[] = await this.validatedDates();
-    const start: DateFormat = dates[0];
-    const end: DateFormat = dates[dates.length - 1];
+  // public async before(date: DateFormat): Promise<AssetType> {
+  //   // Available dates
+  //   const dates: DateFormat[] = await this.validatedDates();
+  //   const start: DateFormat = dates[0];
+  //   const end: DateFormat = dates[dates.length - 1];
 
-    // Outside range
-    if (date >= end) return this.retrieve(end);
-    if (date < start) {
-      throw new Error(
-        `´Searching for asset before ${date} but first date is ${start}`
-      );
-    }
+  //   // Outside range
+  //   if (date >= end) return this.retrieve(end);
+  //   if (date < start) {
+  //     throw new Error(
+  //       `´Searching for asset before ${date} but first date is ${start}`
+  //     );
+  //   }
 
-    // In range
-    for (const available of dates.reverse()) {
-      if (available <= date) return this.retrieve(available);
-    }
+  //   // In range
+  //   for (const available of [...dates].reverse()) {
+  //     if (available <= date) return this.retrieve(available);
+  //   }
 
-    console.log(this.assetname, { dates, start, end, date });
-    throw new Error("This code should never be reached");
-  }
+  //   console.log(this.assetname, { dates, start, end, date });
+  //   throw new Error("This code should never be reached");
+  // }
 
-  /** Search for asset no sooner than date */
-  public async after(date: DateFormat): Promise<AssetType> {
-    // Available dates
-    const dates: DateFormat[] = await this.validatedDates();
-    const start: DateFormat = dates[0];
-    const end: DateFormat = dates[dates.length - 1];
+  // /** Search for asset no sooner than date */
+  // public async after(date: DateFormat): Promise<AssetType> {
+  //   // Available dates
+  //   const dates: DateFormat[] = await this.validatedDates();
+  //   const start: DateFormat = dates[0];
+  //   const end: DateFormat = dates[dates.length - 1];
 
-    // Outside range
-    if (date > end) {
-      throw new Error(
-        `´Searching for ${this.assetname} after ${date} but latest date is ${end}`
-      );
-    }
-    if (date <= start) return this.retrieve(start);
+  //   // Outside range
+  //   if (date > end) {
+  //     throw new Error(
+  //       `´Searching for ${this.assetname} after ${date} but latest date is ${end}`
+  //     );
+  //   }
+  //   if (date <= start) return this.retrieve(start);
 
-    // In range
-    for (const available of dates) {
-      if (available >= date) return this.retrieve(available);
-    }
+  //   // In range
+  //   for (const available of dates) {
+  //     if (available >= date) return this.retrieve(available);
+  //   }
 
-    throw new Error("This code should never be reached");
-  }
+  //   throw new Error("This code should never be reached");
+  // }
 }

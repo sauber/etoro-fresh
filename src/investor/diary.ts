@@ -1,6 +1,6 @@
 import type { DateFormat } from "/utils/time/mod.ts";
 
-/** Collection of objects from various dates */
+/** Collection of same objects from various dates */
 export class Diary<T> {
   /** Sorted list of dates where data is available */
   public readonly dates: DateFormat[];
@@ -46,7 +46,7 @@ export class Diary<T> {
       throw new Error(
         `Searching for asset before ${date} but first date is ${this.start}`
       );
-    for (const d of this.dates.reverse()) {
+    for (const d of [...this.dates].reverse()) {
       if (d <= date) return this.cards[d];
     }
 
@@ -59,7 +59,7 @@ export class Diary<T> {
     this.validate();
     if (date > this.end)
       throw new Error(
-        `Searching for asset after ${date} but last date is ${this.start}`
+        `Searching for asset after ${date} but last date is ${this.end}`
       );
     for (const d of this.dates) {
       if (d >= date) return this.cards[d];

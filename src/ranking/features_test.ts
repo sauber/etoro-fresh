@@ -1,18 +1,25 @@
-import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
+import { assert, assertInstanceOf } from "$std/assert/mod.ts";
 import { community } from "./testdata.ts";
 import { Features } from "./features.ts";
-import { DataFrame } from "/utils/dataframe.ts";
+import type { Input, Output } from "./features.ts";
+
+const investor = await community.any();
 
 Deno.test("Initialization", () => {
-  const rank = new Features(community);
+  const rank = new Features(investor);
   assertInstanceOf(rank, Features);
 });
 
-Deno.test("DataFrame", async (t) => {
-  const rank = new Features(community);
+Deno.test("Input", () => {
+  const rank = new Features(investor);
+  const features: Input = rank.input;
+  assert("PopularInvestor" in features);
+  assert("Gain" in features);
+});
 
-  await t.step("data", async () => {
-    const df: DataFrame = await rank.data();
-    assertEquals(df.length, 10);
-  });
+Deno.test("Output", () => {
+  const rank = new Features(investor);
+  const features: Output = rank.output;
+  assert("Profit" in features);
+  assert("SharpeRatio" in features);
 });

@@ -1,8 +1,8 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { DateFormat, today } from "📚/utils/time/mod.ts";
-import { HeapBackend } from "📚/repository/heap-backend.ts";
-import { Journal } from "📚/repository/journal.ts";
-import { Asset } from "📚/repository/asset.ts";
+import { HeapBackend } from "./heap-backend.ts";
+import { Journal } from "./journal.ts";
+import { Asset } from "./asset.ts";
 
 const repo = new HeapBackend();
 

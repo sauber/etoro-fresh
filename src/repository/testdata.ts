@@ -1,9 +1,9 @@
-import { DiskBackend, Asset } from "📚/repository/mod.ts";
+import { DiskBackend, Asset } from "../storage/mod.ts";
 import type { InvestorId, DiscoverFilter } from "./mod.ts";
-import type { DiscoverData } from "📚/scrape/discover.ts";
-import type { ChartData } from "📚/scrape/chart.ts";
-import type { PortfolioData } from "📚/scrape/portfolio.ts";
-import type { StatsData } from "📚/scrape/stats.ts";
+import type { DiscoverData } from "./discover.ts";
+import type { ChartData } from "./chart.ts";
+import type { PortfolioData } from "./portfolio.ts";
+import type { StatsData } from "./stats.ts";
 
 const path = "testdata";
 export const repo = new DiskBackend(path);

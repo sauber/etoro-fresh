@@ -1,15 +1,7 @@
-import type { JSONObject, AssetName, AssetNames } from "../repository/mod.ts";
-import { Backend } from "../repository/mod.ts";
-import {
-  exists,
-  read,
-  write,
-  files,
-  dirs,
-  age,
-  mkdir,
-} from "../repository/files.ts";
-import { join } from "path";
+import type { JSONObject, AssetName, AssetNames } from "./mod.ts";
+import { Backend } from "./mod.ts";
+import { exists, read, write, files, dirs, age, mkdir } from "./files.ts";
+import { join, parse } from "path";
 
 /** Store investor objects on disk */
 export class DiskBackend implements Backend {
@@ -20,14 +12,19 @@ export class DiskBackend implements Backend {
   }
 
   /** Convert assetname to filename */
+  private readonly normalized: Record<string, string> = {};
   protected async filename(assetname: string): Promise<string> {
-    return join(await this.path(), assetname + ".json");
+    if (!(assetname in this.normalized))
+      this.normalized[assetname] = await join(
+        await this.path(),
+        assetname + ".json"
+      );
+    return this.normalized[assetname];
   }
 
   /** Convert filename to assetname */
   protected assetname(filename: string): string {
-    const [assetname, _ext] = filename.split(".");
-    return assetname;
+    return parse(filename).name;
   }
 
   public async sub(partition: string): Promise<DiskBackend> {
@@ -50,14 +47,17 @@ export class DiskBackend implements Backend {
   public async retrieve(assetname: AssetName): Promise<JSONObject> {
     const filename: string = await this.filename(assetname);
     const content: string = await read(filename);
-    const data: JSONObject = JSON.parse(content);
-    return data;
+    try {
+      const data: JSONObject = JSON.parse(content);
+      return data;
+    } catch (err) {
+      console.log(filename, err);
+      return {};
+    }
   }
 
   public async has(assetname: AssetName): Promise<boolean> {
     const result: boolean = await exists(await this.filename(assetname));
-    //console.log('Backend', await this.path(), 'has', assetname, ':', result);
-    //return exists(await this.filename(assetname));
     return result;
   }
 
@@ -67,12 +67,17 @@ export class DiskBackend implements Backend {
   }
 
   public async names(): Promise<AssetNames> {
-    if (!(await exists(await this.path()))) return [];
+    //if (!(await exists(await this.path()))) return [];
 
-    const filenames: string[] = await files(await this.path());
-    const assetnames: string[] = filenames.map((FileName: string) =>
-      this.assetname(FileName)
-    );
-    return assetnames;
+    const path: string = await this.path();
+    try {
+      const filenames: string[] = await files(path);
+      const assetnames: string[] = filenames.map((FileName: string) =>
+        this.assetname(FileName)
+      );
+      return assetnames;
+    } catch (err) {
+      return [];
+    }
   }
 }

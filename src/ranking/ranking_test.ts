@@ -1,16 +1,15 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
-import { repoBackend } from "../repository/old/testdata.ts";
-import { investorId } from "/investor/testdata.ts";
+import { repo, investorId } from "./testdata.ts";
 import { Ranking } from "./ranking.ts";
 import { TextSeries } from "/utils/series.ts";
 
 Deno.test("Initialize", () => {
-  const rank = new Ranking(repoBackend);
+  const rank = new Ranking(repo);
   assertInstanceOf(rank, Ranking);
 });
 
 Deno.test("Train", { ignore: false }, async () => {
-  const rank = new Ranking(repoBackend);
+  const rank = new Ranking(repo);
 
   // Training
   const done = await rank.train();
@@ -18,7 +17,7 @@ Deno.test("Train", { ignore: false }, async () => {
 });
 
 Deno.test("Validate", { ignore: false }, async () => {
-  const rank = new Ranking(repoBackend);
+  const rank = new Ranking(repo);
 
   // Validate
   const names = new TextSeries([investorId.UserName]);

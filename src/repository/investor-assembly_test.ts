@@ -1,5 +1,6 @@
 import { Investor } from "📚/investor/mod.ts";
 import {
+  assert,
   assertEquals,
   assertGreater,
   assertInstanceOf,
@@ -8,7 +9,7 @@ import {
 import { InvestorAssembly } from "./investor-assembly.ts";
 import type { MirrorsByDate, StatsByDate } from "./investor-assembly.ts";
 
-import { InvestorId } from "📚/scrape/mod.ts";
+import { InvestorId } from "./mod.ts";
 import { repo } from "./testdata.ts";
 
 // Test Data
@@ -83,8 +84,15 @@ Deno.test("Mirrors", async () => {
   });
 });
 
+Deno.test("Validate loadable", async () => {
+  const assembly = new InvestorAssembly(username, repo);
+  const ok: boolean = await assembly.validate();
+  assertEquals(ok, true);
+});
+
 Deno.test("Combined Export", async () => {
   const assembly = new InvestorAssembly(username, repo);
   const investor: Investor = await assembly.investor();
   assertInstanceOf(investor, Investor);
+  assert("UserName" in investor);
 });

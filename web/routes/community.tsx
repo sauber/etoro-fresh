@@ -6,7 +6,7 @@ import Rankgrid from "📦/community/RankGrid.tsx";
 import Value from "📦/visualization/Value.tsx";
 import Card from "📦/Card.tsx";
 
-import { RepoDiskBackend } from "📚/repository/mod.ts";
+import { RepoDiskBackend } from "../../src/storage/mod.ts";
 import { Community, InvestorExport, Names } from "📚/investor/mod.ts";
 import { Ranking } from "📚/ranking/mod.ts";
 import { DateFormat } from "📚/utils/time/mod.ts";
