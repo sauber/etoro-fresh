@@ -3,6 +3,8 @@ import { today } from "📚/utils/time/mod.ts";
 import type { AssetName, JSONObject } from "./mod.ts";
 import { Backend } from "./backend.ts";
 
+type Dates = Set<DateFormat>;
+
 /** A named asset in repo on all the dates it is available */
 export class Asset<AssetType> {
   constructor(
@@ -11,8 +13,8 @@ export class Asset<AssetType> {
   ) {}
 
   /** On which dates is asset available */
-  private _dates: DateFormat[] | null = null;
-  public async dates(): Promise<DateFormat[]> {
+  private _dates: Dates | null = null;
+  public async dates(): Promise<Dates> {
     if (this._dates === null) {
       const allDates: DateFormat[] = await this.repo.dirs();
       const hasAsset: boolean[] = await Promise.all(
@@ -20,24 +22,25 @@ export class Asset<AssetType> {
           this.repo.sub(date).then((sub) => sub.has(this.assetname))
         )
       );
-      const presentDates = allDates.filter((_date, index) => hasAsset[index]);
-      this._dates = presentDates;
+      const presentDates: DateFormat[] = allDates.filter((_date, index) => hasAsset[index]);
+      this._dates = new Set<DateFormat>(presentDates);
     }
     return this._dates;
   }
 
   /** At least one date must exist */
-  private async validatedDates(): Promise<DateFormat[]> {
-    const dates = await this.dates();
+  // TODO: This is too similar to this.exists()
+  private async validatedDates(): Promise<Dates> {
+    const dates: Dates = await this.dates();
     //console.log("Dates for", this.assetname, dates);
-    if (dates.length < 1)
+    if (dates.size < 1)
       throw new Error(`Asset ${this.assetname} is unavailable`);
     return dates;
   }
 
   /** Verify if least one date exists */
   public async exists(): Promise<boolean> {
-    if ((await this.dates()).length > 0) return true;
+    if ((await this.dates()).size > 0) return true;
     else return false;
   }
 
@@ -51,9 +54,8 @@ export class Asset<AssetType> {
   /** Store data at date, default today */
   public async store(content: AssetType, date: DateFormat = today()): Promise<void> {
     // Append date to cached dates
-    const dates = new Set<DateFormat>(await this.dates());
+    const dates = await this.dates();
     dates.add(date);
-    this._dates = Array.from(dates);
 
     // Store data
     const sub: Backend = await this.repo.sub(date);
@@ -68,14 +70,16 @@ export class Asset<AssetType> {
 
   /** First date */
   public async start(): Promise<DateFormat> {
-    const dates: DateFormat[] = await this.validatedDates();
-    return dates[0];
+    const dates: Dates = await this.validatedDates();
+    const [first] = dates;
+    return first;
   }
 
   /** Last date */
   public async end(): Promise<DateFormat> {
-    const dates: DateFormat[] = await this.validatedDates();
-    return dates.reverse()[0];
+    const dates: Dates = await this.validatedDates();
+    const array = Array.from(dates);
+    return array[array.length-1];
   }
 
   /** Data on first date */
@@ -88,16 +92,19 @@ export class Asset<AssetType> {
     return this.retrieve(await this.end());
   }
 
+  /** Delete asset on date */
+  private async trim(date: DateFormat): Promise<void> {
+    const sub: Backend = await this.repo.sub(date);
+    await sub.delete(this.assetname);
+    const dates: Dates = await this.dates();
+    dates.delete(date);
+   }
+
   /** Delete all occurences */
-  public await erase(): Promise<void> {
-    const dates: DateFormat[] = await this.dates();
+  public async erase(): Promise<void> {
+    const dates: Dates = await this.dates();
 
-    dates.forEach(date => {
-      const sub: Backend = await this.repo.sub(date);
-      return sub.delete(this.assetname);
-    })
-
-    this._dates = [];
+    await Promise.all([...dates].map( (date: DateFormat) => this.trim(date)));
   }
 
   /** Search for asset no later than date */
