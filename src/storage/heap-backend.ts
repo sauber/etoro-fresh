@@ -40,4 +40,10 @@ export class HeapBackend implements Backend {
   public names(): Promise<AssetNames> {
     return Promise.resolve(Object.keys(this.heap));
   }
+
+  public delete(assetname: string): Promise<void> {
+    delete this.heap[assetname];
+    return Promise.resolve();
+  }
+
 }
