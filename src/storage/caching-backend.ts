@@ -7,8 +7,9 @@ export class CachingBackend implements Backend {
   private readonly _sub: Record<string, Backend> = {};
   public async sub(partition: string): Promise<Backend> {
     if (!(partition in this._sub))
-      //this._sub[partition] = await this.parent.sub(partition);
-      this._sub[partition] = new CachingBackend(await this.parent.sub(partition));
+      this._sub[partition] = new CachingBackend(
+        await this.parent.sub(partition)
+      );
     return this._sub[partition];
   }
 
@@ -30,9 +31,10 @@ export class CachingBackend implements Backend {
     return;
   }
 
-  private readonly _assets: Record<string, JSONObject> = {}
+  private readonly _assets: Record<string, JSONObject> = {};
   public async retrieve(assetname: string): Promise<JSONObject> {
-    if ( ! (assetname in this._assets)) this._assets[assetname] = await this.parent.retrieve(assetname);
+    if (!(assetname in this._assets))
+      this._assets[assetname] = await this.parent.retrieve(assetname);
     return this._assets[assetname];
   }
 
@@ -46,5 +48,12 @@ export class CachingBackend implements Backend {
     if (!(assetname in this._age))
       this._age[assetname] = await this.parent.age(assetname);
     return this._age[assetname];
+  }
+
+  public async delete(assetname: string): Promise<void> {
+    await this.parent.delete(assetname);
+    delete this._assets[assetname];
+    delete this._age[assetname];
+    this._names = null;
   }
 }
