@@ -1,6 +1,6 @@
 import type { JSONObject, AssetName, AssetNames } from "./mod.ts";
 import { Backend } from "./mod.ts";
-import { exists, read, write, files, dirs, age, mkdir } from "./files.ts";
+import { exists, read, write, files, dirs, age, mkdir, remove } from "./files.ts";
 import { join, parse } from "path";
 
 /** Store investor objects on disk */
@@ -79,5 +79,10 @@ export class DiskBackend implements Backend {
     } catch (err) {
       return [];
     }
+  }
+
+  public async delete(assetname: string): Promise<void> {
+    const filename: string = await this.filename(assetname);
+    return remove(filename);
   }
 }

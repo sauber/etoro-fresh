@@ -21,4 +21,7 @@ export abstract class Backend {
 
   /** Number of milliseconds since most recent version stored */
   abstract age(assetname: AssetName): Promise<number>;
+
+  /** Number of milliseconds since most recent version stored */
+  abstract delete(assetname: AssetName): Promise<void>;
 }
