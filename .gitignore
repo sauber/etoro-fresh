@@ -13,6 +13,7 @@ node_modules
 
 # Generated files
 ranking.model.json
+*.compiled.json
 
 # V8 profiling output
 isolate-*.log

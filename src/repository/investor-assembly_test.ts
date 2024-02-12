@@ -96,3 +96,10 @@ Deno.test("Combined Export", async () => {
   assertInstanceOf(investor, Investor);
   assert("UserName" in investor);
 });
+
+Deno.test("Compiled and cache investor", async () => {
+  const assembly = new InvestorAssembly(username, repo);
+  const investor: Investor = await assembly.compiled();
+  assertInstanceOf(investor, Investor);
+  assert("UserName" in investor);
+});

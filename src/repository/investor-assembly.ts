@@ -33,7 +33,7 @@ export class InvestorAssembly {
       repo
     );
     this.statsAsset = new Asset<StatsData>(this.UserName + ".stats", repo);
-    this.compiledAsset = new Asset<StatsData>(
+    this.compiledAsset = new Asset<InvestorExport>(
       this.UserName + ".compiled",
       repo
     );
@@ -220,9 +220,10 @@ export class InvestorAssembly {
     if (await this.compiledAsset.exists()) {
       if (end > (await this.compiledAsset.end())) {
         // Newer data exists, expire all previous compiled files
-        //this.compiledAsset.erase();
+        await this.compiledAsset.erase();
       } else {
         // Old compiled investor is still valid
+        console.log(`Reusing compiled data`);
         const data: InvestorExport = await this.compiledAsset.last();
         const investor: Investor = Investor.import(data);
         return investor;
@@ -231,8 +232,8 @@ export class InvestorAssembly {
 
     // Generate new compiled investor, and save at end date
     const investor: Investor = await this.investor();
-    //const data = investor.export;
-    //this.compiledAsset.inject(data, end);
+    const data = investor.export;
+    await this.compiledAsset.store(data, end);
     return investor;
   }
 }
