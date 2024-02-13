@@ -128,7 +128,7 @@ export class Community {
   public async investor(username: string): Promise<Investor> {
     if (!(username in this._loaded)) {
       const assembly = new InvestorAssembly(username, this.repo);
-      this._loaded[username] = await assembly.investor();
+      this._loaded[username] = await assembly.compiled();
     }
     return this._loaded[username];
   }

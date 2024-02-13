@@ -223,7 +223,7 @@ export class InvestorAssembly {
         await this.compiledAsset.erase();
       } else {
         // Old compiled investor is still valid
-        console.log(`Reusing compiled data`);
+        //console.log(`Reusing compiled data`);
         const data: InvestorExport = await this.compiledAsset.last();
         const investor: Investor = Investor.import(data);
         return investor;
