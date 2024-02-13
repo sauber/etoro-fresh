@@ -171,6 +171,7 @@ export class InvestorAssembly {
     );
 
     // Zip Dates and Stats
+    // TODO: Skip dates with empty list of mirrors
     const zip: MirrorsByDate = Object.assign(
       {},
       ...range.map((date, index) => ({ [date]: values[index] }))

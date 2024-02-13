@@ -1,17 +1,27 @@
-import { RepoDiskBackend } from "/repository/repo-disk.ts";
-import { Community } from "/investor/mod.ts";
-import type { Names } from "/investor/mod.ts";
+import { DiskBackend } from "/storage/mod.ts";
+import { Community } from "/repository/mod.ts";
 import { Ranking } from "./ranking.ts";
+import { Investor } from "📚/investor/mod.ts";
+import { diffDate } from "📚/utils/time/mod.ts";
 
+// Repo
 const path: string = Deno.args[0];
-const backend: RepoDiskBackend = new RepoDiskBackend(path);
+const backend = new DiskBackend(path);
 const rank = new Ranking(backend);
 
-await rank.train();
+// Load data
+type Investors = Array<Investor>;
+const community = new Community(backend);
+const all: Investors = await community.all();
+const train: Investors = all.filter(
+  (investor: Investor) =>
+    diffDate(investor.stats.start, investor.chart.end) >= 30
+);
+
+// Training
+await rank.train(train);
 await rank.save();
 
 // Validation
-const community = new Community(backend);
-const usernames: Names = await community.valid();
-const prediction = await rank.predict(usernames);
-prediction.sort("SharpeRatio").reverse.slice(0,5).print("Top 5 SharpeRatio");
+const prediction = await rank.predict(train);
+prediction.sort("SharpeRatio").reverse.slice(0, 5).print("Top 5 SharpeRatio");

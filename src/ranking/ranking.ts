@@ -1,29 +1,41 @@
 import { Backend } from "../storage/mod.ts";
 import { Model } from "./model.ts";
 import { Features } from "./features.ts";
-import { Community } from "/repository/mod.ts";
+import type { Input, Output } from "./features.ts";
 import { DataFrame } from "/utils/dataframe.ts";
 import { TextSeries } from "/utils/series.ts";
+import { Investor } from "📚/investor/mod.ts";
+
+type Investors = Array<Investor>;
 
 export class Ranking {
   private readonly model: Model;
-  private readonly features: Features;
 
   constructor(repo: Backend) {
     this.model = new Model(repo);
-    const community = new Community(repo);
-    this.features = new Features(community);
-    this.features.days = 30; // TODO: Read from config
+  }
+
+  /** Input features for investors */
+  private input(investors: Investors): DataFrame {
+    const list: Array<Input> = investors.map(
+      (i: Investor) => new Features(i).input
+    );
+    return DataFrame.fromRecords(list);
+  }
+
+  /** Output features for investors */
+  private output(investors: Investors): DataFrame {
+    const list: Array<Output> = investors.map(
+      (i: Investor) => new Features(i).output
+    );
+    return DataFrame.fromRecords(list);
   }
 
   /** Train model with extracted features */
-  public async train(): Promise<void> {
-    console.log("Loading Features");
-    const training: DataFrame = await this.features.data();
-    const xf = ["Profit", "SharpeRatio"];
-    const train_x = training.exclude(xf);
-    const train_y = training.include(xf);
-    console.log("Training model");
+  public train(investors: Investors): Promise<void> {
+    const train_x = this.input(investors);
+    const train_y = this.output(investors);
+
     return this.model.train(train_x, train_y);
   }
 
@@ -33,15 +45,10 @@ export class Ranking {
   }
 
   /** Predicted profit and SharpeRatio for investors */
-  public async predict(names: TextSeries): Promise<DataFrame> {
-    // const features: Array<DataFrame> = await Promise.all(
-    //   names.values.map((username: string) => this.features.data(username)),
-    // );
-
-    const features: DataFrame = await this.features.data(names);
-    const inputs = features.map((feature: Extract) => feature.input);
-    const indf = DataFrame.fromRecords(inputs);
-    const prediction = await this.model.predict(indf);
+  public async predict(investors: Investors): Promise<DataFrame> {
+    const input = this.input(investors);
+    const prediction = await this.model.predict(input);
+    const names = new TextSeries(investors.map((i) => i.UserName));
     const result = new DataFrame({
       UserName: names,
     }).join(prediction);
