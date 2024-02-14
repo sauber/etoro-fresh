@@ -8,6 +8,19 @@ import { Investor } from "📚/investor/mod.ts";
 
 type Investors = Array<Investor>;
 
+type Feature = Record<string, number | boolean>;
+
+function normalize(name: string, numbers: Feature): Feature {
+  Object.entries(numbers).forEach(([key, value]) => {
+    if (typeof value === "boolean") numbers[key] = value === true ? 1 : 0;
+    else if (Number.isFinite(value) === false) {
+      console.log({name, numbers});
+      throw new Error(`Invalid number ${name} ${key} ${value}`);
+    }
+  });
+  return numbers;
+}
+
 export class Ranking {
   private readonly model: Model;
 
@@ -17,16 +30,16 @@ export class Ranking {
 
   /** Input features for investors */
   private input(investors: Investors): DataFrame {
-    const list: Array<Input> = investors.map(
-      (i: Investor) => new Features(i).input
+    const list: Array<Input> = investors.map((i: Investor) =>
+      normalize(i.UserName, new Features(i).input)
     );
     return DataFrame.fromRecords(list);
   }
 
   /** Output features for investors */
   private output(investors: Investors): DataFrame {
-    const list: Array<Output> = investors.map(
-      (i: Investor) => new Features(i).output
+    const list: Array<Output> = investors.map((i: Investor) =>
+      normalize(i.UserName, new Features(i).output)
     );
     return DataFrame.fromRecords(list);
   }

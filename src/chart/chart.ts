@@ -99,7 +99,7 @@ export class Chart {
     const avg = this.avg;
     const diff = this.add(-avg);
     const d2 = diff.pow(2);
-    const std = Math.sqrt(d2.sum / this.length);
+    const std = Math.sqrt(d2.sum / (this.length-1));
     return std;
   }
 
@@ -123,10 +123,24 @@ export class Chart {
 
     // std of incrementals
     const incrementals = this.win.values.filter((x) => x > 0);
+    if (incrementals.length == 0) return -riskfree;
+
     const volatility = new Chart(incrementals, this.start).std;
 
     // Sharpe Ratio
     const sharpe = (profit - benchmark) / volatility;
+
+    if (!Number.isFinite(sharpe)) {
+      console.log({
+        riskfree,
+        profit,
+        benchmark,
+        incrementals,
+        volatility,
+        sharpe,
+      });
+      throw new Error("Invalid SharpeRatio");
+    }
 
     return sharpe;
   }
@@ -142,7 +156,7 @@ export class Chart {
   /** Average yearly Profit */
   public get apy(): number {
     const profit: number = this.last / this.first - 1;
-    const apy: number = (365 / (this.length-1)) * profit;
+    const apy: number = (365 / (this.length - 1)) * profit;
     return apy;
   }
 }

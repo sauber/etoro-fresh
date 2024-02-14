@@ -162,4 +162,13 @@ export class Community {
 
     return Promise.all(names.map((name) => this.investor(name)));
   }
+
+  /** Load on latest date investor */
+  public async latest(): Promise<Array<Investor>> {
+    const end: DateFormat | null = await this.end();
+    if (!end) return [];
+    const names: Names = await this.active(end);
+
+    return Promise.all(names.map((name) => this.investor(name)));
+  }
 }

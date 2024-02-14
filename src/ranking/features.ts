@@ -25,6 +25,10 @@ export class Features {
     const apy: number = chart.apy;
     // 5% is annual money market return. TODO: Load from config
     const sr: number = chart.sharpeRatio(0.05);
+    if ( ! Number.isFinite(sr )) {
+      console.log({chart, start, apy, sr});
+      throw new Error('Invalid SharpeRatio');
+    }
     const features: Output = {
       Profit: apy,
       SharpeRatio: sr,

@@ -10,18 +10,26 @@ const backend = new DiskBackend(path);
 const rank = new Ranking(backend);
 
 // Load data
+console.log("Loading...");
 type Investors = Array<Investor>;
 const community = new Community(backend);
 const all: Investors = await community.all();
+console.log(all.length);
 const train: Investors = all.filter(
   (investor: Investor) =>
-    diffDate(investor.stats.start, investor.chart.end) >= 30
+    diffDate(investor.stats.start, investor.chart.end) >= 30 &&
+    investor.chart.last != 6000
 );
+console.log("Total loaded: ", all.length, "Trainable: ", train.length);
 
 // Training
+console.log("Training...");
 await rank.train(train);
 await rank.save();
 
 // Validation
-const prediction = await rank.predict(train);
+const latest = await community.latest();
+console.log('latest count', latest.length);
+const prediction = await rank.predict(latest);
+//prediction.print("Predictions");
 prediction.sort("SharpeRatio").reverse.slice(0, 5).print("Top 5 SharpeRatio");

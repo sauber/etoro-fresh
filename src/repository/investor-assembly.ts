@@ -66,7 +66,10 @@ export class InvestorAssembly {
     return this.chartAsset.end();
   }
 
-  /** Combination of as few charts as possible from start to end */
+  /** 
+   * Combination of as few charts as possible from start to end 
+   * TODO: Truncate ends with 6000
+   */
   private _chart: number[] | null = null;
   public async chart(): Promise<number[]> {
     if (this._chart) return this._chart;

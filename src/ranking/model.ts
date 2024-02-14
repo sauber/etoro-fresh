@@ -130,6 +130,7 @@ export class Model {
     }
     const inputs = tensor2D(input.grid as Array2D);
     const outputs = tensor2D(output.grid as Array2D);
+    //console.log({input, output});
 
     // Train model
     model.train(
