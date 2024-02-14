@@ -1,1 +1,2 @@
+* Fix modules in src/simulation
 * In investor-assembly deal with charts ending with 6000
