@@ -5,15 +5,15 @@ import {
   assertLess,
 } from "$std/assert/mod.ts";
 import { Position } from "./position.ts";
-import type { DateFormat } from "/utils/time/mod.ts";
+import type { DateFormat } from "📚/utils/time/mod.ts";
 import { Exchange } from "./exchange.ts";
 import { chart, username } from "./testdata.ts";
 
 // Position data
-const start: DateFormat = chart.start();
-const end: DateFormat = chart.end();
-const first: number = chart.first();
-const last: number = chart.last();
+const start: DateFormat = chart.start;
+const end: DateFormat = chart.end;
+const first: number = chart.first;
+const last: number = chart.last;
 
 // Exchange property
 const spread = 0.02;

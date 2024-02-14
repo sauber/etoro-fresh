@@ -5,6 +5,7 @@ import { Investor } from "/investor/investor.ts";
 import { InvestorAssembly } from "📚/repository/investor-assembly.ts";
 
 type Names = Array<string>;
+type Investors = Array<Investor>;
 
 /** Handle Community I/O requests to local repository */
 export class Community {
@@ -16,17 +17,13 @@ export class Community {
     const allNames: Names[] = await Promise.all(
       dates.map((date) => this.namesByDate(date))
     );
-    //const allNames: string[][] = allDates.map((date) => date.values);
     const merged = new Set(allNames.flat());
-
-    //return new TextSeries([...merged]);
     return Array.from(merged);
   }
 
   /** Identify all investor names on a date */
   public async namesByDate(date: DateFormat): Promise<Names> {
     const assets: string[] = await (await this.repo.sub(date)).names();
-    //console.log({date, assets});
     const valid = /(chart|portfolio|stats)$/;
 
     // Catalog which file type exist for each investor name
@@ -37,25 +34,17 @@ export class Community {
         const [name, _type] = assetname.split(".");
         names.add(name);
       });
-    //return new TextSeries([...names]);
     return Array.from(names);
   }
 
-  /** Get list of names on last date available in repo */
-  // public async last(): Promise<Names> {
-  //   const end: DateFormat | null = await this.end();
-  //   if (end) return this.namesByDate(end);
-  //   else return Promise.resolve(new TextSeries());
-  // }
-
   /** The first directory where names exists */
-  // public async start(): Promise<DateFormat | null> {
-  //   const dates: DateFormat[] = await this.repo.dirs();
-  //   for (const date of dates) {
-  //     if (await this.dateHasNames(date)) return date;
-  //   }
-  //   return null;
-  // }
+  public async start(): Promise<DateFormat | null> {
+    const dates: DateFormat[] = await this.repo.dirs();
+    for (const date of [...dates]) {
+      if ((await this.namesByDate(date)).length) return date;
+    }
+    return null;
+  }
 
   /** The last directory where names exists */
   public async end(): Promise<DateFormat | null> {
@@ -103,7 +92,7 @@ export class Community {
     return investor.active(date);
   }
 
-  /** All investors where date is within active range */
+  /** Names of investors where date is within active range */
   public async active(date: DateFormat): Promise<Names> {
     const allNames: Names = await this.allNames();
     const validVector: Array<boolean> = await Promise.all(
@@ -114,7 +103,8 @@ export class Community {
     );
     //const result: Names = new TextSeries(validNames);
     //return result;
-    return Array.from(validNames);
+    const names: Names = Array.from(validNames);
+    return names;
   }
 
   /** Verify if sufficient data files exists to load ivnestor */
@@ -156,19 +146,27 @@ export class Community {
     return invalidNames;
   }
 
-  /** Load all investor */
-  public async all(): Promise<Array<Investor>> {
-    const names: Names = await this.allNames();
-
+  /** Load a list of investors from list of names */
+  private async load(names: Names): Promise<Investors> {
     return Promise.all(names.map((name) => this.investor(name)));
   }
 
-  /** Load on latest date investor */
-  public async latest(): Promise<Array<Investor>> {
+  /** All investor */
+  public async all(): Promise<Investors> {
+    const names: Names = await this.allNames();
+    return this.load(names);
+  }
+
+  /** Investors active on date */
+  public async on(date: DateFormat): Promise<Investors> {
+    const names: Names = await this.active(date);
+    return this.load(names);
+  }
+
+  /** Investors on latest date */
+  public async latest(): Promise<Investors> {
     const end: DateFormat | null = await this.end();
     if (!end) return [];
-    const names: Names = await this.active(end);
-
-    return Promise.all(names.map((name) => this.investor(name)));
+    return this.on(end);
   }
 }

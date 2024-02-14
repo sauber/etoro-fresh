@@ -1,5 +1,5 @@
-import type { DateFormat } from "/utils/time/mod.ts";
-import { ChartSeries } from "/investor/mod.ts";
+import type { DateFormat } from "📚/utils/time/mod.ts";
+import { Chart } from "📚/chart/mod.ts";
 import { Position } from "./position.ts";
 
 /** An exchange is a place where cash and positions are swapped for a fee */
@@ -20,7 +20,7 @@ export class Exchange {
   public buy(
     date: DateFormat,
     name: string,
-    chart: ChartSeries,
+    chart: Chart,
     amount: number,
   ): Position {
     const price: number = this.buying_price(chart.value(date));

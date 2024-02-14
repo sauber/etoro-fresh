@@ -1,14 +1,14 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
-import type { DateFormat } from "/utils/time/mod.ts";
-import { nextDate } from "/utils/time/mod.ts";
+import type { DateFormat } from "📚/utils/time/mod.ts";
+import { nextDate } from "📚/utils/time/mod.ts";
 import { Portfolio } from "./portfolio.ts";
 import type { Positions } from "./portfolio.ts";
 import { chart, position } from "./testdata.ts";
 
-const start: DateFormat = chart.start();
-const end: DateFormat = chart.end();
-const first: number = chart.first();
-const last: number = chart.last();
+const start: DateFormat = chart.start;
+const end: DateFormat = chart.end;
+const first: number = chart.first;
+const last: number = chart.last;
 const amount: number = position.amount;
 
 Deno.test("Instance", () => {
