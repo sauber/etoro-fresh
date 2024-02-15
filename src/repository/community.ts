@@ -4,8 +4,8 @@ import { Investor } from "/investor/investor.ts";
 //import { TextSeries } from "/utils/series.ts";
 import { InvestorAssembly } from "📚/repository/investor-assembly.ts";
 
-type Names = Array<string>;
-type Investors = Array<Investor>;
+export type Names = Array<string>;
+export type Investors = Array<Investor>;
 
 /** Handle Community I/O requests to local repository */
 export class Community {

@@ -1,4 +1,5 @@
 export { Community } from "./community.ts";
+export type { Investors, Names } from "./community.ts";
 import type { DiscoverData } from "./discover.ts";
 import type { ChartData } from "./chart.ts";
 import type { PortfolioData } from "./portfolio.ts";
