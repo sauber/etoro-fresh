@@ -8,7 +8,7 @@
 # Fresh build directory
 _fresh/
 
-# Cache of node modules
+# npm dependencies
 node_modules
 
 # Generated files
