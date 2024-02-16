@@ -1,7 +1,6 @@
 import { Backend } from "/storage/mod.ts";
 import { DateFormat } from "/utils/time/mod.ts";
 import { Investor } from "/investor/investor.ts";
-//import { TextSeries } from "/utils/series.ts";
 import { InvestorAssembly } from "📚/repository/investor-assembly.ts";
 
 export type Names = Array<string>;
