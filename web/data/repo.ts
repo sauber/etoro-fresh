@@ -4,6 +4,7 @@
 
 import { CachingBackend, DiskBackend } from "📚/storage/mod.ts";
 import { Community } from "📚/repository/mod.ts";
+import { Investor } from "📚/investor/mod.ts";
 import type { Investors } from "📚/repository/mod.ts";
 
 const data_path = Deno.env.get("DATAPATH");
@@ -15,4 +16,9 @@ const community = new Community(cache_repo);
 /** List of investors at most recent date */
 export function community_latest(): Promise<Investors> {
   return community.latest();
+}
+
+/** List of investors at most recent date */
+export function investor(UserName: string): Promise<Investor> {
+  return community.investor(UserName);
 }
