@@ -64,7 +64,7 @@ export default function InvestorItem({ CustomerId }: Props) {
   }, [CustomerId]);
 
   if (imageUrl.value != null) {
-    return <img class="h-full" src={`${imageUrl}`} />;
+    return <img class="max-h-full max-w-full size-full aspect-square" src={`${imageUrl}`} />;
   } else {
     return (
       
