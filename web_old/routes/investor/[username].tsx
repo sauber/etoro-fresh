@@ -9,7 +9,7 @@ import Card from "📦/Card.tsx";
 import Feature from "📦/Feature.tsx";
 //import Chart from "📦/chart/Full.tsx";
 import ChartIsland from "🏝️/Chart.tsx";
-import InvestorAvatar from "🏝️/investor/InvestorAvatar.tsx";
+import InvestorAvatar from "../../../web/islands/investor/Avatar.tsx";
 
 import { RepoDiskBackend } from "../../../src/storage/mod.ts";
 import { Investor, InvestorExport, Names } from "📚/investor/mod.ts";

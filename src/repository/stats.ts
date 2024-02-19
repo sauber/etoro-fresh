@@ -1,5 +1,6 @@
 export type StatsExport = {
   PopularInvestor: boolean;
+  IsFund: boolean;
   Gain: number;
   RiskScore: number;
   MaxDailyRiskScore: number;
@@ -8,6 +9,7 @@ export type StatsExport = {
   CopiersGain: number;
   AUMTier: number;
   AUMTierV2: number;
+  AUMTierDesc: string;
   Trades: number;
   WinRatio: number;
   DailyDD: number;
@@ -54,6 +56,7 @@ export class Stats {
     const d = this.raw.Data;
     return {
       PopularInvestor: d.PopularInvestor,
+      IsFund: d.IsFund,
       Gain: d.Gain,
       RiskScore: d.RiskScore,
       MaxDailyRiskScore: d.MaxDailyRiskScore,
@@ -62,6 +65,7 @@ export class Stats {
       CopiersGain: d.CopiersGain,
       AUMTier: d.AUMTier,
       AUMTierV2: d.AUMTierV2,
+      AUMTierDesc: d.AUMTierDesc,
       Trades: d.Trades,
       WinRatio: d.WinRatio,
       DailyDD: d.DailyDD,

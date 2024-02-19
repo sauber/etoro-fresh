@@ -1,7 +1,7 @@
 import { useSignal } from "@preact/signals";
 import { useEffect } from "preact/hooks";
 import type { InvestorExport } from "📚/investor/mod.ts";
-import Avatar from "🏝️/investor/InvestorAvatar.tsx";
+import Avatar from "../../../web/islands/investor/Avatar.tsx";
 
 interface Props {
   UserName: string;

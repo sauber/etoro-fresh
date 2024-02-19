@@ -6,8 +6,10 @@ interface Props {
 
 export default function Feature({ children }: Props) {
   return (
-    <div class="rounded-lg bg-neutral-900 overflow-hidden border-green-400 border-2 inline-block text-gray-50 p-6 m-8 shadow">
-      {children}
+    <div class="w-full p-8">
+      <div class="rounded-lg bg-neutral-900 overflow-hidden border-green-400 border-2 text-gray-50 p-6 shadow">
+        {children}
+      </div>
     </div>
   );
 }

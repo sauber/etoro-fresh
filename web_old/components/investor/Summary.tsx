@@ -1,6 +1,6 @@
 //import Avatar from "📦/investor/Avatar.tsx";
 import ChartIsland from "🏝️/Chart.tsx";
-import InvestorAvatar from "🏝️/investor/InvestorAvatar.tsx";
+import InvestorAvatar from "../../../web/islands/investor/Avatar.tsx";
 import { ChartExport, InvestorExport, StatsExport } from "📚/investor/mod.ts";
 import { portfolioData } from "📚/investor/testdata.ts";
 //import Chart from "📦/chart/Small.tsx";

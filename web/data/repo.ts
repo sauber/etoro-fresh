@@ -14,6 +14,11 @@ const cache_repo = new CachingBackend(disk_repo);
 const community = new Community(cache_repo);
 
 /** List of investors at most recent date */
+export function community_all(): Promise<Investors> {
+  return community.all();
+}
+
+/** List of investors at most recent date */
 export function community_latest(): Promise<Investors> {
   return community.latest();
 }

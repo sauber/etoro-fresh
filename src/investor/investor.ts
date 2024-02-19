@@ -24,9 +24,19 @@ export class Investor {
   ) {}
 
   /** Confirm if investor has valid data on this date */
-  active(date: DateFormat): boolean {
+  public active(date: DateFormat): boolean {
     if (this.chart.start <= date && this.chart.end >= date) return true;
     else return false;
+  }
+
+  /** Is Fund? */
+  public get isFund(): boolean {
+    return this.stats.last.IsFund;
+  }
+
+  /** Is Popular Investor? */
+  public get isPopularInvestor(): boolean {
+    return this.stats.last.PopularInvestor;
   }
 
   // Export raw data

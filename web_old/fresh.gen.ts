@@ -28,7 +28,7 @@ import * as $Chart from "./islands/Chart.tsx";
 import * as $Counter from "./islands/Counter.tsx";
 import * as $LoginForm from "./islands/LoginForm.tsx";
 import * as $PostItem from "./islands/PostItem.tsx";
-import * as $investor_InvestorAvatar from "./islands/investor/InvestorAvatar.tsx";
+import * as $investor_InvestorAvatar from "../web/islands/investor/Avatar.tsx";
 import * as $investor_InvestorCell from "./islands/investor/InvestorCell.tsx";
 import * as $investor_InvestorItem from "./islands/investor/InvestorItem.tsx";
 import * as $investor_InvestorList from "./islands/investor/InvestorList.tsx";
