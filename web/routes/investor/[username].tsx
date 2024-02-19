@@ -30,11 +30,12 @@ function StatsBox({ title, data }: StatsProps) {
 export default defineRoute(async (req: Request, ctx: RouteContext) => {
   const UserName = ctx.params.username;
   const investor: Investor = await getInvestor(UserName);
-  const chart = investor.chart.values;
-  const dates = investor.chart.dates;
+  const chart = investor.chart;
   const stats = investor.stats.last;
   const mirrors = investor.mirrors.last;
   const link = "http://etoro.com/people/" + UserName.toLowerCase();
+  const apy = +(100*chart.apy).toFixed(2);
+  const sr = chart.sharpeRatio(0.05).toPrecision(4);
 
   return (
     <>
@@ -48,11 +49,11 @@ export default defineRoute(async (req: Request, ctx: RouteContext) => {
               type="line"
               options={{ interaction: { mode: "index", intersect: false } }}
               data={{
-                labels: dates,
+                labels: chart.dates,
                 datasets: [
                   {
                     label: "Simulation",
-                    data: chart,
+                    data: chart.values,
                     pointStyle: false,
                     borderWidth: 2,
                   },
@@ -116,10 +117,12 @@ export default defineRoute(async (req: Request, ctx: RouteContext) => {
             <StatsBox
               title="Results"
               data={{
+                "APY": apy,
                 "Daily Max Drawdown": stats.DailyDD,
                 "Gain": stats.Gain,
                 "Peak To Valley": stats.PeakToValley,
                 "Profitable Weeks Pct": stats.ProfitableWeeksPct,
+                "Sharpe Ratio": sr,
                 "Weekly Max Drawdown": stats.WeeklyDD,
                 "Winning Ratio": stats.WinRatio,
               }}
