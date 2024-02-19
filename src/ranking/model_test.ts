@@ -7,7 +7,7 @@ import type { RowRecords } from "/utils/dataframe.ts";
 const repo: HeapBackend = new HeapBackend();
 
 // Testdata
-const keys = [...Array(26)].map((_, i) =>
+const keys = [...Array(28)].map((_, i) =>
   String.fromCharCode("A".charCodeAt(0) + i)
 );
 const r: RowRecords = [];

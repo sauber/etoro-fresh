@@ -33,7 +33,7 @@ export class Model {
   private readonly asset: Asset<ModelTS>;
   private readonly assetname = "ranking.model";
   private readonly expire = 30 * Days;
-  private readonly inputSize = 26; // Stats parameters
+  private readonly inputSize = 28; // Stats parameters
   private readonly outputSize = 2; // Profit and SharpeRatio
   private _sequential: Sequential | undefined;
   private semaphore = new Semaphore(1);
@@ -122,12 +122,10 @@ export class Model {
     const model: Sequential = await this.init();
 
     // Reshape data as tensors
-    if (input.names.length != this.inputSize) {
-      throw new Error("Wrong number of columns in input");
-    }
-    if (output.names.length != this.outputSize) {
-      throw new Error("Wrong number of columns in output");
-    }
+    if (input.names.length != this.inputSize) 
+      throw new Error(`Expected ${this.inputSize} columns in input, got ${input.names.length}.`);
+    if (output.names.length != this.outputSize) 
+      throw new Error(`Expected ${this.outputSize} columns in output, got ${output.names.length}.`);
     const inputs = tensor2D(input.grid as Array2D);
     const outputs = tensor2D(output.grid as Array2D);
     //console.log({input, output});
