@@ -1,8 +1,6 @@
 import Chart from "🏝️/investor/Chart.tsx";
 import Avatar from "🏝️/investor/Avatar.tsx";
 import { Investor } from "📚/investor/mod.ts";
-//import { portfolioData } from "📚/investor/testdata.ts";
-//import Chart from "📦/chart/Small.tsx";
 
 export interface ComponentProps {
   investor: Investor;
