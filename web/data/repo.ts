@@ -6,6 +6,8 @@ import { CachingBackend, DiskBackend } from "📚/storage/mod.ts";
 import { Community } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import type { Investors } from "📚/repository/mod.ts";
+import { DataFrame } from "📚/utils/dataframe.ts";
+import { Ranking } from "📚/ranking/mod.ts";
 
 const data_path = Deno.env.get("DATAPATH");
 if (!data_path) throw new Error("DATAPATH environment variable not defined");
@@ -26,4 +28,13 @@ export function community_latest(): Promise<Investors> {
 /** List of investors at most recent date */
 export function investor(UserName: string): Promise<Investor> {
   return community.investor(UserName);
+}
+
+/** Ranking of investors */
+export async function ranking(): Promise<DataFrame> {
+  const investors: Investors = await community.latest();
+  const model = new Ranking(cache_repo);
+  const ranks: DataFrame = await model.predict(investors);
+  console.log({ranks});
+  return ranks;
 }

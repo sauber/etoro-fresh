@@ -2,6 +2,7 @@ export default function Header() {
   const menus = [
     { name: "Home", href: "/" },
     { name: "Community", href: "/community" },
+    { name: "Ranking", href: "/ranking" },
     { name: "Simulation", href: "/simulation" },
     { name: "About", href: "/about" },
   ];

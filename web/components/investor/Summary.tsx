@@ -1,32 +1,31 @@
-//import Avatar from "📦/investor/Avatar.tsx";
-import ChartIsland from "🏝️/Chart.tsx";
-import InvestorAvatar from "../../../web/islands/investor/Avatar.tsx";
-import { ChartExport, InvestorExport, StatsExport } from "📚/investor/mod.ts";
-import { portfolioData } from "📚/investor/testdata.ts";
+import Chart from "🏝️/investor/Chart.tsx";
+import Avatar from "🏝️/investor/Avatar.tsx";
+import { Investor } from "📚/investor/mod.ts";
+//import { portfolioData } from "📚/investor/testdata.ts";
 //import Chart from "📦/chart/Small.tsx";
 
 export interface ComponentProps {
-  investor: InvestorExport;
+  investor: Investor;
   color: string;
   sharpeRatio: number;
   profit: number;
 }
 
 export default function InvestorSummary({ investor, color, sharpeRatio, profit }: ComponentProps) {
-  const stats: StatsExport = investor.stats;
-  const chart: ChartExport = investor.chart;
+  const stats = investor.stats.last;
+  const chart = investor.chart;
 
   return (
     <div style={{ backgroundColor: color }}>
-      <ChartIsland
+      <Chart
           type="line"
           options={{ interaction: { mode: "index", intersect: false } }}
           data={{
-            labels: chart[0],
+            labels: chart.dates,
             datasets: [
               {
                 label: "Simulation",
-                data: chart[1],
+                data: chart.values,
                 pointStyle: false,
                 borderWidth: 2
               },
@@ -34,7 +33,7 @@ export default function InvestorSummary({ investor, color, sharpeRatio, profit }
           }}
         />
     <div class="w-20 h-20 inline-block rounded-lg overflow-hidden">
-        {stats.HasAvatar && <InvestorAvatar CustomerId={stats.CustomerId as number} />}
+        {stats.HasAvatar && <Avatar CustomerId={stats.CustomerId as number} />}
       </div>
       <div class="inline-block">
       <p>

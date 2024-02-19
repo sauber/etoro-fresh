@@ -1,4 +1,5 @@
 export type StatsExport = {
+  HasAvatar: boolean;
   PopularInvestor: boolean;
   IsFund: boolean;
   Gain: number;
@@ -55,6 +56,7 @@ export class Stats {
   public get value(): StatsExport {
     const d = this.raw.Data;
     return {
+      HasAvatar: d.HasAvatar,
       PopularInvestor: d.PopularInvestor,
       IsFund: d.IsFund,
       Gain: d.Gain,

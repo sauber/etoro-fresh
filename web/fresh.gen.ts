@@ -12,6 +12,7 @@ import * as $community_latest from "./routes/community/latest.tsx";
 import * as $greet_name_ from "./routes/greet/[name].tsx";
 import * as $index from "./routes/index.tsx";
 import * as $investor_username_ from "./routes/investor/[username].tsx";
+import * as $ranking from "./routes/ranking.tsx";
 import * as $simulation from "./routes/simulation.tsx";
 import * as $investor_Avatar from "./islands/investor/Avatar.tsx";
 import * as $investor_Chart from "./islands/investor/Chart.tsx";
@@ -29,6 +30,7 @@ const manifest = {
     "./routes/greet/[name].tsx": $greet_name_,
     "./routes/index.tsx": $index,
     "./routes/investor/[username].tsx": $investor_username_,
+    "./routes/ranking.tsx": $ranking,
     "./routes/simulation.tsx": $simulation,
   },
   islands: {
