@@ -35,6 +35,5 @@ export async function ranking(): Promise<DataFrame> {
   const investors: Investors = await community.latest();
   const model = new Ranking(cache_repo);
   const ranks: DataFrame = await model.predict(investors);
-  console.log({ranks});
   return ranks;
 }

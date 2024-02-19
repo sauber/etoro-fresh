@@ -159,7 +159,7 @@ export class Model {
   /** Predict a set of inputs in parallel */
   public async predict(input: DataFrame): Promise<DataFrame> {
     if (input.names.length != this.inputSize) {
-      throw new Error("Wrong number of columns in input");
+      throw new Error(`Expected ${this.inputSize} columns in input, got ${input.names.length}`);
     }
     const output: RowRecords = await Promise.all(
       input.records.map((r: RowRecord) => this.predictRecord(r))

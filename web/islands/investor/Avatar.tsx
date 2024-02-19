@@ -43,7 +43,7 @@ export default function InvestorItem({ CustomerId }: Props) {
     console.log('Previuos URL', CustomerId, url);
 
     // A previous URL is cached
-    if ( url?.length >= 0 ) return url.length ? new URL(url) : null;
+    if ( url !== null  ) return url.length ? new URL(url) : null;
 
     console.log('Scanning for', CustomerId);
     // No cached URL, search for one

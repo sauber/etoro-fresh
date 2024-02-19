@@ -10,7 +10,6 @@ export type StatsExport = {
   CopiersGain: number;
   AUMTier: number;
   AUMTierV2: number;
-  AUMTierDesc: string;
   Trades: number;
   WinRatio: number;
   DailyDD: number;
@@ -36,6 +35,7 @@ export type StatsImport = StatsExport & {
   DisplayFullName: boolean;
   FullName?: string;
   VirtualCopiers: number;
+  AUMTierDesc: string;
 };
 
 export type StatsData = {
@@ -67,7 +67,6 @@ export class Stats {
       CopiersGain: d.CopiersGain,
       AUMTier: d.AUMTier,
       AUMTierV2: d.AUMTierV2,
-      AUMTierDesc: d.AUMTierDesc,
       Trades: d.Trades,
       WinRatio: d.WinRatio,
       DailyDD: d.DailyDD,

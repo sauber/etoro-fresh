@@ -1,11 +1,12 @@
 import { Grid, Item, Line, Table, DataSet } from "📚/utils/grid.ts";
 import { DataFrame, RowRecord, RowRecords } from "📚/utils/dataframe.ts";
-import type { Investors } from "📚/investor/mod.ts";
+import type { Investors } from "📚/repository/mod.ts";
+import { Investor } from "📚/investor/mod.ts";
 import Card from "📦/investor/Summary.tsx";
 
 export interface ComponentProps {
   rank: DataFrame;
-  investors: Record<string, Investors>;
+  investors: Investors;
 }
 
 function HSLToHex(hsl: { h: number; s: number; l: number }): string {
@@ -65,6 +66,10 @@ export default function InvestorGrid({ rank, investors }: ComponentProps) {
   const rowCount: number = table.length;
   const colCount: number = table[0].length;
 
+  // Create dict of investors
+  const InvDict: Record<string, Investor> = {};
+  investors.forEach(investor => InvDict[investor.UserName] = investor);
+
   return (
     <>
       <h2>Rank of investors</h2>
@@ -76,7 +81,7 @@ export default function InvestorGrid({ rank, investors }: ComponentProps) {
               <td class="border-2 border-slate-200">
                 {cell && (
                   <Card
-                    investor={investors[(cell.content as RowRecord).UserName as string]}
+                    investor={InvDict[(cell.content as RowRecord).UserName as string]}
                     color={(cell.content as RowRecord).color as string}
                     sharpeRatio={cell.x}
                     profit={cell.y}

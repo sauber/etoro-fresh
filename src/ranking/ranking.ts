@@ -15,10 +15,13 @@ type Stats = Input | Output;
 function normalize(name: string, numbers: Stats): Feature {
   const result: Feature = {};
   Object.entries(numbers).forEach(([key, value]) => {
-    if (Number.isFinite(value) === true) result[key] = value as number;
-    else if (typeof value === "boolean") result[key] = value === true ? 1 : 0;
-    else if (typeof value === "string") false;
-    else if (Number.isFinite(value) === false) {
+    if (Number.isFinite(value) === true) {
+      result[key] = value as number;
+    } else if (typeof value === "boolean") {
+      result[key] = value === true ? 1 : 0;
+    } else if (typeof value === "string" || value === null) {
+      false;
+    } else if (Number.isFinite(value) === false) {
       console.log({ name, numbers });
       throw new Error(`Invalid number ${name} ${key} ${value}`);
     }
