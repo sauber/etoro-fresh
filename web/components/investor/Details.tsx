@@ -14,8 +14,8 @@ function StatsBox({ title, data }: StatsProps) {
       <table>
         {Object.entries(data).map(([key, value]) => (
           <tr>
-            <th>{key}</th>
-            <td>{value}</td>
+            <th class="text-sm">{key}</th>
+            <td class="text-sm">{value}</td>
           </tr>
         ))}
       </table>
@@ -37,7 +37,7 @@ export default function InvestorDetails({investor}: InvestorProps) {
   const sr: number = +chart.sharpeRatio(0.05).toPrecision(4);
 
 return (
-<div class="grid grid-cols-4 auto-rows-[300px]">
+<div class="grid">
 <div class="flex flex-col col-span-4 items-center justify-center">
   <Chart
     type="line"

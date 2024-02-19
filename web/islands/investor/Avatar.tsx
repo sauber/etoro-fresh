@@ -38,12 +38,14 @@ export default function InvestorItem({ CustomerId }: Props) {
 
   /** Cache URL */
   const cachedUrl = async (): Promise<URL | null> => {
-    const key = "avatar_" + CustomerId;
-    const url = localStorage.getItem(key);
+    const key: string = "avatar_" + CustomerId;
+    const url: string | null = localStorage.getItem(key);
+    console.log('Previuos URL', CustomerId, url);
 
     // A previous URL is cached
-    if ( url?.length ) return url.length ? new URL(url) : null;
+    if ( url?.length >= 0 ) return url.length ? new URL(url) : null;
 
+    console.log('Scanning for', CustomerId);
     // No cached URL, search for one
     const searched: URL | null = await searchUrl();
     if (searched) {
@@ -66,10 +68,6 @@ export default function InvestorItem({ CustomerId }: Props) {
   if (imageUrl.value != null) {
     return <img class="max-h-full max-w-full size-full aspect-square" src={`${imageUrl}`} />;
   } else {
-    return (
-      
-        <img class="h-full" src="/8991202.png" />
-      
-    );
+    return <img class="h-full" src="/8991202.png" />;
   }
 }
