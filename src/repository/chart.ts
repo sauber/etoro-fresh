@@ -28,7 +28,7 @@ export class Chart {
   constructor(private readonly raw: ChartData) {}
 
   private get list(): ChartEntry[] {
-    return this.raw.simulation.oneYearAgo.chart;
+    return this.raw.simulation.oneYearAgo?.chart || [];
   }
 
   /** First date in chart */
