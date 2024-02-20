@@ -1,7 +1,7 @@
 import { diffDate, nextDate } from "/utils/time/mod.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
 import { std } from "./statistics.ts";
-import { ema, sma } from "./indicators.ts";
+import { ema, rsi, sma } from "./indicators.ts";
 
 type Numbers = number[];
 
@@ -146,5 +146,10 @@ export class Chart {
   /** Exponential Moving Average */
   public ema(window: number): Chart {
     return this.derive(ema(this.values, window));
+  }
+
+  /** Relative Strength Index */
+  public rsi(window: number): Chart {
+    return this.derive(rsi(this.values, window));
   }
 }
