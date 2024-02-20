@@ -21,7 +21,6 @@
     "extensions": [
       "denoland.vscode-deno",
       "bradlc.vscode-tailwindcss",
-      "ms-vscode.vscode-typescript-next"
     ],
     "vscode": {
       "settings": {
