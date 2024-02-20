@@ -1,4 +1,4 @@
-import { assertEquals } from "$std/assert/mod.ts";
+import { assertEquals, assertAlmostEquals } from "$std/assert/mod.ts";
 import { ema, rsi, sma } from "./indicators.ts";
 
 Deno.test("SMA", () => {
@@ -16,13 +16,9 @@ Deno.test("EMA", () => {
 Deno.test("RSI", () => {
   const testData = [40, 42, 44, 40, 38, 42, 45, 48, 50];
   const windowSize = 5;
+  const expectedResults = [57.14, 66.20, 73.26, 77.22];
 
   const result = rsi(testData, windowSize);
-  assertEquals(result, [
-    65,
-    76.76348547717842,
-    84.55172413793103,
-    88.4297520661157,
-    100
-  ]);
+  result.forEach((value, index) => assertAlmostEquals(value, expectedResults[index], 0.01));
+  
 });

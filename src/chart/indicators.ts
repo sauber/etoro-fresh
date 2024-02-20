@@ -26,36 +26,47 @@ export function ema(data: number[], window: number): number[] {
 }
 
 /** Relative Strength Index */
-export function rsi(data: number[], window: number): number[] {
-  const gains: number[] = [];
-  const losses: number[] = [];
+export function rsi(data: number[], windowSize: number): number[] {
+  if (data.length < 5) {
+    throw new Error("Data length must be at least 5 for an RSI window of 5");
+  }
+
+  const gains: number[] = new Array(data.length - 1).fill(0);
+  const losses: number[] = new Array(data.length - 1).fill(0);
 
   for (let i = 1; i < data.length; i++) {
-    const difference = data[i] - data[i - 1];
-    if (difference > 0) {
-      gains.push(difference);
-      losses.push(0);
-    } else if (difference < 0) {
-      gains.push(0);
-      losses.push(-difference);
-    } else {
-      gains.push(0);
-      losses.push(0);
-    }
+    const difference: number = data[i] - data[i - 1];
+    gains[i - 1] = Math.max(0, difference);
+    losses[i - 1] = Math.max(0, -difference);
   }
-  
-  const averageGain: number[] = ema(gains, window);
-  const averageLoss: number[] = ema(losses, window);
-  console.log({gains, losses, averageGain, averageLoss});
 
-  const rsiValues = new Array(data.length - window);
+  // console.log({ gains, losses });
 
-  for (let i = 0; i < averageGain.length; i++) {
-    console.log(i, averageGain[i], averageLoss[i]);
-    if (averageLoss[i] === 0) rsiValues[i] = 100;
+  let averageGain = avg(gains.slice(0, windowSize));
+  let averageLoss = avg(losses.slice(0, windowSize));
+
+  // console.log({ averageGain, averageLoss });
+
+  const rsiValues = new Array<number>(data.length - windowSize);
+
+  if (averageLoss == 0) rsiValues[0] = 100;
+  else {
+    const rs = averageGain / averageLoss;
+    rsiValues[0] = 100 - 100 / (1 + rs);
+  }
+
+  // console.log({ gains, losses });
+
+  for (let i = windowSize; i < data.length -1; i++) {
+    // averageGain = (averageGain * (windowSize - 1) + gains[i]) / windowSize;
+    // averageLoss = (averageLoss * (windowSize - 1) + losses[i]) / windowSize;
+    averageGain = (averageGain * (windowSize - 1) + gains[i]) / windowSize;
+    averageLoss = (averageLoss * (windowSize - 1) + losses[i]) / windowSize;
+    // console.log({ i, averageGain, averageLoss, gains: gains[i], losses: losses[i] });
+    if (averageLoss == 0) rsiValues[i - windowSize + 1] = 100;
     else {
-      const rs = averageGain[i] / averageLoss[i];
-      rsiValues[i] = 100 - 100 / (1 + rs);
+      const rs = averageGain / averageLoss;
+      rsiValues[i - windowSize + 1] = 100 - 100 / (1 + rs);
     }
   }
 
