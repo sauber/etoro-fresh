@@ -1,5 +1,5 @@
 import { Semaphore } from "semaphore";
-import { decodeBase64, encodeBase64 } from "base64";
+import { decodeBase64, encodeBase64 } from "$std/encoding/base64.ts";
 import {
   AdamOptimizer,
   Array1D,

@@ -1,7 +1,7 @@
 import type { JSONObject, AssetName, AssetNames } from "./mod.ts";
 import { Backend } from "./mod.ts";
 import { exists, read, write, files, dirs, age, mkdir, remove } from "./files.ts";
-import { join, parse } from "path";
+import { join, parse } from "$std/path/mod.ts";
 
 /** Store investor objects on disk */
 export class DiskBackend implements Backend {
