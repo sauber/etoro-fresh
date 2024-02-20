@@ -1,7 +1,7 @@
 import { diffDate, nextDate } from "/utils/time/mod.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
-import { sma } from "./sma.ts";
 import { std } from "./statistics.ts";
+import { ema, sma } from "./indicators.ts";
 
 type Numbers = number[];
 
@@ -125,20 +125,26 @@ export class Chart {
 
   /** Sub chart with entries until and including date */
   public until(enddate: DateFormat): Chart {
-    const count = diffDate(this.start, enddate);
-    const trimmed = this.values.slice(0, count + 1);
+    const count: number = diffDate(this.start, enddate);
+    const trimmed: Numbers = this.values.slice(0, count + 1);
     return this.derive(trimmed, enddate);
   }
 
   /** Value as ratio above previous value */
   private get win(): Chart {
-    const v = this.values;
+    const v: Numbers = this.values;
     return this.derive(
       v.map((a, i) => (i == 0 ? 0 : a / v[i - 1] - 1)).slice(1),
     );
   }
 
+  /** Simple Moving Average */
   public sma(window: number): Chart {
     return this.derive(sma(this.values, window));
+  }
+
+  /** Exponential Moving Average */
+  public ema(window: number): Chart {
+    return this.derive(ema(this.values, window));
   }
 }
