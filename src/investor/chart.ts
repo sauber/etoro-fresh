@@ -1,5 +1,5 @@
 import type { DateFormat } from "/utils/time/mod.ts";
-import { formatDate, today } from "/utils/time/mod.ts";
+import { today, formatDate } from "/utils/time/mod.ts";
 import { ChartSeries } from "./chart-series.ts";
 
 type ChartEntry = {
@@ -23,7 +23,11 @@ export class Chart {
   constructor(private readonly raw: ChartData) {}
 
   private get list(): ChartEntry[] {
-    return this.raw.simulation.oneYearAgo.chart;
+    if (this.raw.simulation.oneYearAgo)
+      return this.raw.simulation.oneYearAgo.chart;
+    else {
+      return [];
+    }
   }
 
   // Last date in chart
@@ -40,8 +44,14 @@ export class Chart {
 
   public validate(): boolean {
     const todayDate = today();
-    if (this.count <= 365) throw new Error("Too few dates in chart");
-    if (this.end > todayDate) throw new Error("Last date is in the future");
+    if (this.count <= 365) {
+      console.warn(`Warning: Too few dates in chart: ${this.count}`);
+      return false;
+    }
+    if (this.end > todayDate) {
+      console.warn(`Warning: Last date is in the future: ${this.end}`);
+      return false;
+    }
     return true;
   }
 

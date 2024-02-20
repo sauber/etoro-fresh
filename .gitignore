@@ -8,13 +8,16 @@
 # Fresh build directory
 _fresh/
 
+# npm dependencies
+node_modules
+
 # Generated files
 ranking.model.json
 *.compiled.json
 
-# Node Modules
-node_modules/
-
 # V8 profiling output
 isolate-*.log
 profile.txt
+
+# tmp files from tests
+tmp/

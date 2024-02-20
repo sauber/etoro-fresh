@@ -1,30 +1,41 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
-import { repoBackend } from "/repository/testdata.ts";
-import { investorId } from "/investor/testdata.ts";
+import { repo } from "./testdata.ts";
 import { Ranking } from "./ranking.ts";
-import { TextSeries } from "/utils/series.ts";
+import { Community } from "📚/repository/mod.ts";
+import { Investor } from "📚/investor/mod.ts";
+import { diffDate } from "📚/utils/time/mod.ts";
+
+type Investors = Array<Investor>;
+
+const community = new Community(repo);
+const all: Investors = await community.all();
+const train: Investors = all.filter(
+  (investor: Investor) =>
+    diffDate(investor.stats.start, investor.chart.end) >= 30
+);
+const test: Investors = all.filter(
+  (investor: Investor) =>
+    diffDate(investor.stats.start, investor.chart.end) < 30
+);
 
 Deno.test("Initialize", () => {
-  const rank = new Ranking(repoBackend);
+  const rank = new Ranking(repo);
   assertInstanceOf(rank, Ranking);
 });
 
 Deno.test("Train", { ignore: false }, async () => {
-  const rank = new Ranking(repoBackend);
+  const rank = new Ranking(repo);
 
   // Training
-  const done = await rank.train();
+  const done = await rank.train(train);
   assertEquals(done, undefined);
 });
 
-Deno.test("Validate", { ignore: false }, async () => {
-  const rank = new Ranking(repoBackend);
+Deno.test("Predict", { ignore: false }, async () => {
+  const rank = new Ranking(repo);
 
-  // Validate
-  const names = new TextSeries([investorId.UserName]);
-  //console.log(names);
-  const out = await rank.predict(names);
+  const out = await rank.predict(test);
   out.print("Prediction");
-  assertEquals(out.length, 1);
+  assertEquals(out.length, test.length);
   assertEquals(out.names.length, 3);
 });

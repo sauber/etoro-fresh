@@ -1,4 +1,4 @@
-import Feature from "📦/Feature.tsx";
+import Feature from "📦/ux/Feature.tsx";
 
 export default function AboutPage() {
   return (

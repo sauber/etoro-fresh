@@ -1,6 +1,8 @@
-import { DateFormat, nextDate } from "/utils/time/mod.ts";
-import { ChartSeries, Community, Investor, Names } from "/investor/mod.ts";
-import { ObjectSeries } from "/utils/series.ts";
+import { DateFormat, nextDate } from "📚/utils/time/mod.ts";
+import { Chart } from "📚/chart/mod.ts";
+import { Community } from "📚/repository/mod.ts";
+import { Investor } from "📚/investor/mod.ts";
+import { ObjectSeries } from "📚/utils/series.ts";
 import { Strategy, StrategyClass } from "./strategy.ts";
 import type { Orders } from "./strategy.ts";
 import { Exchange } from "./exchange.ts";
@@ -11,6 +13,7 @@ import { DataFrame } from "📚/utils/dataframe.ts";
 import { Position } from "./position.ts";
 
 type Investors = ObjectSeries<Investor>;
+type Name = Array<string>;
 
 /** Simulate trading over a period */
 export class Simulation {
@@ -23,7 +26,7 @@ export class Simulation {
     private readonly end: DateFormat,
     private readonly community: Community,
     private readonly strategy: StrategyClass,
-    private cash: number = 100000,
+    private cash: number = 100000
   ) {
     this.exchange = new Exchange();
     this.book = new Book();
@@ -34,10 +37,7 @@ export class Simulation {
   /** Generate a strategy for the current date and current portfolio */
   private async StrategyInstance(date: DateFormat): Promise<Strategy> {
     const strategyClass = this.strategy;
-    const names: Names = await this.community.active(date);
-    const objects: Array<Investor> = await Promise.all(
-      names.values.map((name) => this.community.investor(name)),
-    );
+    const objects: Array<Investor> = await this.community.on(date);
     const investors: Investors = new ObjectSeries(objects);
     const strategy: Strategy = new strategyClass(this.portfolio, investors);
     return strategy;
@@ -49,13 +49,13 @@ export class Simulation {
     const open: Orders = await strategy.open();
     for (const order of open) {
       const name: string = order.name;
-      const investor: Investor = this.community.investor(name);
-      const chart: ChartSeries = await investor.chart();
+      const investor: Investor = await this.community.investor(name);
+      const chart: Chart = investor.chart;
       const position: Position = this.exchange.buy(
         date,
         name,
         chart,
-        order.amount,
+        order.amount
       );
       this.book.add(date, position);
     }
@@ -77,7 +77,7 @@ export class Simulation {
     const yesterday: DateFormat = nextDate(date, -1);
     for (const position of expired) {
       const selling_price: number = this.exchange.selling_price(
-        position.value(yesterday),
+        position.value(yesterday)
       );
       //console.log('book.remove', date, position, selling_price);
       //throw new Error('Simulation Expire');
@@ -109,11 +109,11 @@ export class Simulation {
   }
 
   // /** Export daily performance as chart */
-  public get chart(): ChartSeries {
+  public get chart(): Chart {
     const df: DataFrame = this.book.export;
     const values = df
       .select((r) => r.action === "valuate")
       .records.map((r) => r.value) as number[];
-    return new ChartSeries(values, this.start);
+    return new Chart(values, this.end);
   }
 }

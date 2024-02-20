@@ -1,29 +1,62 @@
-import { RepoBackend } from "/repository/mod.ts";
+import { Backend } from "../storage/mod.ts";
 import { Model } from "./model.ts";
-import { Extract, Features } from "./features.ts";
-import { Community } from "/investor/mod.ts";
+import { Features } from "./features.ts";
+import type { Input, Output } from "./features.ts";
 import { DataFrame } from "/utils/dataframe.ts";
 import { TextSeries } from "/utils/series.ts";
+import { Investor } from "📚/investor/mod.ts";
+
+type Investors = Array<Investor>;
+
+type Feature = Record<string, number>;
+// type Feature = Input | Output;
+type Stats = Input | Output;
+
+function normalize(name: string, numbers: Stats): Feature {
+  const result: Feature = {};
+  Object.entries(numbers).forEach(([key, value]) => {
+    if (Number.isFinite(value) === true) {
+      result[key] = value as number;
+    } else if (typeof value === "boolean") {
+      result[key] = value === true ? 1 : 0;
+    } else if (typeof value === "string" || value === null) {
+      false;
+    } else if (Number.isFinite(value) === false) {
+      console.log({ name, numbers });
+      throw new Error(`Invalid number ${name} ${key} ${value}`);
+    }
+  });
+  return result;
+}
 
 export class Ranking {
   private readonly model: Model;
-  private readonly features: Features;
 
-  constructor(repo: RepoBackend) {
+  constructor(repo: Backend) {
     this.model = new Model(repo);
-    const community = new Community(repo);
-    this.features = new Features(community);
-    this.features.days = 30; // TODO: Read from config
+  }
+
+  /** Input features for investors */
+  private input(investors: Investors): DataFrame {
+    const list: Array<Feature> = investors.map((i: Investor) =>
+      normalize(i.UserName, new Features(i).input)
+    );
+    return DataFrame.fromRecords(list);
+  }
+
+  /** Output features for investors */
+  private output(investors: Investors): DataFrame {
+    const list: Array<Feature> = investors.map((i: Investor) =>
+      normalize(i.UserName, new Features(i).output)
+    );
+    return DataFrame.fromRecords(list);
   }
 
   /** Train model with extracted features */
-  public async train(): Promise<void> {
-    console.log("Loading Features");
-    const training: DataFrame = await this.features.data();
-    const xf = ["Profit", "SharpeRatio"];
-    const train_x = training.exclude(xf);
-    const train_y = training.include(xf);
-    console.log("Training model");
+  public train(investors: Investors): Promise<void> {
+    const train_x = this.input(investors);
+    const train_y = this.output(investors);
+
     return this.model.train(train_x, train_y);
   }
 
@@ -33,13 +66,10 @@ export class Ranking {
   }
 
   /** Predicted profit and SharpeRatio for investors */
-  public async predict(names: TextSeries): Promise<DataFrame> {
-    const features: Array<Extract> = await Promise.all(
-      names.values.map((username: string) => this.features.features(username)),
-    );
-    const inputs = features.map((feature: Extract) => feature.input);
-    const indf = DataFrame.fromRecords(inputs);
-    const prediction = await this.model.predict(indf);
+  public async predict(investors: Investors): Promise<DataFrame> {
+    const input = this.input(investors);
+    const prediction = await this.model.predict(input);
+    const names = new TextSeries(investors.map((i) => i.UserName));
     const result = new DataFrame({
       UserName: names,
     }).join(prediction);

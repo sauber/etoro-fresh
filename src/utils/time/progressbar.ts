@@ -57,13 +57,19 @@ export class ProgressBar {
     }
   }
 
-  /** Increment count by amount, and write progress bar */
+  /** Increment counter by amount, and write progress bar */
   public inc(amount = 1): Promise<void> {
     this.counter += amount;
     return this.update(this.counter);
   }
 
-  /** Increment count by amount, and write progress bar */
+  /** Reduce total count by amount, and write progress bar */
+  public dec(amount = 1): Promise<void> {
+    this.total -= amount;
+    return this.update(this.counter);
+  }
+
+  /** Write newline */
   public async finish(): Promise<void> {
     await Deno.stdout.write(this.encoder.encode("\x1b[?25h\n"));
   }

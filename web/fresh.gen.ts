@@ -6,33 +6,15 @@ import * as $_404 from "./routes/_404.tsx";
 import * as $_app from "./routes/_app.tsx";
 import * as $_layout from "./routes/_layout.tsx";
 import * as $about from "./routes/about.tsx";
-import * as $api_investor_username_stats from "./routes/api/investor/[username]/stats.ts";
-import * as $api_investor_middleware from "./routes/api/investor/_middleware.ts";
-import * as $api_investor_end from "./routes/api/investor/end.ts";
-import * as $api_investor_names from "./routes/api/investor/names.ts";
-import * as $api_investor_rank from "./routes/api/investor/rank.ts";
-import * as $api_joke from "./routes/api/joke.ts";
-import * as $api_login from "./routes/api/login.ts";
-import * as $chart from "./routes/chart.tsx";
-import * as $community from "./routes/community.tsx";
-import * as $examples from "./routes/examples.tsx";
-import * as $greet_name_ from "./routes/greet/[name].tsx";
+import * as $community_all from "./routes/community/all.tsx";
+import * as $community_index from "./routes/community/index.tsx";
+import * as $community_latest from "./routes/community/latest.tsx";
 import * as $index from "./routes/index.tsx";
 import * as $investor_username_ from "./routes/investor/[username].tsx";
-import * as $login from "./routes/login.tsx";
-import * as $posts from "./routes/posts.tsx";
-import * as $posts_id_edit from "./routes/posts/[id]/edit.tsx";
-import * as $posts_id_index from "./routes/posts/[id]/index.tsx";
-import * as $posts_new from "./routes/posts/new.tsx";
-import * as $Chart from "./islands/Chart.tsx";
-import * as $Counter from "./islands/Counter.tsx";
-import * as $LoginForm from "./islands/LoginForm.tsx";
-import * as $PostItem from "./islands/PostItem.tsx";
-import * as $investor_InvestorAvatar from "./islands/investor/InvestorAvatar.tsx";
-import * as $investor_InvestorCell from "./islands/investor/InvestorCell.tsx";
-import * as $investor_InvestorItem from "./islands/investor/InvestorItem.tsx";
-import * as $investor_InvestorList from "./islands/investor/InvestorList.tsx";
-import * as $investor_List from "./islands/investor/List.tsx";
+import * as $ranking from "./routes/ranking.tsx";
+import * as $simulation from "./routes/simulation.tsx";
+import * as $investor_Avatar from "./islands/investor/Avatar.tsx";
+import * as $investor_Chart from "./islands/investor/Chart.tsx";
 import { type Manifest } from "$fresh/server.ts";
 
 const manifest = {
@@ -41,35 +23,17 @@ const manifest = {
     "./routes/_app.tsx": $_app,
     "./routes/_layout.tsx": $_layout,
     "./routes/about.tsx": $about,
-    "./routes/api/investor/[username]/stats.ts": $api_investor_username_stats,
-    "./routes/api/investor/_middleware.ts": $api_investor_middleware,
-    "./routes/api/investor/end.ts": $api_investor_end,
-    "./routes/api/investor/names.ts": $api_investor_names,
-    "./routes/api/investor/rank.ts": $api_investor_rank,
-    "./routes/api/joke.ts": $api_joke,
-    "./routes/api/login.ts": $api_login,
-    "./routes/chart.tsx": $chart,
-    "./routes/community.tsx": $community,
-    "./routes/examples.tsx": $examples,
-    "./routes/greet/[name].tsx": $greet_name_,
+    "./routes/community/all.tsx": $community_all,
+    "./routes/community/index.tsx": $community_index,
+    "./routes/community/latest.tsx": $community_latest,
     "./routes/index.tsx": $index,
     "./routes/investor/[username].tsx": $investor_username_,
-    "./routes/login.tsx": $login,
-    "./routes/posts.tsx": $posts,
-    "./routes/posts/[id]/edit.tsx": $posts_id_edit,
-    "./routes/posts/[id]/index.tsx": $posts_id_index,
-    "./routes/posts/new.tsx": $posts_new,
+    "./routes/ranking.tsx": $ranking,
+    "./routes/simulation.tsx": $simulation,
   },
   islands: {
-    "./islands/Chart.tsx": $Chart,
-    "./islands/Counter.tsx": $Counter,
-    "./islands/LoginForm.tsx": $LoginForm,
-    "./islands/PostItem.tsx": $PostItem,
-    "./islands/investor/InvestorAvatar.tsx": $investor_InvestorAvatar,
-    "./islands/investor/InvestorCell.tsx": $investor_InvestorCell,
-    "./islands/investor/InvestorItem.tsx": $investor_InvestorItem,
-    "./islands/investor/InvestorList.tsx": $investor_InvestorList,
-    "./islands/investor/List.tsx": $investor_List,
+    "./islands/investor/Avatar.tsx": $investor_Avatar,
+    "./islands/investor/Chart.tsx": $investor_Chart,
   },
   baseUrl: import.meta.url,
 } satisfies Manifest;

@@ -13,9 +13,6 @@
   }
   table {
   }
-  thead {
-    @apply bg-neutral-100;
-  }
   th {
     @apply font-semibold;
   }

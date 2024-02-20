@@ -1,73 +1,34 @@
-import {
-  assertEquals,
-  assertGreaterOrEqual,
-  assertInstanceOf,
-} from "$std/assert/mod.ts";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { Investor } from "./investor.ts";
-import { repoBackend } from "/repository/testdata.ts";
-import { ChartSeries } from "./chart-series.ts";
-import type { InvestorExport } from "./mod.ts";
-import type { DateFormat } from "/utils/time/mod.ts";
-import type { InvestorId } from "/investor/mod.ts";
+import type { InvestorExport } from "./investor.ts";
+import { Diary } from "./diary.ts";
+import { Chart } from "../chart/mod.ts";
+import type { InvestorId, StatsExport } from "📚/repository/mod.ts";
+import type { DateFormat } from "📚/utils/time/mod.ts";
 
-// Test Data
-const username = "FundManagerZech";
-const CustomerId = 5125148;
-const FullName = "Zheng Bin";
+const username = "john123";
+const id = 1;
+const fullname = "John Doe";
+const end: DateFormat = "2022-10-10";
+const chart = new Chart([10000], end);
+const mirrors = new Diary<InvestorId[]>({});
+const stats = new Diary<StatsExport>({});
 
-Deno.test("Blank Initialization", () => {
-  const investor: Investor = new Investor(username, repoBackend);
+Deno.test("Initialization", () => {
+  const investor = new Investor(username, id, fullname, chart, mirrors, stats);
   assertInstanceOf(investor, Investor);
 });
 
-Deno.test("Chart Series", async () => {
-  const investor: Investor = new Investor(username, repoBackend);
-  const series: ChartSeries = await investor.chart();
-  assertEquals(series.start(), "2020-12-01");
-  assertEquals(series.values.length, 511);
-});
+Deno.test("Export / Import", () => {
+  // Generate original object
+  const investor = new Investor(username, id, fullname, chart, mirrors, stats);
 
-Deno.test("Combined Export", async () => {
-  const investor: Investor = new Investor(username, repoBackend);
-  const dump: InvestorExport = await investor.export();
-  assertInstanceOf(dump.chart[0], Array<DateFormat>);
-  assertInstanceOf(dump.chart[1], Array<number>);
-  assertInstanceOf(dump.mirrors, Array<InvestorId>);
-  assertInstanceOf(dump.stats, Object);
-  assertEquals(dump.stats.UserName, username);
-});
+  // Export raw data
+  const data: InvestorExport = investor.export;
+  assertEquals(data.FullName, fullname);
 
-Deno.test("CustomerId", async () => {
-  const investor: Investor = new Investor(username, repoBackend);
-  const id: number = await investor.CustomerId();
-  assertEquals(id, CustomerId);
-});
-
-Deno.test("Full Name", async () => {
-  const investor: Investor = new Investor(username, repoBackend);
-  const name: string = await investor.FullName();
-  assertEquals(name, FullName);
-});
-
-Deno.test("Start/End", async () => {
-  const investor: Investor = new Investor(username, repoBackend);
-  const start: DateFormat | null = await investor.start();
-  assertEquals(start, "2021-12-29");
-  const end: DateFormat | null = await investor.end();
-  assertEquals(end, "2022-04-25");
-  assertGreaterOrEqual(end, start);
-});
-
-Deno.test("Active Range", async () => {
-  const investor: Investor = new Investor(username, repoBackend);
-  const active: boolean = await investor.active("2021-12-30");
-  assertEquals(active, true);
-  const inactive: boolean = await investor.active("2021-12-28");
-  assertEquals(inactive, false);
-});
-
-Deno.test("Validate", async () => {
-  const investor: Investor = new Investor(username, repoBackend);
-  const valid: boolean = await investor.isValid();
-  assertEquals(valid, true);
+  // Generate from export
+  const imported: Investor = Investor.import(data);
+  assertInstanceOf(imported, Investor);
+  console.log(imported);
 });

@@ -15,8 +15,8 @@ import {
   tensor2D,
   WASM,
 } from "netsaur";
-import { Asset, RepoBackend } from "/repository/mod.ts";
-import type { JSONObject } from "/repository/mod.ts";
+import { Asset, Backend } from "../storage/mod.ts";
+import type { JSONObject } from "../storage/mod.ts";
 import { DataFrame } from "/utils/dataframe.ts";
 import type { RowRecord, RowRecords } from "/utils/dataframe.ts";
 
@@ -38,8 +38,9 @@ export class Model {
   private _sequential: Sequential | undefined;
   private semaphore = new Semaphore(1);
 
-  constructor(private readonly repo: RepoBackend) {
-    this.asset = this.repo.asset(this.assetname);
+  constructor(private readonly repo: Backend) {
+    //this.asset = this.repo.asset(this.assetname);
+    this.asset = new Asset<ModelTS>(this.assetname, repo);
   }
 
   /** Run before creating model, training or predicting */
@@ -49,7 +50,7 @@ export class Model {
 
   /** Load existing model */
   private async loadModel(): Promise<Sequential> {
-    console.log("Loading existing model");
+    //console.log("Loading existing model");
     const loaded: JSONObject | null = await this.repo.retrieve(this.assetname);
     if (loaded) {
       const model: Uint8Array = decodeBase64(loaded.model as string);
@@ -60,7 +61,7 @@ export class Model {
 
   /** Create a sequential model with layers */
   private createModel(): Sequential {
-    console.log("Creating new model");
+    console.warn("Creating new model");
 
     const hiddenSize = this.outputSize + Math.round(Math.sqrt(this.inputSize));
 
@@ -121,14 +122,13 @@ export class Model {
     const model: Sequential = await this.init();
 
     // Reshape data as tensors
-    if (input.names.length != this.inputSize) {
-      throw new Error("Wrong number of columns in input");
-    }
-    if (output.names.length != this.outputSize) {
-      throw new Error("Wrong number of columns in output");
-    }
+    if (input.names.length != this.inputSize) 
+      throw new Error(`Expected ${this.inputSize} columns in input, got ${input.names.length}.`);
+    if (output.names.length != this.outputSize) 
+      throw new Error(`Expected ${this.outputSize} columns in output, got ${output.names.length}.`);
     const inputs = tensor2D(input.grid as Array2D);
     const outputs = tensor2D(output.grid as Array2D);
+    //console.log({input, output});
 
     // Train model
     model.train(
@@ -138,7 +138,7 @@ export class Model {
       // Batches
       25,
       // Learning Rate
-      0.1,
+      0.1
     );
   }
 
@@ -159,10 +159,10 @@ export class Model {
   /** Predict a set of inputs in parallel */
   public async predict(input: DataFrame): Promise<DataFrame> {
     if (input.names.length != this.inputSize) {
-      throw new Error("Wrong number of columns in input");
+      throw new Error(`Expected ${this.inputSize} columns in input, got ${input.names.length}`);
     }
     const output: RowRecords = await Promise.all(
-      input.records.map((r: RowRecord) => this.predictRecord(r)),
+      input.records.map((r: RowRecord) => this.predictRecord(r))
     );
     const df = DataFrame.fromRecords(output);
     return df;
