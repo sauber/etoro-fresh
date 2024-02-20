@@ -2,6 +2,7 @@
  * Interface to access underlying data modules
  */
 
+import { load } from "$std/dotenv/mod.ts";
 import { CachingBackend, DiskBackend } from "📚/storage/mod.ts";
 import { Community } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
@@ -9,7 +10,14 @@ import type { Investors } from "📚/repository/mod.ts";
 import { DataFrame } from "📚/utils/dataframe.ts";
 import { Ranking } from "📚/ranking/mod.ts";
 
-const data_path = Deno.env.get("DATAPATH");
+let data_path = Deno.env.get("DATAPATH");
+
+// Try to load from .env file
+if (!data_path) {
+  const env = await load();
+  data_path = env["DATAPATH"];
+}
+
 if (!data_path) throw new Error("DATAPATH environment variable not defined");
 const disk_repo = new DiskBackend(data_path);
 const cache_repo = new CachingBackend(disk_repo);
