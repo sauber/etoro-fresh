@@ -1,4 +1,4 @@
-import { DiskBackend } from "/storage/mod.ts";
+import { DiskBackend, CachingBackend } from "/storage/mod.ts";
 import { Community } from "/repository/mod.ts";
 import { Ranking } from "./ranking.ts";
 import { Investor } from "📚/investor/mod.ts";
@@ -6,7 +6,8 @@ import { diffDate } from "📚/utils/time/mod.ts";
 
 // Repo
 const path: string = Deno.args[0];
-const backend = new DiskBackend(path);
+const disk = new DiskBackend(path);
+const backend = new CachingBackend(disk);
 const rank = new Ranking(backend);
 
 // Load data

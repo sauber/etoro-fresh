@@ -1,4 +1,9 @@
+/** Type of exported fields */
 export type StatsExport = {
+  CustomerId: number;
+  UserName: string;
+  DisplayFullName: boolean;
+  FullName?: string;
   HasAvatar: boolean;
   PopularInvestor: boolean;
   IsFund: boolean;
@@ -10,6 +15,8 @@ export type StatsExport = {
   CopiersGain: number;
   AUMTier: number;
   AUMTierV2: number;
+  AUMTierDesc: string;
+  VirtualCopiers: number;
   Trades: number;
   WinRatio: number;
   DailyDD: number;
@@ -29,17 +36,47 @@ export type StatsExport = {
   WeeksSinceRegistration: number;
 };
 
-export type StatsImport = StatsExport & {
-  CustomerId: number;
-  UserName: string;
-  DisplayFullName: boolean;
-  FullName?: string;
-  VirtualCopiers: number;
-  AUMTierDesc: string;
-};
+/** Names of exported fields */
+const props = [
+  "CustomerId",
+  "UserName",
+  "DisplayFullName",
+  "FullName",
+  "HasAvatar",
+  "PopularInvestor",
+  "IsFund",
+  "Gain",
+  "RiskScore",
+  "MaxDailyRiskScore",
+  "MaxMonthlyRiskScore",
+  "Copiers",
+  "CopiersGain",
+  "AUMTier",
+  "AUMTierV2",
+  "AUMTierDesc",
+  "VirtualCopiers",
+  "Trades",
+  "WinRatio",
+  "DailyDD",
+  "WeeklyDD",
+  "ProfitableWeeksPct",
+  "ProfitableMonthsPct",
+  "Velocity",
+  "Exposure",
+  "AvgPosSize",
+  "HighLeveragePct",
+  "MediumLeveragePct",
+  "LowLeveragePct",
+  "PeakToValley",
+  "LongPosPct",
+  "ActiveWeeks",
+  "ActiveWeeksPct",
+  "WeeksSinceRegistration",
+] as const;
 
+/** Format of raw data */
 export type StatsData = {
-  Data: StatsImport;
+  Data: StatsExport;
 };
 
 /** Stats data scraped from eToro */
@@ -54,36 +91,9 @@ export class Stats {
 
   /** Export subset of data */
   public get value(): StatsExport {
-    const d = this.raw.Data;
-    return {
-      HasAvatar: d.HasAvatar,
-      PopularInvestor: d.PopularInvestor,
-      IsFund: d.IsFund,
-      Gain: d.Gain,
-      RiskScore: d.RiskScore,
-      MaxDailyRiskScore: d.MaxDailyRiskScore,
-      MaxMonthlyRiskScore: d.MaxMonthlyRiskScore,
-      Copiers: d.Copiers,
-      CopiersGain: d.CopiersGain,
-      AUMTier: d.AUMTier,
-      AUMTierV2: d.AUMTierV2,
-      Trades: d.Trades,
-      WinRatio: d.WinRatio,
-      DailyDD: d.DailyDD,
-      WeeklyDD: d.WeeklyDD,
-      ProfitableWeeksPct: d.ProfitableWeeksPct,
-      ProfitableMonthsPct: d.ProfitableMonthsPct,
-      Velocity: d.Velocity,
-      Exposure: d.Exposure,
-      AvgPosSize: d.AvgPosSize,
-      HighLeveragePct: d.HighLeveragePct,
-      MediumLeveragePct: d.MediumLeveragePct,
-      LowLeveragePct: d.LowLeveragePct,
-      PeakToValley: d.PeakToValley,
-      LongPosPct: d.LongPosPct,
-      ActiveWeeks: d.ActiveWeeks,
-      ActiveWeeksPct: d.ActiveWeeksPct,
-      WeeksSinceRegistration: d.WeeksSinceRegistration,
-    };
+    const output = Object.fromEntries(
+      props.map(key => [key, this.raw.Data[key]])
+    ) as StatsExport;
+    return output;
   }
 }

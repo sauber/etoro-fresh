@@ -33,7 +33,7 @@ export class Model {
   private readonly asset: Asset<ModelTS>;
   private readonly assetname = "ranking.model";
   private readonly expire = 30 * Days;
-  private readonly inputSize = 28; // Stats parameters
+  private readonly inputSize = 26; // Stats parameters
   private readonly outputSize = 2; // Profit and SharpeRatio
   private _sequential: Sequential | undefined;
   private semaphore = new Semaphore(1);
