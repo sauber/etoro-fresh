@@ -50,7 +50,7 @@ export class Model {
 
   /** Load existing model */
   private async loadModel(): Promise<Sequential> {
-    console.log("Loading existing model");
+    //console.log("Loading existing model");
     const loaded: JSONObject | null = await this.repo.retrieve(this.assetname);
     if (loaded) {
       const model: Uint8Array = decodeBase64(loaded.model as string);
@@ -61,7 +61,7 @@ export class Model {
 
   /** Create a sequential model with layers */
   private createModel(): Sequential {
-    console.log("Creating new model");
+    console.warn("Creating new model");
 
     const hiddenSize = this.outputSize + Math.round(Math.sqrt(this.inputSize));
 
