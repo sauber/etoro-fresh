@@ -125,7 +125,7 @@ export class Refresh {
   private chart(investor: InvestorId): Promise<boolean> {
     const validate = function (loaded: ChartData) {
       const chart: Chart = new Chart(loaded);
-      if (!chart.validate) {
+      if (!chart.validate()) {
         console.warn(`Warning: Chart for ${investor.UserName} is invalid`);
         return false;
       }
