@@ -1,14 +1,15 @@
-import { Simulation } from "📚/simulation/simulation.ts";
-import { RandomStrategy } from "📚/simulation/strategy.ts";
-import { Community } from "📚/investor/mod.ts";
-import { RepoDiskBackend } from "../storage/mod.ts";
+import { Community } from "📚/repository/mod.ts";
+import { DiskBackend, CachingBackend } from "📚/storage/mod.ts";
 import type { DateFormat } from "/utils/time/mod.ts";
 import { nextDate } from "📚/utils/time/calendar.ts";
+import { Simulation } from "📚/simulation/simulation.ts";
+import { RandomStrategy } from "📚/simulation/strategy.ts";
 
 // Community Repo
 const path: string = Deno.args[0];
-const backend = new RepoDiskBackend(path);
-export const community = new Community(backend);
+const backend = new DiskBackend(path);
+const repo = new CachingBackend(backend);
+export const community = new Community(repo);
 
 // Start and end dates
 const [start, end] = (await Promise.all([
@@ -17,5 +18,6 @@ const [start, end] = (await Promise.all([
 ])) as [DateFormat, DateFormat];
 
 const stop = nextDate(end);
-const sim = new Simulation(start, stop, community, RandomStrategy);
+const sim = new Simulation(start, "2022-04-27", community, RandomStrategy);
 await sim.run();
+sim.book.export.digits(2).print("Random Strategy");
