@@ -1,4 +1,4 @@
-function minimize(
+export function minimize(
   f: (x: number, y: number) => number,
   x0: number,
   y0: number,
@@ -42,14 +42,14 @@ function minimize(
   return { x, y };
 }
 
-const result = minimize(
-  (x: number, y: number) => x * x + y * y,
-  2,
-  3,
-  0.1, // alpha
-  0.5, // beta
-  1000, // maxSteps
-  1e-6 // epsilon
-);
+// const result = minimize(
+//   (x: number, y: number) => x * x + y * y,
+//   4,
+//   3,
+//   0.1, // alpha
+//   0.5, // beta
+//   1000, // maxSteps
+//   1e-6 // epsilon
+// );
 
-console.log(`Minimum found at: x=${result.x}, y=${result.y}`);
+// console.log(`Minimum found at: x=${result.x}, y=${result.y}`);
