@@ -11,8 +11,8 @@ export class CrossPath {
 
   constructor(
     private readonly chart: Chart,
-    slowWindow: number,
     fastWindow: number,
+    slowWindow: number,
   ) {
     this.slow = chart.sma(slowWindow);
     this.fast = chart.sma(fastWindow);

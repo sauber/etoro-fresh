@@ -52,7 +52,6 @@ Deno.test("Disk repo", async (t) => {
     assertEquals(names.length, 0);
   });
 
-
   await t.step("all names", async () => {
     const names: Investor[] = await community.all();
     assertEquals(names.length, 26);
