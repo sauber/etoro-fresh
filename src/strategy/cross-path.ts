@@ -93,9 +93,9 @@ export class CrossPathParameters {
   /** Change one parameter by amount */
   step(param: Parameter, amount: number): void {
     const b = this.boundary(param);
-    const int = Math.round(amount)
-    if ( this[param] + int > b.max ) this[param] = b.max
-    else if ( this[param] + int < b.min ) this[param] = b.min
-    else this[param] += int;
+    const d = Math.round(amount)
+    if ( this[param] + d > b.max ) this[param] = b.max
+    else if ( this[param] + d < b.min ) this[param] = b.min
+    else this[param] += d;
   }
 }
