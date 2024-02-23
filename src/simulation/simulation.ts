@@ -50,13 +50,7 @@ export class Simulation {
     for (const order of open) {
       const name: string = order.name;
       const investor: Investor = await this.community.investor(name);
-      const chart: Chart = investor.chart;
-      const position: Position = this.exchange.buy(
-        date,
-        name,
-        chart,
-        order.amount
-      );
+      const position: Position = this.exchange.buy(investor, date, order.amount);
       this.book.add(date, position);
     }
   }
@@ -66,7 +60,7 @@ export class Simulation {
     const strategy: Strategy = await this.StrategyInstance(date);
     const close: Positions = await strategy.close();
     for (const position of close) {
-      const refund: number = this.exchange.sell(date, position);
+      const refund: number = this.exchange.sell(position, date);
       this.book.remove(date, position, "sell", refund);
     }
   }
@@ -76,9 +70,7 @@ export class Simulation {
     const expired: Positions = this.portfolio.expired(date);
     const yesterday: DateFormat = nextDate(date, -1);
     for (const position of expired) {
-      const selling_price: number = this.exchange.selling_price(
-        position.value(yesterday)
-      );
+      const selling_price: number = this.exchange.sell(position, yesterday);
       //console.log('book.remove', date, position, selling_price);
       //throw new Error('Simulation Expire');
       this.book.remove(date, position, "expire", selling_price);

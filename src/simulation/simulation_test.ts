@@ -27,7 +27,7 @@ Deno.test("Random Strategy", async () => {
   const stop = "2022-04-27";
   const sim = new Simulation(start, stop, community, RandomStrategy);
   await sim.run();
-  sim.book.export.digits(2).print("Random Strategy");
+  // sim.book.export.digits(2).print("Random Strategy");
   const positions: number = sim.book.portfolio.length;
   assertEquals(positions, 0);
 });

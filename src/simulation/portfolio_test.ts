@@ -3,8 +3,9 @@ import type { DateFormat } from "📚/utils/time/mod.ts";
 import { nextDate } from "📚/utils/time/mod.ts";
 import { Portfolio } from "./portfolio.ts";
 import type { Positions } from "./portfolio.ts";
-import { chart, position } from "./testdata.ts";
+import { investor, position } from "./testdata.ts";
 
+const chart = investor.chart;
 const start: DateFormat = chart.start;
 const end: DateFormat = chart.end;
 const first: number = chart.first;

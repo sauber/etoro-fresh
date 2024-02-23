@@ -3,7 +3,7 @@ import { Community } from "📚/repository/mod.ts";
 import { CrossPath } from "./cross-path.ts";
 import type { DateFormat } from "📚/utils/time/mod.ts";
 import { diffDate } from "📚/utils/time/mod.ts";
-import { avg } from "📚/chart/statistics.ts";
+// import { avg } from "📚/chart/statistics.ts";
 
 type Position = {
   date: DateFormat;

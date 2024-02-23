@@ -9,14 +9,14 @@ import { Position } from "./position.ts";
 export const community = new Community(repo);
 
 // Pick a random investor
-const investor: Investor = await community.any();
-export const username: string = investor.UserName;
+export const investor: Investor = await community.any();
+// export const username: string = investor.UserName;
 
 // Chart data
-export const chart: Chart = investor.chart;
+const chart: Chart = investor.chart;
 const open: DateFormat = chart.start;
-const price: number = chart.first * 1.000; // No spread
+// const price: number = chart.first * 1.000; // No spread
 
 // Position data
 const amount = 1000;
-export const position = new Position(open, username, chart, price, amount);
+export const position = new Position(investor, open, amount);
