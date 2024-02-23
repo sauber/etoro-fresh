@@ -12,3 +12,4 @@ export const community = new Community(repo);
 * Strategy, book and simulation should use same Portfolio module.
 * Simulation is incomplete and broken
 * Move /utils/time to /time
+* Portfolio strategies and chart indicator strategies are not the same thing
