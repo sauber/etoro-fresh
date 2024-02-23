@@ -42,7 +42,7 @@ function run(fast: number, slow: number): number {
   }
 
   /** Loop all dates in all charts */
-  charts.forEach((chart, index) => {
+  charts.forEach((chart, _index) => {
     let position: Position | null = null;
     const strategy = new CrossPath(chart, fast, slow);
     const dates: DateFormat[] = strategy.dates;

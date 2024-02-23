@@ -2,10 +2,9 @@ export function minimize(
   f: (x: number, y: number) => number,
   x0: number,
   y0: number,
-  alpha: number = 0.1,
-  beta: number = 0.5,
-  maxSteps: number = 1000,
-  epsilon: number = 1e-6
+  alpha  = 0.1,
+  maxSteps = 1000,
+  epsilon = 1e-6
 ): { x: number; y: number } {
   let x = x0;
   let y = y0;
@@ -16,13 +15,13 @@ export function minimize(
 
   for (let i = 0; i < maxSteps; i++) {
     // Forward difference estimation of derivatives
-    let fxPlusX = f(x + epsilon, y);
+    const fxPlusX = f(x + epsilon, y);
     dx = (fxPlusX - fx) / epsilon;
-    let fxPlusY = f(x, y + epsilon);
+    const fxPlusY = f(x, y + epsilon);
     dy = (fxPlusY - fx) / epsilon;
 
     // Adaptive step size based on previous improvement
-    let stepSize = alpha * Math.max(Math.abs(fxPrev - fx), epsilon);
+    const stepSize = alpha * Math.max(Math.abs(fxPrev - fx), epsilon);
 
     // Update positions
     x -= stepSize * dx;
