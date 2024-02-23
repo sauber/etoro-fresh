@@ -7,3 +7,8 @@ const backend = new DiskBackend(path);
 const repo = new CachingBackend(backend);
 export const community = new Community(repo);
 ```
+* Class files should not import modules from other directories. Import should only be from mod.ts
+* Test files should not import modules or data from other directories. Import should only be from testdata.ts
+* Strategy, book and simulation should use same Portfolio module.
+* Simulation is incomplete and broken
+* One of the Strategy chain submodule should be add portfolio.
