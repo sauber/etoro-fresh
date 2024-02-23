@@ -58,7 +58,7 @@ export class Portfolio {
     const removed: Positions = [];
     for (let i = keep.length - 1; i >= 0; i--) {
       const pos: Position = keep[i];
-      if (!pos.valid(date)) removed.unshift(pos);
+      if (pos.expired(date)) removed.unshift(pos);
     }
     return removed;
   }

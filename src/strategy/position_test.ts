@@ -32,8 +32,8 @@ Deno.test("Value", () => {
 
 Deno.test("Expire", () => {
   const pos = new Position(investor, open, amount);
-  const within: boolean = pos.valid(expire);
-  assertEquals(within, true);
-  const beyond: boolean = pos.valid(nextDate(expire));
-  assertEquals(beyond, false);
+  const expired: boolean = pos.expired(expire);
+  assertEquals(expired, false);
+  const expired2: boolean = pos.expired(nextDate(expire));
+  assertEquals(expired2, true);
 });

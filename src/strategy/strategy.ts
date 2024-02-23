@@ -2,18 +2,8 @@ export type { Investors } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import type { DateFormat } from "📚/utils/time/mod.ts";
 import type { Investors } from "📚/repository/mod.ts";
-
-type Order = {
-  investor: Investor;
-  action: "buy" | "sell" | "keep";
-  amount: number;
-  reason?: string;
-  value?: number;
-  rank?: number;
-  timing?: number;
-};
-
-export type Orders = Array<Order>;
+import { Order } from "./order.ts";
+import { Portfolio } from "./portfolio.ts";
 
 /** Pick a random item from an array */
 function any<T>(items: Array<T>): T {
@@ -28,10 +18,13 @@ export class Strategy {
     protected readonly parent?: Strategy,
   ) {}
 
-  /** List of buy, sell and keep orders */
-  public orders(_date: DateFormat): Orders {
-    if (this.parent) return this.parent.orders(_date);
-    else return [];
+  /** List of buy and sell orders */
+  public order(
+    portfolio: Portfolio,
+    date: DateFormat,
+    order: Order = new Order(),
+  ): Order {
+    return this.parent?.order(portfolio, date, order) || order;
   }
 
   public get null(): NullStrategy {
@@ -60,13 +53,17 @@ export class RandomStrategy extends Strategy {
     super(investors, parent);
   }
 
-  public orders(_date: DateFormat): Orders {
-    const orders = this.parent?.orders(_date) || [];
+  public order(
+    portfolio: Portfolio,
+    date: DateFormat,
+    order: Order = new Order(),
+  ): Order {
+    order = this.parent?.order(portfolio, date, order) || order;
     if (this.investors.length > 0) {
       const investor: Investor = any(this.investors);
       const amount = 1000;
-      orders.push({ investor, amount, action: "buy" });
+      order.buy.push({ investor, amount, date });
     }
-    return orders;
+    return order;
   }
 }

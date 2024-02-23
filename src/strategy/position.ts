@@ -42,7 +42,7 @@ export class Position {
   }
 
   /** Confirm if position is within date range of available investor data */
-  public valid(date: DateFormat): boolean {
-    return date <= this.investor.chart.end;
+  public expired(date: DateFormat): boolean {
+    return date > this.investor.chart.end;
   }
 }
