@@ -1,3 +1,4 @@
+import { matchesUrl } from "$fresh/src/runtime/active_url.ts";
 import { Chart } from "📚/chart/mod.ts";
 import { nextDate } from "📚/utils/time/mod.ts";
 import type { DateFormat } from "📚/utils/time/mod.ts";
@@ -64,5 +65,37 @@ export class CrossPath {
   /** All trading signals */
   public get values(): number[] {
     return this.dates.map((date) => this.value(date));
+  }
+}
+
+/** Define boundaries of parameters for CrossPath Strategy */
+type Parameter = "fast" | "slow";
+
+export class CrossPathParameters {
+  public readonly names = ['fast', 'slow'];
+  private readonly min = 2;
+  private readonly max = 200;
+  public fast: number;
+  public slow: number;
+
+  constructor() {
+    this.fast = this.min + Math.round(Math.random()*(this.max/2 - this.min));
+    this.slow = 1 + this.fast + Math.round(Math.random()*(this.max-this.fast));
+  }
+
+  /** Min and max for parameter */
+  public boundary(param: Parameter): {min: number, max: number} {
+    if ( param == "fast" ) return {min: this.min, max: this.slow-1};
+    if ( param == "slow" ) return {min: this.fast+1, max: this.max};
+    return {min: NaN, max: NaN};
+  }
+
+  /** Change one parameter by amount */
+  step(param: Parameter, amount: number): void {
+    const b = this.boundary(param);
+    const d = Math.round(amount)
+    if ( this[param] + d > b.max ) this[param] = b.max
+    else if ( this[param] + d < b.min ) this[param] = b.min
+    else this[param] += d;
   }
 }

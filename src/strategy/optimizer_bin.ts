@@ -28,17 +28,17 @@ function run(fast: number, slow: number): number {
 
   /** Display results */
   function results(): void {
-    console.log("Fast:", fast, "Slow:", slow);
+    // console.log("Fast:", fast, "Slow:", slow);
     console.log("  Total profit:", acc.toFixed(2));
-    console.log(
-      "  Wins:",
-      wins,
-      "Losses:",
-      losses,
-      "Winratio:",
-      (100 * wins / (wins + losses)).toFixed(2),
-    );
-    console.log("  Average duration:", avg(duration).toFixed(2), "days");
+    // console.log(
+    //   "  Wins:",
+    //   wins,
+    //   "Losses:",
+    //   losses,
+    //   "Winratio:",
+    //   (100 * wins / (wins + losses)).toFixed(2),
+    // );
+    // console.log("  Average duration:", avg(duration).toFixed(2), "days");
   }
 
   /** Loop all dates in all charts */
@@ -85,8 +85,8 @@ console.log("Loaded", charts.length, "charts in", loadingTime, "ms");
 // run(10, 100);
 // run(20, 200);
 
-let fast = 5;
-let slow = 60;
+let fast = 6;
+let slow = 42;
 
 while (true) {
   const gain = run(fast, slow);
@@ -111,7 +111,7 @@ while (true) {
   };
 
   // No change to fast and slow
-  console.log({fast, nextFast, slow, nextSlow});
+  console.log({gain: +gain.toFixed(2), fast, nextFast, slow, nextSlow});
   if ( nextFast == fast && nextSlow == slow ) break;
   fast = nextFast;
   slow = nextSlow;
