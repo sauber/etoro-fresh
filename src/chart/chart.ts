@@ -111,23 +111,31 @@ export class Chart {
   /// Derived Charts
   //////////////////////////////////////////////////////////////////////
 
-  /** Create a derived chart */
-  private derive(values: Numbers, enddate: DateFormat = this.end): Chart {
-    return new Chart(values, enddate);
+  /** Create a derived chart, cache for future use */
+  private readonly subcharts: Record<string, Chart> = {};
+  private derive(
+    values: Numbers,
+    id: string,
+    enddate: DateFormat = this.end,
+  ): Chart {
+    if (!(id in this.subcharts)) {
+      this.subcharts[id] = new Chart(values, enddate);
+    }
+    return this.subcharts[id];
   }
 
   /** Sub chart with entries starting on date */
-  public from(date: DateFormat): Chart {
-    const offset: number = diffDate(this.start, date);
+  public from(start: DateFormat): Chart {
+    const offset: number = diffDate(this.start, start);
     const trimmed: Numbers = this.values.slice(offset);
-    return this.derive(trimmed);
+    return this.derive(trimmed, "from" + start);
   }
 
   /** Sub chart with entries until and including date */
-  public until(enddate: DateFormat): Chart {
-    const count: number = diffDate(this.start, enddate);
+  public until(end: DateFormat): Chart {
+    const count: number = diffDate(this.start, end);
     const trimmed: Numbers = this.values.slice(0, count + 1);
-    return this.derive(trimmed, enddate);
+    return this.derive(trimmed, "until" + end, end);
   }
 
   /** Value as ratio above previous value */
@@ -135,21 +143,22 @@ export class Chart {
     const v: Numbers = this.values;
     return this.derive(
       v.map((a, i) => (i == 0 ? 0 : a / v[i - 1] - 1)).slice(1),
+      "win",
     );
   }
 
   /** Simple Moving Average */
   public sma(window: number): Chart {
-    return this.derive(sma(this.values, window));
+    return this.derive(sma(this.values, window), "sma" + window);
   }
 
   /** Exponential Moving Average */
   public ema(window: number): Chart {
-    return this.derive(ema(this.values, window));
+    return this.derive(ema(this.values, window), "ema" + window);
   }
 
   /** Relative Strength Index */
   public rsi(window: number): Chart {
-    return this.derive(rsi(this.values, window));
+    return this.derive(rsi(this.values, window), "rsi" + window);
   }
 }
