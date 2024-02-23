@@ -1,8 +1,8 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
-import { NullStrategy, RandomStrategy, Strategy } from "./strategy.ts";
+import { NullStrategy, RandomStrategy, Strategy, ExitStrategy } from "./strategy.ts";
 import { Order } from "./order.ts";
 import { Portfolio } from "./portfolio.ts";
-import { investor, investors } from "./testdata.ts";
+import { investor, investors, position } from "./testdata.ts";
 
 const date = investor.chart.start;
 const portfolio: Portfolio = new Portfolio();
@@ -24,3 +24,14 @@ Deno.test("Random Strategy", () => {
   assertEquals(order.buy.length, 1);
   assertEquals(order.buy[0].amount, amount);
 });
+
+Deno.test("Exit Strategy", () => {
+    const portfolio = new Portfolio();
+    portfolio.add(position);
+    const s = new ExitStrategy(investors);
+    const order: Order = s.order(portfolio, date);
+    assertEquals(order.sell.length, 1);
+    assertEquals(order.sell[0].reason, "exit");
+    assertEquals(order.sell[0].position, position);
+  });
+  

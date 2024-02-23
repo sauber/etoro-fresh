@@ -13,7 +13,7 @@ import { nanoid } from "nanoid";
 /** Information about a position */
 export class Position {
   // Generate uniq ID
-  public readonly id: string = nanoid();
+  public readonly id: string = nanoid(8);
   public readonly name: string;
 
   constructor(

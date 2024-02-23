@@ -31,6 +31,10 @@ export class Strategy {
     return new NullStrategy(this.investors, this);
   }
 
+  public get exit(): ExitStrategy {
+    return new ExitStrategy(this.investors, this);
+  }
+
   public random(amount: number): RandomStrategy {
     return new RandomStrategy(this.investors, amount, this);
   }
@@ -64,6 +68,21 @@ export class RandomStrategy extends Strategy {
       const amount = 1000;
       order.buy.push({ investor, amount, date });
     }
+    return order;
+  }
+}
+
+/** Sell all positions */
+export class ExitStrategy extends Strategy {
+  public order(
+    portfolio: Portfolio,
+    date: string,
+    order: Order = new Order(),
+  ): Order {
+    order = this.parent?.order(portfolio, date, order) || order;
+    order.sell.push(
+      ...portfolio.positions.map((position) => ({ position, reason: "exit" })),
+    );
     return order;
   }
 }

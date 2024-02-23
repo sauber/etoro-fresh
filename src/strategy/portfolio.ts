@@ -5,7 +5,7 @@ export type Positions = Array<Position>;
 
 /** A collection of positions */
 export class Portfolio {
-  private readonly positions: Positions = [];
+  public readonly positions: Positions = [];
 
   /** Add new position to collection */
   public add(position: Position): void {
