@@ -1,5 +1,5 @@
 import { Position } from "./position.ts";
-import type { DateFormat } from "../time/mod.ts";
+import type { DateFormat } from "📚/time/mod.ts";
 
 export type Positions = Array<Position>;
 
