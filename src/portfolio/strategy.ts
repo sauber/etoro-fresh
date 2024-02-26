@@ -1,9 +1,9 @@
-export type { Investors } from "📚/repository/mod.ts";
+import type { Investors } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import type { DateFormat } from "../time/mod.ts";
-import type { Investors } from "📚/repository/mod.ts";
 import { Order } from "./order.ts";
 import { Portfolio } from "./portfolio.ts";
+import { Ranking } from "📚/ranking/ranking.ts";
 
 /** Pick a random item from an array */
 function any<T>(items: Array<T>): T {
@@ -86,3 +86,12 @@ export class ExitStrategy extends Strategy {
     return order;
   }
 }
+
+/** Rank all investors by conviction */
+// export class ConvictionStrategy extends Strategy {
+//   public order(portfolio: Portfolio, date: string, order: Order): Order {
+//     const ranking = new Ranking(this.repo);
+//     const investors = this.community.on(date);
+//     const prediction = ranking.predict(investors, date);
+//   }
+// }
