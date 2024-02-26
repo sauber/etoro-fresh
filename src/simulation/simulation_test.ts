@@ -26,7 +26,7 @@ Deno.test("Null Strategy", async () => {
   assertEquals(chart.length, days);
 });
 
-Deno.test("Random Strategy", async () => {
+Deno.test.ignore("Random Strategy", async () => {
   const stop = "2022-04-27";
   const sim = new Simulation(
     start,

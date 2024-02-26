@@ -1,17 +1,11 @@
 import { DateFormat, nextDate } from "📚/time/mod.ts";
 import { Chart } from "📚/chart/mod.ts";
 import type { Investors } from "📚/repository/mod.ts";
-import { Investor } from "📚/investor/mod.ts";
-import { ObjectSeries } from "📚/utils/series.ts";
-import { Strategy } from "../strategy/mod.ts";
-import type { Orders } from "../strategy/strategy.ts";
+import { Strategy, Order, Portfolio, Position } from "📚/strategy/mod.ts";
+import type { Positions } from "📚/strategy/mod.ts";
 import { Exchange } from "./exchange.ts";
 import { Book } from "./book.ts";
-import { Portfolio } from "📚/strategy/portfolio.ts";
-import type { Positions } from "📚/strategy/portfolio.ts";
 import { DataFrame } from "📚/utils/dataframe.ts";
-import { Position } from "📚/strategy/position.ts";
-import { renderOuterDocument } from "$fresh/src/server/rendering/template.tsx";
 
 type Name = Array<string>;
 
@@ -45,9 +39,8 @@ export class Simulation {
 
   /** Open all positions suggested by strategy */
   private open(date: DateFormat): void {
-    const open: Orders = this.strategy.orders(date).filter((o) =>
-      o.action == "buy"
-    );
+    const order: Order = this.strategy.order(this.portfolio, date);
+    const open = order.buy;
     for (const order of open) {
       // const name: string = order.name;
       // const investor: Investor = await this.community.investor(name);
@@ -62,9 +55,9 @@ export class Simulation {
 
   /** Close all positions suggested by strategy */
   private close(date: DateFormat): void {
-    const close: Orders = this.strategy.orders(date).filter((o) =>
-      o.action == "sell"
-    );
+    const order: Order = this.strategy.order(this.portfolio, date);
+    const close = order.sell;
+
 
     // TODO!!
     // Identify all matching positions
