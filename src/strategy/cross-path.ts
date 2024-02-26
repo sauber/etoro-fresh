@@ -1,4 +1,3 @@
-import { matchesUrl } from "$fresh/src/runtime/active_url.ts";
 import { Chart } from "📚/chart/mod.ts";
 import { nextDate } from "📚/utils/time/mod.ts";
 import type { DateFormat } from "📚/utils/time/mod.ts";
@@ -33,17 +32,19 @@ export class CrossPath {
 
     const crossOver: boolean = f > s && f1 < s1;
     const crossUnder: boolean = f < s && f1 > s1;
+    const upTrend: boolean = s > s1 && f > f1;
+    const downTrend: boolean = s < s1 && f > f1;
 
     if (crossOver) {
       // Strong buy when both trend up
-      if (s > s1 && f > f1) return 1;
+      if (upTrend) return 1;
       // Weak buy
       return 0.5;
     }
 
     if (crossUnder) {
       // Strong sell when both trend down
-      if (s < s1 && f > f1) return -1;
+      if (downTrend) return -1;
       // Weak sell
       return -0.5;
     }
@@ -83,7 +84,7 @@ export class CrossPathParameters {
     this.slow = 1 + this.fast + Math.round(Math.random()*(this.max-this.fast));
   }
 
-  /** Min and max for parameter */
+  /** Min and max for parameter, fast must be less than slow and vice versa */
   public boundary(param: Parameter): {min: number, max: number} {
     if ( param == "fast" ) return {min: this.min, max: this.slow-1};
     if ( param == "slow" ) return {min: this.fast+1, max: this.max};
