@@ -3,7 +3,7 @@ import { Investor } from "📚/investor/mod.ts";
 import type { DateFormat } from "../time/mod.ts";
 import { Order } from "./order.ts";
 import { Portfolio } from "./portfolio.ts";
-import { Ranking } from "📚/ranking/ranking.ts";
+//import { Ranking } from "📚/ranking/ranking.ts";
 
 /** Pick a random item from an array */
 function any<T>(items: Array<T>): T {
