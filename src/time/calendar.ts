@@ -63,8 +63,9 @@ export function today(): DateFormat {
 /** A range of dates including start and end dates */
 export function range(start: DateFormat, end: DateFormat): Array<DateFormat> {
   const dates = [];
-  while (start <= end) {
+  while (true) {
     dates.push(start);
+    if ( start == end ) break;
     start = nextDate(start, 1);
   }
   return dates;
