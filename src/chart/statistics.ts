@@ -34,3 +34,24 @@ export function std(values: Numbers): number {
   const result: number = Math.sqrt(total / (values.length - 1));
   return result;
 }
+
+/** Linear regression coeeficents */
+export function regression(
+  values: Numbers,
+): { intercept: number; gradiant: number } {
+  const sum = [0, 0, 0, 0];
+  values.forEach(function (value, index) {
+    sum[0] += index;
+    sum[1] += value;
+    sum[2] += index * index;
+    sum[3] += index * value;
+  });
+  const len = values.length;
+
+  const run: number = len * sum[2] - sum[0] * sum[0];
+  const rise: number = len * sum[3] - sum[0] * sum[1];
+  const gradiant: number = run === 0 ? 0 : rise / run;
+  const intercept: number = sum[1] / len - gradiant * sum[0] / len;
+
+  return { intercept: intercept, gradiant: gradiant };
+}
