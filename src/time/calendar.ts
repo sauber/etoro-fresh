@@ -25,31 +25,29 @@ export function formatDate(ms: number): DateFormat {
 type DateCache = Record<string, Record<string, DateFormat>>;
 
 declare global {
-  let nextDateCache: DateCache;
-  interface Window {
-    nextDateCache: DateCache;
-  }
+  var nextDateCache: DateCache;
 }
 
 // Initialize global cache
-//window.nextDateCache = {};
+globalThis.nextDateCache = {};
 
 // Check if a keys is missing in a dictionary
-function missing(dictionary: unknown, key: string | number): boolean {
-  return !Object.prototype.hasOwnProperty.call(dictionary, key);
-}
+// function missing(dictionary: unknown, key: string | number): boolean {
+//   return !Object.prototype.hasOwnProperty.call(dictionary, key);
+// }
 
 /** Date number of days away */
 export function nextDate(date: DateFormat, days = 1): DateFormat {
   if (days == 0) return date;
 
-  if (missing(nextDateCache, date)) window.nextDateCache[date] = {};
-  if (missing(window.nextDateCache[date], days))
-    window.nextDateCache[date][days] = formatDate(
+  const cache = globalThis.nextDateCache;
+  if (!(date in cache)) cache[date] = {};
+  if (!(days in cache[date]))
+    cache[date][days] = formatDate(
       new Date(date).getTime() + days * 86400000
     );
 
-  const result: DateFormat = window.nextDateCache[date][days];
+  const result: DateFormat = cache[date][days];
   return result;
 }
 
