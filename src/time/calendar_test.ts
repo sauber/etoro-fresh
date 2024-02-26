@@ -11,4 +11,8 @@ Deno.test("diffDate", () => {
 
 Deno.test("nextDate", () => {
   assertEquals(nextDate("2024-02-26", 4), "2024-03-01");
-})
+});
+
+Deno.test("prevDate", () => {
+  assertEquals(nextDate("2024-03-01", -4), "2024-02-26");
+});
