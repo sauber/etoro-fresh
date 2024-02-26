@@ -1,5 +1,5 @@
 import { assertEquals } from "$std/assert/mod.ts";
-import { diffDate, nextDate, today } from "./calendar.ts";
+import { diffDate, nextDate, range, today } from "./calendar.ts";
 
 Deno.test("today", () => {
   assertEquals(today(), new Date().toISOString().substring(0, 10));
@@ -15,4 +15,14 @@ Deno.test("nextDate", () => {
 
 Deno.test("prevDate", () => {
   assertEquals(nextDate("2024-03-01", -4), "2024-02-26");
+});
+
+Deno.test("range", () => {
+  assertEquals(range("2024-02-26", "2024-03-01"), [
+    "2024-02-26",
+    "2024-02-27",
+    "2024-02-28",
+    "2024-02-29",
+    "2024-03-01",
+  ]);
 });

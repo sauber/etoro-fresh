@@ -59,3 +59,13 @@ export function msDate(date: DateFormat): number {
 export function today(): DateFormat {
   return formatDate(new Date().getTime());
 }
+
+/** A range of dates including start and end dates */
+export function range(start: DateFormat, end: DateFormat): Array<DateFormat> {
+  const dates = [];
+  while (start <= end) {
+    dates.push(start);
+    start = nextDate(start, 1);
+  }
+  return dates;
+}
