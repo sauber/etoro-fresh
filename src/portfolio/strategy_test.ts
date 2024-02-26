@@ -7,8 +7,9 @@ import {
 } from "./strategy.ts";
 import { Order } from "./order.ts";
 import { Portfolio } from "./portfolio.ts";
-import { investor, investors, position } from "./testdata.ts";
+import { investor, community, position } from "./testdata.ts";
 
+const investors = await community.all();
 const date = investor.chart.start;
 const portfolio: Portfolio = new Portfolio();
 
