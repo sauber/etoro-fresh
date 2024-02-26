@@ -1,5 +1,5 @@
 import { Backend } from "/storage/mod.ts";
-import { DateFormat } from "/utils/time/mod.ts";
+import { DateFormat } from "../time/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import { Chart } from "📚/chart/mod.ts";
 import { InvestorAssembly } from "📚/repository/investor-assembly.ts";

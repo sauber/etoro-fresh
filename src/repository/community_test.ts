@@ -2,7 +2,7 @@ import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { Asset } from "📚/storage/mod.ts";
 import { Community } from "./community.ts";
 import { HeapBackend } from "/storage/heap-backend.ts";
-import { today } from "/utils/time/mod.ts";
+import { today } from "../time/mod.ts";
 import { repo as temprepo } from "📚/repository/testdata.ts";
 import { Investor } from "📚/investor/mod.ts";
 

@@ -1,7 +1,7 @@
 import { Community } from "📚/repository/mod.ts";
 import { DiskBackend, CachingBackend } from "📚/storage/mod.ts";
-import type { DateFormat } from "/utils/time/mod.ts";
-import { nextDate } from "📚/utils/time/calendar.ts";
+import type { DateFormat } from "../time/mod.ts";
+import { nextDate } from "../time/calendar.ts";
 import { Simulation } from "📚/simulation/simulation.ts";
 import { RandomStrategy } from "../strategy/strategy.ts";
 

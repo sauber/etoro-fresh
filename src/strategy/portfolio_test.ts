@@ -1,6 +1,6 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
-import type { DateFormat } from "📚/utils/time/mod.ts";
-import { nextDate } from "📚/utils/time/mod.ts";
+import type { DateFormat } from "📚/time/mod.ts";
+import { nextDate } from "📚/time/mod.ts";
 import { Portfolio } from "./portfolio.ts";
 import type { Positions } from "./portfolio.ts";
 import { investor, position } from "./testdata.ts";

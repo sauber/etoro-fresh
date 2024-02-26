@@ -1,10 +1,10 @@
-import type { DateFormat } from "📚/utils/time/mod.ts";
+import type { DateFormat } from "../time/mod.ts";
 import { repo } from "📚/repository/testdata.ts";
 import { Community } from "📚/repository/mod.ts";
 export type { Investors } from "📚/repository/mod.ts";
 import { Chart } from "📚/chart/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
-import { Position } from "./position.ts";
+import { Position } from "📚/strategy/position.ts";
 
 // Testdata based Community
 export const community = new Community(repo);

@@ -32,7 +32,7 @@ declare global {
 }
 
 // Initialize global cache
-window.nextDateCache = {};
+//window.nextDateCache = {};
 
 // Check if a keys is missing in a dictionary
 function missing(dictionary: unknown, key: string | number): boolean {
@@ -43,7 +43,7 @@ function missing(dictionary: unknown, key: string | number): boolean {
 export function nextDate(date: DateFormat, days = 1): DateFormat {
   if (days == 0) return date;
 
-  if (missing(window.nextDateCache, date)) window.nextDateCache[date] = {};
+  if (missing(nextDateCache, date)) window.nextDateCache[date] = {};
   if (missing(window.nextDateCache[date], days))
     window.nextDateCache[date][days] = formatDate(
       new Date(date).getTime() + days * 86400000

@@ -3,7 +3,7 @@ import { repo } from "./testdata.ts";
 import { Ranking } from "./ranking.ts";
 import { Community } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
-import { diffDate } from "📚/utils/time/mod.ts";
+import { diffDate } from "../time/mod.ts";
 
 type Investors = Array<Investor>;
 

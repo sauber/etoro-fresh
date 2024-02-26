@@ -1,4 +1,4 @@
-import { DateFormat } from "/utils/time/mod.ts";
+import { DateFormat } from "../time/mod.ts";
  
 export * from "./book.ts";
 export * from "./simulation.ts";

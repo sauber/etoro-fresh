@@ -1,5 +1,5 @@
-import type { DateFormat } from "/utils/time/mod.ts";
-import { today } from "/utils/time/mod.ts";
+import type { DateFormat } from "../time/mod.ts";
+import { today } from "../time/mod.ts";
 
 type ChartEntry = {
   timestamp: string;

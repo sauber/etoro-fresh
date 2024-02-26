@@ -1,5 +1,5 @@
-import { diffDate, nextDate } from "/utils/time/mod.ts";
-import type { DateFormat } from "/utils/time/mod.ts";
+import { diffDate, nextDate } from "../time/mod.ts";
+import type { DateFormat } from "../time/mod.ts";
 import { std } from "./statistics.ts";
 import { ema, rsi, sma } from "./indicators.ts";
 

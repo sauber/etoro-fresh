@@ -1,6 +1,6 @@
 export type { Investors } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
-import type { DateFormat } from "📚/utils/time/mod.ts";
+import type { DateFormat } from "../time/mod.ts";
 import type { Investors } from "📚/repository/mod.ts";
 import { Order } from "./order.ts";
 import { Portfolio } from "./portfolio.ts";

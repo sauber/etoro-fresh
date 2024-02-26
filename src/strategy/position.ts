@@ -1,4 +1,4 @@
-import type { DateFormat } from "📚/utils/time/mod.ts";
+import type { DateFormat } from "../time/mod.ts";
 import { Chart } from "📚/chart/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import { nanoid } from "nanoid";

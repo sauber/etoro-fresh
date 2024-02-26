@@ -4,8 +4,8 @@ import {
   assertThrows,
 } from "$std/assert/mod.ts";
 import { Chart } from "./chart.ts";
-import type { DateFormat } from "/utils/time/mod.ts";
-import { nextDate } from "/utils/time/mod.ts";
+import type { DateFormat } from "../time/mod.ts";
+import { nextDate } from "../time/mod.ts";
 
 Deno.test("Blank Initialization", () => {
   const chart = new Chart([], "2022-10-10");

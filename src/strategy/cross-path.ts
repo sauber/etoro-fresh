@@ -1,6 +1,6 @@
 import { Chart } from "📚/chart/mod.ts";
-import { nextDate } from "📚/utils/time/mod.ts";
-import type { DateFormat } from "📚/utils/time/mod.ts";
+import { nextDate } from "../time/mod.ts";
+import type { DateFormat } from "../time/mod.ts";
 
 /** Crossing Path strategy looks for when fast SMA crosses slow SMA */
 export class CrossPath {
