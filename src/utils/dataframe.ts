@@ -1,6 +1,7 @@
 import { Table } from "./table.ts";
 import { BoolSeries, Series, TextSeries } from "./series.ts";
 import type { SeriesClasses, SeriesTypes } from "./series.ts";
+import { DateTimeFormatter } from "$std/datetime/_common.ts";
 
 type Column = Series | TextSeries | BoolSeries;
 type Columns = Record<string, Column>;
@@ -182,6 +183,19 @@ export class DataFrame {
       columns[to] = column;
     });
     return new DataFrame(columns, this.index);
+  }
+
+  /** Replace existing column with new  */
+  private replace(name: string, column: Column): DataFrame {
+    const columns: Columns = {...this.columns};
+    columns[name] = column;
+    return new DataFrame(columns, this.index);
+  }
+
+  /** Scale values in column to sum of 1 */
+  public distribute(name: string): DataFrame {
+    const column = (this.column(name) as Series).distribute;
+    return this.replace(name, column);
   }
 
   /** Values and columns names from all series at index */
