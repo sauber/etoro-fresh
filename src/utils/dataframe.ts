@@ -119,7 +119,6 @@ export class DataFrame {
 
   /** Sort rows by columns */
   public sort(colname: string): DataFrame {
-    // TODO: only rearrange incides
     const index: Index = this.index;
     const value: SeriesTypes[] = this.column(colname).values;
     const zip: Array<SortElement> = index.map((i: number) => [i, value[i]]);
@@ -173,6 +172,16 @@ export class DataFrame {
   /** Combine with series from other DataFrame */
   public join(other: DataFrame): DataFrame {
     return new DataFrame(Object.assign({}, this.columns, other.columns));
+  }
+
+  /** Rename columns */
+  public rename(names: Record<string, string>): DataFrame {
+    const columns: Columns = {};
+    Object.entries(this.columns).forEach(([from, column]) => {
+      const to: string = (from in names) ? names[from] : from;
+      columns[to] = column;
+    });
+    return new DataFrame(columns, this.index);
   }
 
   /** Values and columns names from all series at index */
