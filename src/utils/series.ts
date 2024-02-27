@@ -90,6 +90,13 @@ export class Series extends DataSeries<number | undefined>
     );
   }
 
+  /** Generate new Series: n => log(n) */
+  public get log(): Series {
+    return new Series(
+      this.values.map((n) => (n !== undefined ? Math.log(n) : undefined)),
+    );
+  }
+
   /** Generate new Series: n => c*n */
   public scale(factor: number): Series {
     return new Series(

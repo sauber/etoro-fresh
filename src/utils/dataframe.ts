@@ -187,15 +187,24 @@ export class DataFrame {
 
   /** Replace existing column with new  */
   private replace(name: string, column: Column): DataFrame {
-    const columns: Columns = {...this.columns};
+    const columns: Columns = { ...this.columns };
     columns[name] = column;
     return new DataFrame(columns, this.index);
   }
 
   /** Scale values in column to sum of 1 */
   public distribute(name: string): DataFrame {
-    const column = (this.column(name) as Series).distribute;
-    return this.replace(name, column);
+    return this.replace(name, (this.column(name) as Series).distribute);
+  }
+
+  /** Scale values in column to sum of 1 */
+  public log(name: string): DataFrame {
+    return this.replace(name, (this.column(name) as Series).log);
+  }
+
+  /** Scale values in column to sum of 1 */
+  public scale(name: string, factor: number): DataFrame {
+    return this.replace(name, (this.column(name) as Series).scale(factor));
   }
 
   /** Values and columns names from all series at index */
