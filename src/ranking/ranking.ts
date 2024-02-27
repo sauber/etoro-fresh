@@ -1,10 +1,11 @@
-import { Backend } from "../storage/mod.ts";
+import { Backend } from "📚/storage/mod.ts";
+import { DataFrame } from "📚/utils/dataframe.ts";
+import { TextSeries } from "📚/utils/series.ts";
+import { Investor } from "📚/investor/mod.ts";
+import type { DateFormat } from "📚/time/mod.ts";
 import { Model } from "./model.ts";
 import { Features } from "./features.ts";
 import type { Input, Output } from "./features.ts";
-import { DataFrame } from "/utils/dataframe.ts";
-import { TextSeries } from "/utils/series.ts";
-import { Investor } from "📚/investor/mod.ts";
 
 type Investors = Array<Investor>;
 
@@ -37,9 +38,9 @@ export class Ranking {
   }
 
   /** Input features for investors */
-  private input(investors: Investors): DataFrame {
+  private input(investors: Investors, date?: DateFormat): DataFrame {
     const list: Array<Feature> = investors.map((i: Investor) =>
-      normalize(i.UserName, new Features(i).input())
+      normalize(i.UserName, new Features(i).input(date))
     );
     return DataFrame.fromRecords(list);
   }
@@ -66,8 +67,11 @@ export class Ranking {
   }
 
   /** Predicted profit and SharpeRatio for investors */
-  public async predict(investors: Investors): Promise<DataFrame> {
-    const input = this.input(investors);
+  public async predict(
+    investors: Investors,
+    date?: DateFormat,
+  ): Promise<DataFrame> {
+    const input = this.input(investors, date);
     const prediction = await this.model.predict(input);
     const names = new TextSeries(investors.map((i) => i.UserName));
     const result = new DataFrame({
