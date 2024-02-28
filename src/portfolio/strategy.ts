@@ -89,7 +89,8 @@ export class ExitStrategy extends Strategy {
 
 /** Rank all investors by conviction */
 // export class ConvictionStrategy extends Strategy {
-//   public order(portfolio: Portfolio, date: string, order: Order): Order {
+//   public order(portfolio: Portfolio, date: string, order: Order = new Order): Order {
+//     order = this.parent?.order(portfolio, date, order) || order;
 //     const ranking = new Ranking(this.repo);
 //     const investors = this.community.on(date);
 //     const prediction = ranking.predict(investors, date);

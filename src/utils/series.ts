@@ -90,6 +90,25 @@ export class Series extends DataSeries<number | undefined>
     );
   }
 
+  /** Generate new Series: n => log(n) */
+  public get log(): Series {
+    return new Series(
+      this.values.map((n) => (n !== undefined ? Math.log(n) : undefined)),
+    );
+  }
+
+  /** Generate new Series: n => c*n */
+  public scale(factor: number): Series {
+    return new Series(
+      this.values.map((n) => (n !== undefined ? n * factor : undefined)),
+    );
+  }
+
+  /** Generate new Series: sum(n) = 1 */
+  public get distribute(): Series {
+    return this.scale(1 / this.sum);
+  }
+
   /** Multiply each items in this series with item at other series: n[i] = x[i] * y[i] */
   public multiply(other: Series): Series {
     const values = [];
