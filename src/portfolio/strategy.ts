@@ -66,7 +66,7 @@ export class RandomStrategy extends Strategy {
     if (this.investors.length > 0) {
       const investor: Investor = any(this.investors);
       const amount = 1000;
-      order.buy.push({ investor, amount, date });
+      order.buy([{ investor, amount, date }]);
     }
     return order;
   }
@@ -80,8 +80,8 @@ export class ExitStrategy extends Strategy {
     order: Order = new Order(),
   ): Order {
     order = this.parent?.order(portfolio, date, order) || order;
-    order.sell.push(
-      ...portfolio.positions.map((position) => ({ position, reason: "exit" })),
+    order.sell(
+      portfolio.positions.map((position) => ({ position, reason: "exit" })),
     );
     return order;
   }

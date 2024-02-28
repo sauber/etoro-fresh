@@ -197,15 +197,21 @@ export class DataFrame {
     return this.replace(name, (this.column(name) as Series).distribute);
   }
 
-  /** Scale values in column to sum of 1 */
+  /** Take log of each value in column */
   public log(name: string): DataFrame {
     return this.replace(name, (this.column(name) as Series).log);
   }
 
-  /** Scale values in column to sum of 1 */
+  /** Scale values in column by factor */
   public scale(name: string, factor: number): DataFrame {
     return this.replace(name, (this.column(name) as Series).scale(factor));
   }
+
+  /** Add operand to values in column */
+  public add(name: string, operand: number): DataFrame {
+    return this.replace(name, (this.column(name) as Series).add(operand));
+  }
+
 
   /** Values and columns names from all series at index */
   private record(index: number): RowRecord {
@@ -246,11 +252,12 @@ export class DataFrame {
   }
 
   /** Pretty print as ascii table */
-  public print(title?: string): void {
+  public print(title?: string): DataFrame {
     const table = new Table();
     if (title) table.title = title;
     table.headers = this.names;
     table.rows = this.grid;
     console.log("\n" + table.toString());
+    return this;
   }
 }

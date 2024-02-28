@@ -18,6 +18,16 @@ type SellItem = {
 type SellItems = Array<SellItem>;
 
 export class Order {
-  readonly buy: BuyItems = [];
-  readonly sell: SellItems = [];
+  readonly buyItems: BuyItems = [];
+  readonly sellItems: SellItems = [];
+
+  public buy(items: BuyItems): Order {
+    this.buyItems.push(...items);
+    return this;
+  }
+
+  public sell(items: SellItems): Order {
+    this.sellItems.push(...items);
+    return this;
+  }
 }

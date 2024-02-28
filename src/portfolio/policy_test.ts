@@ -1,15 +1,18 @@
-import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
+import { assert, assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { Portfolio } from "./portfolio.ts";
 import { IPolicy, Policy } from "./policy.ts";
-import { conviction, date, investors } from "./testdata.ts";
+import { Order } from "./order.ts";
+import { conviction, date, investor, investors } from "./testdata.ts";
 
 const portfolio = new Portfolio();
 const cash = 100000;
 const targets = 10;
+const chart = investor.chart;
 
 const args: IPolicy = {
-  investors,
   portfolio,
+  chart,
+  investors,
   conviction,
   date,
   cash,
@@ -21,9 +24,10 @@ Deno.test("Instance", () => {
   assertInstanceOf(p, Policy);
 });
 
-Deno.test("ranking", () => {
+Deno.test("Run", () => {
   const p = new Policy(args);
-  const t = p.target;
-  assertEquals(Object.entries(t).length, 6);
-  //console.log(t);
+  const o: Order = p.run();
+  assert( "buy" in o);
+  assert("sell" in o);
+  console.log(o);
 });

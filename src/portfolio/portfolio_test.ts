@@ -40,12 +40,3 @@ Deno.test("Aggregated Profit", () => {
   const expected_profit: number = 2 * (last / first - 1) * amount;
   assertEquals(actual_profit, expected_profit);
 });
-
-Deno.test("Expiration", () => {
-  const p = new Portfolio();
-  p.add(position);
-  const late: DateFormat = nextDate(end);
-  const expired: Positions = p.expired(late);
-  assertEquals(expired.length, 1);
-  assertEquals(p.length, 1);
-});

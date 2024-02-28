@@ -51,15 +51,4 @@ export class Portfolio {
   public value(date: DateFormat): number {
     return this.invested + this.profit(date);
   }
-
-  /** List of all expired positions */
-  public expired(date: DateFormat): Positions {
-    const keep = this.positions;
-    const removed: Positions = [];
-    for (let i = keep.length - 1; i >= 0; i--) {
-      const pos: Position = keep[i];
-      if (pos.expired(date)) removed.unshift(pos);
-    }
-    return removed;
-  }
 }

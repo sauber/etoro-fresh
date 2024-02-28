@@ -1,4 +1,4 @@
-import { assertInstanceOf } from "$std/assert/mod.ts";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { investor, position } from "./testdata.ts";
 import { Order } from "./order.ts";
 
@@ -8,11 +8,16 @@ Deno.test("Instance", () => {
 });
 
 Deno.test("Buy", () => {
-  const o = new Order();
-  o.buy.push({ investor, date: investor.chart.start, amount: 1000 });
+  const o = new Order().buy([{
+    investor,
+    date: investor.chart.start,
+    amount: 1000,
+  }]);
+
+  assertEquals(o.buyItems.length, 1);
 });
 
 Deno.test("Sell", () => {
-  const o = new Order();
-  o.sell.push({ position, reason: "test" });
+  const o = new Order().sell([{ position, reason: "test" }]);
+  assertEquals(o.sellItems.length, 1);
 });

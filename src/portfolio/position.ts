@@ -45,4 +45,17 @@ export class Position {
   public expired(date: DateFormat): boolean {
     return date > this.investor.chart.end;
   }
+
+  /**
+   * Verify if position hit any of the limits
+   * TODO: Not implemented
+   */
+  public limited(_date: DateFormat): boolean {
+    return false;
+  }
+
+  /** Confirm if position is considere to still be open */
+  public open(date: DateFormat): boolean {
+    return ! this.expired(date) && ! this.limited(date);
+  }
 }
