@@ -8,8 +8,9 @@ export class Portfolio {
   public readonly positions: Positions = [];
 
   /** Add new position to collection */
-  public add(position: Position): void {
+  public add(position: Position): Portfolio {
     this.positions.push(position);
+    return this;
   }
 
   /** Remove matching position */

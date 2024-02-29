@@ -2,10 +2,11 @@ import type { DateFormat } from "📚/time/mod.ts";
 import type { Investors } from "📚/repository/mod.ts";
 import { Chart } from "📚/chart/mod.ts";
 import { DataFrame } from "📚/utils/dataframe.ts";
+import type { RowRecord } from "📚/utils/dataframe.ts";
 import { Portfolio } from "./portfolio.ts";
 import { Position } from "./position.ts";
-import { Order } from "📚/portfolio/order.ts";
-import { toPathString } from "$std/fs/_to_path_string.ts";
+import { Order } from "./order.ts";
+import type { SellItem } from "./order.ts";
 
 type UserName = string;
 type RankScore = number;
@@ -54,6 +55,7 @@ export class Policy {
   }
 
   /** Sum of cash and value of positions */
+  // TODO: Cannot calculate value of expired positions
   private get value(): number {
     return this.cash + this.portfolio.value(this.date);
   }
@@ -95,7 +97,7 @@ export class Policy {
   }
 
   /** Given investor ranks, available cash etc. what is ideal target investment level for each investor */
-  public get target(): Conviction {
+  public get target(): DataFrame {
     // Ranked positively
     const desired: Conviction = Object.fromEntries(
       Object.entries(this.conviction).filter(([_user, rank]) => rank > 0),
@@ -115,11 +117,46 @@ export class Policy {
     // Print results
     // df.sort("Rank").reverse.print("Targets");
 
-    const ideal: Conviction = Object.fromEntries(
-      target.records.map((r) => [r.UserName, r.Rank]),
+    return target;
+  }
+
+  /** Gap =
+   * Open positions no longer desired
+   * Desired positions not in portfolio, or by less amount than desired
+   */
+  public get gap(): DataFrame {
+    const targets: DataFrame = this.target;
+    const portfolio: Order = this.open;
+    console.log({targets, portfolio});
+
+    // Target amount for each UserName
+    const targetAmount: Record<string, number> = Object.fromEntries(
+      targets.records.map((r: RowRecord) => [r.UserName, r.Rank]),
     );
-    // console.log(ideal);
-    return ideal;
+
+    // Current amount for each UserName
+    // TODO: If multiple positions by same name, add values
+    const currentAmount: Record<string, number> = Object.fromEntries(
+      portfolio.sellItems.map((p: SellItem) => [p.position.name, p.position.value(this.date)]),
+    );
+
+    // Positions no longer a target
+    const excessive: Record<string, number> = Object.fromEntries(
+      Object.entries(currentAmount).filter(([UserName, _value]) =>
+        !(UserName in targetAmount)
+      ),
+    );
+
+    console.log({ targetAmount, currentAmount, excessive });
+
+
+    // Targets missing from positions
+    //const missing = targets.records.filter((target: RowRecord) => ! (target.UserName in positionSizes));
+
+    // // Targets larger than positions
+    // const tooSmall = targets.records.filter((target: RowRecord) => ( target.UserName in positionSizes ) && (target.Rank > positionSizes[target.UserName]));
+
+    return new DataFrame();
   }
 
   /** Run through steps of policy. Compile a list of buy and sell orders. */
@@ -131,9 +168,10 @@ export class Policy {
     // Remaining open positions
     const open: Order = this.open;
     // Ideal portfolio based on current ranking
-    const target: Conviction = this.target;
+    const target: DataFrame = this.target;
 
     // Desired = ideal - open
+    const gap = this.gap;
     // timing
     // close undesired
     // close desired, if necessary

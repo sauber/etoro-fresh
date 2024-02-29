@@ -2,9 +2,9 @@ import { assert, assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { Portfolio } from "./portfolio.ts";
 import { IPolicy, Policy } from "./policy.ts";
 import { Order } from "./order.ts";
-import { conviction, date, investor, investors } from "./testdata.ts";
+import { conviction, date, investor, investors, position } from "./testdata.ts";
 
-const portfolio = new Portfolio();
+const portfolio = new Portfolio().add(position);
 const cash = 100000;
 const targets = 10;
 const chart = investor.chart;

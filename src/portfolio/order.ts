@@ -11,7 +11,7 @@ type BuyItem = {
 };
 type BuyItems = Array<BuyItem>;
 
-type SellItem = {
+export type SellItem = {
   position: Position;
   reason: string;
 };
