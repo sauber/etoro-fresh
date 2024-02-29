@@ -24,7 +24,7 @@ function sqd(
   learning_rate: number,
   loss: Function,
 ): Numbers {
-  const residuals = x.map((x, i) => loss(coeffcients, x, y[i]))
+  const residuals = x.map((x, i) => loss(coeffcients, x, y[i]));
   console.log({ coeffcients, x, y, learning_rate, loss, residuals });
   return coeffcients;
 }

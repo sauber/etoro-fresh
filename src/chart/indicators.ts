@@ -1,4 +1,4 @@
-import { avg } from "./statistics.ts";
+import { avg } from "../math/statistics.ts";
 
 /** Simple Moving Average */
 export function sma(data: number[], window: number): number[] {
