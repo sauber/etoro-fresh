@@ -147,7 +147,7 @@ export class DataFrame {
     return new DataFrame(columns, this.index);
   }
 
-  /** Sort rows by columns */
+  /** Sort rows by columns from smallest to largest */
   public sort(colname: string): DataFrame {
     const index: Index = this.index;
     const value: SeriesTypes[] = this.column(colname).values;
