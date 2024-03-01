@@ -1,9 +1,8 @@
 import { Table } from "./table.ts";
-import { BoolSeries, Series, TextSeries } from "./series.ts";
+import { BoolSeries, ObjectSeries, Series, TextSeries } from "./series.ts";
 import type { SeriesClasses, SeriesTypes } from "./series.ts";
-import { DateTimeFormatter } from "$std/datetime/_common.ts";
 
-type Column = Series | TextSeries | BoolSeries;
+type Column = Series | TextSeries | BoolSeries | ObjectSeries<object>;
 type Columns = Record<string, Column>;
 export type RowRecord = Record<string, SeriesTypes>;
 export type RowRecords = Array<RowRecord>;
@@ -12,6 +11,9 @@ type Index = number[];
 type ColumnNames = string[];
 type SortElement = [number, SeriesTypes];
 type RowCallback = (row: RowRecord) => SeriesTypes;
+type ColumnName = string;
+type ColumnTypeName = "number" | "string" | "bool" | "object";
+type Header = Record<ColumnName, ColumnTypeName>;
 
 /** Generate a series from an array of unknown values */
 function series(array: Array<unknown>): SeriesClasses | undefined {
@@ -22,6 +24,8 @@ function series(array: Array<unknown>): SeriesClasses | undefined {
       return new TextSeries(array as string[]);
     case "boolean":
       return new BoolSeries(array as boolean[]);
+    default:
+      return new ObjectSeries<object>(array as object[]);
   }
 }
 
@@ -55,7 +59,7 @@ export class DataFrame {
     }
   }
 
-  /** Import data from list of records */
+  /** Import data from list of records, autodetect types from first record */
   public static fromRecords(records: RowRecords): DataFrame {
     return new DataFrame(
       Object.assign(
@@ -69,6 +73,31 @@ export class DataFrame {
         }),
       ),
     );
+  }
+
+  /** Generate a DataFrame from a header definition and optional data.  */
+  public static fromDef(header: Header, records: RowRecords = []): DataFrame {
+    const columns: Columns = Object.fromEntries(
+      Object.entries(header).map(
+        ([name, type]) => {
+          const values = records.map((r) => r[name]);
+          const series = function () {
+            switch (type) {
+              case "number":
+                return new Series(values as number[]);
+              case "string":
+                return new TextSeries(values as string[]);
+              case "bool":
+                return new BoolSeries(values as boolean[]);
+              default:
+                return new ObjectSeries<object>(values as object[]);
+            }
+          };
+          return [name, series()];
+        },
+      ),
+    );
+    return new DataFrame(columns);
   }
 
   /** A new dataframe with subset of columns */
@@ -211,7 +240,6 @@ export class DataFrame {
   public add(name: string, operand: number): DataFrame {
     return this.replace(name, (this.column(name) as Series).add(operand));
   }
-
 
   /** Values and columns names from all series at index */
   private record(index: number): RowRecord {

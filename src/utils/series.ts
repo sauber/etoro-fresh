@@ -13,7 +13,7 @@ export interface SeriesInterface<T> {
   any: T;
 }
 
-export type SeriesTypes = number | string | boolean | undefined;
+export type SeriesTypes = number | string | boolean | object | undefined;
 export type SeriesClasses =
   | Series
   | TextSeries

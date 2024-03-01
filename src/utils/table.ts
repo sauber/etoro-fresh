@@ -1,4 +1,4 @@
-type CellTypes = number | string | boolean | undefined;
+type CellTypes = number | string | boolean | undefined | object;
 type BorderSymbols = [string, string, string, string];
 type Theme = {
   top: BorderSymbols;
@@ -72,12 +72,12 @@ export class Table {
         if (s > size[i]) size[i] = s;
       }
     }
-    //console.log({ content, size });
     return size;
   }
 
   /** Render cell content as a string */
   private cast(content: CellTypes): string {
+    if (typeof content === "object") return "obj";
     if (content !== undefined && typeof content.toString === "function") {
       return content.toString();
     } else return "";
@@ -109,16 +109,17 @@ export class Table {
     const pad = cellWidth - str.length;
     const bl = this.theme.row[1];
     switch (typeof content) {
+      case "number":
+        return bl.repeat(pad) + rich;
+      case "string":
+        return rich + bl.repeat(pad);
       case "boolean":
+      case "object":
         return (
           bl.repeat(Math.ceil(pad / 2)) +
           ansi("italic", str) +
           bl.repeat(Math.floor(pad / 2))
         );
-      case "string":
-        return rich + bl.repeat(pad);
-      case "number":
-        return bl.repeat(pad) + rich;
       default:
         return bl.repeat(pad);
     }
