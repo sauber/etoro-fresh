@@ -1,6 +1,6 @@
-import { diffDate, nextDate } from "../time/mod.ts";
-import type { DateFormat } from "../time/mod.ts";
-import { std } from "./statistics.ts";
+import { diffDate, nextDate } from "📚/time/mod.ts";
+import type { DateFormat } from "📚/time/mod.ts";
+import { std } from "📚/math/statistics.ts";
 import { ema, rsi, sma } from "./indicators.ts";
 
 type Numbers = number[];
