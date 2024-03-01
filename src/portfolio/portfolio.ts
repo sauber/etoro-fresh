@@ -5,26 +5,16 @@ export type Positions = Array<Position>;
 
 /** A collection of positions */
 export class Portfolio {
-  public readonly positions: Positions = [];
+  constructor(public readonly positions: Positions = []) {}
 
   /** Add new position to collection */
   public add(position: Position): Portfolio {
-    this.positions.push(position);
-    return this;
+    return new Portfolio([...this.positions, position]);
   }
 
   /** Remove matching position */
-  public remove(position: Position): boolean {
-    const id = position.id;
-    const p = this.positions;
-    for (let i = 0; i < p.length; i++) {
-      const pos = p[i];
-      if (pos.id === id) {
-        p.splice(i, 1);
-        return true;
-      }
-    }
-    return false;
+  public remove(position: Position): Portfolio {
+    return new Portfolio(this.positions.filter(p=>p.id != position.id));
   }
 
   /** Count of positions */

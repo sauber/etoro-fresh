@@ -17,22 +17,19 @@ Deno.test("Instance", () => {
 
 Deno.test("Add position", () => {
   const p = new Portfolio();
-  p.add(position);
+  const a: Portfolio = p.add(position);
+  assertEquals(a.length, 1);
 });
 
 Deno.test("Remove position", () => {
   const p = new Portfolio();
-  p.add(position);
-  assertEquals(p.length, 1);
-  p.remove(position);
-  assertEquals(p.length, 0);
+  const a: Portfolio = p.add(position);
+  const r: Portfolio = a.remove(position);
+  assertEquals(r.length, 0);
 });
 
 Deno.test("Aggregated Profit", () => {
-  const p = new Portfolio();
-  assertEquals(p.profit(end), 0);
-  p.add(position);
-  p.add(position);
+  const p = new Portfolio([position, position]);
   assertEquals(p.profit(start), 0);
   const actual_profit: number = p.profit(end);
   const expected_profit: number = 2 * (last / first - 1) * amount;
