@@ -6,7 +6,7 @@ import { DataFrame } from "📚/dataframe/mod.ts";
 import { Portfolio } from "./portfolio.ts";
 import { Position } from "./position.ts";
 import { Order } from "./order.ts";
-import type { BuyItems } from "./order.ts";
+import type { BuyItems, SellItems } from "./order.ts";
 
 type UserName = string;
 type Score = number;
@@ -39,7 +39,6 @@ export type IPolicy = {
   targets: number;
 };
 
-
 /** Convert dict of username=>number to dataframe */
 function frame(c: Conviction): DataFrame {
   return DataFrame.fromDef(
@@ -52,7 +51,7 @@ export class Policy {
   private readonly portfolio: Portfolio;
   private readonly chart: Chart;
   private readonly investors: Investors;
-  private readonly conviction: Conviction;
+  private readonly conviction: DataFrame;
   private readonly date: DateFormat;
   private readonly cash: number;
   private readonly targets: number;
@@ -61,7 +60,7 @@ export class Policy {
     this.portfolio = params.portfolio;
     this.chart = params.chart;
     this.investors = params.investors;
-    this.conviction = params.conviction;
+    this.conviction = frame(params.conviction);
     this.date = params.date;
     this.cash = params.cash;
     this.targets = params.targets;
@@ -108,9 +107,10 @@ export class Policy {
     return this.investors.find((i) => i.UserName === UserName) as Investor;
   }
 
-  /** Given investor ranks, available cash etc. what is ideal target investment level for each investor */
+  /** Given investor ranks, available cash etc. 
+   * what is ideal target investment level for each investor */
   private get target(): DataFrame {
-    return frame(this.conviction)
+    return this.conviction
       .select((r) => r.Score as Score > 0).sort("Score")
       .reverse
       .slice(0, this.targets)
@@ -188,6 +188,10 @@ export class Policy {
     return target;
   }
 
+  private get sellGap(): DataFrame {
+    return DataFrame.fromDef({ Position: "object", Reason: "string" });
+  }
+
   /** List of investments to open or increase */
   public get buy(): BuyItems {
     const frame: DataFrame = this.buyGap;
@@ -196,6 +200,16 @@ export class Policy {
       investor: this.investor(r.UserName as UserName),
       date: this.date,
       amount: r.Amount as number,
+    }));
+  }
+
+  /** List of investments to open or increase */
+  public get sell(): SellItems {
+    const frame: DataFrame = this.sellGap;
+
+    return frame.records.map((r) => ({
+      position: r.Position as Position,
+      reason: r.Reason as string,
     }));
   }
 }

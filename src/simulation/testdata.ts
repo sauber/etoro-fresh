@@ -4,7 +4,7 @@ import { Community } from "📚/repository/mod.ts";
 export type { Investors } from "📚/repository/mod.ts";
 import { Chart } from "📚/chart/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
-import { Position } from "📚/strategy/position.ts";
+import { Position } from "📚/portfolio/position.ts";
 
 // Testdata based Community
 export const community = new Community(repo);

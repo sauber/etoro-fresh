@@ -1,5 +1,5 @@
 import type { DateFormat } from "📚/time/mod.ts";
-import { Position } from "📚/strategy/position.ts";
+import { Position } from "📚/portfolio/position.ts";
 import { Investor } from "📚/investor/mod.ts";
 
 /** An exchange is a place where cash and positions are swapped for a fee */

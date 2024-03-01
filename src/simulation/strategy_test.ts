@@ -5,9 +5,9 @@ import {
   RandomStrategy,
   Strategy,
 } from "./strategy.ts";
-import { Order } from "./order.ts";
-import { Portfolio } from "./portfolio.ts";
-import { investor, community, position } from "./testdata.ts";
+import { Order } from "../portfolio/order.ts";
+import { Portfolio } from "../portfolio/portfolio.ts";
+import { investor, community, position } from "../portfolio/testdata.ts";
 
 const investors = await community.all();
 const date = investor.chart.start;
@@ -32,8 +32,7 @@ Deno.test("Random Strategy", () => {
 });
 
 Deno.test("Exit Strategy", () => {
-  const portfolio = new Portfolio();
-  portfolio.add(position);
+  const portfolio = new Portfolio().add(position);
   const s = new ExitStrategy(investors);
   const order: Order = s.order(portfolio, date);
   assertEquals(order.sellItems.length, 1);
