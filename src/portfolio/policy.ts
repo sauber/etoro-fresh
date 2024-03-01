@@ -15,6 +15,7 @@ type UserScore = {
   Score: number;
 };
 export type Conviction = Record<UserName, Score>;
+type Positions = Array<Position>;
 
 export type IPolicy = {
   // Portfolio of current positions
@@ -107,7 +108,7 @@ export class Policy {
     return this.investors.find((i) => i.UserName === UserName) as Investor;
   }
 
-  /** Given investor ranks, available cash etc. 
+  /** Given investor ranks, available cash etc.
    * what is ideal target investment level for each investor */
   private get target(): DataFrame {
     return this.conviction
@@ -119,6 +120,14 @@ export class Policy {
       .distribute("Score")
       .scale("Score", this.value)
       .rename({ "Score": "Amount" });
+  }
+
+  /** Which positions in portfolio are no longer among targets */
+  private get unranked(): Positions {
+    const targetNames = this.target.values("UserName") as UserName[];
+    const remove: Positions = this.portfolio.positions
+      .filter((p) => !targetNames.includes(p.name));
+    return remove;
   }
 
   /** Gap =
@@ -189,7 +198,8 @@ export class Policy {
   }
 
   private get sellGap(): DataFrame {
-    return DataFrame.fromDef({ Position: "object", Reason: "string" });
+    const records = this.unranked.map((p) => ({ Position: p, Reason: "Rank" }));
+    return DataFrame.fromDef({ Position: "object", Reason: "string" }, records);
   }
 
   /** List of investments to open or increase */
