@@ -1,6 +1,6 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { DataFrame } from "./dataframe.ts";
-import type { SeriesTypes } from "/utils/series.ts";
+import type { SeriesTypes } from "./series.ts";
 
 const testdata = [
   { n: 1, s: "a", b: true },
