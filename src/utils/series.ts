@@ -77,7 +77,6 @@ export class ObjectSeries<T> extends DataSeries<T>
 /** Series of numbers */
 export class Series extends DataSeries<number | undefined>
   implements SeriesInterface<number | undefined> {
-
   constructor(values?: Array<number | undefined>) {
     super(values);
   }
