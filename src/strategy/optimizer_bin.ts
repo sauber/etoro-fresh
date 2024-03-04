@@ -1,17 +1,18 @@
 import { CachingBackend, DiskBackend } from "📚/storage/mod.ts";
 import { Community } from "📚/repository/mod.ts";
-import { CrossPath } from "./cross-path.ts";
+import { CrossPath, CrossPathParameters } from "./cross-path.ts";
 import type { DateFormat } from "../time/mod.ts";
 import { diffDate } from "../time/mod.ts";
 // import { avg } from "📚/chart/statistics.ts";
+import { parabolic } from "📚/math/parabolic.ts";
 
 type Position = {
   date: DateFormat;
   value: number;
 };
 
-function run(fast: number, slow: number): number {
-  console.log("Testing with fast:", fast, "slow:", slow);
+function test(fast: number, slow: number): number {
+  // console.log("Testing with fast:", fast, "slow:", slow);
   // Accumulated profit
   let acc = 0;
   let wins = 0;
@@ -63,7 +64,7 @@ function run(fast: number, slow: number): number {
     });
   });
 
-  results();
+  // results();
   // const loss = 1 / acc;
   return acc;
 }
@@ -80,39 +81,90 @@ const charts = await community.allCharts();
 const loadingTime: number = performance.now() - t1;
 console.log("Loaded", charts.length, "charts in", loadingTime, "ms");
 
-// run(2, 20);
-// run(5, 50);
-// run(10, 100);
-// run(20, 200);
+/** Walk one step at a time until no higher result is found in any direction */
+function singlestep() {
+  let fast = 1;
+  let slow = 50;
 
-let fast = 6;
-let slow = 42;
+  while (true) {
+    const gain = test(fast, slow);
 
-while (true) {
-  const gain = run(fast, slow);
+    // Decide if fast should be higher or lower
+    let nextFast = fast;
+    const fh = test(fast + 1, slow);
+    if (fh > gain) nextFast = fast + 1;
+    else {
+      const fl = test(fast - 1, slow);
+      if (fl > gain) nextFast = fast - 1;
+    }
 
-  // Decide if fast should be higher or lower
-  let nextFast = fast;
-  const fh = run(fast+1, slow);
-  if ( fh > gain ) { nextFast = fast + 1}
-  else { 
-    const fl = run(fast-1, slow);
-    if ( fl > gain ) { nextFast = fast - 1}
-  };
+    // Decide if slow should be higher or lower
+    let nextSlow = slow;
+    const sh = test(fast, slow + 1);
+    if (sh > gain) nextSlow = slow + 1;
+    else {
+      const sl = test(fast, slow - 1);
+      if (sl > gain) nextSlow = slow - 1;
+    }
 
-  
-  // Decide if slow should be higher or lower
-  let nextSlow = slow;
-  const sh = run(fast, slow+1);
-  if ( sh > gain ) { nextSlow = slow + 1}
-  else { 
-    const sl = run(fast, slow-1);
-    if ( sl > gain ) { nextSlow = slow - 1}
-  };
-
-  // No change to fast and slow
-  console.log({gain: +gain.toFixed(2), fast, nextFast, slow, nextSlow});
-  if ( nextFast == fast && nextSlow == slow ) break;
-  fast = nextFast;
-  slow = nextSlow;
+    // No change to fast and slow
+    console.log({ gain: +gain.toFixed(2), fast, nextFast, slow, nextSlow });
+    if (nextFast == fast && nextSlow == slow) break;
+    fast = nextFast;
+    slow = nextSlow;
+  }
 }
+
+/** Sample points in one random dimension.
+ * By parabolic regression estimate peak.
+ * Step towards peak.
+ */
+function peakscout(): void {
+  // Initial values
+  const params = new CrossPathParameters();
+  let stepsize = [1, 1];
+
+  while (true) {
+    // In which dimension to make a step
+    const p: number[] = params.names.map((name) => params[name]);
+    const dimension: number = Math.floor(Math.random() * params.names.length);
+    const name = params.names[dimension];
+    const current = params[name];
+    const { min, max } = params.boundary(name);
+    const n = Array(50).fill(0).map(() => params.random(name));
+    const y = n.map((x) => {
+      const o = [...p];
+      o[dimension] = x;
+      const r: number = test(o[0], o[1]);
+      return r;
+    });
+    // console.log(`Test values for ${name}:`, n);
+    // console.log(`Test results for ${name}:`, y);
+    const pairs = n.map((x, i) => [x, y[i]]);
+    // console.log(pairs);
+    const pb = parabolic(pairs);
+    // console.log(pb);
+    const yminx = pb.predict(min);
+    const ymaxx = pb.predict(max);
+    const candidates = [[min, yminx], [max, ymaxx]];
+    if (pb.peak[0] > min && pb.peak[0] < max && Number.isFinite(pb.peak[0])) candidates.push(pb.peak);
+
+    candidates.sort((a, b) => b[1] - a[1]);
+    // console.log(candidates);
+
+    // Step 10% towards point where peak is predicted
+    const xpeak = candidates[0][0];
+    stepsize[dimension] += (xpeak - current) / 2;
+    stepsize[dimension] *= 0.75;
+    // console.log({ name, current, xpeak, stepsize, profit: candidates[0][1] });
+    console.log('result:', p, candidates[0][1], dimension, name, stepsize);
+    if (Math.abs(stepsize[0]) < 0.1 && stepsize[1]<0.1) {
+      break;
+    }
+    params.step(name, stepsize);
+  }
+  
+}
+
+//singlestep()
+peakscout();
