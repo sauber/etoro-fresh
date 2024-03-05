@@ -1,6 +1,6 @@
 import { Chart } from "📚/chart/mod.ts";
-import { nextDate } from "../time/mod.ts";
-import type { DateFormat } from "../time/mod.ts";
+import { nextDate } from "📚/time/mod.ts";
+import type { DateFormat } from "📚/time/mod.ts";
 
 /** Crossing Path strategy looks for when fast SMA crosses slow SMA */
 export class CrossPath {
@@ -70,7 +70,7 @@ export class CrossPath {
 }
 
 /** Define boundaries of parameters for CrossPath Strategy */
-type Parameter = "fast" | "slow";
+export type Parameter = "fast" | "slow";
 
 export class CrossPathParameters {
   public readonly names = ["fast", "slow"];
@@ -99,12 +99,16 @@ export class CrossPathParameters {
     return min + Math.floor(Math.random() * (max - min));
   }
 
-  /** Change one parameter by amount */
-  step(param: Parameter, amount: number): void {
+  /** Change one parameter by amount, return actual amount changed */
+  step(param: Parameter, amount: number): number {
     const b = this.boundary(param);
     const d = Math.round(amount);
-    if (this[param] + d > b.max) this[param] = b.max;
-    else if (this[param] + d < b.min) this[param] = b.min;
-    else this[param] += d;
+    let actual = 0;
+    if (this[param] + d > b.max) actual = b.max;
+    else if (this[param] + d < b.min) actual = b.min;
+    else actual = this[param] + d;
+    const before = this[param];
+    this[param] = actual;
+    return this[param] - before;
   }
 }

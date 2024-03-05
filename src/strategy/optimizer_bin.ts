@@ -1,10 +1,12 @@
 import { CachingBackend, DiskBackend } from "📚/storage/mod.ts";
 import { Community } from "📚/repository/mod.ts";
-import { CrossPath, CrossPathParameters } from "./cross-path.ts";
-import type { DateFormat } from "../time/mod.ts";
-import { diffDate } from "../time/mod.ts";
+import type { DateFormat } from "📚/time/mod.ts";
+import { diffDate } from "📚/time/mod.ts";
 // import { avg } from "📚/chart/statistics.ts";
 import { parabolic } from "📚/math/parabolic.ts";
+import { CrossPath, CrossPathParameters } from "./cross-path.ts";
+import type { Parameter } from "./cross-path.ts";
+import { dim } from "$std/fmt/colors.ts";
 
 type Position = {
   date: DateFormat;
@@ -53,8 +55,8 @@ function test(fast: number, slow: number): number {
         // Have no position, so open one
         position = { date: date, value: 1000 * signal };
       } else if (signal < 0 && position) {
-        // Close existing position
-        const profit = position.value * chart.gain(position.date, date);
+        // Close existing position, lose 2% on trade
+        const profit = position.value * (chart.gain(position.date, date)-0.02);
         close(position.date, date, profit);
         // console.log(
         //   `Chart ${index} Profit ${position.date} to ${date}: ${profit}`,
@@ -122,48 +124,75 @@ function singlestep() {
 function peakscout(): void {
   // Initial values
   const params = new CrossPathParameters();
-  let stepsize = [1, 1];
+  let velocity = [0, 0];
+  const friction = 0.75;
+  const sample = 50;
 
   while (true) {
-    // In which dimension to make a step
-    const p: number[] = params.names.map((name) => params[name]);
-    const dimension: number = Math.floor(Math.random() * params.names.length);
-    const name = params.names[dimension];
-    const current = params[name];
+    // Current point
+    const current: number[] = params.names.map((n) => params[n]);
+
+    // Pick random dimension
+    const i: number = Math.floor(Math.random() * params.names.length);
+
+    // Name of Ith dimention
+    const name = params.names[i] as Parameter;
+
+    // Friction
+    velocity = velocity.map((v) => v * friction);
+
+    // Min and max are same, so cannot estimate new peak position
     const { min, max } = params.boundary(name);
-    const n = Array(50).fill(0).map(() => params.random(name));
+    if (min == max) continue;
+
+    // Take samples at min, max and other random points
+    const n = Array(sample).fill(0).map(() => params.random(name));
+    n.push(min, max);
     const y = n.map((x) => {
-      const o = [...p];
-      o[dimension] = x;
-      const r: number = test(o[0], o[1]);
+      const point = [...current];
+      point[i] = x;
+      const r: number = test(point[0], point[1]);
       return r;
     });
-    // console.log(`Test values for ${name}:`, n);
-    // console.log(`Test results for ${name}:`, y);
-    const pairs = n.map((x, i) => [x, y[i]]);
-    // console.log(pairs);
+
+    // Parabolic regression to find peak
+    const pairs: [number, number][] = n.map((x, i) => [x, y[i]]);
     const pb = parabolic(pairs);
-    // console.log(pb);
+
+    // Confirm regression concluded
+    pb.coefficients.forEach((c) => {
+      if (!Number.isFinite(c)) {
+        throw new Error("Invalid regression coefficients:" + pb.coefficients);
+      }
+    });
+
+    // Get values at min and max
     const yminx = pb.predict(min);
     const ymaxx = pb.predict(max);
     const candidates = [[min, yminx], [max, ymaxx]];
-    if (pb.peak[0] > min && pb.peak[0] < max && Number.isFinite(pb.peak[0])) candidates.push(pb.peak);
 
+    // Confirm peak is between min and max
+    if (pb.peak[0] > min && pb.peak[0] < max) candidates.push(pb.peak);
+
+    // Find highest point
     candidates.sort((a, b) => b[1] - a[1]);
-    // console.log(candidates);
+    const peak = candidates[0];
 
-    // Step 10% towards point where peak is predicted
-    const xpeak = candidates[0][0];
-    stepsize[dimension] += (xpeak - current) / 2;
-    stepsize[dimension] *= 0.75;
-    // console.log({ name, current, xpeak, stepsize, profit: candidates[0][1] });
-    console.log('result:', p, candidates[0][1], dimension, name, stepsize);
-    if (Math.abs(stepsize[0]) < 0.1 && stepsize[1]<0.1) {
-      break;
-    }
-    params.step(name, stepsize);
+    // Increase velocity towards peak
+    velocity[i] += (peak[0] - current[i]) * 0.2;
+
+    // Take step towards peak. Evaluate actual step taken.
+    // const stepsize = velocity[i];
+    // const actualStep = params.step(name, stepsize);
+    velocity.forEach((v, i)=>params.step(params.names[i] as Parameter, v));
+
+    // Display action
+    const profit = test(params[params.names[0]], params[params.names[1]]);
+    console.log(current, name, peak, velocity, profit);
+
+    // Continue if velocity is high enough
+    if (Math.abs(velocity[0]) < 0.1 && Math.abs(velocity[1]) < 0.1) break;
   }
-  
 }
 
 //singlestep()
