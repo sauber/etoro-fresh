@@ -161,4 +161,15 @@ export class Chart {
   public rsi(window: number): Chart {
     return this.derive(rsi(this.values, window), "rsi" + window);
   }
+
+  /** this chart - other chart */
+  public subtract(other: Chart): Chart {
+    const start: DateFormat = this.start > other.start ? this.start : other.start;
+    const end: DateFormat = this.end < other.end ? this.end : other.end;
+
+    const parent = this.from(start).until(end).values;
+    const child = other.from(start).until(end).values;
+    const diff = parent.map((n, i)=> n-child[i]);
+    return new Chart(diff, end);
+  }
 }

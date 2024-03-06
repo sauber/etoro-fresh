@@ -5,6 +5,7 @@ import { diffDate } from "📚/time/mod.ts";
 import { parabolic } from "📚/math/parabolic.ts";
 import { Chart } from "📚/chart/mod.ts";
 import { CrossPath, CrossPathParameters } from "./cross-path.ts";
+import { MACD, MACDParameters } from "./macd.ts";
 import type { Parameter } from "./cross-path.ts";
 
 type Position = {
@@ -56,10 +57,11 @@ function test(fast: number, slow: number): number {
   }
 
   /** Loop all dates in random sample charts */
-  const c: Chart[] = sample(charts, 25);
+  const c: Chart[] = sample(charts, 20);
   c.forEach((chart, _index) => {
     let position: Position | null = null;
-    const strategy = new CrossPath(chart, fast, slow);
+    // const strategy = new CrossPath(chart, fast, slow);
+    const strategy = new MACD(chart, fast, slow);
     const dates: DateFormat[] = strategy.dates;
     dates.forEach((date: DateFormat) => {
       const signal: number = strategy.value(date);
@@ -159,7 +161,7 @@ function singlestep() {
  */
 function peakscout(): void {
   // Initial values
-  const params = new CrossPathParameters();
+  const params = new MACDParameters();
   let velocity = [0, 0];
   const friction = 0.75;
   const sample = 10;
