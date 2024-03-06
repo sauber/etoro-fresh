@@ -2,17 +2,28 @@ import { CachingBackend, DiskBackend } from "📚/storage/mod.ts";
 import { Community } from "📚/repository/mod.ts";
 import type { DateFormat } from "📚/time/mod.ts";
 import { diffDate } from "📚/time/mod.ts";
-// import { avg } from "📚/chart/statistics.ts";
 import { parabolic } from "📚/math/parabolic.ts";
+import { Chart } from "📚/chart/mod.ts";
 import { CrossPath, CrossPathParameters } from "./cross-path.ts";
 import type { Parameter } from "./cross-path.ts";
-import { dim } from "$std/fmt/colors.ts";
 
 type Position = {
   date: DateFormat;
   value: number;
 };
 
+type Point = [number, number];
+
+function shuffle<T>(array: T[]): T[] {
+  return [...array].sort((_a, _b) => Math.random()-0.5)
+}
+
+function sample<T>(array: T[], count: number): T[] {
+  const shuffled = shuffle(array);
+  return shuffled.slice(0, count);
+}
+
+/** Aquire the result of parameters */
 function test(fast: number, slow: number): number {
   // console.log("Testing with fast:", fast, "slow:", slow);
   // Accumulated profit
@@ -44,8 +55,9 @@ function test(fast: number, slow: number): number {
     // console.log("  Average duration:", avg(duration).toFixed(2), "days");
   }
 
-  /** Loop all dates in all charts */
-  charts.forEach((chart, _index) => {
+  /** Loop all dates in random sample charts */
+  const c: Chart[] = sample(charts, 25);
+  c.forEach((chart, _index) => {
     let position: Position | null = null;
     const strategy = new CrossPath(chart, fast, slow);
     const dates: DateFormat[] = strategy.dates;
@@ -56,7 +68,8 @@ function test(fast: number, slow: number): number {
         position = { date: date, value: 1000 * signal };
       } else if (signal < 0 && position) {
         // Close existing position, lose 2% on trade
-        const profit = position.value * (chart.gain(position.date, date)-0.02);
+        const profit = position.value *
+          (chart.gain(position.date, date) - 0.01);
         close(position.date, date, profit);
         // console.log(
         //   `Chart ${index} Profit ${position.date} to ${date}: ${profit}`,
@@ -71,17 +84,40 @@ function test(fast: number, slow: number): number {
   return acc;
 }
 
-// Community Repo
-const path: string = Deno.args[0];
-const disk = new DiskBackend(path);
-const repo = new CachingBackend(disk);
-const community = new Community(repo);
+/** The sample with highe result */
+function absolutePeak(samples: Point[]): Point {
+  samples.sort((a,b) => b[1]-a[1]);
+  return samples[0];
+}
 
-// Load Charts
-const t1: number = performance.now();
-const charts = await community.allCharts();
-const loadingTime: number = performance.now() - t1;
-console.log("Loaded", charts.length, "charts in", loadingTime, "ms");
+/** Parabalic regression on samples to find peak */
+function parabolicPeak(samples: Point[]): Point {
+  const x: number[] = samples.map((s) => s[0]);
+  const minx: number = Math.min(...x);
+  const maxx: number = Math.max(...x);
+
+  const pb = parabolic(samples);
+
+  // Confirm regression concluded
+  pb.coefficients.forEach((c) => {
+    if (!Number.isFinite(c)) {
+      throw new Error("Invalid regression coefficients:" + pb.coefficients);
+    }
+  });
+
+  // Get values at min and max
+  const yminx: number = pb.predict(minx);
+  const ymaxx: number = pb.predict(maxx);
+  const candidates: Point[] = [[minx, yminx], [maxx, ymaxx]];
+
+  // Confirm peak is between min and max
+  if (pb.peak[0] > minx && pb.peak[0] < maxx) candidates.push(pb.peak);
+
+  // Find highest point
+  candidates.sort((a, b) => b[1] - a[1]);
+  const peak = candidates[0];
+  return peak;
+}
 
 /** Walk one step at a time until no higher result is found in any direction */
 function singlestep() {
@@ -126,7 +162,7 @@ function peakscout(): void {
   const params = new CrossPathParameters();
   let velocity = [0, 0];
   const friction = 0.75;
-  const sample = 50;
+  const sample = 10;
 
   while (true) {
     // Current point
@@ -145,46 +181,32 @@ function peakscout(): void {
     const { min, max } = params.boundary(name);
     if (min == max) continue;
 
-    // Take samples at min, max and other random points
+    // Take uniq samples at min, max and other random points
     const n = Array(sample).fill(0).map(() => params.random(name));
     n.push(min, max);
-    const y = n.map((x) => {
+    const s = [...new Set(n)].sort((a, b) => a - b);
+    const pairs = s.map((x) => {
       const point = [...current];
       point[i] = x;
-      const r: number = test(point[0], point[1]);
-      return r;
+      const y: number = test(point[0], point[1]);
+      return [x, y];
     });
 
     // Parabolic regression to find peak
-    const pairs: [number, number][] = n.map((x, i) => [x, y[i]]);
-    const pb = parabolic(pairs);
+    // const peak = parabolicPeak(pairs);
+    const peak = absolutePeak(pairs);
 
-    // Confirm regression concluded
-    pb.coefficients.forEach((c) => {
-      if (!Number.isFinite(c)) {
-        throw new Error("Invalid regression coefficients:" + pb.coefficients);
-      }
-    });
-
-    // Get values at min and max
-    const yminx = pb.predict(min);
-    const ymaxx = pb.predict(max);
-    const candidates = [[min, yminx], [max, ymaxx]];
-
-    // Confirm peak is between min and max
-    if (pb.peak[0] > min && pb.peak[0] < max) candidates.push(pb.peak);
-
-    // Find highest point
-    candidates.sort((a, b) => b[1] - a[1]);
-    const peak = candidates[0];
+    // Is peak higher than current
+    // const y = test(current[0], current[1]);
+    // if (peak[1] < y) continue;
 
     // Increase velocity towards peak
-    velocity[i] += (peak[0] - current[i]) * 0.2;
+    velocity[i] += (peak[0] - current[i]) * 0.1;
 
     // Take step towards peak. Evaluate actual step taken.
     // const stepsize = velocity[i];
     // const actualStep = params.step(name, stepsize);
-    velocity.forEach((v, i)=>params.step(params.names[i] as Parameter, v));
+    velocity.forEach((v, i) => params.step(params.names[i] as Parameter, v));
 
     // Display action
     const profit = test(params[params.names[0]], params[params.names[1]]);
@@ -195,5 +217,32 @@ function peakscout(): void {
   }
 }
 
+/** Test all possible parameters */
+function sweep(): void {
+  const params = new CrossPathParameters();
+  const [min, max] = [2, 199];
+  for (let fast = min; fast <= max; fast++) {
+    params.fast = fast;
+    const { min, max } = params.boundary("slow");
+    for (let slow = min; slow <= max; slow++) {
+      const result = test(fast, slow);
+      console.log(fast, slow, result);
+    }
+  }
+}
+
+// Community Repo
+const path: string = Deno.args[0];
+const disk = new DiskBackend(path);
+const repo = new CachingBackend(disk);
+const community = new Community(repo);
+
+// Load Charts
+const t1: number = performance.now();
+const charts = await community.allCharts();
+const loadingTime: number = performance.now() - t1;
+console.log("Loaded", charts.length, "charts in", loadingTime, "ms");
+
 //singlestep()
 peakscout();
+// sweep();
