@@ -20,7 +20,7 @@ export class MACD {
     this.slow = chart.ema(slowWindow);
     this.fast = chart.ema(fastWindow);
     this.macd_line = this.fast.subtract(this.slow);
-    this.trigger_line = this.macd_line.sma(triggerWindow);
+    this.trigger_line = this.macd_line.ema(triggerWindow);
 
     this.start = nextDate(this.trigger_line.start);
     this.end = chart.end;
