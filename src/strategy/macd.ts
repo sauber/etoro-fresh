@@ -6,8 +6,8 @@ import type { DateFormat } from "📚/time/mod.ts";
 export class MACD {
   private readonly fast: Chart;
   private readonly slow: Chart;
-  private readonly macd: Chart;
-  private readonly trigger: Chart;
+  private readonly macd_line: Chart;
+  private readonly trigger_line: Chart;
   private readonly start: DateFormat;
   private readonly end: DateFormat;
 
@@ -19,22 +19,23 @@ export class MACD {
   ) {
     this.slow = chart.ema(slowWindow);
     this.fast = chart.ema(fastWindow);
-    this.macd = this.fast.subtract(this.slow);
-    this.trigger = this.macd.sma(triggerWindow);
+    this.macd_line = this.fast.subtract(this.slow);
+    this.trigger_line = this.macd_line.sma(triggerWindow);
 
-    this.start = nextDate(this.trigger.start);
+    this.start = nextDate(this.trigger_line.start);
     this.end = chart.end;
   }
 
-  /** Trading signal on date */
+  /** Trading trigger on date */
   public value(date: DateFormat): number {
     //console.log('cross-path value on date', date);
     const prev: DateFormat = nextDate(date, -1);
 
-    const t: number = this.trigger.value(date);
-    const t1: number = this.trigger.value(prev);
-    const m: number = this.macd.value(date);
+    const t: number = this.trigger_line.value(date);
+    const t1: number = this.trigger_line.value(prev);
+    const m: number = this.macd_line.value(date);
 
+    // trigger line have crossed 0 and MACD line is already above 0
     const triggerUp: boolean = t > 0 && t1 <= 0 && m > 0;
     const triggerDown: boolean = t < 0 && t1 >= 0 && m < 0;
 
@@ -47,7 +48,7 @@ export class MACD {
     return range(this.start, this.end);
   }
 
-  /** All trading signals */
+  /** All trading triggers */
   public get values(): number[] {
     return this.dates.map((date) => this.value(date));
   }
@@ -60,19 +61,21 @@ export class MACDParameters {
   public readonly names: Parameter[] = ["fast", "slow", "trigger"];
   private readonly min = 2;
   private readonly max = 200;
-  public fast: number;
-  public slow: number;
-  public trigger: number;
 
-  constructor() {
-    this.fast = 12;
-    this.slow = 26;
-    this.trigger = 9;
+  constructor(
+    public readonly fast = 12,
+    public readonly slow = 26,
+    public readonly trigger = 9,
+  ) {}
+
+  /** Values as vector */
+  public get values(): [number, number, number] {
+    return [this.fast, this.slow, this.trigger];
   }
 
   /** Min and max for parameter, fast must be less than slow and vice versa */
   public boundary(param: Parameter): { min: number; max: number } {
-    if (param == "fast") return { min: this.trigger +1, max: this.slow - 1 };
+    if (param == "fast") return { min: this.trigger + 1, max: this.slow - 1 };
     if (param == "slow") return { min: this.fast + 1, max: this.max };
     if (param == "trigger") return { min: this.min, max: this.fast - 1 };
     return { min: NaN, max: NaN };
@@ -84,16 +87,21 @@ export class MACDParameters {
     return min + Math.floor(Math.random() * (max - min));
   }
 
-  /** Change one parameter by amount, return actual amount changed */
-  step(param: Parameter, amount: number): number {
+  /** Set parameter to value */
+  public set(param: Parameter, value: number): MACDParameters {
     const b = this.boundary(param);
-    const d = Math.round(amount);
-    let actual = 0;
-    if (this[param] + d > b.max) actual = b.max;
-    else if (this[param] + d < b.min) actual = b.min;
-    else actual = this[param] + d;
-    const before = this[param];
-    this[param] = actual;
-    return this[param] - before;
+    const d = Math.round(value);
+    let actual = d;
+    if (d > b.max) actual = b.max;
+    else if (d < b.min) actual = b.min;
+    const p: number[] = this.names.map((name: Parameter) =>
+      (name === param ? actual : this[name]) as number
+    );
+    return new MACDParameters(...p);
+  }
+
+  /** Change one parameter by amount */
+  public step(param: Parameter, amount: number): MACDParameters {
+    return this.set(param, this[param] + amount);
   }
 }
