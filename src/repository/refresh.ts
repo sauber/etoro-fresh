@@ -170,7 +170,7 @@ export class Refresh {
   private async loadInvestor(
     investor: InvestorId,
     expire: number = this.expire.portfolio,
-  ): Promise<boolean[]> {
+  ): Promise<void> {
     if (await this.chart(investor)) {
       await this.stats(investor);
       await this.portfolio(investor, expire);
