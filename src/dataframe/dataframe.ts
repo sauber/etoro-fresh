@@ -16,7 +16,7 @@ type ColumnTypeName = "number" | "string" | "bool" | "object";
 type Header = Record<ColumnName, ColumnTypeName>;
 
 /** Generate a series from an array of unknown values */
-function series(array: Array<unknown>): SeriesClasses | undefined {
+function series(array: Array<unknown>): SeriesClasses {
   switch (typeof array[0]) {
     case "number":
       return new Series(array as number[]);
@@ -161,13 +161,15 @@ export class DataFrame {
 
   /** Generate a new column from existing columns */
   public amend(name: string, callback: RowCallback): DataFrame {
-    const array: SeriesTypes[] = this.index
-      .map((index) => this.record(index))
-      .map((row: RowRecord) => callback(row));
+    const array: SeriesTypes[] = Array(this.length);
+    this.index.forEach((index: number) =>
+      array[index] = callback(this.record(index))
+    );
     const ser = series(array);
-    if (ser) {
-      return new DataFrame(Object.assign({}, this.columns, { [name]: ser }));
-    } else return this;
+    return new DataFrame(
+      Object.assign({}, this.columns, { [name]: ser }),
+      this.index,
+    );
   }
 
   /** Select only matching rows */
