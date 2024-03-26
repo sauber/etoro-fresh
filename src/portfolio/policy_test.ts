@@ -128,7 +128,7 @@ Deno.test("Sell nothing from populated portfolio", () => {
   assertEquals(sell.length, 0);
 });
 
-Deno.test("Sell reduced targets populated portfolio", () => {
+Deno.test("Sell from populated portfolio to meet target count", () => {
   const one = Object.assign({}, empty, {
     portfolio: new Portfolio([pos]),
     targets: 0,
@@ -139,7 +139,7 @@ Deno.test("Sell reduced targets populated portfolio", () => {
   assertEquals(sell.length, 1);
 });
 
-Deno.test("Sell unranked ranked from populated portfolio", () => {
+Deno.test("Sell unranked from populated portfolio", () => {
   const one = Object.assign({}, empty, {
     portfolio: new Portfolio([pos]),
     targets: 1,
@@ -158,4 +158,17 @@ Deno.test("Sell negative ranked from populated portfolio", () => {
   const p = new Policy(one);
   const sell: SellItems = p.sell;
   assertEquals(sell.length, 1);
+});
+
+Deno.test("Buy more of already opened position", () => {
+  const one = Object.assign({}, empty, {
+    portfolio: new Portfolio([pos]),
+    conviction: { [name]: 1 },
+    targets: 1,
+    cash: 5000,
+  });
+  const p = new Policy(one);
+  const buy: BuyItems = p.buy;
+  assertEquals(buy.length, 1);
+  assertEquals(buy[0].amount, 5000);
 });

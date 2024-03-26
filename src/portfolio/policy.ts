@@ -2,7 +2,7 @@ import type { DateFormat } from "📚/time/mod.ts";
 import type { Investors } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import { Chart } from "📚/chart/mod.ts";
-import { DataFrame } from "📚/dataframe/mod.ts";
+import { DataFrame, RowRecord } from "📚/dataframe/mod.ts";
 import { Portfolio } from "./portfolio.ts";
 import { Position } from "./position.ts";
 import { Order } from "./order.ts";
@@ -191,10 +191,33 @@ export class Policy {
   //   return compiled;
   // }
 
+  /** Amount invested for each investor */
+  private get invested(): Conviction {
+    const sell: SellItems = this.open.sellItems;
+    const inv: Conviction = {};
+    sell.forEach((pos) => {
+      const user = pos.position.name;
+      const amount = pos.position.amount;
+      inv[user] = user in inv ? inv[user] + amount : amount;
+    });
+    return inv;
+  }
+
+  /** Target size minus current size */
   private get buyGap(): DataFrame {
-    const target = this.target;
-    //console.log({ target });
-    return target;
+    const target: DataFrame = this.target;
+    const invested: Conviction = this.invested;
+    const gap: DataFrame = target
+      .rename({ Amount: "Target" })
+      .amend("Invested", (r: RowRecord) => invested[r.UserName as string])
+      .amend(
+        "Buy",
+        (r) =>
+          Number.isFinite(r.Invested)
+            ? (r.Target as number) - (r.Invested as number)
+            : (r.Target as number),
+      );
+    return gap;
   }
 
   private get sellGap(): DataFrame {
@@ -209,7 +232,7 @@ export class Policy {
     return frame.records.map((r) => ({
       investor: this.investor(r.UserName as UserName),
       date: this.date,
-      amount: r.Amount as number,
+      amount: r.Buy as number,
     }));
   }
 
