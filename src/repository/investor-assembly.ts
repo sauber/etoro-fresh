@@ -237,6 +237,7 @@ export class InvestorAssembly {
     // Generate new compiled investor, and save at end date
     const investor: Investor = await this.investor();
     const data = investor.export;
+    console.log(`Compile ${end} ${this.UserName}`);
     await this.compiledAsset.store(data, end);
     return investor;
   }

@@ -85,7 +85,11 @@ export class Refresh {
     }
 
     // Store downloaded data
-    await asset.store(data);
+    if (assetname.match(/.chart$/)) {
+      const obj = new Chart(data as ChartData);
+      const date = obj.end;
+      await asset.store(data, date);
+    } else await asset.store(data);
     return true;
   }
 
@@ -129,12 +133,12 @@ export class Refresh {
         console.warn(`Warning: Chart for ${investor.UserName} is invalid`);
         return false;
       }
-      if (chart.end != today()) {
-        console.warn(
-          `Warning: ${investor.UserName} chart end ${chart.end} is not today`,
-        );
-        return false;
-      }
+      // if (chart.end != today()) {
+      //   console.warn(
+      //     `Warning: ${investor.UserName} chart end ${chart.end} is not today`,
+      //   );
+      //   return false;
+      // }
       return true;
     };
 
