@@ -1,4 +1,4 @@
-import { today } from "📚/utils/time/mod.ts";
+import { today } from "📚/time/mod.ts";
 import { Asset, Backend } from "📚/storage/mod.ts";
 
 import { Discover } from "./discover.ts";
