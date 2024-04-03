@@ -1,6 +1,7 @@
 import { Table } from "./table.ts";
 import { BoolSeries, Series, TextSeries } from "./series.ts";
 import type { SeriesClasses, SeriesTypes } from "./series.ts";
+import { DateTimeFormatter } from "$std/datetime/_common.ts";
 
 type Column = Series | TextSeries | BoolSeries;
 type Columns = Record<string, Column>;
@@ -119,7 +120,6 @@ export class DataFrame {
 
   /** Sort rows by columns */
   public sort(colname: string): DataFrame {
-    // TODO: only rearrange incides
     const index: Index = this.index;
     const value: SeriesTypes[] = this.column(colname).values;
     const zip: Array<SortElement> = index.map((i: number) => [i, value[i]]);
@@ -173,6 +173,38 @@ export class DataFrame {
   /** Combine with series from other DataFrame */
   public join(other: DataFrame): DataFrame {
     return new DataFrame(Object.assign({}, this.columns, other.columns));
+  }
+
+  /** Rename columns */
+  public rename(names: Record<string, string>): DataFrame {
+    const columns: Columns = {};
+    Object.entries(this.columns).forEach(([from, column]) => {
+      const to: string = (from in names) ? names[from] : from;
+      columns[to] = column;
+    });
+    return new DataFrame(columns, this.index);
+  }
+
+  /** Replace existing column with new  */
+  private replace(name: string, column: Column): DataFrame {
+    const columns: Columns = { ...this.columns };
+    columns[name] = column;
+    return new DataFrame(columns, this.index);
+  }
+
+  /** Scale values in column to sum of 1 */
+  public distribute(name: string): DataFrame {
+    return this.replace(name, (this.column(name) as Series).distribute);
+  }
+
+  /** Scale values in column to sum of 1 */
+  public log(name: string): DataFrame {
+    return this.replace(name, (this.column(name) as Series).log);
+  }
+
+  /** Scale values in column to sum of 1 */
+  public scale(name: string, factor: number): DataFrame {
+    return this.replace(name, (this.column(name) as Series).scale(factor));
   }
 
   /** Values and columns names from all series at index */

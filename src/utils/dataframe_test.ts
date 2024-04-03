@@ -98,3 +98,9 @@ Deno.test("Filter Rows", () => {
   const rev = df.select((r) => r.b);
   assertEquals(rev.records, [testdata[0]]);
 });
+
+Deno.test("Rename Columns", () => {
+  const df = DataFrame.fromRecords(testdata);
+  const mv = df.rename({ s: "t", b: "c" });
+  assertEquals(mv.names, ["n", "t", "c"]);
+});

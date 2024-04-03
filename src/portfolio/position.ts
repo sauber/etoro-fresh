@@ -1,5 +1,6 @@
-import type { DateFormat } from "📚/utils/time/mod.ts";
+import type { DateFormat } from "../time/mod.ts";
 import { Chart } from "📚/chart/mod.ts";
+import { Investor } from "📚/investor/mod.ts";
 import { nanoid } from "nanoid";
 
 // TODO:
@@ -12,25 +13,26 @@ import { nanoid } from "nanoid";
 /** Information about a position */
 export class Position {
   // Generate uniq ID
-  public readonly id: string = nanoid();
+  public readonly id: string = nanoid(8);
+  public readonly name: string;
 
   constructor(
+    // Investor
+    public readonly investor: Investor,
     // Date of opening
     public readonly date: DateFormat,
-    // Investor Name
-    public readonly name: string,
-    // Chart for investor
-    private readonly chart: Chart,
-    // Price (nomimal + spread) at time of opening
-    public readonly price: number,
     // Amount invested
     public readonly amount: number,
-  ) {}
+  ) {
+    this.name = investor.UserName;
+  }
 
   /** Calculate profits since opening until date */
   public profit(date: DateFormat): number {
-    const last = this.chart.value(date);
-    const profit = this.amount * (last / this.price - 1);
+    const chart: Chart = this.investor.chart;
+    const first = chart.value(this.date);
+    const last = chart.value(date);
+    const profit = this.amount * (last / first - 1);
     return profit;
   }
 
@@ -40,7 +42,7 @@ export class Position {
   }
 
   /** Confirm if position is within date range of available investor data */
-  public valid(date: DateFormat): boolean {
-    return date <= this.chart.end;
+  public expired(date: DateFormat): boolean {
+    return date > this.investor.chart.end;
   }
 }

@@ -4,9 +4,11 @@ import type { DiscoverData } from "./discover.ts";
 import type { ChartData } from "./chart.ts";
 import type { PortfolioData } from "./portfolio.ts";
 import type { StatsData } from "./stats.ts";
+import { Community } from "./community.ts";
 
 const path = "testdata";
 export const repo = new DiskBackend(path);
+export const community = new Community(repo);
 export const investorId: InvestorId = {
   CustomerId: 4657429,
   UserName: "GainersQtr",

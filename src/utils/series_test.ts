@@ -50,3 +50,8 @@ Deno.test("Positive Numbers", () => {
   const s = new Series([-1, 1]);
   assertEquals(s.abs.values, [1, 1]);
 });
+
+Deno.test("Distribute Numbers", () => {
+  const s = new Series([1, 4]);
+  assertEquals(s.distribute.values, [0.2, 0.8]);
+});

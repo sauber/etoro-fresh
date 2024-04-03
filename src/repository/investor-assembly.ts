@@ -1,5 +1,5 @@
-import type { DateFormat } from "📚/utils/time/mod.ts";
-import { diffDate, nextDate } from "📚/utils/time/calendar.ts";
+import type { DateFormat } from "../time/mod.ts";
+import { diffDate, nextDate } from "../time/calendar.ts";
 import { Asset, Backend } from "../storage/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import { Chart as CompiledChart } from "📚/chart/mod.ts";
@@ -237,6 +237,7 @@ export class InvestorAssembly {
     // Generate new compiled investor, and save at end date
     const investor: Investor = await this.investor();
     const data = investor.export;
+    console.log(`Compile ${end} ${this.UserName}`);
     await this.compiledAsset.store(data, end);
     return investor;
   }

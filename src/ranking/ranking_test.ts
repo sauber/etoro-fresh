@@ -1,9 +1,10 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
-import { repo } from "./testdata.ts";
-import { Ranking } from "./ranking.ts";
 import { Community } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
-import { diffDate } from "📚/utils/time/mod.ts";
+import { diffDate } from "📚/time/mod.ts";
+import type { DateFormat } from "📚/time/mod.ts";
+import { Ranking } from "./ranking.ts";
+import { repo } from "./testdata.ts";
 
 type Investors = Array<Investor>;
 
@@ -11,11 +12,11 @@ const community = new Community(repo);
 const all: Investors = await community.all();
 const train: Investors = all.filter(
   (investor: Investor) =>
-    diffDate(investor.stats.start, investor.chart.end) >= 30
+    diffDate(investor.stats.start, investor.chart.end) >= 30,
 );
 const test: Investors = all.filter(
   (investor: Investor) =>
-    diffDate(investor.stats.start, investor.chart.end) < 30
+    diffDate(investor.stats.start, investor.chart.end) < 30,
 );
 
 Deno.test("Initialize", () => {
@@ -23,7 +24,7 @@ Deno.test("Initialize", () => {
   assertInstanceOf(rank, Ranking);
 });
 
-Deno.test("Train", { ignore: false }, async () => {
+Deno.test("Train", async () => {
   const rank = new Ranking(repo);
 
   // Training
@@ -31,11 +32,20 @@ Deno.test("Train", { ignore: false }, async () => {
   assertEquals(done, undefined);
 });
 
-Deno.test("Predict", { ignore: false }, async () => {
+Deno.test("Predict recent", async () => {
   const rank = new Ranking(repo);
-
   const out = await rank.predict(test);
-  out.print("Prediction");
+  //out.sort("SharpeRatio").reverse.digits(3).print("Prediction");
   assertEquals(out.length, test.length);
+  assertEquals(out.names.length, 3);
+});
+
+Deno.test("Predict at date", async () => {
+  const rank = new Ranking(repo);
+  const last: Investors = await community.latest();
+  const end = await community.end() as DateFormat;
+  const out = await rank.predict(last, end);
+  //out.sort("SharpeRatio").reverse.digits(3).print("Prediction");
+  assertEquals(out.length, last.length);
   assertEquals(out.names.length, 3);
 });

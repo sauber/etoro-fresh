@@ -1,6 +1,6 @@
 import { assertEquals } from "$std/assert/mod.ts";
 import { Chart } from "📚/chart/mod.ts";
-import { today } from "📚/utils/time/mod.ts";
+import { today } from "../time/mod.ts";
 import { CrossPath } from "./cross-path.ts";
 
 Deno.test("Cross Path Strategy", () => {

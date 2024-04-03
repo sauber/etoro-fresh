@@ -1,5 +1,4 @@
-import { today } from "📚/utils/time/mod.ts";
-import { Asset, Backend } from "../storage/mod.ts";
+import { Asset, Backend } from "📚/storage/mod.ts";
 
 import { Discover } from "./discover.ts";
 import type { DiscoverData } from "./discover.ts";
@@ -80,12 +79,17 @@ export class Refresh {
 
     // Validate content
     if (validate && !validate(data)) {
-      console.warn(`Warning: Asset ${assetname} failed validation`);
+      console.error(`Error: Asset ${assetname} failed validation`);
       return false;
     }
 
     // Store downloaded data
-    await asset.store(data);
+    // console.log(`Store asset ${assetname}`);
+    if (assetname.match(/.chart$/)) {
+      const obj = new Chart(data as ChartData);
+      const date = obj.end;
+      await asset.store(data, date);
+    } else await asset.store(data);
     return true;
   }
 
@@ -126,15 +130,15 @@ export class Refresh {
     const validate = function (loaded: ChartData) {
       const chart: Chart = new Chart(loaded);
       if (!chart.validate()) {
-        console.warn(`Warning: Chart for ${investor.UserName} is invalid`);
+        // console.error(`Error: Chart for ${investor.UserName} is invalid`);
         return false;
       }
-      if (chart.end != today()) {
-        console.warn(
-          `Warning: ${investor.UserName} chart end ${chart.end} is not today`,
-        );
-        return false;
-      }
+      // if (chart.end != today()) {
+      //   console.warn(
+      //     `Warning: ${investor.UserName} chart end ${chart.end} is not today`,
+      //   );
+      //   return false;
+      // }
       return true;
     };
 
@@ -187,9 +191,11 @@ export class Refresh {
       this.investor.UserName + ".portfolio",
       this.repo,
     );
-    const data: PortfolioData = await asset.last();
-    const portfolio: Portfolio = new Portfolio(data);
-    return portfolio.investors;
+    if (await asset.exists()) {
+      const data: PortfolioData = await asset.last();
+      const portfolio: Portfolio = new Portfolio(data);
+      return portfolio.investors;
+    } else return [];
   }
 
   public async run(max?: number): Promise<number> {
