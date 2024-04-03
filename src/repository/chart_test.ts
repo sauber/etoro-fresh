@@ -12,7 +12,7 @@ Deno.test("Initialization", () => {
 
 Deno.test("Validate", () => {
   const chart: Chart = new Chart(chartData);
-  assertEquals(chart.validate(), true);
+  assertEquals(chart.validate(), false);
 });
 
 Deno.test("Dates", () => {

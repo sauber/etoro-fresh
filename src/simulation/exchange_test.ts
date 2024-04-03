@@ -3,8 +3,8 @@ import {
   assertEquals,
   assertInstanceOf,
 } from "$std/assert/mod.ts";
-import { Position } from "../strategy/position.ts";
-import type { DateFormat } from "../time/mod.ts";
+import { Position } from "📚/portfolio/position.ts";
+import type { DateFormat } from "📚/time/mod.ts";
 import { Exchange } from "./exchange.ts";
 import { investor } from "./testdata.ts";
 

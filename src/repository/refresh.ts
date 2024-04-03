@@ -1,4 +1,3 @@
-import { today } from "📚/time/mod.ts";
 import { Asset, Backend } from "📚/storage/mod.ts";
 
 import { Discover } from "./discover.ts";
@@ -80,11 +79,12 @@ export class Refresh {
 
     // Validate content
     if (validate && !validate(data)) {
-      console.warn(`Warning: Asset ${assetname} failed validation`);
+      console.error(`Error: Asset ${assetname} failed validation`);
       return false;
     }
 
     // Store downloaded data
+    // console.log(`Store asset ${assetname}`);
     if (assetname.match(/.chart$/)) {
       const obj = new Chart(data as ChartData);
       const date = obj.end;
@@ -130,7 +130,7 @@ export class Refresh {
     const validate = function (loaded: ChartData) {
       const chart: Chart = new Chart(loaded);
       if (!chart.validate()) {
-        console.warn(`Warning: Chart for ${investor.UserName} is invalid`);
+        // console.error(`Error: Chart for ${investor.UserName} is invalid`);
         return false;
       }
       // if (chart.end != today()) {
@@ -174,7 +174,7 @@ export class Refresh {
   private async loadInvestor(
     investor: InvestorId,
     expire: number = this.expire.portfolio,
-  ): Promise<boolean[]> {
+  ): Promise<void> {
     if (await this.chart(investor)) {
       await this.stats(investor);
       await this.portfolio(investor, expire);
@@ -191,9 +191,11 @@ export class Refresh {
       this.investor.UserName + ".portfolio",
       this.repo,
     );
-    const data: PortfolioData = await asset.last();
-    const portfolio: Portfolio = new Portfolio(data);
-    return portfolio.investors;
+    if (await asset.exists()) {
+      const data: PortfolioData = await asset.last();
+      const portfolio: Portfolio = new Portfolio(data);
+      return portfolio.investors;
+    } else return [];
   }
 
   public async run(max?: number): Promise<number> {
