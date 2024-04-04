@@ -41,7 +41,7 @@ export type IPolicy = {
 };
 
 /** Convert dict of username=>number to dataframe */
-function frame(c: Conviction): DataFrame {
+function dataframe(c: Conviction): DataFrame {
   return DataFrame.fromDef(
     { UserName: "string", "Score": "number" },
     Object.entries(c).map(([k, v]) => ({ UserName: k, Score: v })),
@@ -61,7 +61,7 @@ export class Policy {
     this.portfolio = params.portfolio;
     this.chart = params.chart;
     this.investors = params.investors;
-    this.conviction = frame(params.conviction);
+    this.conviction = dataframe(params.conviction);
     this.date = params.date;
     this.cash = params.cash;
     this.targets = params.targets;
@@ -109,7 +109,10 @@ export class Policy {
   }
 
   /** Given investor ranks, available cash etc.
-   * what is ideal target investment level for each investor */
+   * what is ideal target investment level for each investor 
+   * 
+   * 
+   * */
   private get target(): DataFrame {
     return this.conviction
       .select((r) => r.Score as Score > 0).sort("Score")
@@ -220,6 +223,9 @@ export class Policy {
     return gap;
   }
 
+  /** Sell every that is unranked
+   * TODO: Only sell if potential for growth is lost
+   */
   private get sellGap(): DataFrame {
     const records = this.unranked.map((p) => ({ Position: p, Reason: "Rank" }));
     return DataFrame.fromDef({ Position: "object", Reason: "string" }, records);
@@ -236,7 +242,7 @@ export class Policy {
     }));
   }
 
-  /** List of investments to open or increase */
+  /** List of investments to close */
   public get sell(): SellItems {
     const frame: DataFrame = this.sellGap;
 
