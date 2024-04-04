@@ -1,7 +1,7 @@
 import { DateFormat, nextDate } from "📚/time/mod.ts";
 import { Chart } from "📚/chart/mod.ts";
 import type { Investors } from "📚/repository/mod.ts";
-import { Strategy, Order, Portfolio, Position } from "📚/portfolio/mod.ts";
+import { Order, Portfolio, Position } from "📚/portfolio/mod.ts";
 import type { Positions } from "📚/portfolio/mod.ts";
 import { Exchange } from "./exchange.ts";
 import { Book } from "./book.ts";
