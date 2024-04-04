@@ -1,9 +1,8 @@
 import { Table } from "./table.ts";
-import { BoolSeries, Series, TextSeries } from "./series.ts";
+import { BoolSeries, ObjectSeries, Series, TextSeries } from "./series.ts";
 import type { SeriesClasses, SeriesTypes } from "./series.ts";
-import { DateTimeFormatter } from "$std/datetime/_common.ts";
 
-type Column = Series | TextSeries | BoolSeries;
+type Column = Series | TextSeries | BoolSeries | ObjectSeries<object>;
 type Columns = Record<string, Column>;
 export type RowRecord = Record<string, SeriesTypes>;
 export type RowRecords = Array<RowRecord>;
@@ -12,9 +11,12 @@ type Index = number[];
 type ColumnNames = string[];
 type SortElement = [number, SeriesTypes];
 type RowCallback = (row: RowRecord) => SeriesTypes;
+type ColumnName = string;
+type ColumnTypeName = "number" | "string" | "bool" | "object";
+type Header = Record<ColumnName, ColumnTypeName>;
 
 /** Generate a series from an array of unknown values */
-function series(array: Array<unknown>): SeriesClasses | undefined {
+function series(array: Array<unknown>): SeriesClasses {
   switch (typeof array[0]) {
     case "number":
       return new Series(array as number[]);
@@ -22,6 +24,8 @@ function series(array: Array<unknown>): SeriesClasses | undefined {
       return new TextSeries(array as string[]);
     case "boolean":
       return new BoolSeries(array as boolean[]);
+    default:
+      return new ObjectSeries<object>(array as object[]);
   }
 }
 
@@ -55,7 +59,7 @@ export class DataFrame {
     }
   }
 
-  /** Import data from list of records */
+  /** Import data from list of records, autodetect types from first record */
   public static fromRecords(records: RowRecords): DataFrame {
     return new DataFrame(
       Object.assign(
@@ -69,6 +73,31 @@ export class DataFrame {
         }),
       ),
     );
+  }
+
+  /** Generate a DataFrame from a header definition and optional data.  */
+  public static fromDef(header: Header, records: RowRecords = []): DataFrame {
+    const columns: Columns = Object.fromEntries(
+      Object.entries(header).map(
+        ([name, type]) => {
+          const values = records.map((r) => r[name]);
+          const series = function () {
+            switch (type) {
+              case "number":
+                return new Series(values as number[]);
+              case "string":
+                return new TextSeries(values as string[]);
+              case "bool":
+                return new BoolSeries(values as boolean[]);
+              default:
+                return new ObjectSeries<object>(values as object[]);
+            }
+          };
+          return [name, series()];
+        },
+      ),
+    );
+    return new DataFrame(columns);
   }
 
   /** A new dataframe with subset of columns */
@@ -118,7 +147,7 @@ export class DataFrame {
     return new DataFrame(columns, this.index);
   }
 
-  /** Sort rows by columns */
+  /** Sort rows by columns from smallest to largest */
   public sort(colname: string): DataFrame {
     const index: Index = this.index;
     const value: SeriesTypes[] = this.column(colname).values;
@@ -132,13 +161,15 @@ export class DataFrame {
 
   /** Generate a new column from existing columns */
   public amend(name: string, callback: RowCallback): DataFrame {
-    const array: SeriesTypes[] = this.index
-      .map((index) => this.record(index))
-      .map((row: RowRecord) => callback(row));
+    const array: SeriesTypes[] = Array(this.length);
+    this.index.forEach((index: number) =>
+      array[index] = callback(this.record(index))
+    );
     const ser = series(array);
-    if (ser) {
-      return new DataFrame(Object.assign({}, this.columns, { [name]: ser }));
-    } else return this;
+    return new DataFrame(
+      Object.assign({}, this.columns, { [name]: ser }),
+      this.index,
+    );
   }
 
   /** Select only matching rows */
@@ -197,14 +228,19 @@ export class DataFrame {
     return this.replace(name, (this.column(name) as Series).distribute);
   }
 
-  /** Scale values in column to sum of 1 */
+  /** Take log of each value in column */
   public log(name: string): DataFrame {
     return this.replace(name, (this.column(name) as Series).log);
   }
 
-  /** Scale values in column to sum of 1 */
+  /** Scale values in column by factor */
   public scale(name: string, factor: number): DataFrame {
     return this.replace(name, (this.column(name) as Series).scale(factor));
+  }
+
+  /** Add operand to values in column */
+  public add(name: string, operand: number): DataFrame {
+    return this.replace(name, (this.column(name) as Series).add(operand));
   }
 
   /** Values and columns names from all series at index */
@@ -223,6 +259,11 @@ export class DataFrame {
   /** Values from all series at index */
   private line(index: number): RowValues {
     return this.names.map((x) => this.columns[x].values[index]);
+  }
+
+  public values<T>(name: string): Array<T> {
+    const all = this.columns[name].values as Array<T>;
+    return this.index.map((i: number) => all[i]);
   }
 
   /** Export data to matrix */
@@ -246,11 +287,12 @@ export class DataFrame {
   }
 
   /** Pretty print as ascii table */
-  public print(title?: string): void {
+  public print(title?: string): DataFrame {
     const table = new Table();
     if (title) table.title = title;
     table.headers = this.names;
     table.rows = this.grid;
     console.log("\n" + table.toString());
+    return this;
   }
 }

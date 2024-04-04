@@ -3,7 +3,7 @@ import { DiskBackend, CachingBackend } from "📚/storage/mod.ts";
 import type { DateFormat } from "../time/mod.ts";
 import { nextDate } from "../time/calendar.ts";
 import { Simulation } from "📚/simulation/simulation.ts";
-import { RandomStrategy } from "../portfolio/strategy.ts";
+import { RandomStrategy } from "./strategy.ts";
 
 // Community Repo
 const path: string = Deno.args[0];

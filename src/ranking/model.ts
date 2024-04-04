@@ -15,10 +15,10 @@ import {
   tensor2D,
   WASM,
 } from "netsaur";
-import { Asset, Backend } from "../storage/mod.ts";
-import type { JSONObject } from "../storage/mod.ts";
-import { DataFrame } from "/utils/dataframe.ts";
-import type { RowRecord, RowRecords } from "/utils/dataframe.ts";
+import { Asset, Backend } from "📚/storage/mod.ts";
+import type { JSONObject } from "📚/storage/mod.ts";
+import { DataFrame } from "📚/dataframe/mod.ts";
+import type { RowRecord, RowRecords } from "📚/dataframe/mod.ts";
 
 type ModelTS = Uint8Array;
 type Profit = number;

@@ -13,7 +13,7 @@ export interface SeriesInterface<T> {
   any: T;
 }
 
-export type SeriesTypes = number | string | boolean | undefined;
+export type SeriesTypes = number | string | boolean | object | undefined;
 export type SeriesClasses =
   | Series
   | TextSeries
@@ -77,31 +77,35 @@ export class ObjectSeries<T> extends DataSeries<T>
 /** Series of numbers */
 export class Series extends DataSeries<number | undefined>
   implements SeriesInterface<number | undefined> {
-  //public readonly isNumber = true;
-
   constructor(values?: Array<number | undefined>) {
     super(values);
   }
 
+  /** Modify each valid number in series */
+  private derive(callback: (n: number) => number): Series {
+    return new Series(
+      this.values.map((n) => (n !== undefined ? callback(n) : undefined)),
+    );
+  }
+
   /** Generate new Series: n => n*n */
   public get pow2(): Series {
-    return new Series(
-      this.values.map((n) => (n !== undefined ? n * n : undefined)),
-    );
+    return this.derive((n) => n * n);
   }
 
   /** Generate new Series: n => log(n) */
   public get log(): Series {
-    return new Series(
-      this.values.map((n) => (n !== undefined ? Math.log(n) : undefined)),
-    );
+    return this.derive((n) => Math.log(n));
+  }
+
+  /** Generate new Series: n => n + b */
+  public add(operand: number): Series {
+    return this.derive((n) => n + operand);
   }
 
   /** Generate new Series: n => c*n */
   public scale(factor: number): Series {
-    return new Series(
-      this.values.map((n) => (n !== undefined ? n * factor : undefined)),
-    );
+    return this.derive((n) => n * factor);
   }
 
   /** Generate new Series: sum(n) = 1 */
@@ -109,8 +113,18 @@ export class Series extends DataSeries<number | undefined>
     return this.scale(1 / this.sum);
   }
 
+  /** Number of decimals in float */
+  public digits(unit: number): Series {
+    return this.derive((n) => parseFloat(n.toFixed(unit)));
+  }
+
+  /** Convert to absolute numbers */
+  public get abs(): Series {
+    return this.derive((n) => Math.abs(n));
+  }
+
   /** Multiply each items in this series with item at other series: n[i] = x[i] * y[i] */
-  public multiply(other: Series): Series {
+  public dot(other: Series): Series {
     const values = [];
     for (let i = 0; i < this.values.length; i++) {
       const [x, y] = [this.values[i], other.values[i]];
@@ -119,29 +133,8 @@ export class Series extends DataSeries<number | undefined>
     return new Series(values);
   }
 
-  /** Number of decimals in float */
-  public digits(unit: number): Series {
-    return new Series(
-      this.values.map((n) =>
-        n !== undefined ? parseFloat(n.toFixed(unit)) : undefined
-      ),
-    );
-  }
-
-  /** Convert to absolute numbers */
-  public get abs(): Series {
-    return new Series(
-      this.values.map((n) => (n !== undefined ? Math.abs(n) : undefined)),
-    );
-  }
-
   /** Calculate sum of numbers in series */
   public get sum(): number {
-    // const arr = this.values;
-    // let sum = 0;
-    // let i = arr.length;
-    // while (i--) sum += arr[i];
-    // return sum;
     return this.values.reduce(
       (sum: number, a) => sum + (a !== undefined ? a : 0),
       0,
@@ -155,7 +148,7 @@ export class Series extends DataSeries<number | undefined>
     const y: number = other.sum;
     const x2: number = this.pow2.sum;
     const y2: number = other.pow2.sum;
-    const xy: number = this.multiply(other).sum;
+    const xy: number = this.dot(other).sum;
     const r: number = (n * xy - x * y) /
       Math.sqrt((n * x2 - x * x) * (n * y2 - y * y));
     return r;

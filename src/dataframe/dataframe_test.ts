@@ -1,6 +1,6 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { DataFrame } from "./dataframe.ts";
-import type { SeriesTypes } from "/utils/series.ts";
+import type { SeriesTypes } from "./series.ts";
 
 const testdata = [
   { n: 1, s: "a", b: true },
@@ -103,4 +103,12 @@ Deno.test("Rename Columns", () => {
   const df = DataFrame.fromRecords(testdata);
   const mv = df.rename({ s: "t", b: "c" });
   assertEquals(mv.names, ["n", "t", "c"]);
+});
+
+Deno.test("Sort and change", () => {
+  const testdata = [{ n: 2 }, { n: 1 }];
+  const df = DataFrame.fromRecords(testdata);
+  const sorted = df.sort("n");
+  const amend = sorted.amend("neg", (r) => (r.n !== undefined ? -r.n : undefined));
+  assertEquals(amend.column("neg").values, [-2, -1]);
 });

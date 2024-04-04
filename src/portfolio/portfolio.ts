@@ -5,25 +5,16 @@ export type Positions = Array<Position>;
 
 /** A collection of positions */
 export class Portfolio {
-  public readonly positions: Positions = [];
+  constructor(public readonly positions: Positions = []) {}
 
   /** Add new position to collection */
-  public add(position: Position): void {
-    this.positions.push(position);
+  public add(position: Position): Portfolio {
+    return new Portfolio([...this.positions, position]);
   }
 
   /** Remove matching position */
-  public remove(position: Position): boolean {
-    const id = position.id;
-    const p = this.positions;
-    for (let i = 0; i < p.length; i++) {
-      const pos = p[i];
-      if (pos.id === id) {
-        p.splice(i, 1);
-        return true;
-      }
-    }
-    return false;
+  public remove(position: Position): Portfolio {
+    return new Portfolio(this.positions.filter(p=>p.id != position.id));
   }
 
   /** Count of positions */
@@ -50,16 +41,5 @@ export class Portfolio {
   /** Current sum of values for each position */
   public value(date: DateFormat): number {
     return this.invested + this.profit(date);
-  }
-
-  /** List of all expired positions */
-  public expired(date: DateFormat): Positions {
-    const keep = this.positions;
-    const removed: Positions = [];
-    for (let i = keep.length - 1; i >= 0; i--) {
-      const pos: Position = keep[i];
-      if (pos.expired(date)) removed.unshift(pos);
-    }
-    return removed;
   }
 }

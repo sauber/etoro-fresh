@@ -44,3 +44,11 @@ Deno.test("Display Headers and Rows", { ignore: true }, () => {
   ];
   console.log(t.toString());
 });
+
+Deno.test("Display Object", { ignore: true }, () => {
+  const t = new Table();
+  class O {}
+  const r = { foo: "bar" };
+  t.rows = [[new O(), r]];
+  console.log(t.toString());
+});

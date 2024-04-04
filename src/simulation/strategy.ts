@@ -1,8 +1,8 @@
 import type { Investors } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import type { DateFormat } from "../time/mod.ts";
-import { Order } from "./order.ts";
-import { Portfolio } from "./portfolio.ts";
+import { Order } from "../portfolio/order.ts";
+import { Portfolio } from "../portfolio/portfolio.ts";
 //import { Ranking } from "📚/ranking/ranking.ts";
 
 /** Pick a random item from an array */
@@ -66,7 +66,7 @@ export class RandomStrategy extends Strategy {
     if (this.investors.length > 0) {
       const investor: Investor = any(this.investors);
       const amount = 1000;
-      order.buy.push({ investor, amount, date });
+      order.buy([{ investor, amount, date }]);
     }
     return order;
   }
@@ -80,8 +80,8 @@ export class ExitStrategy extends Strategy {
     order: Order = new Order(),
   ): Order {
     order = this.parent?.order(portfolio, date, order) || order;
-    order.sell.push(
-      ...portfolio.positions.map((position) => ({ position, reason: "exit" })),
+    order.sell(
+      portfolio.positions.map((position) => ({ position, reason: "exit" })),
     );
     return order;
   }

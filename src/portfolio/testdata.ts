@@ -17,9 +17,9 @@ export const position = new Position(investor, open, amount);
 export const date: DateFormat = "2022-04-25";
 
 // Ranking
-export const investors = await community.on(date);
-const model = new Ranking(repo);
-const predict = await model.predict(investors, date);
-export const conviction = Object.fromEntries(
-  predict.records.map(record => [record.UserName, record.SharpeRatio])
-);
+// export const investors = await community.on(date);
+// const model = new Ranking(repo);
+// const predict = await model.predict(investors, date);
+// export const conviction = Object.fromEntries(
+//   predict.records.map(record => [record.UserName, record.SharpeRatio])
+// );

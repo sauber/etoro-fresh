@@ -4,20 +4,30 @@ import { Investor } from "📚/investor/mod.ts";
 import type { DateFormat } from "../time/mod.ts";
 import { Position } from "./position.ts";
 
-type BuyItem = {
+export type BuyItem = {
   investor: Investor;
   date: DateFormat;
   amount: number;
 };
-type BuyItems = Array<BuyItem>;
+export type BuyItems = Array<BuyItem>;
 
-type SellItem = {
+export type SellItem = {
   position: Position;
   reason: string;
 };
-type SellItems = Array<SellItem>;
+export type SellItems = Array<SellItem>;
 
 export class Order {
-  readonly buy: BuyItems = [];
-  readonly sell: SellItems = [];
+  readonly buyItems: BuyItems = [];
+  readonly sellItems: SellItems = [];
+
+  public buy(items: BuyItems): Order {
+    this.buyItems.push(...items);
+    return this;
+  }
+
+  public sell(items: SellItems): Order {
+    this.sellItems.push(...items);
+    return this;
+  }
 }
