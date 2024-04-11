@@ -1,8 +1,8 @@
-import { DiskBackend, CachingBackend } from "/storage/mod.ts";
-import { Community } from "/repository/mod.ts";
+import { DiskBackend, CachingBackend } from "📚/storage/mod.ts";
+import { Community } from "📚/repository/mod.ts";
 import { Ranking } from "./ranking.ts";
 import { Investor } from "📚/investor/mod.ts";
-import { diffDate } from "../time/mod.ts";
+import { diffDate } from "📚/time/mod.ts";
 
 // Repo
 const path: string = Deno.args[0];

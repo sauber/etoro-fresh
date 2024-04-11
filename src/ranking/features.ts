@@ -60,7 +60,7 @@ export class Features {
   }
 
   /** Prediction output parameters */
-  public get output(): Output {
+  public output(): Output {
     const start: DateFormat = this.investor.stats.start;
     const chart: Chart = this.investor.chart.from(start);
     const apy: number = chart.apy;
