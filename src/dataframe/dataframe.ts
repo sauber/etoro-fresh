@@ -184,6 +184,11 @@ export class DataFrame {
     return new DataFrame(this.columns, index);
   }
 
+  /** Create new columns from index */
+  public get bake(): DataFrame {
+    return DataFrame.fromRecords(this.records);
+  }
+
   /** Rows in reverse order */
   public get reverse(): DataFrame {
     return this.reindex(this.index.reverse());
