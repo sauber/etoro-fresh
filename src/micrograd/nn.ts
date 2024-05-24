@@ -1,4 +1,4 @@
-import { add, mul, tanh, Value } from "./engine.ts";
+import { add, mul, tanh, relu, Value } from "./engine.ts";
 
 export class Neuron {
   public w: Value[];
@@ -17,6 +17,16 @@ export class Neuron {
 
   public run(inputs: Value[]) {
     return tanh(add(this.b, ...inputs.map((input, i) => mul(input, this.w[i]))));
+    // return relu(add(this.b, ...inputs.map((input, i) => mul(input, this.w[i]))));
+    // return add(this.b, ...inputs.map((input, i) => mul(input, this.w[i])));
+  }
+
+  public print(indent = ""): void {
+    console.log(indent + "Neuron");
+    console.log(indent + " Weights");
+    for ( const w of this.w) { w.print(indent + "  ")}
+    console.log(indent + " B");
+    this.b.print(indent + "  ");
   }
 }
 
@@ -33,6 +43,11 @@ export class Layer {
 
   public run(inputs: Value[]) {
     return this.neurons.map((neuron) => neuron.run(inputs));
+  }
+  
+  public print(indent = ""): void {
+    console.log(indent + "Layer");
+    for ( const n of this.neurons) { n.print(indent + " ")}
   }
 }
 
@@ -57,5 +72,10 @@ export class MLP {
       outputs = layer.run(outputs);
     }
     return outputs.length === 1 ? outputs[0] : outputs;
+  }
+  
+  public print(indent = ""): void {
+    console.log(indent + "MLP");
+    for ( const l of this.layers) { l.print(indent + " ")}
   }
 }

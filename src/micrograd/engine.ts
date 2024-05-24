@@ -37,6 +37,14 @@ export class Value {
       v._backward();
     }
   }
+
+  public print(indent: string = "") {
+    console.log(indent, this._op, this.data, this.grad);
+    for (const c of this._children) {
+      c.print(indent + " ");
+    }
+  }
+
 }
 
 export const add = (...args: Value[]) => {
@@ -120,21 +128,8 @@ export const div = (a: Value, b: Value) => {
   return out;
 };
 
-// tanh(): Value {
-//   const out = new Value(Math.tanh(this.data), { prev: [this], op: 'tanh' })
-//   out.backwardStep = () => (this.grad += (1 - out.data ** 2) * out.grad)
-//   return out
-// }
-
-// relu(): Value {
-//   const reluVal = this.data < 0 ? 0 : this.data
-//   const out = new Value(reluVal, { prev: [this], op: 'relu' })
-//   out.backwardStep = () => (this.grad += (out.data > 0 ? 1 : 0) * out.grad)
-//   return out
-// }
-
 export const relu = (a: Value) => {
-  const out = new Value(a.data < 0 ? 9 : a.data, [a], "relu");
+  const out = new Value(a.data < 0 ? 0 : a.data, [a], "relu");
 
   function _backward() {
     a.grad += (out.data > 0 ? 1 : 0) * out.grad;
@@ -145,7 +140,7 @@ export const relu = (a: Value) => {
 };
 
 export const tanh = (a: Value) => {
-  const out = new Value(Math.tanh(a.data), [a], "relu");
+  const out = new Value(Math.tanh(a.data), [a], "tanh");
 
   function _backward() {
     a.grad += (1 - out.data ** 2) * out.grad;

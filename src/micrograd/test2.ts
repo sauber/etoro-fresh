@@ -11,7 +11,7 @@ const xs = [
 const ys = toValues([1.0, -1.0, -1.0, 1.0]); // create an array of output values from an array of numbers
 const parameters = n.parameters();
 
-for (let i = 0; i < 20; i++) { // train the model for 200 iterations
+for (let i = 0; i < 200; i++) { // train the model for 200 iterations
   const ypred = xs.map((x) => n.run(x)); // run the model on each input and get an array of predictions
   const loss = getLoss(ys, ypred as Value[]); // compute the mean squared error loss between the predictions and the outputs
 

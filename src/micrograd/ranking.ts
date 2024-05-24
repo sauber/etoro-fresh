@@ -67,17 +67,25 @@ const inputs = input.include(keys);
 // Deno.exit(143);
 
 // Transform to training data
-const xs: Value[][] = inputs.records.map(r=>toValues(Object.values(r).map(v=>Math.tanh(v as number))));
-const ys: Value[] = toValues(output.records.map(r=>r.SharpeRatio as number));
+const xs: Value[][] = inputs.records.map((r) =>
+  // toValues(Object.values(r).map((v) => Math.tanh(v as number)))
+  toValues(Object.values(r) as number[])
+);
+const ys: Value[] = toValues(
+  output.records.map((r) => r.SharpeRatio as number),
+);
+// console.log({inputs});
 // console.log({xs, ys});
 // Deno.exit(143);
 
-const n = new MLP(columns, [10, 10, 1]); // create a multilayer perceptron model with 3 input units, 2 hidden layers with 4 units each, and 1 output unit
+const n = new MLP(columns, [2, 1]); // create a multilayer perceptron model with 3 input units, 2 hidden layers with 4 units each, and 1 output unit
+// n.print();
+
 const parameters = n.parameters();
 // console.log(parameters);
 
 // Training
-for (let i = 0; i < 200; i++) { // train the model for 200 iterations
+for (let i = 0; i < 500; i++) { // train the model for 200 iterations
   const ypred = xs.map((x) => n.run(x)); // run the model on each input and get an array of predictions
   const loss = getLoss(ys, ypred as Value[]); // compute the mean squared error loss between the predictions and the outputs
   // console.log({ ys: ys.map((y) => y.data), ypred: ypred.map((y) => y.data) });
@@ -88,14 +96,26 @@ for (let i = 0; i < 200; i++) { // train the model for 200 iterations
   loss.backward(); // compute the gradient of the loss with respect to all the parameters
 
   for (const p of parameters) { // loop over all the parameters of the model
+    // console.log(p.grad);
     p.data -= 0.02 * p.grad; // update their data by subtracting a small fraction of their gradients
   }
 
   console.log(i, ": loss:", loss.data); // print the iteration number and the loss value
+  if ( isNaN(loss.data)) throw new Error("Gradiant incline");
 }
+n.print();
 
 // Validation
 const ypred = xs.map((x) => n.run(x)); // run the model on each input and get an array of predictions
-console.log(ypred.map(y=>y.data));
-console.log(ys.map(y=>y.data));
+console.log('ys [actual, prediction]:', ypred.map((y, index) => [ys[index].data, y.data as Value]));
+// console.log(ys.map((y) => y.data));
 
+// Display predictions for 5 random samples
+// for (let i = 0; i < 5; i++) { // train the model for 200 iterations
+//   const sample = Math.floor(Math.random() * xs.length);
+//   console.log();
+//   console.log("sample n:", sample);
+//   console.log("  xs:", xs[sample].map((col) => col.data));
+//   console.log("  ys", ys[sample].data);
+//   console.log("  ypred", (ypred[sample] as Value).data);
+// }
