@@ -1,0 +1,169 @@
+type ValueParams = { op?: string; label?: string; prev?: Value[] };
+
+// Stores a single scalar value and its gradient.
+export class Value {
+  data: number;
+  grad: number = 0;
+  label: string;
+  prev: Value[];
+  op: string | null;
+
+  constructor(data: number, params: ValueParams = {}) {
+    this.data = data;
+    this.op = params?.op ?? null;
+    this.label = params?.label ?? "";
+    this.prev = params?.prev ?? [];
+  }
+
+  public print(indent = ""): void {
+    console.log(indent, this.op, { data: this.data, grad: this.grad });
+    this.prev.forEach((prev) => prev.print(indent + " "));
+  }
+
+  private toVal(v: Value | number): Value {
+    return typeof v === "number" ? new Value(v) : v;
+  }
+
+  public backwardStep() {}
+
+  public add(v: Value | number): Value {
+    const other = this.toVal(v);
+    const out = new Value(this.data + other.data, {
+      prev: [this, other],
+      op: "+",
+    });
+    out.backwardStep = () => {
+      this.grad += 1 * out.grad;
+      other.grad += 1 * out.grad;
+    };
+    return out;
+  }
+
+  public sub(v: Value | number): Value {
+    const other = this.toVal(v);
+    const out = new Value(this.data - other.data, {
+      prev: [this, other],
+      op: "-",
+    });
+    out.backwardStep = () => {
+      this.grad += 1 * out.grad;
+      other.grad += -1 * out.grad;
+    };
+    return out;
+  }
+
+  public mul(v: Value | number): Value {
+    const other = this.toVal(v);
+    const out = new Value(this.data * other.data, {
+      prev: [this, other],
+      op: "*",
+    });
+    out.backwardStep = () => {
+      this.grad += other.data * out.grad;
+      other.grad += this.data * out.grad;
+    };
+    return out;
+  }
+
+  public div(v: Value | number): Value {
+    const other = this.toVal(v);
+    const out = new Value(this.data / other.data, {
+      prev: [this, other],
+      op: "/",
+    });
+    out.backwardStep = () => {
+      this.grad += (1 / other.data) * out.grad;
+      other.grad += (-this.data / other.data ** 2) * out.grad;
+    };
+    return out;
+  }
+
+  public pow(other: number): Value {
+    if (typeof other !== "number") {
+      throw new Error("Only supporting int/float powers");
+    }
+    const out = new Value(this.data ** other, {
+      prev: [this],
+      op: "^",
+    });
+    out.backwardStep = () => {
+      this.grad += other * this.data ** (other - 1) * out.grad;
+    };
+    return out;
+  }
+
+  public exp(): Value {
+    const out = new Value(Math.exp(this.data), { prev: [this], op: "e" });
+    out.backwardStep = () => {
+      this.grad += out.data * out.grad;
+    };
+    return out;
+  }
+
+  public sigmoid(): Value {
+    // Sigmoid
+    const s = (x: number) => 1 / ( 1 + Math.exp(-x));
+    // Sigmoid gradiant
+    const ds = (x: number) => { const sx = s(x); return sx * (1-sx)};
+    
+    const out = new Value(s(this.data), { prev: [this], op: "sigmoid" });
+    out.backwardStep = () => this.grad += ds(out.data) * out.grad;
+    return out;
+  }
+
+  public tanh(): Value {
+    const out = new Value(Math.tanh(this.data), { prev: [this], op: "tanh" });
+    out.backwardStep = () => (this.grad += (1 - out.data ** 2) * out.grad);
+    return out;
+  }
+
+  public relu(): Value {
+    const reluVal = this.data < 0 ? 0 : this.data;
+    const out = new Value(reluVal, { prev: [this], op: "relu" });
+    out.backwardStep = () => (this.grad += (out.data > 0 ? 1 : 0) * out.grad);
+    return out;
+  }
+
+  // Binary activation, output is 0 or 1
+  public bin(): Value {
+    const b = this.data < 0.5 ? 0 : 1;
+    const out = new Value(b, { prev: [this], op: "bin" });
+    out.backwardStep = () => {};
+    return out;
+  }
+
+  public backward(): void {
+    // Topological order of all the children in the graph.
+    const topo: Value[] = [];
+    const visited = new Set();
+    const buildTopo = (v: Value) => {
+      if (visited.has(v)) return;
+      visited.add(v);
+      for (const parent of v.prev) buildTopo(parent);
+      topo.push(v);
+    };
+    buildTopo(this);
+    topo.reverse();
+
+    // Go one variable at a time and apply the chain rule to get its gradient.
+    this.grad = 1;
+    for (const node of topo) node.backwardStep();
+  }
+}
+
+// Shortcut for: new Value(data, params)
+export const v = (d: number, p: ValueParams = {}): Value => new Value(d, p);
+
+export const sum = (...args: Value[]): Value => {
+  const out = new Value(
+    args.reduce((acc, cur) => acc + cur.data, 0),
+    { prev: args, op: "Σ" },
+  );
+
+  out.backwardStep = () => {
+    for (const arg of args) {
+      arg.grad += out.grad;
+    }
+  };
+  return out;
+};
