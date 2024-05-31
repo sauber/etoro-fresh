@@ -38,9 +38,7 @@ Deno.test("XOR training", async () => {
   ]);
   const train = new Train(network, xs, ys);
   train.epsilon = 0.01;
-  // console.log(train);
   train.run(200000, 0.9);
-  // console.log(train);
 
   // Validate
   xs.forEach((x) =>
@@ -50,27 +48,8 @@ Deno.test("XOR training", async () => {
     )
   );
 
-  // network.print();
-  train.print_loss();
-  // train.print_velocity();
-
-  // Generate scatter data
-  const size = 56;
-  const buffer: Array<number> = [];
-  for (let x = 0; x < size; ++x) {
-    for (let y = 0; y < size; ++y) {
-      const p = network.forward([
-        new Value(x / (size - 1)),
-        new Value(y / (size - 1)),
-      ]);
-      const c = Math.floor(p[0].data * 256);
-      buffer.push(c, c, c, 255);
-    }
-  }
-  const imageBuffer: Uint8Array = new Uint8Array(buffer);
-
-  await printImage({
-    rawPixels: { width: size, height: size, data: imageBuffer },
-    width: 25,
-  });
+  console.log('Loss Chart');
+  console.log(train.loss_chart());
+  console.log('Scatter Plot');
+  await train.scatter_chart(10);
 });

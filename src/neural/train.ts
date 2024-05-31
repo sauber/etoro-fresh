@@ -1,5 +1,5 @@
-import { plot } from "https://deno.land/x/chart/mod.ts";
-
+import { plot } from "chart";
+import { printImage } from "terminal_images";
 import { sum, Value } from "./value.ts";
 import { Network } from "./network.ts";
 
@@ -13,8 +13,6 @@ export class Train {
   private readonly xs: Values;
   private readonly ys: Values;
   public epsilon = 0.0001;
-  public readonly beta = 0.9;
-  public velocityHistory = [0];
 
   constructor(
     private readonly network: Network,
@@ -41,24 +39,14 @@ export class Train {
       this.network.forward(line)
     );
     const loss = Train.MeanSquareError(this.ys, predict);
-    // loss.print();
     this.lossHistory.push(loss.data);
 
     // Stochastic Gradient Descent
     this.network.zeroGrad();
     loss.backward();
-    // loss.print();
 
     // Update
-
     // Stochastic Gradient Descent
-    // velocity = 1;
-    // Gradient Descent with Momentum
-    const prev = this.velocityHistory[this.velocityHistory.length-1];
-    const velocity = this.beta * prev + ( 1 - this.beta) * loss.data;
-    this.velocityHistory.push(velocity);
-    // console.log('velocity', this.velocity);
-
     for (const p of this.network.parameters()) {
       p.data -= learning_rate * p.grad;
     }
@@ -77,23 +65,40 @@ export class Train {
   }
 
   // Resample data to 80 columns and display ascii chart
-  private plot_graph(name: string, data: number[]): void {
+  private plot_graph(data: number[], height: number): string {
     const step = data.length / 80;
     const samples: number[] = [];
     for (let i = 0; i < data.length; i += step) {
       samples.push(data[Math.floor(i)]);
     }
-    console.log(name);
-    console.log(plot(samples, { height: 16 }));
+    return plot(samples, { height });
   }
 
   /** Plot loss history */
-  public print_loss(): void {
-    this.plot_graph('Loss History', this.lossHistory);
+  public loss_chart(height = 16): string {
+    return this.plot_graph(this.lossHistory, height);
   }
 
-  public print_velocity(): void {
-    this.plot_graph('Velocity History', this.velocityHistory);
-  }
+  public async scatter_chart(height = 16): Promise<void> {
+    const subsize = height * 4;
 
+    const pixbuffer: Array<number> = [];
+    for (let x = 0; x < subsize; ++x) {
+      for (let y = 0; y < subsize; ++y) {
+        const p = this.network.forward([
+          new Value(x / (subsize - 1)),
+          new Value(y / (subsize - 1)),
+        ]);
+        const c = Math.floor(p[0].data * 256);
+        pixbuffer.push(c, c, c, 255);
+      }
+    }
+
+    const imageBuffer: Uint8Array = new Uint8Array(pixbuffer);
+
+    await printImage({
+      rawPixels: { width: subsize, height: subsize, data: imageBuffer },
+      width: height * 2,
+    });
+  }
 }
