@@ -124,6 +124,14 @@ export class Value {
     return out;
   }
 
+  public lrelu(): Value {
+    const reluVal = this.data < 0 ? 0.01 * this.data : this.data;
+    const out = new Value(reluVal, { prev: [this], op: "relu" });
+    out.backwardStep = () => (this.grad += (out.data > 0 ? 1 : 0.01) * out.grad);
+    return out;
+  }
+
+
   // Binary activation, output is 0 or 1
   public bin(): Value {
     const b = this.data < 0.5 ? 0 : 1;

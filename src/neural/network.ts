@@ -91,6 +91,20 @@ export class Relu extends Module {
   }
 }
 
+/** A layer of Relu activations */
+export class LRelu extends Module {
+  private readonly values: Value[] = [];
+
+  public forward(x: Value[]): Value[] {
+    return x.map((n) => n.lrelu());
+  }
+
+  public print(indent = ""): void {
+    console.log(indent + "Leaky Relu Layer");
+  }
+}
+
+
 /** A layer of Sigmoid activations */
 export class Sigmoid extends Module {
   private readonly values: Value[] = [];
@@ -132,7 +146,7 @@ export class Binary extends Module {
 
 /** An array of layers */
 export class Network extends Module {
-  constructor(private readonly layers: Array<Dense | Relu | Sigmoid | Tanh | Binary>) {
+  constructor(private readonly layers: Array<Dense | Relu | LRelu | Sigmoid | Tanh | Binary>) {
     super();
   }
 

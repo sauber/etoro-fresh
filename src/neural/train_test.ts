@@ -1,5 +1,5 @@
 import { assertInstanceOf } from "$std/assert/assert_instance_of.ts";
-import { Dense, Network, Sigmoid, Relu } from "./network.ts";
+import { Dense, LRelu, Network, Sigmoid } from "./network.ts";
 import { Inputs, Outputs, Train } from "./train.ts";
 import { Value } from "./value.ts";
 import { printImage } from "https://deno.land/x/terminal_images@3.1.0/mod.ts";
@@ -29,14 +29,15 @@ Deno.test("Initialize", () => {
 // A much larger network using relu is faster and higher chance of success.
 Deno.test("XOR training", async () => {
   const network = new Network([
-    new Dense(2, 9),
-    new Relu(),
-    new Dense(9, 5),
-    new Relu(),
+    new Dense(2, 5),
+    new LRelu(),
+    new Dense(5, 5),
+    new LRelu(),
     new Dense(5, 1),
     new Sigmoid(),
   ]);
   const train = new Train(network, xs, ys);
+  train.epsilon = 0.01;
   // console.log(train);
   train.run(200000, 0.9);
   // console.log(train);
@@ -58,7 +59,10 @@ Deno.test("XOR training", async () => {
   const buffer: Array<number> = [];
   for (let x = 0; x < size; ++x) {
     for (let y = 0; y < size; ++y) {
-      const p = network.forward([new Value(x / (size-1)), new Value(y / (size-1))]);
+      const p = network.forward([
+        new Value(x / (size - 1)),
+        new Value(y / (size - 1)),
+      ]);
       const c = Math.floor(p[0].data * 256);
       buffer.push(c, c, c, 255);
     }
