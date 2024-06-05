@@ -47,7 +47,7 @@ export class Ranking {
   /** Output features for investors */
   private output(investors: Investors): DataFrame {
     const list: Array<Feature> = investors.map((i: Investor) =>
-      normalize(i.UserName, new Features(i).output)
+      normalize(i.UserName, new Features(i).output())
     );
     return DataFrame.fromRecords(list);
   }

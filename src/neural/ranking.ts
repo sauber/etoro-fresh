@@ -3,9 +3,10 @@ import { Community, Investors } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import { diffDate } from "📚/time/mod.ts";
 import { Features } from "📚/ranking/mod.ts";
-import { getLoss, MLP, toValues, Value } from "./mod.ts";
 import { DataFrame } from "📚/dataframe/mod.ts";
-import { sum } from "📚/math/statistics.ts";
+import { avg } from "📚/math/statistics.ts";
+import { Network, Dense, LRelu, Relu, Normalization } from "./network.ts";
+import { Train } from "./train.ts";
 
 // Load investor data
 const backend = new Backend(Deno.args[0]);
@@ -28,16 +29,13 @@ const features: Training = investors.map((investor: Investor) => {
   const f = new Features(investor);
   return { input: f.input(), output: f.output() };
 });
-console.log(features);
-Deno.exit(143);
 
+// Use Correlation matrix to extract only the top 5 inputs most correlated to output
 const input = DataFrame.fromRecords(features.map((f) => f.input));
 const output = DataFrame.fromRecords(features.map((f) => f.output)).include([
   "SharpeRatio",
 ]);
 const corr = input.correlationMatrix(output);
-// corr.print("Correlation Matrix");
-
 const columns = 5;
 const weights = corr
   .amend("Abs", (r) => Math.abs(r.SharpeRatio as number))
@@ -47,67 +45,51 @@ const weights = corr
   .include(["Keys", "SharpeRatio"])
   .rename({ Keys: "Key", SharpeRatio: "Weight" })
   .bake;
-// weights.print("Weights");
 const w: Record<string, number> = Object.assign(
   {},
   ...weights.records.map((r) => ({ [r.Key as string]: r.Weight })),
 );
-const mid = sum(Object.values(w));
-console.log(w, mid);
-
+console.log('Correlations:', w);
 const keys = weights.column("Key").values as string[];
-// console.log(keys);
 const inputs = input.include(keys);
-// const significant = inputs
-//   .join(output)
-//   .sort("SharpeRatio")
-//   .reverse
-//   .amend("Predict", (r) => -mid + sum(Object.keys(w).map((k) => Math.tanh(r[k] as number) * w[k])));
-// console.log(significant);
-// significant.print("Significant");
-// Deno.exit(143);
 
 // Transform to training data
-const xs: Value[][] = inputs.records.map((r) =>
-  // toValues(Object.values(r).map((v) => Math.tanh(v as number)))
-  toValues(Object.values(r) as number[])
-);
-const ys: Value[] = toValues(
-  output.records.map((r) => r.SharpeRatio as number),
-);
-// console.log({inputs});
-// console.log({xs, ys});
-// Deno.exit(143);
+const xs: number[][] = inputs.records.map((r) => Object.values(r) as number[]);
+const ys: number[][] = output.records.map((r) => [r.SharpeRatio as number]);
 
-const n = new MLP(columns, [2, 1]); // create a multilayer perceptron model with 3 input units, 2 hidden layers with 4 units each, and 1 output unit
-// n.print();
+const network = new Network([
+  new Normalization(5),
+  new Dense(5, 11),
+  new LRelu(),
+  new Dense(11, 5),
+  new LRelu(),
+  new Dense(5, 1),
+]);
+const train = new Train(network, xs, ys);
+train.epsilon = 0.0001;
+train.run(200000, 0.2);
+console.log(train.loss_chart());
+// network.print();
 
-const parameters = n.parameters();
-// console.log(parameters);
+// Scatter plot
+const xmin: number = Math.min(...xs.map(r=>r[0]));
+const xmax: number = Math.max(...xs.map(r=>r[0]));
+const ymin: number = Math.min(...xs.map(r=>r[1]));
+const ymax: number = Math.max(...xs.map(r=>r[1]));
+const pad: [number, number, number] = [
+  avg(xs.map(r=>r[2])),
+  avg(xs.map(r=>r[3])),
+  avg(xs.map(r=>r[4])),
+]
 
-// Training
-for (let i = 0; i < 500; i++) { // train the model for 200 iterations
-  const ypred = xs.map((x) => n.run(x)); // run the model on each input and get an array of predictions
-  const loss = getLoss(ys, ypred as Value[]); // compute the mean squared error loss between the predictions and the outputs
-  // console.log({ ys: ys.map((y) => y.data), ypred: ypred.map((y) => y.data) });
+await train.scatter_chart([xmin,xmax], [ymin,ymax], pad, 13);
 
-  for (const p of parameters) { // loop over all the parameters of the model
-    p.grad = 0; // reset their gradients to zero
-  }
-  loss.backward(); // compute the gradient of the loss with respect to all the parameters
 
-  for (const p of parameters) { // loop over all the parameters of the model
-    // console.log(p.grad);
-    p.data -= 0.02 * p.grad; // update their data by subtracting a small fraction of their gradients
-  }
-
-  console.log(i, ": loss:", loss.data); // print the iteration number and the loss value
-  if ( isNaN(loss.data)) throw new Error("Gradiant incline");
-}
-n.print();
 
 // Validation
-// const ypred = xs.map((x) => n.run(x)); // run the model on each input and get an array of predictions
+console.log('Validation')
+xs.forEach((input, index) => console.log(input, ys[index], network.predict(input)));
+// const ypred = xs.map((x) => network.predict(x)); // run the model on each input and get an array of predictions
 // console.log('ys [actual, prediction]:', ypred.map((y, index) => [ys[index].data, y.data as Value]));
 // console.log(ys.map((y) => y.data));
 

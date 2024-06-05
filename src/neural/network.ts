@@ -51,13 +51,59 @@ export class Neuron extends Module {
   }
 }
 
+// Scale input to range of -1:1
+export class Scaler extends Module {
+  private min = 0;
+  private max = 0;
+  private a = 0;
+  private b = 0;
+
+  public forward(v: Value): Value {
+    // Extend range
+    if (v.data > this.max) {
+      this.max = v.data;
+      this.b = 1;
+    }
+    if (v.data < this.min) {
+      this.min = v.data;
+      this.a = -1;
+    }
+
+    // [0:0] range and 0 input value
+    if (this.min == 0 && this.max == 0) return v;
+
+    // Scale input value to a:b
+    const scaled =
+      (this.b - this.a) * (v.data - this.min) / (this.max - this.min) + this.a;
+    if ( scaled < -1 || scaled > 1 ) {
+      console.log('scaling', {min: this.min, max: this.max, a: this.a, b: this.b, input: v.data, output: scaled});
+      throw new Error('Scaling out of range');
+    }
+    return new Value(scaled, { prev: [v], op: `[${this.min}:${this.max}]` });
+  }
+
+  // No adjustments in back propagation
+  // XXX: Move adjustments from forward to backward
+  public parameters(): Value[] {
+    return [];
+  }
+
+  public print(indent = ""): void {
+    console.log(indent + `MinMax [${this.min}:${this.max}]`);
+  }
+}
+
+class Layer extends Module {
+  public readonly inputs: number = 0;
+}
+
 /** All nodes in input layer connected to all nodes in output layer */
-export class Dense extends Module {
+export class Dense extends Layer {
   private readonly neurons: Neuron[] = [];
 
-  constructor(nin: number, nout: number) {
+  constructor(public readonly inputs: number, nout: number) {
     super();
-    for (let i = 0; i < nout; i++) this.neurons.push(new Neuron(nin));
+    for (let i = 0; i < nout; i++) this.neurons.push(new Neuron(inputs));
   }
 
   public forward(x: Value[]): Value[] {
@@ -78,8 +124,27 @@ export class Dense extends Module {
   }
 }
 
+/** A layer of input normalization */
+export class Normalization extends Layer {
+  private readonly scalers: Scaler[] = [];
+
+  constructor(public readonly inputs: number) {
+    super();
+    for (let i = 0; i < inputs; i++) this.scalers.push(new Scaler());
+  }
+
+  public forward(x: Value[]): Value[] {
+    return this.scalers.map((scaler, index) => scaler.forward(x[index]));
+  }
+
+  public print(indent = ""): void {
+    console.log(indent + "Normalization Layer");
+    this.scalers.forEach((n) => n.print(indent + " "));
+  }
+}
+
 /** A layer of Relu activations */
-export class Relu extends Module {
+export class Relu extends Layer {
   private readonly values: Value[] = [];
 
   public forward(x: Value[]): Value[] {
@@ -87,12 +152,12 @@ export class Relu extends Module {
   }
 
   public print(indent = ""): void {
-    console.log(indent + "Relu Layer");
+    console.log(indent + "Relu Activation");
   }
 }
 
 /** A layer of Relu activations */
-export class LRelu extends Module {
+export class LRelu extends Layer {
   private readonly values: Value[] = [];
 
   public forward(x: Value[]): Value[] {
@@ -100,13 +165,12 @@ export class LRelu extends Module {
   }
 
   public print(indent = ""): void {
-    console.log(indent + "Leaky Relu Layer");
+    console.log(indent + "Leaky Relu Activation");
   }
 }
 
-
 /** A layer of Sigmoid activations */
-export class Sigmoid extends Module {
+export class Sigmoid extends Layer {
   private readonly values: Value[] = [];
 
   public forward(x: Value[]): Value[] {
@@ -114,12 +178,12 @@ export class Sigmoid extends Module {
   }
 
   public print(indent = ""): void {
-    console.log(indent + "Sigmoid Layer");
+    console.log(indent + "Sigmoid Activation");
   }
 }
 
 /** A layer of tanh() activations */
-export class Tanh extends Module {
+export class Tanh extends Layer {
   private readonly values: Value[] = [];
 
   public forward(x: Value[]): Value[] {
@@ -127,27 +191,25 @@ export class Tanh extends Module {
   }
 
   public print(indent = ""): void {
-    console.log(indent + "Tanh Layer");
-  }
-}
-
-/** A layer of binary activations */
-export class Binary extends Module {
-  private readonly values: Value[] = [];
-
-  public forward(x: Value[]): Value[] {
-    return x.map((n) => n.bin());
-  }
-
-  public print(indent = ""): void {
-    console.log(indent + "Binary Layer");
+    console.log(indent + "Tanh Activation");
   }
 }
 
 /** An array of layers */
 export class Network extends Module {
-  constructor(private readonly layers: Array<Dense | Relu | LRelu | Sigmoid | Tanh | Binary>) {
+  constructor(
+    private readonly layers: Array<
+      Dense | Relu | LRelu | Sigmoid | Tanh | Normalization
+    >,
+  ) {
     super();
+  }
+
+  /** Run a set of values through forward propagation and record the output */
+  public predict(x: number[]): number[] {
+    const xs = x.map((n) => new Value(n));
+    const ys = this.forward(xs);
+    return ys.map((y) => y.data);
   }
 
   public forward(xin: Value[]): Value[] {
@@ -165,6 +227,10 @@ export class Network extends Module {
   public print(indent = ""): void {
     console.log(indent + "Network");
     this.layers.forEach((l) => l.print(indent + " "));
+  }
+
+  public get inputs(): number {
+    return this.layers[0].inputs;
   }
 }
 

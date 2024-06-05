@@ -1,3 +1,5 @@
+import { TimeScale } from "https://esm.sh/v128/chart.js@4.3.0/auto/auto.js";
+
 type ValueParams = { op?: string; label?: string; prev?: Value[] };
 
 // Stores a single scalar value and its gradient.
@@ -7,6 +9,8 @@ export class Value {
   label: string;
   prev: Value[];
   op: string | null;
+  min: number = 0;
+  max: number = 0;
 
   constructor(data: number, params: ValueParams = {}) {
     this.data = data;
@@ -33,8 +37,8 @@ export class Value {
       op: "+",
     });
     out.backwardStep = () => {
-      this.grad += 1 * out.grad;
-      other.grad += 1 * out.grad;
+      this.grad += out.grad;
+      other.grad += out.grad;
     };
     return out;
   }
@@ -46,8 +50,8 @@ export class Value {
       op: "-",
     });
     out.backwardStep = () => {
-      this.grad += 1 * out.grad;
-      other.grad += -1 * out.grad;
+      this.grad += out.grad;
+      other.grad -= out.grad;
     };
     return out;
   }
@@ -74,6 +78,15 @@ export class Value {
     out.backwardStep = () => {
       this.grad += (1 / other.data) * out.grad;
       other.grad += (-this.data / other.data ** 2) * out.grad;
+
+      if (Math.abs(this.grad) > 1000000 || Math.abs(other.grad) > 1000000) {
+        console.log("Division inclined grad", {
+          "this.data": this.data,
+          "this.grad": this.grad,
+          "other.data": other.data,
+          "other.grad": other.grad,
+        });
+      }
     };
     return out;
   }
@@ -102,10 +115,13 @@ export class Value {
 
   public sigmoid(): Value {
     // Sigmoid
-    const s = (x: number) => 1 / ( 1 + Math.exp(-x));
+    const s = (x: number) => 1 / (1 + Math.exp(-x));
     // Sigmoid gradiant
-    const ds = (x: number) => { const sx = s(x); return sx * (1-sx)};
-    
+    const ds = (x: number) => {
+      const sx = s(x);
+      return sx * (1 - sx);
+    };
+
     const out = new Value(s(this.data), { prev: [this], op: "sigmoid" });
     out.backwardStep = () => this.grad += ds(out.data) * out.grad;
     return out;
@@ -126,19 +142,36 @@ export class Value {
 
   public lrelu(): Value {
     const reluVal = this.data < 0 ? 0.01 * this.data : this.data;
-    const out = new Value(reluVal, { prev: [this], op: "relu" });
-    out.backwardStep = () => (this.grad += (out.data > 0 ? 1 : 0.01) * out.grad);
+    const out = new Value(reluVal, { prev: [this], op: "lrelu" });
+    out.backwardStep =
+      () => (this.grad += (out.data > 0 ? 1 : 0.01) * out.grad);
     return out;
   }
 
+  /** Scale input to output range -1.0 to 1.0 */
+  // public norm(): Value {
+  //   // Scale to -1:0, 0:1 or -1:1
+  //   let a = this.min < 0 ? -1 : 0;
+  //   let b = this.max > 0 ? 1 : 0;
 
-  // Binary activation, output is 0 or 1
-  public bin(): Value {
-    const b = this.data < 0.5 ? 0 : 1;
-    const out = new Value(b, { prev: [this], op: "bin" });
-    out.backwardStep = () => {};
-    return out;
-  }
+  //   let x = 0;
+  //   if (this.data > this.max) {
+  //     this.max = this.data;
+  //     b = x = 1;
+  //   } else if (this.data < this.min) {
+  //     this.min = this.data;
+  //     a = x = -1;
+  //   } else if (this.min != 0 || this.max != 0) {
+  //     x = (b - a) * (this.data - this.min) / (this.max - this.min) + a;
+  //   }
+
+  //   const out = new Value(x, { prev: [this], op: `[a,b]` });
+  //   out.backwardStep =
+  //     () => (this.grad +=
+  //       (this.max == this.min ? 0 : (this.max - this.min) / (b - a)) *
+  //       out.grad);
+  //   return out;
+  // }
 
   public backward(): void {
     // Topological order of all the children in the graph.
