@@ -2,7 +2,6 @@ import { plot } from "chart";
 import { printImage } from "terminal_images";
 import { sum, Value } from "./value.ts";
 import { Network } from "./network.ts";
-import { ProgressBar } from "📚/time/mod.ts";
 
 export type Inputs = number[][];
 export type Outputs = number[][];
@@ -50,7 +49,12 @@ export class Train {
   private readonly lossHistory: number[] = [];
   private readonly xs: Values;
   private readonly ys: Values;
+  
+  // Stop when loss is lower than epsilon
   public epsilon = 0.0001;
+
+  // Noumber of samples per step
+  public batchSize = 23;
 
   constructor(
     private readonly network: Network,
@@ -72,13 +76,29 @@ export class Train {
     return mean;
   }
 
+  /** Pick random samples for training */
+  private batch(): [Values, Values] {
+    const xs: Values = [];
+    const ys: Values = [];
+    const l = this.xs.length;
+    for ( let n = 0; n < this.batchSize ; ++n) {
+      const i = Math.floor(Math.random() * l);
+      xs.push(this.xs[i]);
+      ys.push(this.ys[i]);
+    }
+    return [xs, ys];
+  }
+
+  /** Run training on a batch */
   private step(n: number, learning_rate: number): void {
+    const [xs, ys] = this.batch();
+
     // Forward
-    const predict: Values = this.xs.map((line: Value[]) =>
+    const predict: Values = xs.map((line: Value[]) =>
       this.network.forward(line)
     );
     // this.network.print();
-    const loss = Train.MeanSquareError(this.ys, predict);
+    const loss = Train.MeanSquareError(ys, predict);
     // console.log('Iteration', n, 'loss', loss.data);
     if (isNaN(loss.data) || loss.data > 1000000) {
       loss.print();
@@ -121,12 +141,12 @@ export class Train {
 
   // Resample data to 80 columns and display ascii chart
   private plot_graph(data: number[], height: number): string {
-    const step = data.length / 80;
+    const step = (data.length-1) / 80;
     const samples: number[] = [];
-    for (let i = 0; i < data.length; i += step) {
+    for (let i = 1; i < data.length; i += step) {
       samples.push(data[Math.floor(i)]);
     }
-    console.log({ samples });
+    // console.log({ samples });
     return plot(samples, { height });
   }
 
@@ -157,10 +177,9 @@ export class Train {
     const ystart = yrange[0];
     const yscale = (yrange[1] - yrange[0]) / (subsize - 1);
 
-    // For dimensions beyond 2, set values to 0
     const yp: number[] = [];
-    for (let x = 0; x < subsize; ++x) {
-      for (let y = 0; y < subsize; ++y) {
+    for (let y = subsize-1; y >=0; --y) {
+      for (let x = 0; x < subsize; ++x) {
         const input = [xstart + x * xscale, ystart + y * yscale, ...pad];
         const p: number[] = this.network.predict(input);
         yp.push(p[0]);
@@ -185,14 +204,16 @@ export class Train {
       const x: number = input[0].data;
       const y: number = input[1].data;
       const xg: number = Math.floor((x - xstart) / xscale);
-      const yg: number = Math.floor((y - ystart) / yscale);
+      // const yg: number = Math.floor((y - ystart) / yscale);
+      const yg: number = Math.floor(Math.floor((y - ystart) / yscale)/2)*2;
       const v = this.ys[index][0].data;
       // const c = Math.floor((v - ymin) / (ymax - ymin) * 255);
-      const pixindex: number = (xg * subsize + yg) * 4;
-      const lightness = (v - ymin) / (ymax - ymin);
+      const pixindex: number = ((subsize-yg-1) * subsize + xg) * 4;
+      // Lightness in range 0.1:0.9
+      const lightness = ((v - ymin) / (ymax - ymin)) * 0.8 + 0.1;
       const degree = v > 0 ? 1/3 : 0; // 120=green, 0=red
       const [r, g, b] = hslToRgb(degree, 1, lightness);
-      // console.log('overlay', {x, y, v, xg, yg, c, pixindex});
+      // console.log('overlay', {x, y, v, xg, yg, lightness, pixindex});
       pixbuffer[pixindex] = r;
       pixbuffer[pixindex+1] = g;
       pixbuffer[pixindex+2] = b;
@@ -201,7 +222,7 @@ export class Train {
 
     const imageBuffer: Uint8Array = new Uint8Array(pixbuffer);
 
-    console.log("scatter", { xrange, yrange, pad, lines });
+    console.log("scatter", { xrange, yrange, pad, lines, subsize });
     await printImage({
       rawPixels: { width: subsize, height: subsize, data: imageBuffer },
       width: rows,
