@@ -5,7 +5,7 @@ import { diffDate } from "📚/time/mod.ts";
 import { Features } from "📚/ranking/mod.ts";
 import { DataFrame } from "📚/dataframe/mod.ts";
 import { avg } from "📚/math/statistics.ts";
-import { Network, Dense, LRelu, Relu, Normalization } from "./network.ts";
+import { Dense, LRelu, Network, Normalization, Relu } from "./network.ts";
 import { Train } from "./train.ts";
 
 // Load investor data
@@ -49,7 +49,7 @@ const w: Record<string, number> = Object.assign(
   {},
   ...weights.records.map((r) => ({ [r.Key as string]: r.Weight })),
 );
-console.log('Correlations:', w);
+console.log("Correlations:", w);
 const keys = weights.column("Key").values as string[];
 const inputs = input.include(keys);
 
@@ -67,38 +67,35 @@ const network = new Network([
 ]);
 const train = new Train(network, xs, ys);
 train.epsilon = 0.0001;
-train.run(200000, 0.2);
+train.run(200, 0.2);
 console.log(train.loss_chart());
 // network.print();
 
 // Scatter plot
-const xmin: number = Math.min(...xs.map(r=>r[0]));
-const xmax: number = Math.max(...xs.map(r=>r[0]));
-const ymin: number = Math.min(...xs.map(r=>r[1]));
-const ymax: number = Math.max(...xs.map(r=>r[1]));
+const xmin: number = Math.min(...xs.map((r) => r[0]));
+const xmax: number = Math.max(...xs.map((r) => r[0]));
+const ymin: number = Math.min(...xs.map((r) => r[1]));
+const ymax: number = Math.max(...xs.map((r) => r[1]));
 const pad: [number, number, number] = [
-  avg(xs.map(r=>r[2])),
-  avg(xs.map(r=>r[3])),
-  avg(xs.map(r=>r[4])),
-]
+  avg(xs.map((r) => r[2])),
+  avg(xs.map((r) => r[3])),
+  avg(xs.map((r) => r[4])),
+];
 
-await train.scatter_chart([xmin,xmax], [ymin,ymax], pad, 13);
-
-
+await train.scatter_chart([xmin, xmax], [ymin, ymax], pad, 23);
 
 // Validation
-console.log('Validation')
-xs.forEach((input, index) => console.log(input, ys[index], network.predict(input)));
+// xs.forEach((input, index) => console.log(input, ys[index], network.predict(input)));
 // const ypred = xs.map((x) => network.predict(x)); // run the model on each input and get an array of predictions
 // console.log('ys [actual, prediction]:', ypred.map((y, index) => [ys[index].data, y.data as Value]));
 // console.log(ys.map((y) => y.data));
 
 // Display predictions for 5 random samples
-// for (let i = 0; i < 5; i++) { // train the model for 200 iterations
-//   const sample = Math.floor(Math.random() * xs.length);
-//   console.log();
-//   console.log("sample n:", sample);
-//   console.log("  xs:", xs[sample].map((col) => col.data));
-//   console.log("  ys", ys[sample].data);
-//   console.log("  ypred", (ypred[sample] as Value).data);
-// }
+console.log("Validation");
+for (let i = 0; i < 5; i++) { // train the model for 200 iterations
+  const sample = Math.floor(Math.random() * xs.length);
+  console.log("sample n:", sample);
+  console.log("  xs:", xs[sample]);
+  console.log("  ys:", ys[sample]);
+  console.log("  yp:", network.predict(xs[sample]));
+}
