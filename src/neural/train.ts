@@ -123,7 +123,7 @@ export class Train {
     }
   }
 
-  public run(iterations: number, rate: number = 0.1): void {
+  public run(iterations: number = 1000, rate: number = 0.1): void {
     // const eta = new ProgressBar('Training', iterations);
     let i = 0;
     for (; i < iterations; i++) {
