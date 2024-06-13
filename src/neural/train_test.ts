@@ -1,6 +1,6 @@
 import { assertInstanceOf } from "$std/assert/assert_instance_of.ts";
 import { assertAlmostEquals } from "$std/assert/mod.ts";
-import { Dense, LRelu, Network, Normalization, Sigmoid } from "./network.ts";
+import { Network } from "./network.ts";
 import { Inputs, Outputs, Train } from "./train.ts";
 import { Value } from "./value.ts";
 
@@ -19,7 +19,7 @@ const ys: Outputs = [
 ];
 
 Deno.test("Initialize", () => {
-  const network = new Network([]);
+  const network = new Network(0);
   const train = new Train(network, [], []);
   assertInstanceOf(train, Train);
 });
@@ -28,18 +28,23 @@ Deno.test("Initialize", () => {
 // but takes a long time to train, and often doesn't find the solution.
 // A much larger network using relu is faster and higher chance of success.
 Deno.test("XOR training", async () => {
-  const network = new Network([
-    new Dense(2, 5),
-    new LRelu(),
-    new Dense(5, 2),
-    new LRelu(),
-    new Dense(2, 1),
-    new Sigmoid(),
-  ]);
+  const network: Network = new Network(2)
+    .dense(5)
+    .lrelu
+    .dense(2)
+    .lrelu
+    .dense(1)
+    .sigmoid;
+
   const train = new Train(network, xs, ys);
   train.epsilon = 0.01;
   train.run(200000, 0.9);
   // network.print();
+
+  console.log("Loss Chart");
+  console.log(train.loss_chart());
+  console.log("Scatter Plot");
+  await train.scatter_chart([0, 1], [0, 1], [], 10);
 
   // Validate
   xs.forEach((x, i) => {
@@ -48,8 +53,4 @@ Deno.test("XOR training", async () => {
     assertAlmostEquals(p[0], ys[i][0], 0.2);
   });
 
-  console.log("Loss Chart");
-  console.log(train.loss_chart());
-  console.log("Scatter Plot");
-  await train.scatter_chart([0,1],[0,1],[], 10);
 });

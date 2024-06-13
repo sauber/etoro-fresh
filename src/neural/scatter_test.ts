@@ -1,5 +1,5 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
-import { Dense, LRelu, Network, Sigmoid } from "./network.ts";
+import { Dense, LRelu, Network, Sigmoid } from "./micrograd.ts";
 import { ScatterPlot } from "./scatter.ts";
 import { Inputs, Outputs, Train } from "./train.ts";
 import { printImage } from "terminal_images";

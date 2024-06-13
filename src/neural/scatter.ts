@@ -1,4 +1,4 @@
-import { Network } from "./network.ts";
+import { Network } from "./micrograd.ts";
 
 // Visualize training results
 
@@ -123,7 +123,7 @@ export class ScatterPlot {
       }
     }
 
-    // Plot predicted values
+    // Plot predicted values (contour plot)
     const canvas = new PixelCanvas(xmin, xmax, ymin, ymax, size);
     let [pmin, pmax] = MinMax(column(values, 2));
     if (vmin < pmin) pmin = vmin;
@@ -134,7 +134,7 @@ export class ScatterPlot {
       canvas.set(x, y, color);
     });
 
-    // Overlay training set
+    // Overlay training set (scatter plot)
     this.xs.forEach((input, index) => {
       const [x, y] = [input[xcol], input[ycol]];
       const v: number = this.ys[index][vcol];

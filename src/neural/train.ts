@@ -112,7 +112,7 @@ export class Train {
 
     // Update
     // Stochastic Gradient Descent
-    for (const p of this.network.parameters()) {
+    for (const p of this.network.parameters) {
       p.data -= learning_rate * p.grad;
       if (!isFinite(p.data) || Math.abs(p.data) > 1000000) {
         // loss.print();

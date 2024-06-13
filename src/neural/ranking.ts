@@ -5,7 +5,7 @@ import { diffDate } from "📚/time/mod.ts";
 import { Features } from "📚/ranking/mod.ts";
 import { DataFrame } from "📚/dataframe/mod.ts";
 import { avg } from "📚/math/statistics.ts";
-import { Dense, LRelu, Network, Normalization, Relu } from "./network.ts";
+import { Dense, LRelu, Network, Normalization, Relu } from "./micrograd.ts";
 import { Train } from "./train.ts";
 
 // Load investor data

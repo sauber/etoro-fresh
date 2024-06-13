@@ -1,13 +1,13 @@
-import { TimeScale } from "https://esm.sh/v128/chart.js@4.3.0/auto/auto.js";
+type ValueParams = { op?: string; label?: string; prev?: Values };
 
-type ValueParams = { op?: string; label?: string; prev?: Value[] };
+export type Values = Array<Value>;
 
 // Stores a single scalar value and its gradient.
 export class Value {
   data: number;
   grad: number = 0;
   label: string;
-  prev: Value[];
+  prev: Values;
   op: string | null;
   min: number = 0;
   max: number = 0;
@@ -148,34 +148,9 @@ export class Value {
     return out;
   }
 
-  /** Scale input to output range -1.0 to 1.0 */
-  // public norm(): Value {
-  //   // Scale to -1:0, 0:1 or -1:1
-  //   let a = this.min < 0 ? -1 : 0;
-  //   let b = this.max > 0 ? 1 : 0;
-
-  //   let x = 0;
-  //   if (this.data > this.max) {
-  //     this.max = this.data;
-  //     b = x = 1;
-  //   } else if (this.data < this.min) {
-  //     this.min = this.data;
-  //     a = x = -1;
-  //   } else if (this.min != 0 || this.max != 0) {
-  //     x = (b - a) * (this.data - this.min) / (this.max - this.min) + a;
-  //   }
-
-  //   const out = new Value(x, { prev: [this], op: `[a,b]` });
-  //   out.backwardStep =
-  //     () => (this.grad +=
-  //       (this.max == this.min ? 0 : (this.max - this.min) / (b - a)) *
-  //       out.grad);
-  //   return out;
-  // }
-
   public backward(): void {
     // Topological order of all the children in the graph.
-    const topo: Value[] = [];
+    const topo: Values = [];
     const visited = new Set();
     const buildTopo = (v: Value) => {
       if (visited.has(v)) return;
@@ -195,7 +170,8 @@ export class Value {
 // Shortcut for: new Value(data, params)
 export const v = (d: number, p: ValueParams = {}): Value => new Value(d, p);
 
-export const sum = (...args: Value[]): Value => {
+/** Sum of multiple values */
+export const sum = (...args: Values): Value => {
   const out = new Value(
     args.reduce((acc, cur) => acc + cur.data, 0),
     { prev: args, op: "Σ" },
