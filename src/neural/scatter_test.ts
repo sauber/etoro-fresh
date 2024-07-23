@@ -1,15 +1,19 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
-import { Dense, LRelu, Network, Sigmoid } from "./micrograd.ts";
+// import { Dense, LRelu, Network, Sigmoid } from "./micrograd.ts";
+import { Network } from "./network.ts";
 import { ScatterPlot } from "./scatter.ts";
 import { Inputs, Outputs, Train } from "./train.ts";
 import { printImage } from "terminal_images";
 
-const network = new Network([
-  new Dense(2, 3),
-  new LRelu(),
-  new Dense(3, 1),
-  new Sigmoid(),
-]);
+// const network = new Network([
+//   new Dense(2, 3),
+//   new LRelu(),
+//   new Dense(3, 1),
+//   new Sigmoid(),
+// ]);
+
+
+const network = new Network(2).dense(3).lrelu.dense(1).sigmoid;
 
 // XOR training set
 const xs: Inputs = [

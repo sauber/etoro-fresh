@@ -1,4 +1,4 @@
-import { Network } from "./micrograd.ts";
+import { Network } from "./network.ts";
 
 // Visualize training results
 
