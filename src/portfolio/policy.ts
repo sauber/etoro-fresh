@@ -2,14 +2,14 @@ import type { DateFormat } from "📚/time/mod.ts";
 import type { Investors } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import { Chart } from "📚/chart/mod.ts";
-import { DataFrame } from "📚/utils/dataframe.ts";
-import type { RowRecord } from "📚/utils/dataframe.ts";
+import { DataFrame } from "dataframe";
+import type { RowRecord } from "dataframe";
 import { Portfolio } from "./portfolio.ts";
 import { Position } from "./position.ts";
 import { Order } from "./order.ts";
 import type { BuyItems, SellItem } from "./order.ts";
-import { Series, TextSeries } from "📚/utils/series.ts";
-import { sum } from "📚/chart/statistics.ts";
+import { Series, TextSeries } from "dataframe";
+import { sum } from "📚/math/statistics.ts";
 
 type UserName = string;
 type Score = number;

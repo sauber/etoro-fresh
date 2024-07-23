@@ -1,8 +1,8 @@
 import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { HeapBackend } from "/storage/heap-backend.ts";
 import { Model } from "./model.ts";
-import { DataFrame } from "/utils/dataframe.ts";
-import type { RowRecords } from "/utils/dataframe.ts";
+import { DataFrame } from "dataframe";
+import type { RowRecords } from "dataframe";
 
 const repo: HeapBackend = new HeapBackend();
 

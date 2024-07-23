@@ -5,7 +5,7 @@ import { Strategy, Order, Portfolio, Position } from "📚/portfolio/mod.ts";
 import type { Positions } from "📚/portfolio/mod.ts";
 import { Exchange } from "./exchange.ts";
 import { Book } from "./book.ts";
-import { DataFrame } from "📚/utils/dataframe.ts";
+import { DataFrame } from "dataframe";
 
 type Name = Array<string>;
 
@@ -40,7 +40,7 @@ export class Simulation {
   /** Open all positions suggested by strategy */
   private open(date: DateFormat): void {
     const order: Order = this.strategy.order(this.portfolio, date);
-    const open = order.buy;
+    const open = order.buy();
     for (const order of open) {
       // const name: string = order.name;
       // const investor: Investor = await this.community.investor(name);
