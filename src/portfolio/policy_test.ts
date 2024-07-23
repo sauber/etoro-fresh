@@ -1,9 +1,11 @@
-import { assert, assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
+import {
+  assertAlmostEquals,
+  assertEquals,
+  assertInstanceOf,
+} from "$std/assert/mod.ts";
 import { Portfolio } from "./portfolio.ts";
 import { IPolicy, Policy } from "./policy.ts";
-import type { Conviction } from "./policy.ts";
-import { Order } from "./order.ts";
-import type { BuyItems } from "./order.ts";
+import type { BuyItems, SellItems } from "./order.ts";
 import { community } from "./testdata.ts";
 import { Chart } from "📚/chart/mod.ts";
 import { DateFormat } from "📚/time/mod.ts";
@@ -15,9 +17,12 @@ import { DataFrame } from "dataframe";
 // const chart = investor.chart;
 
 const start: DateFormat = "2021-12-29";
-const end: DateFormat = "2022-04-25";
 const name = "FundManagerZech";
 const investor = await community.investor(name);
+const name2 = "Robier89";
+const investor2 = await community.investor(name2);
+const pos: Position = new Position(investor, start, 5000);
+const pos2: Position = new Position(investor2, start, 5000);
 
 const empty: IPolicy = {
   portfolio: new Portfolio(),
@@ -45,47 +50,129 @@ Deno.test("Buy 100% of investor with positive rank", () => {
     investors: [investor],
     conviction: { [name]: 1 },
     cash: 10000,
+    targets: 1,
   });
   const p = new Policy(positive);
   const buy: BuyItems = p.buy;
   assertEquals(buy.length, 1);
-  assertEquals(buy, [{investor: investor, date: start, amount: 10000 }]);
+  assertEquals(buy[0].investor.UserName, name);
+  assertEquals(buy[0].amount, 10000);
 });
-
 
 Deno.test("Buy 0% of investor with negative rank", () => {
   const positive = Object.assign({}, empty, {
     investors: [investor],
     conviction: { [name]: -1 },
     cash: 10000,
+    targets: 1,
   });
   const p = new Policy(positive);
   const buy: BuyItems = p.buy;
   assertEquals(buy.length, 0);
 });
 
-// Deno.test("Buy max 0 targets", () => {
-//   const zero = Object.assign({}, empty, {
-//     investors: [investor],
-//     conviction: { [name]: 1 },
-//     cash: 10000,
-//   });
-//   const p = new Policy(zero);
-//   const buy: BuyItems = p.buy;
-//   assertEquals(buy.length, 0);
-// });
+Deno.test("Buy count within targets", () => {
+  const zero = Object.assign({}, empty, {
+    investors: [investor],
+    conviction: { [name]: 1 },
+    cash: 10000,
+  });
+  assertEquals(new Policy(zero).buy.length, 0);
 
+  const one = Object.assign({}, zero, { targets: 1 });
+  assertEquals(new Policy(one).buy.length, 1);
 
+  const two = Object.assign({}, zero, { targets: 2 });
+  assertEquals(new Policy(two).buy.length, 1);
+});
 
-// Deno.test("Run", () => {
-//   const p = new Policy(args);
-//   const o: Order = p.run();
-//   assert( "buy" in o);
-//   assert("sell" in o);
-//   console.log(o);
-// });
+Deno.test("Buy two equally ranked investors", () => {
+  const equal = Object.assign({}, empty, {
+    investors: [investor, investor2],
+    conviction: { [name]: 1, [name2]: 1 },
+    cash: 10000,
+    targets: 2,
+  });
+  const p = new Policy(equal);
+  const buy: BuyItems = p.buy;
+  assertEquals(buy.length, 2);
+  assertEquals(buy[0].amount, 5000);
+  assertEquals(buy[1].amount, 5000);
+});
 
-/** Test scenarios:
- * No portfolio, no investors: Buy nothing and sell nothing
- * No portfolio, one investor, perfect timing: Invest 100% in investor
- */
+Deno.test("Buy two inequally ranked investors", () => {
+  const inequal = Object.assign({}, empty, {
+    investors: [investor, investor2],
+    conviction: { [name]: 1, [name2]: 2 },
+    cash: 10000,
+    targets: 2,
+  });
+  const p = new Policy(inequal);
+  const buy: BuyItems = p.buy;
+  assertEquals(buy.length, 2);
+  assertEquals(sum(buy.map((i) => i.amount)), 10000);
+  assertAlmostEquals(buy[0].amount, 5579, 1);
+  assertAlmostEquals(buy[1].amount, 4421, 1);
+});
+
+Deno.test("Sell nothing from empty portfolio", () => {
+  const p = new Policy(empty);
+  const sell: SellItems = p.sell;
+  assertEquals(sell.length, 0);
+});
+
+Deno.test("Sell nothing from populated portfolio", () => {
+  const one = Object.assign({}, empty, {
+    portfolio: new Portfolio([pos]),
+    targets: 1,
+    conviction: { [name]: 1 },
+  });
+  const p = new Policy(one);
+  const sell: SellItems = p.sell;
+  assertEquals(sell.length, 0);
+});
+
+Deno.test("Sell from populated portfolio to meet target count", () => {
+  const one = Object.assign({}, empty, {
+    portfolio: new Portfolio([pos]),
+    targets: 0,
+    conviction: { [name]: 1 },
+  });
+  const p = new Policy(one);
+  const sell: SellItems = p.sell;
+  assertEquals(sell.length, 1);
+});
+
+Deno.test("Sell unranked from populated portfolio", () => {
+  const one = Object.assign({}, empty, {
+    portfolio: new Portfolio([pos]),
+    targets: 1,
+  });
+  const p = new Policy(one);
+  const sell: SellItems = p.sell;
+  assertEquals(sell.length, 1);
+});
+
+Deno.test("Sell negative ranked from populated portfolio", () => {
+  const one = Object.assign({}, empty, {
+    portfolio: new Portfolio([pos]),
+    conviction: { [name]: -1 },
+    targets: 1,
+  });
+  const p = new Policy(one);
+  const sell: SellItems = p.sell;
+  assertEquals(sell.length, 1);
+});
+
+Deno.test("Buy more of already opened position", () => {
+  const one = Object.assign({}, empty, {
+    portfolio: new Portfolio([pos]),
+    conviction: { [name]: 1 },
+    targets: 1,
+    cash: 5000,
+  });
+  const p = new Policy(one);
+  const buy: BuyItems = p.buy;
+  assertEquals(buy.length, 1);
+  assertEquals(buy[0].amount, 5000);
+});

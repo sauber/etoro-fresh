@@ -19,5 +19,8 @@
   ],
   "editor.quickSuggestions": {
     "strings": "on"
+  },
+  "[plantuml]": {
+    "editor.defaultFormatter": "jebbs.plantuml"
   }
 }

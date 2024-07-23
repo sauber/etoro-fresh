@@ -7,13 +7,16 @@ import type { RowRecord } from "dataframe";
 import { Portfolio } from "./portfolio.ts";
 import { Position } from "./position.ts";
 import { Order } from "./order.ts";
-import type { BuyItems, SellItem } from "./order.ts";
-import { Series, TextSeries } from "dataframe";
-import { sum } from "📚/math/statistics.ts";
+import type { BuyItems, SellItems } from "./order.ts";
 
 type UserName = string;
 type Score = number;
+type UserScore = {
+  UserName: string;
+  Score: number;
+};
 export type Conviction = Record<UserName, Score>;
+type Positions = Array<Position>;
 
 export type IPolicy = {
   // Portfolio of current positions
@@ -38,24 +41,11 @@ export type IPolicy = {
   targets: number;
 };
 
-/** Merge two arrays into one dict */
-function zip<T>(keys: Array<string>, values: Array<T>): Record<string, T> {
-  return Object.fromEntries(keys.map((k, i) => [k, values[i]]));
-}
-
-/** Split dict into two arrays */
-function unzip<T>(dict: Record<string, T>): [Array<string>, Array<T>] {
-  const l: Array<[string, T]> = Object.entries(dict);
-  return [l.map((e) => e[0]), l.map((e) => e[1])];
-}
-
-/** Filter a dictionary */
-function dfilter<T>(
-  dict: Record<string, T>,
-  callback: (v: T) => {},
-): Record<string, T> {
-  return Object.fromEntries(
-    Object.entries(dict).filter(([_k, v]) => callback(v)),
+/** Convert dict of username=>number to dataframe */
+function dataframe(c: Conviction): DataFrame {
+  return DataFrame.fromDef(
+    { UserName: "string", "Score": "number" },
+    Object.entries(c).map(([k, v]) => ({ UserName: k, Score: v })),
   );
 }
 
@@ -63,7 +53,7 @@ export class Policy {
   private readonly portfolio: Portfolio;
   private readonly chart: Chart;
   private readonly investors: Investors;
-  private readonly conviction: Conviction;
+  private readonly conviction: DataFrame;
   private readonly date: DateFormat;
   private readonly cash: number;
   private readonly targets: number;
@@ -72,7 +62,7 @@ export class Policy {
     this.portfolio = params.portfolio;
     this.chart = params.chart;
     this.investors = params.investors;
-    this.conviction = params.conviction;
+    this.conviction = dataframe(params.conviction);
     this.date = params.date;
     this.cash = params.cash;
     this.targets = params.targets;
@@ -99,45 +89,49 @@ export class Policy {
   /** Identify positions which boxed hit limits from portfolio */
   private get limited(): Order {
     return new Order().sell(
-      this.portfolio.positions.filter((position: Position) =>
-        position.limited(this.date)
-      ).map((position: Position) => ({
-        position,
-        reason: "limit",
-      })),
+      this.portfolio.positions
+        .filter((position: Position) => position.limited(this.date))
+        .map((position: Position) => ({ position, reason: "limit" })),
     );
   }
 
   /** Positions that are neither expired nor hit limits */
   private get open(): Order {
     return new Order().sell(
-      this.portfolio.positions.filter((position: Position) =>
-        position.open(this.date)
-      ).map((position: Position) => ({
-        position,
-        reason: "open",
-      })),
+      this.portfolio.positions
+        .filter((position: Position) => position.open(this.date))
+        .map((position: Position) => ({ position, reason: "open" })),
     );
   }
 
   /** Lookup investor object by UserName */
   private investor(UserName: string): Investor {
-    return this.investors.find(i => i.UserName === UserName) as Investor;
+    return this.investors.find((i) => i.UserName === UserName) as Investor;
   }
 
-  /** Given investor ranks, available cash etc. what is ideal target investment level for each investor */
-  private get target(): Conviction {
-    // frame = DataFrame.fromDef([UserName: "string, Rank: "number"], records: [Record], index)
+  /** Given investor ranks, available cash etc.
+   * what is ideal target investment level for each investor 
+   * 
+   * 
+   * */
+  private get target(): DataFrame {
+    return this.conviction
+      .select((r) => r.Score as Score > 0).sort("Score")
+      .reverse
+      .slice(0, this.targets)
+      .add("Score", 2)
+      .log("Score")
+      .distribute("Score")
+      .scale("Score", this.value)
+      .rename({ "Score": "Amount" });
+  }
 
-
-    const desired = dfilter(this.conviction, (rank: number) => rank > 0);
-    const [names, ranks] = unzip(desired);
-    const ranks_log: number[] = ranks.map((r) => Math.log(r + 2));
-    const total: number = sum(ranks_log);
-    const value: number = this.value;
-    const amount: number[] = ranks_log.map((n) => n / total * value);
-    const target: Conviction = zip(names, amount);
-    return target;
+  /** Which positions in portfolio are no longer among targets */
+  private get unranked(): Positions {
+    const targetNames = this.target.values("UserName") as UserName[];
+    const remove: Positions = this.portfolio.positions
+      .filter((p) => !targetNames.includes(p.name));
+    return remove;
   }
 
   /** Gap =
@@ -171,13 +165,13 @@ export class Policy {
 
   //   console.log({ targetAmount, currentAmount, excessive });
 
-    // Targets missing from positions
-    //const missing = targets.records.filter((target: RowRecord) => ! (target.UserName in positionSizes));
+  // Targets missing from positions
+  //const missing = targets.records.filter((target: RowRecord) => ! (target.UserName in positionSizes));
 
-    // // Targets larger than positions
-    // const tooSmall = targets.records.filter((target: RowRecord) => ( target.UserName in positionSizes ) && (target.Rank > positionSizes[target.UserName]));
+  // // Targets larger than positions
+  // const tooSmall = targets.records.filter((target: RowRecord) => ( target.UserName in positionSizes ) && (target.Rank > positionSizes[target.UserName]));
 
-    // return new DataFrame();
+  // return new DataFrame();
   // }
 
   /** Run through steps of policy. Compile a list of buy and sell orders. */
@@ -201,18 +195,61 @@ export class Policy {
   //   return compiled;
   // }
 
-  private get buyGap(): Conviction {
-    const target = this.target;
-    // console.log({target});
-    return target;
+  /** Amount invested for each investor */
+  private get invested(): Conviction {
+    const sell: SellItems = this.open.sellItems;
+    const inv: Conviction = {};
+    sell.forEach((pos) => {
+      const user = pos.position.name;
+      const amount = pos.position.amount;
+      inv[user] = user in inv ? inv[user] + amount : amount;
+    });
+    return inv;
+  }
+
+  /** Target size minus current size */
+  private get buyGap(): DataFrame {
+    const target: DataFrame = this.target;
+    const invested: Conviction = this.invested;
+    const gap: DataFrame = target
+      .rename({ Amount: "Target" })
+      .amend("Invested", (r: RowRecord) => invested[r.UserName as string])
+      .amend(
+        "Buy",
+        (r) =>
+          Number.isFinite(r.Invested)
+            ? (r.Target as number) - (r.Invested as number)
+            : (r.Target as number),
+      );
+    return gap;
+  }
+
+  /** Sell every that is unranked
+   * TODO: Only sell if potential for growth is lost
+   */
+  private get sellGap(): DataFrame {
+    const records = this.unranked.map((p) => ({ Position: p, Reason: "Rank" }));
+    return DataFrame.fromDef({ Position: "object", Reason: "string" }, records);
   }
 
   /** List of investments to open or increase */
   public get buy(): BuyItems {
-    return Object.entries(this.buyGap).map(([UserName, value])=>({
-      investor: this.investor(UserName),
+    const frame: DataFrame = this.buyGap;
+
+    return frame.records.map((r) => ({
+      investor: this.investor(r.UserName as UserName),
       date: this.date,
-      amount: value
+      amount: r.Buy as number,
+    }));
+  }
+
+  /** List of investments to close */
+  public get sell(): SellItems {
+    const frame: DataFrame = this.sellGap;
+
+    return frame.records.map((r) => ({
+      position: r.Position as Position,
+      reason: r.Reason as string,
     }));
   }
 }

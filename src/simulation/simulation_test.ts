@@ -2,8 +2,8 @@ import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
 import { community } from "./testdata.ts";
 import type { Investors } from "./testdata.ts";
 import { Simulation } from "./simulation.ts";
-import { NullStrategy, RandomStrategy } from "../portfolio/strategy.ts";
-import { DateFormat, diffDate } from "../time/mod.ts";
+import { NullStrategy, RandomStrategy } from "./strategy.ts";
+import { DateFormat, diffDate } from "📚/time/mod.ts";
 
 const [start, end] = (await Promise.all([
   community.start(),

@@ -1,8 +1,8 @@
 import type { Investors } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import type { DateFormat } from "../time/mod.ts";
-import { Order } from "./order.ts";
-import { Portfolio } from "./portfolio.ts";
+import { Order } from "../portfolio/order.ts";
+import { Portfolio } from "../portfolio/portfolio.ts";
 //import { Ranking } from "📚/ranking/ranking.ts";
 
 /** Pick a random item from an array */
