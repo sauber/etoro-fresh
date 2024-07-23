@@ -1,4 +1,4 @@
-import { Table } from "./table.ts";
+import { Table } from "table";
 import { BoolSeries, Series, TextSeries } from "./series.ts";
 import type { SeriesClasses, SeriesTypes } from "./series.ts";
 import { DateTimeFormatter } from "$std/datetime/_common.ts";
