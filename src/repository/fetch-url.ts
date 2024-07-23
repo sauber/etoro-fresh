@@ -23,8 +23,8 @@ export class FetchURL {
 
   public chart(investor: InvestorId): URL {
     const urlTemplate =
-      //"https://www.etoro.com/sapi/trade-data-real/chart/public/%s/oneYearAgo/1?client_request_id=%s";
-      "/sapi/userstats/CopySim/Username/%s/OneYearAgo?client_request_id=%s";
+      "/sapi/trade-data-real/chart/public/%s/oneYearAgo/1?client_request_id=%s";
+      // "/sapi/userstats/CopySim/Username/%s/OneYearAgo?client_request_id=%s";
     const url: string =
       this.site + sprintf(urlTemplate, investor.UserName, this.uuid);
     return url;

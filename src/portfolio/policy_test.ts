@@ -7,7 +7,7 @@ import type { BuyItems } from "./order.ts";
 import { community } from "./testdata.ts";
 import { Chart } from "📚/chart/mod.ts";
 import { DateFormat } from "📚/time/mod.ts";
-import { DataFrame } from "📚/utils/dataframe.ts";
+import { DataFrame } from "dataframe";
 
 // const portfolio = new Portfolio();
 // const cash = 100000;

@@ -1,5 +1,4 @@
-import { today } from "../time/mod.ts";
-import { Backend, Asset } from "../storage/mod.ts";
+import { Asset, Backend } from "📚/storage/mod.ts";
 
 import { Discover } from "./discover.ts";
 import type { DiscoverData } from "./discover.ts";
@@ -56,7 +55,7 @@ export class Refresh {
     private readonly repo: Backend,
     private readonly fetcher: FetchBackend,
     private readonly investor: InvestorId,
-    private readonly filter: DiscoverFilter // TODO: Expire // TODO: Discover Range
+    private readonly filter: DiscoverFilter, // TODO: Expire // TODO: Discover Range
   ) {}
 
   /** Load  asset from web if missing or expired */
@@ -64,7 +63,7 @@ export class Refresh {
     assetname: string,
     expire: number,
     download: () => Promise<DataFormat>,
-    validate?: (data: DataFormat) => boolean
+    validate?: (data: DataFormat) => boolean,
   ): Promise<boolean> {
     const asset = new Asset(assetname, this.repo);
 
@@ -80,12 +79,17 @@ export class Refresh {
 
     // Validate content
     if (validate && !validate(data)) {
-      console.warn(`Warning: Asset ${assetname} failed validation`);
+      console.error(`Error: Asset ${assetname} failed validation`);
       return false;
     }
 
     // Store downloaded data
-    await asset.store(data);
+    // console.log(`Store asset ${assetname}`);
+    if (assetname.match(/.chart$/)) {
+      const obj = new Chart(data as ChartData);
+      const date = obj.end;
+      await asset.store(data, date);
+    } else await asset.store(data);
     return true;
   }
 
@@ -97,7 +101,7 @@ export class Refresh {
       const count: number = discover.count;
       if (count < range.min || count > range.max) {
         throw new Error(
-          `Count of discovered investors is ${count}, should be ${range.min}-${range.max}`
+          `Count of discovered investors is ${count}, should be ${range.min}-${range.max}`,
         );
       }
       console.log(`Count of discovered investors is ${count}`);
@@ -109,7 +113,7 @@ export class Refresh {
       "discover",
       expire.discover,
       () => this.fetcher.discover(this.filter),
-      validate
+      validate,
     );
     if (available) {
       const asset = new Asset<DiscoverData>("discover", this.repo);
@@ -126,15 +130,15 @@ export class Refresh {
     const validate = function (loaded: ChartData) {
       const chart: Chart = new Chart(loaded);
       if (!chart.validate()) {
-        console.warn(`Warning: Chart for ${investor.UserName} is invalid`);
+        // console.error(`Error: Chart for ${investor.UserName} is invalid`);
         return false;
       }
-      if (chart.end != today()) {
-        console.warn(
-          `Warning: ${investor.UserName} chart end ${chart.end} is not today`
-        );
-        return false;
-      }
+      // if (chart.end != today()) {
+      //   console.warn(
+      //     `Warning: ${investor.UserName} chart end ${chart.end} is not today`,
+      //   );
+      //   return false;
+      // }
       return true;
     };
 
@@ -142,7 +146,7 @@ export class Refresh {
       investor.UserName + ".chart",
       this.expire.chart,
       () => this.fetcher.chart(investor),
-      validate
+      validate,
     );
   }
 
@@ -152,7 +156,7 @@ export class Refresh {
       investor.UserName + ".portfolio",
       expire,
       () => this.fetcher.portfolio(investor),
-      (loaded: PortfolioData) => new Portfolio(loaded).validate()
+      (loaded: PortfolioData) => new Portfolio(loaded).validate(),
     );
   }
 
@@ -162,20 +166,19 @@ export class Refresh {
       investor.UserName + ".stats",
       this.expire.stats,
       () => this.fetcher.stats(investor),
-      (loaded: StatsData) => new Stats(loaded).validate()
+      (loaded: StatsData) => new Stats(loaded).validate(),
     );
   }
 
   /** Load all data for an investor */
-  private loadInvestor(
+  private async loadInvestor(
     investor: InvestorId,
-    expire: number = this.expire.portfolio
-  ): Promise<boolean[]> {
-    return Promise.all([
-      this.chart(investor),
-      this.portfolio(investor, expire),
-      this.stats(investor),
-    ]);
+    expire: number = this.expire.portfolio,
+  ): Promise<void> {
+    if (await this.chart(investor)) {
+      await this.stats(investor);
+      await this.portfolio(investor, expire);
+    }
   }
 
   /** Extract list of mirrors for root investor */
@@ -186,18 +189,20 @@ export class Refresh {
     // Load data from repo
     const asset = new Asset<PortfolioData>(
       this.investor.UserName + ".portfolio",
-      this.repo
+      this.repo,
     );
-    const data: PortfolioData = await asset.last();
-    const portfolio: Portfolio = new Portfolio(data);
-    return portfolio.investors;
+    if (await asset.exists()) {
+      const data: PortfolioData = await asset.last();
+      const portfolio: Portfolio = new Portfolio(data);
+      return portfolio.investors;
+    } else return [];
   }
 
   public async run(max?: number): Promise<number> {
     function onlyUnique(value: InvestorId, index: number, self: InvestorId[]) {
       return (
         index ===
-        self.findIndex((elem: InvestorId) => elem.UserName === value.UserName)
+          self.findIndex((elem: InvestorId) => elem.UserName === value.UserName)
       );
     }
 
@@ -211,7 +216,7 @@ export class Refresh {
 
     // In parallel fetch data for all investors
     await Promise.all(
-      uniq.map((investor: InvestorId) => this.loadInvestor(investor))
+      uniq.map((investor: InvestorId) => this.loadInvestor(investor)),
     );
 
     // Count of updates

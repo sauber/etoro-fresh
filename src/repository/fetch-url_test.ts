@@ -18,7 +18,7 @@ Deno.test("discover", () => {
 Deno.test("chart", () => {
   const f: FetchURL = new FetchURL();
   const url = f.chart(investorId);
-  assertStringIncludes(url, "/CopySim/Username/" + investorId.UserName);
+  assertStringIncludes(url, "/chart/public/" + investorId.UserName);
 });
 
 Deno.test("portfolio", () => {
