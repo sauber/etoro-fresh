@@ -3,10 +3,10 @@ import { Chart } from "📚/chart/mod.ts";
 import type { Investors } from "📚/repository/mod.ts";
 import { Order, Portfolio, Position } from "📚/portfolio/mod.ts";
 import type { Positions } from "📚/portfolio/mod.ts";
+import { Strategy } from "./strategy.ts";
 import { Exchange } from "./exchange.ts";
 import { Book } from "./book.ts";
-import { DataFrame } from "📚/dataframe/mod.ts";
-import { Strategy } from "./strategy.ts";
+import { DataFrame } from "dataframe";
 
 type Name = Array<string>;
 

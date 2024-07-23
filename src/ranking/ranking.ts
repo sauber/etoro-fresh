@@ -1,5 +1,6 @@
 import { Backend } from "📚/storage/mod.ts";
-import { DataFrame, TextSeries } from "📚/dataframe/mod.ts";
+import { DataFrame } from "dataframe";
+import { TextSeries } from "dataframe";
 import { Investor } from "📚/investor/mod.ts";
 import type { DateFormat } from "📚/time/mod.ts";
 import { Model } from "./model.ts";
