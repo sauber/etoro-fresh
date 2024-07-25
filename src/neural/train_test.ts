@@ -1,6 +1,8 @@
 import { assertInstanceOf } from "$std/assert/assert_instance_of.ts";
 import { assertAlmostEquals } from "$std/assert/mod.ts";
 import { Network } from "./network.ts";
+import { ScatterPlot } from "./scatter.ts";
+import { printImage } from "terminal_images";
 import { Inputs, Outputs, Train } from "./train.ts";
 import { Value } from "./value.ts";
 
@@ -43,8 +45,24 @@ Deno.test("XOR training", async () => {
 
   console.log("Loss Chart");
   console.log(train.loss_chart());
+
+
+  // TODO migrate plotting code from train.ts to scatter.ts
   console.log("Scatter Plot");
   await train.scatter_chart([0, 1], [0, 1], [], 10);
+
+  // Comparison of the two charts.
+  // TODO: Fix colors
+  // TODO: Twice as many x pixels as y pixels
+  const s = new ScatterPlot(network, xs, ys);
+  const width = 20;
+  const pixels = s.pixels(width);
+  await printImage({
+    rawPixels: { width: width, height: width, data: pixels },
+    width: width,
+  });
+
+
 
   // Validate
   xs.forEach((x, i) => {
