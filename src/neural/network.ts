@@ -1,5 +1,13 @@
 import { Value } from "./value.ts";
-import { Dense, DenseData, LRelu, Relu, Sigmoid, Tanh } from "./layer.ts";
+import {
+  Dense,
+  DenseData,
+  LRelu,
+  Normalize,
+  Relu,
+  Sigmoid,
+  Tanh,
+} from "./layer.ts";
 import { Train } from "./train.ts";
 import { Node } from "./node.ts";
 
@@ -22,15 +30,21 @@ export class Network extends Node {
   constructor(
     private readonly inputs: number,
     private readonly layers: Layers = [],
-  ) {super()}
+  ) {
+    super();
+  }
 
   public static import(data: NetworkData): Network {
+    let inputs: number = data.inputs;
     const layers: Layers = [];
     data.layers.forEach((layer) => {
       switch (layer.type) {
-        case "Dense":
-          layers.push(Dense.import(layer.neurons as DenseData));
+        case "Dense": {
+          const neurons = layer.neurons as DenseData;
+          inputs = neurons.length;
+          layers.push(Dense.import(neurons));
           break;
+        }
         case "Relu":
           layers.push(new Relu());
           break;
@@ -42,6 +56,9 @@ export class Network extends Node {
           break;
         case "Tanh":
           layers.push(new Tanh());
+          break;
+        case "Normalize":
+          layers.push(new Normalize(inputs));
           break;
       }
     });
@@ -62,10 +79,9 @@ export class Network extends Node {
 
   public get parameters(): Value[] {
     const params: Value[] = [];
-    this.layers.forEach((layer: Layer) => params.push(...layer.parameters))
+    this.layers.forEach((layer: Layer) => params.push(...layer.parameters));
     return params;
   }
-
 
   /** Run a set of values through forward propagation and record the output */
   public predict(x: number[]): number[] {
@@ -113,6 +129,10 @@ export class Network extends Node {
 
   public get tanh(): Network {
     return this.add(new Tanh());
+  }
+
+  public get normalize(): Network {
+    return this.add(new Normalize(this.inputs));
   }
 
   /** Train network with input and output data */

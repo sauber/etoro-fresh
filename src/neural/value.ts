@@ -80,7 +80,7 @@ export class Value {
       other.grad += (-this.data / other.data ** 2) * out.grad;
 
       if (Math.abs(this.grad) > 1000000 || Math.abs(other.grad) > 1000000) {
-        console.log("Division inclined grad", {
+        console.log("Division operation cause steep inclined grad", {
           "this.data": this.data,
           "this.grad": this.grad,
           "other.data": other.data,

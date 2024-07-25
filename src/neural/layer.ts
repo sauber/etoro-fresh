@@ -1,9 +1,8 @@
 import { Value } from "./value.ts";
 import { Node } from "./node.ts";
-import { Neuron, NeuronData } from "./neuron.ts";
+import { Neuron, NeuronData, Scaler } from "./neuron.ts";
 
 export type DenseData = Array<NeuronData>;
-
 
 /** All nodes in input layer connected to all nodes in output layer */
 export class Dense extends Node {
@@ -67,5 +66,21 @@ export class Sigmoid extends Node {
 export class Tanh extends Node {
   public forward(x: Value[]): Value[] {
     return x.map((n) => n.tanh());
+  }
+}
+
+export class Normalize extends Node {
+  constructor(
+    public readonly inputs: number,
+    private readonly scalers: Array<Scaler> = Array.from(
+      Array(inputs),
+      (_) => new Scaler(),
+    ),
+  ) {
+    super();
+  }
+
+  public forward(x: Value[]): Value[] {
+    return this.scalers.map((scaler, index) => scaler.forward(x[index]));
   }
 }
