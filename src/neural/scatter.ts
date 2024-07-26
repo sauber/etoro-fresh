@@ -34,7 +34,7 @@ function scale(
 type DataSet = number[][];
 type Color = [number, number, number, number]; // R, G, B, A
 
-/** A quadratic canvas in range xmin:xmax, ymin:ymax */
+/** A canvas in range xmin:xmax, ymin:ymax */
 class PixelCanvas {
   public readonly buffer: Uint8Array;
 
@@ -43,21 +43,25 @@ class PixelCanvas {
     private readonly xmax: number,
     private readonly ymin: number,
     private readonly ymax: number,
-    private readonly size: number,
+    private readonly xsize: number,
+    private readonly ysize: number,
   ) {
-    this.buffer = new Uint8Array(Array(size * size * 4).fill(0));
+    this.buffer = new Uint8Array(Array(xsize * ysize * 4).fill(0));
   }
 
   /** Convert floating (x,y) position to buffer index */
   // TODO: Odd lines are ignored in terminal output
   private pos(x: number, y: number): number {
     const xg: number = Math.round(
-      scale(this.xmin, this.xmax, 0, this.size - 1, x),
+      scale(this.xmin, this.xmax, 0, this.xsize - 1, x),
     );
     const yg: number = Math.round(
-      scale(this.ymin, this.ymax, 0, this.size - 1, y),
+      scale(this.ymin, this.ymax, 0, this.ysize - 1, y),
     );
-    return ((this.size - yg - 1) * this.size + xg) * 4;
+    // const yg: number = 2*Math.floor(
+    //   scale(this.ymin, this.ymax, 0, this.ysize - 1, y)/2,
+    // );
+    return ((this.ysize - yg - 1) * this.xsize + xg) * 4;
   }
 
   /** Set value at position */
@@ -84,13 +88,14 @@ export class ScatterPlot {
   /**
    * Create a pixbuffer of the plot
    *
-   * @param   {number}      size  Number of rows and columns
-   * @param   {number}      xcol  Input column number for x-axis
-   * @param   {number}      ycol  Input column number for y-axis
-   * @param   {number}      vcol  Output column number for values
-   * @return  {Uint8Array}        8-bit RGBT buffer
+   * @param   {number}      xsize  Number of columns
+   * @param   {number}      ysize  Number of rows, default=xsize
+   * @param   {number}      xcol   Input column number for x-axis, default=0
+   * @param   {number}      ycol   Input column number for y-axis, default=1
+   * @param   {number}      vcol   Output column number for values, default=0
+   * @return  {Uint8Array}         8-bit RGBT buffer
    */
-  public pixels(size = 16, xcol = 0, ycol = 1, vcol = 0): Uint8Array {
+  public pixels(xsize = 16, ysize = xsize, xcol = 0, ycol = 1, vcol = 0): Uint8Array {
     // Identify data columns
     const xs: number[] = column(this.xs, xcol);
     const ys: number[] = column(this.xs, ycol);
@@ -110,8 +115,9 @@ export class ScatterPlot {
 
     // Create list of predicted values at each grid position
     const values: Array<[number, number, number]> = [];
-    const xstep: number = (xmax - xmin) / (size - 1);
-    const ystep: number = (xmax - xmin) / (size - 1);
+    const xstep: number = (xmax - xmin) / (xsize - 1);
+    const ystep: number = (xmax - xmin) / (ysize - 1);
+    // console.log({xmin, xmax, xstep, ymin, ymax, ystep});
     for (let x = xmin; x <= xmax; x += xstep) {
       for (let y = ymin; y <= ymax; y += ystep) {
         const input: number[] = [...means];
@@ -124,13 +130,15 @@ export class ScatterPlot {
     }
 
     // Plot predicted values (contour plot)
-    const canvas = new PixelCanvas(xmin, xmax, ymin, ymax, size);
+
+    const canvas = new PixelCanvas(xmin, xmax, ymin, ymax, xsize, ysize);
     let [pmin, pmax] = MinMax(column(values, 2));
     if (vmin < pmin) pmin = vmin;
     if (vmax > pmax) pmax = vmax;
     values.forEach(([x, y, p]) => {
       const lightness: number = Math.floor(scale(pmin, pmax, 0, 255, p));
-      const color: Color = [255 - lightness, 128, 128, 255];
+      // const color: Color = [255 - lightness, 128, 128, 255];
+      const color: Color = [lightness, lightness, lightness, 255];
       canvas.set(x, y, color);
     });
 

@@ -42,18 +42,26 @@ Deno.test("Initialize", () => {
 Deno.test("Pixels", async () => {
   const s = new ScatterPlot(network, xs, ys);
   const size = 4;
-  const p: Uint8Array = s.pixels(size);
-  assertInstanceOf(p, Uint8Array);
-  assertEquals(p.length, size**2 * 4);
-  const red = new Uint8Array([64,0,0,255]);
-  const green = new Uint8Array([0,255,0,255])
-  assertEquals( p.slice(0,4), green);
-  assertEquals( p.slice(12,16), red);
-  assertEquals( p.slice(48,52), red);
-  assertEquals( p.slice(60,64), green);
+  const p: Uint8Array = s.pixels(size*2, size*2);
 
   await printImage({
-    rawPixels: { width: size, height: size, data: p },
-    width: 4,
+    rawPixels: { width: size*2, height: size*2, data: p },
+    width: size,
   });
+
+  assertInstanceOf(p, Uint8Array);
+  assertEquals(p.length, size**2 * 4 * 4);
+  const red = new Uint8Array([64,0,0,255]);
+  const green = new Uint8Array([0,255,0,255])
+  // const topLeftIndex = 0;
+  const line = size * 2 * 4;
+  const topLeftIndex = line;
+  const topRightIndex = line + line - 4;
+  const bottomLeftIndex = size * 2 * line - line;
+  const bottomRightIndex = size * 2 * line - 4;
+
+  assertEquals( p.slice(topLeftIndex,topLeftIndex + 4), green);
+  assertEquals( p.slice(topRightIndex,topRightIndex + 4), red);
+  assertEquals( p.slice(bottomLeftIndex,bottomLeftIndex + 4), red);
+  assertEquals( p.slice(bottomRightIndex,bottomRightIndex + 4), green);
 });
