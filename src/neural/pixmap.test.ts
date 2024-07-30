@@ -30,6 +30,12 @@ Deno.test("Color Sort", () => {
   assertEquals(sorted.map((c) => c.brightness), [0, 1, 255]);
 });
 
+Deno.test("Color Average", () => {
+  const avg: Color = Color.average([black, white, color]);
+  assertEquals(avg, new Color(85, 85, 85));
+});
+
+
 Deno.test("Random Color", () => {
   const random: Color = Color.random;
   const brightness = random.brightness;
@@ -42,7 +48,7 @@ Deno.test("Random Color", () => {
 import { Pixel } from "./pixmap.ts";
 
 Deno.test("Pixel instance", () => {
-  const p = new Pixel([0, 0], Color.random);
+  const p = new Pixel([0, 0], Color.random, 0);
   assertInstanceOf(p, Pixel);
 });
 
@@ -71,4 +77,8 @@ Deno.test("BlockPixMap instance", () => {
   const b = new BlockPixMap(white, white, white, white);
   assertInstanceOf(b, BlockPixMap);
   assertEquals(b.get(1, 1), white);
+});
+
+Deno.test("BlockPixMap grouping", () => {
+  const b = new BlockPixMap(Color.random, Color.random, Color.random, Color.random);
 });
