@@ -1,9 +1,17 @@
-import { assertEquals, assertGreater, assertGreaterOrEqual, assertLess, assertLessOrEqual } from "$std/assert/mod.ts";
-import { sort } from "$std/semver/sort.ts";
+import {
+  assertEquals,
+  assertExists,
+  assertGreaterOrEqual,
+  assertInstanceOf,
+  assertLessOrEqual,
+} from "$std/assert/mod.ts";
+
+////////////////////////////////////////////////////////////////////////
+
 import { Color } from "./pixmap.ts";
 
-const black = new Color(0, 0, 0);
-const white = new Color(255, 255, 255);
+const black = Color.black;
+const white = Color.white;
 const color = new Color(1, 1, 1);
 
 Deno.test("Color Distance", () => {
@@ -25,7 +33,42 @@ Deno.test("Color Sort", () => {
 Deno.test("Random Color", () => {
   const random: Color = Color.random;
   const brightness = random.brightness;
-  console.log({random, brightness});
   assertGreaterOrEqual(brightness, 0);
   assertLessOrEqual(brightness, 255);
+});
+
+////////////////////////////////////////////////////////////////////////
+
+import { Pixel } from "./pixmap.ts";
+
+Deno.test("Pixel instance", () => {
+  const p = new Pixel([0, 0], Color.random);
+  assertInstanceOf(p, Pixel);
+});
+
+////////////////////////////////////////////////////////////////////////
+
+import { PixMap, Position } from "./pixmap.ts";
+
+Deno.test("PixMap instance", () => {
+  const m = new PixMap(0, 0);
+  assertInstanceOf(m, PixMap);
+});
+
+Deno.test("PixMap Set/get", () => {
+  const m = new PixMap(1, 1);
+  const white = Color.white;
+  const pos: Position = [0, 0];
+  m.set(...pos, white);
+  assertEquals(m.get(...pos), white);
+});
+
+////////////////////////////////////////////////////////////////////////
+
+import { BlockPixMap } from "./pixmap.ts";
+
+Deno.test("BlockPixMap instance", () => {
+  const b = new BlockPixMap(white, white, white, white);
+  assertInstanceOf(b, BlockPixMap);
+  assertEquals(b.get(1, 1), white);
 });
