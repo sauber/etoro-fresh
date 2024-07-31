@@ -69,6 +69,21 @@ Deno.test("PixMap Set/get", () => {
   assertEquals(m.get(...pos), white);
 });
 
+Deno.test("PixMap Gradient", () => {
+  const rows = 8;
+  const cols = 20;
+  const g = new PixMap(cols, rows);
+  for ( let x = 0; x<cols; ++x ) {
+    for ( let y = 0; y<rows; ++y ) {
+      const l = Math.floor((x+y)*(255/(rows-1+cols-1)));
+      // console.log({x, y, l});
+      g.set(x, y, new Color(l,255-l,l));
+    }  
+  }
+  console.log(g.toString());
+});
+
+
 ////////////////////////////////////////////////////////////////////////
 
 import { BlockPixMap } from "./pixmap.ts";
@@ -77,8 +92,12 @@ Deno.test("BlockPixMap instance", () => {
   const b = new BlockPixMap(white, white, white, white);
   assertInstanceOf(b, BlockPixMap);
   assertEquals(b.get(1, 1), white);
+  const s = b.toString();
+  assertEquals(s, "\x1b[48;2;255;255;255m \x1b[49m");
 });
 
 Deno.test("BlockPixMap grouping", () => {
-  const b = new BlockPixMap(Color.random, Color.random, Color.random, Color.random);
+  const b = new BlockPixMap(Color.white, Color.black, Color.black, Color.white);
+  const s = b.toString();
+  assertEquals(s, "\x1b[48;2;0;0;0m\x1b[38;2;255;255;255m▚\x1b[39m\x1b[49m");
 });

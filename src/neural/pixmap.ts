@@ -1,4 +1,4 @@
-import { rgb24, bgRgb24 } from "$std/fmt/colors.ts";
+import { bgRgb24, rgb24 } from "$std/fmt/colors.ts";
 
 /** RGB color, each channel value in range 0-255 */
 export class Color {
@@ -18,8 +18,8 @@ export class Color {
     this.brightness = (r + g + b) / 3;
   }
 
-  public get rgb(): {r: number, g: number, b: number} {
-    return {r: this.r, g: this.g, b: this.b};
+  public get rgb(): { r: number; g: number; b: number } {
+    return { r: this.r, g: this.g, b: this.b };
   }
 
   /** Are to colors same */
@@ -89,7 +89,7 @@ export class Pixel {
   constructor(
     public readonly position: Position,
     public readonly color: Color,
-    public readonly index: number
+    public readonly index: number,
   ) {}
 }
 
@@ -101,13 +101,16 @@ export class PixMap {
 
   /** Create [x,y] sized black-filled pixel map */
   constructor(
+    /** Number of x positions */
     private readonly cols: number,
+    /** Number of y positions, must be even number */
     private readonly rows: number,
   ) {
     const black = Color.black;
     // this.pixels = new Array(columns * rows).fill(black);
-    for (let x = 0; x < rows; ++x) {
-      for (let y = 0; y < cols; ++y) {
+    for (let x = 0; x < cols; ++x) {
+      for (let y = 0; y < rows; ++y) {
+        // console.log({x, y, black});
         this.set(x, y, black);
       }
     }
@@ -135,20 +138,57 @@ export class PixMap {
   public get(x: number, y: number): Color {
     return this.pixels[y][x];
   }
+
+  // Split pixmap into 2x2 blocks
+  private get blocks(): BlockPixMap[][] {
+    const lines = [];
+    for (let row = this.rows - 2; row >= 0; row -= 2) {
+      const line: Array<BlockPixMap> = [];
+      for (let col = 0; col < this.cols; col += 2) {
+        line.push(
+          new BlockPixMap(
+            this.get(col, row + 1),
+            this.get(col + 1, row + 1),
+            this.get(col, row),
+            this.get(col + 1, row),
+          ),
+        );
+      }
+      lines.push(line);
+    }
+    return lines;
+  }
+
+  /** Convert pixmap to printable string */
+  public toString(): string {
+    let output = "";
+    const blocks = this.blocks;
+    blocks.forEach((line) => {
+      line.forEach((block) => output = output.concat(block.toString()));
+      output = output.concat("\n");
+    });
+
+    return output;
+  }
 }
 
 ////////////////////////////////////////////////////////////////////////
 
 /** 2x2 pixel map */
 export class BlockPixMap extends PixMap {
+  /** List of pixels */
+  private readonly block: Pixels;
+
   constructor(
     topleft: Color,
     topright: Color,
     bottomleft: Color,
     bottomright: Color,
   ) {
+    super(2, 2);
+
     // List of pixels
-    const pixels: Pixels = [
+    this.block = [
       new Pixel([0, 0], topleft, 0),
       new Pixel([1, 0], topright, 1),
       new Pixel([0, 1], bottomleft, 2),
@@ -156,11 +196,12 @@ export class BlockPixMap extends PixMap {
     ];
 
     // Create pixmap
-    super(2, 2);
-    pixels.forEach((pixel) => this.set(...pixel.position, pixel.color));
+    this.block.forEach((pixel) => this.set(...pixel.position, pixel.color));
+  }
 
+  public toString(): string {
     // Sort pixels by bightness, darkest first
-    const sorted: Pixels = pixels.slice().sort((a, b) =>
+    const sorted: Pixels = this.block.slice().sort((a, b) =>
       a.color.brightness - b.color.brightness
     );
 
@@ -174,16 +215,16 @@ export class BlockPixMap extends PixMap {
 
     // If all pixels are identical, then only set background color and displace a blank char
     if (dark.length === 4) {
-      console.log('All pixels are equal');
+      console.log("All pixels are equal");
       const bgColor: Color = dark[0].color;
-      const char = " ";
-      return;
+      return bgRgb24(" ", bgColor.rgb);
     }
 
     // Identify brightest pixel
     const bright: Pixels = [sorted.pop() as Pixel];
 
-    // Divide remaining pixels according to most close to darkest or brightest pixels
+    // For remaining pixels, test if they are most close the darkest or
+    // brightst pixel, and add to respective groups
     sorted.forEach((pixel) => {
       if (
         pixel.color.distance(dark[0].color) <
@@ -195,27 +236,19 @@ export class BlockPixMap extends PixMap {
       }
     });
 
+    // Average of dark and bright colors
     const bg: Color = Color.average(dark.map((p) => p.color));
     const fg: Color = Color.average(bright.map((p) => p.color));
-    // const elementIndex: number = bright.map(p=>p.index).reduce((s,a)=>s+(2**a), 0);
-    const elementIndex: number = bright.map(p=>p.index).reduce((s,a)=>{
-      console.log({a, s}, 2**a);
-      return s+(2**a);
-    }, 0);
 
+    // Pick block element to represent brigtest pixels
+    const elementIndex: number = bright.map((p) => p.index).reduce(
+      (s, a) => s + (2 ** a),
+      0,
+    );
     const chars = " ▘▝▀▖▌▞▛▗▚▐▜▄▙▟█";
-    const char = chars.substring(elementIndex, elementIndex+1);
+    const element = chars.substring(elementIndex, elementIndex + 1);
 
-    console.log({ pixels, sorted, dark, bright, bg, fg, elementIndex, char });
-    console.log(bright.map(p=>p.index));
-    const output = bgRgb24(rgb24(char, fg.rgb), bg.rgb);
-    console.log(output);
-
-
-    // Average darkest pixels
-    // Set bg to average dark color
-
-    // Use brightest pattern to lookup block element char
-    // Set fg to average bright color
+    // Color code background and foreground
+    return bgRgb24(rgb24(element, fg.rgb), bg.rgb);
   }
 }
