@@ -88,41 +88,38 @@ Deno.test("PixMap Gradient", () => {
 });
 
 Deno.test("Display test picture", async () => {
+  // Load image
   const raw = await Deno.readFileSync("src/neural/test-billede.jpg");
   const img = decode(raw);
-  //result.width: Image width
-  //result.height: Image height
 
-  //result.data[0] -> Red
-  //result.data[1] -> Green
-  //result.data[2] -> Blue
-  //result.data[3] -> Alpha
-  //...
-
-  // result.data is an array of RGBa colors
+  // Resize. Cols is double because of half-width terminal chars
   const width: number = img.width;
   const height: number = img.height;
   const rows: number = 16;
   const cols: number = Math.round(width / height * rows) * 2;
 
+  // Resize to match terminal block rows and cols
   const resizedRaw = await resize(raw, {
     width: cols,
     height: rows,
     aspectRatio: false,
   });
 
+  // Read all pixels from resized image and insert in Block PixMap
   const term = new PixMap(cols, rows);
   const resized = decode(resizedRaw);
   for (let col = 0; col < cols; ++col) {
     for (let row = 0; row < rows; ++row) {
-      const color = resized.getPixel(col, row) as {
+      const { r, g, b } = resized.getPixel(col, row) as {
         r: number;
         g: number;
         b: number;
       };
-      term.set(col, row, new Color(color.r, color.g, color.b));
+      term.set(col, row, new Color(r, g, b));
     }
   }
+
+  // Display blocks
   console.log(term.toString());
 });
 
