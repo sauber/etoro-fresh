@@ -35,7 +35,6 @@ Deno.test("Color Average", () => {
   assertEquals(avg, new Color(85, 85, 85));
 });
 
-
 Deno.test("Random Color", () => {
   const random: Color = Color.random;
   const brightness = random.brightness;
@@ -55,6 +54,8 @@ Deno.test("Pixel instance", () => {
 ////////////////////////////////////////////////////////////////////////
 
 import { PixMap, Position } from "./pixmap.ts";
+import { resize } from "https://deno.land/x/deno_image/mod.ts";
+import { decode } from "https://deno.land/x/jpegts@1.1/mod.ts";
 
 Deno.test("PixMap instance", () => {
   const m = new PixMap(0, 0);
@@ -73,16 +74,57 @@ Deno.test("PixMap Gradient", () => {
   const rows = 8;
   const cols = 20;
   const g = new PixMap(cols, rows);
-  for ( let x = 0; x<cols; ++x ) {
-    for ( let y = 0; y<rows; ++y ) {
-      const l = Math.floor((x+y)*(255/(rows-1+cols-1)));
+  for (let x = 0; x < cols; ++x) {
+    for (let y = 0; y < rows; ++y) {
+      const l = Math.floor((x + y) * (255 / (rows - 1 + cols - 1)));
       // console.log({x, y, l});
-      g.set(x, y, new Color(l,255-l,l));
-    }  
+      g.set(x, y, new Color(l, 255 - l, l));
+    }
   }
+  const display = g.toString();
+  const lines = display.split("\n");
+  assertEquals(lines.length, rows / 2);
   console.log(g.toString());
 });
 
+Deno.test("Display test picture", async () => {
+  const raw = await Deno.readFileSync("src/neural/test-billede.jpg");
+  const img = decode(raw);
+  //result.width: Image width
+  //result.height: Image height
+
+  //result.data[0] -> Red
+  //result.data[1] -> Green
+  //result.data[2] -> Blue
+  //result.data[3] -> Alpha
+  //...
+
+  // result.data is an array of RGBa colors
+  const width: number = img.width;
+  const height: number = img.height;
+  const rows: number = 16;
+  const cols: number = Math.round(width / height * rows) * 2;
+
+  const resizedRaw = await resize(raw, {
+    width: cols,
+    height: rows,
+    aspectRatio: false,
+  });
+
+  const term = new PixMap(cols, rows);
+  const resized = decode(resizedRaw);
+  for (let col = 0; col < cols; ++col) {
+    for (let row = 0; row < rows; ++row) {
+      const color = resized.getPixel(col, row) as {
+        r: number;
+        g: number;
+        b: number;
+      };
+      term.set(col, row, new Color(color.r, color.g, color.b));
+    }
+  }
+  console.log(term.toString());
+});
 
 ////////////////////////////////////////////////////////////////////////
 

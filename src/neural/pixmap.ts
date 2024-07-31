@@ -159,16 +159,11 @@ export class PixMap {
     return lines;
   }
 
-  /** Convert pixmap to printable string */
+  /** Convert pixmap to string printable on console */
   public toString(): string {
-    let output = "";
-    const blocks = this.blocks;
-    blocks.forEach((line) => {
-      line.forEach((block) => output = output.concat(block.toString()));
-      output = output.concat("\n");
-    });
-
-    return output;
+    return this.blocks.map((line) =>
+      line.map((block) => block.toString()).join("")
+    ).join("\n");
   }
 }
 
@@ -215,7 +210,6 @@ export class BlockPixMap extends PixMap {
 
     // If all pixels are identical, then only set background color and displace a blank char
     if (dark.length === 4) {
-      console.log("All pixels are equal");
       const bgColor: Color = dark[0].color;
       return bgRgb24(" ", bgColor.rgb);
     }
