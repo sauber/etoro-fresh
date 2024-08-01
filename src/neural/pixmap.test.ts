@@ -90,12 +90,18 @@ Deno.test("PixMap Gradient", () => {
 Deno.test("Display test picture", async () => {
   // Load image
   const raw = await Deno.readFileSync("src/neural/test-billede.jpg");
+  // const url = "https://deno.com/images/artwork/deno_city.jpeg";
+  // const response: Response = await fetch(url);
+  // if (!response.body) throw new Error("Image not loaded");
+  // const raw = response.body as string;
+
   const img = decode(raw);
 
   // Resize. Cols is double because of half-width terminal chars
   const width: number = img.width;
   const height: number = img.height;
-  const rows: number = 16;
+  const lines = 16;
+  const rows: number = lines * 2;
   const cols: number = Math.round(width / height * rows) * 2;
 
   // Resize to match terminal block rows and cols
