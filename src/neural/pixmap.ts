@@ -142,15 +142,15 @@ export class PixMap {
   // Split pixmap into 2x2 blocks
   private get blocks(): BlockPixMap[][] {
     const lines = [];
-    for (let row = this.rows - 2; row >= 0; row -= 2) {
+    for (let row = 0; row < this.rows; row += 2) {
       const line: Array<BlockPixMap> = [];
       for (let col = 0; col < this.cols; col += 2) {
         line.push(
           new BlockPixMap(
-            this.get(col, row + 1),
-            this.get(col + 1, row + 1),
             this.get(col, row),
             this.get(col + 1, row),
+            this.get(col, row+1),
+            this.get(col + 1, row+1),
           ),
         );
       }
