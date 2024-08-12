@@ -17,8 +17,8 @@ import {
 } from "netsaur";
 import { Asset, Backend } from "../storage/mod.ts";
 import type { JSONObject } from "../storage/mod.ts";
-import { DataFrame } from "/utils/dataframe.ts";
-import type { RowRecord, RowRecords } from "/utils/dataframe.ts";
+import { DataFrame } from "dataframe";
+import type { RowRecord, RowRecords } from "dataframe";
 
 type ModelTS = Uint8Array;
 type Profit = number;

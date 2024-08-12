@@ -1,7 +1,7 @@
 import { DateFormat } from "📚/time/mod.ts";
 import { Position } from "📚/portfolio/position.ts";
 import { Portfolio } from "📚/portfolio/portfolio.ts";
-import { DataFrame } from "📚/utils/dataframe.ts";
+import { DataFrame } from "dataframe";
 
 type Reasons = "sell" | "expire" | "limit";
 type Actions = "deposit" | "valuate" | "buy" | Reasons;

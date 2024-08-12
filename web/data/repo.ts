@@ -7,7 +7,7 @@ import { CachingBackend, DiskBackend } from "📚/storage/mod.ts";
 import { Community } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import type { Investors } from "📚/repository/mod.ts";
-import { DataFrame } from "📚/utils/dataframe.ts";
+import { DataFrame } from "dataframe.ts";
 import { Ranking } from "📚/ranking/mod.ts";
 
 let data_path = Deno.env.get("DATAPATH");
