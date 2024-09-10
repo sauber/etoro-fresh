@@ -4,6 +4,7 @@
     "build": "deno run -A dev.ts build",
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
     "community": "deno run --allow-read=testdata,../etoro-data/data src/repository/community_bin.ts ../etoro-data/data",
+    "config": "deno run --allow-read=../etoro-data/data --allow-write=/workspaces/etoro-data/data src/config/config_bin.ts ../etoro-data/data",
     "cli": "echo \"import '\\$fresh/src/dev/cli.ts'\" | deno run --unstable -A -",
     "manifest": "deno task cli manifest $(pwd)",
     "preview": "deno run -A main.ts",
