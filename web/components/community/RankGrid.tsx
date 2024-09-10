@@ -1,5 +1,5 @@
 import { Grid, Item, Line, Table, DataSet } from "📚/utils/grid.ts";
-import { DataFrame, RowRecord, RowRecords } from "dataframe.ts";
+import { DataFrame, RowRecord, RowRecords } from "dataframe";
 import type { Investors } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import Card from "📦/investor/Summary.tsx";
