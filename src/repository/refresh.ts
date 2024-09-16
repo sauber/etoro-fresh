@@ -28,6 +28,10 @@ type Expire = {
   stats: number;
 };
 
+type UserName = string;
+type BlacklistProperties = Record<string, unknown>;
+type Blacklist = Record<UserName, BlacklistProperties>;
+
 // Convert hours to ms
 const msPerHour = 60 * 60 * 1000;
 
@@ -56,6 +60,7 @@ export class Refresh {
     private readonly fetcher: FetchBackend,
     private readonly investor: InvestorId,
     private readonly filter: DiscoverFilter, // TODO: Expire // TODO: Discover Range
+    private readonly blacklist: Blacklist
   ) {}
 
   /** Load  asset from web if missing or expired */
@@ -130,15 +135,8 @@ export class Refresh {
     const validate = function (loaded: ChartData) {
       const chart: Chart = new Chart(loaded);
       if (!chart.validate()) {
-        // console.error(`Error: Chart for ${investor.UserName} is invalid`);
         return false;
       }
-      // if (chart.end != today()) {
-      //   console.warn(
-      //     `Warning: ${investor.UserName} chart end ${chart.end} is not today`,
-      //   );
-      //   return false;
-      // }
       return true;
     };
 
@@ -211,7 +209,8 @@ export class Refresh {
       ...(await this.mirrors()),
       ...(await this.discover()),
     ];
-    const subset: InvestorId[] = max ? investors.slice(0, max) : investors;
+    const whitelist = investors.filter(id=>!(id.UserName in this.blacklist));
+    const subset: InvestorId[] = max ? whitelist.slice(0, max) : whitelist;
     const uniq: InvestorId[] = subset.filter(onlyUnique);
 
     // In parallel fetch data for all investors
