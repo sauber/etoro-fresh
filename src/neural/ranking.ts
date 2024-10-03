@@ -3,7 +3,7 @@ import { Community, Investors } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import { diffDate } from "📚/time/mod.ts";
 import { Features } from "📚/ranking/mod.ts";
-import { DataFrame } from "📚/dataframe/mod.ts";
+import { DataFrame } from "@dataframe";
 import { avg } from "📚/math/statistics.ts";
 import { Dense, LRelu, Network, Normalization, Relu } from "./micrograd.ts";
 import { Train } from "./train.ts";

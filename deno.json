@@ -42,7 +42,7 @@
     "netsaur": "https://deno.land/x/netsaur@0.2.14/mod.ts",
     "semaphore": "https://deno.land/x/semaphore@v1.1.2/semaphore.ts",
     "terminal_images": "https://deno.land/x/terminal_images@3.1.0/mod.ts",
-    "dataframe": "jsr:@sauber/dataframe@^0.0.5",
+    "@dataframe": "jsr:@sauber/dataframe@^0.0.5",
     "📚/": "./src/",
     "📦/": "./web/components/"
   },
