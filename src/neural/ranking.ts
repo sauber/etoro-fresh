@@ -51,7 +51,7 @@ const w: Record<string, number> = Object.assign(
   ...weights.records.map((r) => ({ [r.Key as string]: r.Weight })),
 );
 // console.log({weights}, weights.records);;
-// console.log("Correlations:", w);
+console.log("Correlations:", w);
 const keys = weights.values("Key") as string[];
 // console.log({keys});
 const inputs = input.include(keys);
@@ -69,7 +69,7 @@ const ys: number[][] = output.records.map((r) => [r.SharpeRatio as number]);
 //   new Dense(5, 1),
 // ]);
 
-const network = new Network(columns).tanh.dense(11).lrelu.dense(5).lrelu.dense(1);
+const network = new Network(columns).normalize.dense(11).lrelu.dense(5).lrelu.dense(1);
 
 // Mean number in list
 function mean(l: number[]): number {
@@ -109,7 +109,7 @@ train.epsilon = 0.001;
 const iterations = train.run(20000, 0.1);
 // console.log(iterations);
 // network.print();
-console.log(network.export);
+console.log(network.export.layers);
 
 // Validation
 // xs.forEach((input, index) => console.log(input, ys[index], network.predict(input)));
