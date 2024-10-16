@@ -5,10 +5,8 @@ import { diffDate } from "📚/time/mod.ts";
 import { Features } from "📚/ranking/mod.ts";
 import { DataFrame } from "@dataframe";
 import { avg } from "📚/math/statistics.ts";
-// import { Dense, LRelu, Network, Normalization, Relu } from "./micrograd.ts";
-import { Network, Train } from "jsr:@sauber/neurons@1.0.7";
+import { Network, Train } from "jsr:@sauber/neurons@1.2.4";
 import { Dashboard } from "jsr:@sauber/ml-cli-dashboard";
-// import { Train } from "./train.ts";
 
 // Load investor data
 const backend = new Backend(Deno.args[0]);
@@ -38,7 +36,7 @@ const output = DataFrame.fromRecords(features.map((f) => f.output)).include([
   "SharpeRatio",
 ]);
 const corr = input.correlationMatrix(output);
-const columns = 8;
+const columns = 10;
 const weights = corr
   .amend("Abs", (r) => Math.abs(r.SharpeRatio as number))
   .sort("Abs")
@@ -60,16 +58,12 @@ const inputs = input.include(keys);
 const xs: number[][] = inputs.records.map((r) => Object.values(r) as number[]);
 const ys: number[][] = output.records.map((r) => [r.SharpeRatio as number]);
 
-// const network = new Network([
-//   new Normalization(5),
-//   new Dense(5, 11),
-//   new LRelu(),
-//   new Dense(11, 5),
-//   new LRelu(),
-//   new Dense(5, 1),
-// ]);
+const network = new Network(columns).normalize.dense(15).lrelu.dense(15).lrelu.dense(1);
 
-const network = new Network(columns).normalize.dense(11).lrelu.dense(5).lrelu.dense(1);
+// Adapt network to range if inputs
+network.adapt(xs);
+// console.log(network.export.layers);
+// Deno.exit(143);
 
 // Mean number in list
 function mean(l: number[]): number {
@@ -94,7 +88,8 @@ function predict(a, b): number {
 
 const scatter: Array<[number, number]> = xs.map(row=>[row[0], row[1]]);
 const values: Array<number> = ys.map(row=>row[0]);
-const dashboard = new Dashboard(78, 16, scatter, values, predict, 20000);
+const epochs = 200000;
+const dashboard = new Dashboard(78, 16, scatter, values, predict, epochs);
 
 function status (iterations: number, lossHistory: number[]): void {
   const loss = lossHistory[lossHistory.length-1];
@@ -102,14 +97,18 @@ function status (iterations: number, lossHistory: number[]): void {
 }
 
 const train = new Train(network, xs, ys);
-train.epsilon = 0.0001;
 train.callback = status;
 train.callbackFrequency = 100;
-train.epsilon = 0.001;
-const iterations = train.run(20000, 0.1);
+train.epsilon = 0.01;
+try {
+  const iterations = train.run(epochs, 0.02);  
+} catch (error) {
+  console.log(network.print)
+}
+
 // console.log(iterations);
 // network.print();
-console.log(network.export.layers);
+// console.log(network.export.layers);
 
 // Validation
 // xs.forEach((input, index) => console.log(input, ys[index], network.predict(input)));
