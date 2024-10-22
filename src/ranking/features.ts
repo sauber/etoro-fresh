@@ -60,8 +60,8 @@ export class Features {
   }
 
   /** Prediction output parameters */
-  public output(): Output {
-    const start: DateFormat = this.investor.stats.start;
+  public output(start: DateFormat = this.investor.stats.start): Output {
+    // const start: DateFormat = this.investor.stats.start;
     const chart: Chart = this.investor.chart.from(start);
     const apy: number = chart.apy;
     // 5% is annual money market return. 

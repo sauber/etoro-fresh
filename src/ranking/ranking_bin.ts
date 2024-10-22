@@ -3,6 +3,7 @@ import { Community } from "📚/repository/mod.ts";
 import { Ranking } from "./ranking.ts";
 import { Investor } from "📚/investor/mod.ts";
 import { diffDate } from "📚/time/mod.ts";
+import { denoPlugins } from "$fresh/src/build/deps.ts";
 
 // Repo
 const path: string = Deno.args[0];
@@ -15,6 +16,9 @@ console.log("Loading...");
 type Investors = Array<Investor>;
 const community = new Community(backend);
 const all: Investors = await community.all();
+console.log(all);
+Deno.exit(143);
+
 console.log(all.length);
 const train: Investors = all.filter(
   (investor: Investor) =>

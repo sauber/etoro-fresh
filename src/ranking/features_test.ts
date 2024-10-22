@@ -29,7 +29,7 @@ Deno.test("Input at specific date", () => {
 
 Deno.test("Output", () => {
   const rank = new Features(investor);
-  const features: Output = rank.output;
+  const features: Output = rank.output();
   assert("Profit" in features);
   assert("SharpeRatio" in features);
 });
