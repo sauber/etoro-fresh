@@ -20,11 +20,8 @@
     "@sauber/ml-cli-dashboard": "jsr:@sauber/ml-cli-dashboard@^0.4.0",
     "@sauber/neurons": "jsr:@sauber/neurons@^1.2.5",
     "@sauber/table": "jsr:@sauber/table@^0.1.0",
-    "chart": "https://deno.land/x/chart@1.1/mod.ts",
-    "dataframe": "jsr:@sauber/dataframe@^0.1.0",
     "nanoid": "https://deno.land/x/nanoid@v3.0.0/mod.ts",
     "semaphore": "https://deno.land/x/semaphore@v1.1.2/semaphore.ts",
-    "table": "jsr:@sauber/table@^0.0.3",
     "📚/": "./src/"
   }
 }

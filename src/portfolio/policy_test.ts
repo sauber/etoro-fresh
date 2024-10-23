@@ -10,13 +10,7 @@ import type { BuyItems, SellItems } from "./order.ts";
 import { community } from "./testdata.ts";
 import { Chart } from "📚/chart/mod.ts";
 import { DateFormat } from "📚/time/mod.ts";
-import { DataFrame } from "dataframe";
 import { sum } from "📚/math/statistics.ts";
-
-// const portfolio = new Portfolio();
-// const cash = 100000;
-// const targets = 10;
-// const chart = investor.chart;
 
 const start: DateFormat = "2021-12-29";
 const name = "FundManagerZech";
@@ -61,7 +55,7 @@ Deno.test("Buy 100% of investor with positive rank", () => {
   assertEquals(buy[0].amount, 10000);
 });
 
-Deno.test("Buy 0% of investor with negative rank", {ignore: true}, () => {
+Deno.test("Buy 0% of investor with negative rank", { ignore: true }, () => {
   const positive = Object.assign({}, empty, {
     investors: [investor],
     conviction: { [name]: -1 },
@@ -73,7 +67,7 @@ Deno.test("Buy 0% of investor with negative rank", {ignore: true}, () => {
   assertEquals(buy.length, 0);
 });
 
-Deno.test("Buy count within targets", {ignore: true}, () => {
+Deno.test("Buy count within targets", { ignore: true }, () => {
   const zero = Object.assign({}, empty, {
     investors: [investor],
     conviction: { [name]: 1 },
@@ -102,7 +96,7 @@ Deno.test("Buy two equally ranked investors", () => {
   assertEquals(buy[1].amount, 5000);
 });
 
-Deno.test("Buy two inequally ranked investors", {ignore: true}, () => {
+Deno.test("Buy two inequally ranked investors", { ignore: true }, () => {
   const inequal = Object.assign({}, empty, {
     investors: [investor, investor2],
     conviction: { [name]: 1, [name2]: 2 },

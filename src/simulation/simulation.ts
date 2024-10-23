@@ -6,7 +6,7 @@ import type { Positions } from "📚/portfolio/mod.ts";
 import { Strategy } from "./strategy.ts";
 import { Exchange } from "./exchange.ts";
 import { Book } from "./book.ts";
-import { DataFrame } from "dataframe";
+import { DataFrame } from "@sauber/dataframe";
 
 type Name = Array<string>;
 
@@ -59,7 +59,6 @@ export class Simulation {
     const order: Order = this.strategy.order(this.portfolio, date);
     const close = order.sellItems;
 
-
     // TODO!!
     // Identify all matching positions
     // const positions: Array<Position> = []
@@ -76,7 +75,9 @@ export class Simulation {
 
   /** Close any positions with expired underlying data */
   private expire(date: DateFormat): void {
-    const expired: Positions = this.portfolio.positions.filter(p=>p.expired(date));
+    const expired: Positions = this.portfolio.positions.filter((p) =>
+      p.expired(date)
+    );
     const yesterday: DateFormat = nextDate(date, -1);
     for (const position of expired) {
       const selling_price: number = this.exchange.sell(position, yesterday);
