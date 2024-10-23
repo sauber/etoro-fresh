@@ -1,7 +1,7 @@
-import { Inputs, Outputs, TrainingData } from "📚/ranking/trainingdata.ts";
+import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
+import { TrainingData } from "📚/ranking/trainingdata.ts";
 import { community } from "📚/ranking/testdata.ts";
-import { assertInstanceOf } from "$std/assert/assert_instance_of.ts";
-import { assertEquals } from "$std/assert/assert_equals.ts";
+import type { Inputs, Outputs } from "📚/ranking/mod.ts";
 
 Deno.test("Instance", () => {
   const t = new TrainingData(community);

@@ -1,9 +1,10 @@
 import type { NetworkData } from "@sauber/neurons";
-import { CachingBackend, DiskBackend } from "📚/storage/mod.ts";
-import { Model } from "📚/ranking/model_neurons.ts";
-import { Inputs, Outputs, TrainingData } from "📚/ranking/trainingdata.ts";
-import { Community } from "📚/repository/community.ts";
 import { shuffleArray }from "@hugoalh/shuffle-array";
+import { CachingBackend, DiskBackend } from "📚/storage/mod.ts";
+import { Model } from "./model.ts";
+import type { Inputs, Outputs, } from "📚/ranking/mod.ts";
+import { TrainingData } from "📚/ranking/trainingdata.ts";
+import { Community } from "📚/repository/community.ts";
 
 // Repo
 if (!Deno.args[0]) throw new Error("Path missing");
@@ -47,7 +48,7 @@ samples.forEach((sample) => {
   console.log("sample n:", sample);
   console.log("  xs:", xs[sample]);
   console.log("  ys:", ys[sample]);
-  console.log("  yp:", model.predict([xs[sample]]));
+  console.log("  yp:", model.predict(xs[sample]));
 });
 
 // Store Model

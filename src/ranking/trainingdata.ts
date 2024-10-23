@@ -2,9 +2,9 @@ import { Community } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import type { DateFormat } from "📚/time/mod.ts";
 import { diffDate } from "📚/time/mod.ts";
-import { Features } from "📚/ranking/mod.ts";
+import { Features } from "📚/ranking/features.ts";
 import { Chart } from "📚/chart/mod.ts";
-import type { Input, Output } from "📚/ranking/features.ts";
+import type { Input, Inputs, Output, Outputs } from "./mod.ts";
 import type { Names } from "📚/repository/community.ts";
 
 // Combine input and output records
@@ -12,12 +12,6 @@ type Sample = {
   input: Input;
   output: Output;
 };
-
-/** Input is 2D array of numbers */
-export type Inputs = number[][];
-
-/** Output is 2D array of one number */
-export type Outputs = [number][];
 
 /** Prepare data for training models */
 export class TrainingData {
@@ -64,11 +58,11 @@ export class TrainingData {
 
   /** List of training input data */
   public get inputs(): Inputs {
-    return this.samples.map((sample: Sample) => Object.values(sample.input));
+    return this.samples.map((sample: Sample) => sample.input);
   }
 
   /** List of SharpeRatio matching input data */
   public get outputs(): Outputs {
-    return this.samples.map((sample: Sample) => [sample.output.SharpeRatio]);
+    return this.samples.map((sample: Sample) => [sample.output[0]]);
   }
 }
