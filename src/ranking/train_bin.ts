@@ -69,8 +69,22 @@ function predict(a: number, b: number): number {
 const epochs = 2000;
 const width = 78;
 const height = 12;
-const overlay: Array<[number, number]> = xs.map((r) => [r[xi], r[yi]]);
-const d = new Dashboard(width, height, overlay, out, predict, epochs);
+const xlabel: string = input_labels[sorted_index[0]];
+const ylabel: string = input_labels[sorted_index[1]];
+type Point = [number, number];
+const overlay: Array<Point> = shuffleArray(
+  xs.map((r) => [r[xi], r[yi]] as Point),
+).slice(0, 100);
+const d = new Dashboard(
+  width,
+  height,
+  overlay,
+  out,
+  predict,
+  epochs,
+  xlabel,
+  ylabel,
+);
 
 // Callback to dashboard from training
 function dashboard(iteration: number, loss: number[]): void {

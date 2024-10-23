@@ -29,7 +29,7 @@
     "@hugoalh/shuffle-array": "jsr:@hugoalh/shuffle-array@^2.0.4",
     "@preact/signals": "https://esm.sh/*@preact/signals@1.2.1",
     "@preact/signals-core": "https://esm.sh/*@preact/signals-core@1.5.0",
-    "@sauber/ml-cli-dashboard": "jsr:@sauber/ml-cli-dashboard@^0.3.5",
+    "@sauber/ml-cli-dashboard": "jsr:@sauber/ml-cli-dashboard@^0.4.0",
     "@sauber/neurons": "jsr:@sauber/neurons@^1.2.5",
     "chart": "https://deno.land/x/chart@1.1/mod.ts",
     "dataframe": "jsr:@sauber/dataframe@^0.1.0",
