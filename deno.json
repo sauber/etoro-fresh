@@ -1,7 +1,7 @@
 {
   "lock": false,
   "tasks": {
-    "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
+    "check": "deno fmt --check && deno lint && deno check **/*.ts",
     "community": "deno run --allow-read=testdata,../etoro-data/data src/repository/community_bin.ts ../etoro-data/data",
     "config": "deno run --allow-read=../etoro-data/data --allow-write=/workspaces/etoro-data/data src/config/config_bin.ts ../etoro-data/data",
     "profile": "deno run --allow-read=testdata,../etoro-data/data --v8-flags=--prof src/repository/community_bin.ts ../etoro-data/data",

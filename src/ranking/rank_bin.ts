@@ -28,7 +28,8 @@ const model = Model.import(rankingparams);
 console.log("Loading...");
 const community = new Community(backend);
 const latest = await community.latest();
-const end: DateFormat = await community.end();
+const end: DateFormat | null = await community.end();
+if (!end) throw new Error("No end date in community");
 console.log(`${end} investor count:`, latest.length);
 
 // Predict SharpeRatio for each Investor
@@ -43,6 +44,5 @@ const df = DataFrame.fromRecords(
   })),
 ).sort("SharpeRatio");
 
-df.reverse.slice(0,5).print("Desired Investor Ranking");
-df.slice(0,5).print("Undesired Investor Ranking");
-
+df.reverse.slice(0, 5).print("Desired Investor Ranking");
+df.slice(0, 5).print("Undesired Investor Ranking");

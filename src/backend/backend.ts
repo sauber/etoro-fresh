@@ -1,6 +1,8 @@
 import { CachingBackend, DiskBackend } from "📚/storage/mod.ts";
 import { Community } from "📚/repository/mod.ts";
 import { Ranking } from "📚/ranking/mod.ts";
+import { Model } from "📚/ranking/model.ts";
+import type { NetworkData } from "@sauber/neurons";
 
 export class Backend {
   private readonly repo: CachingBackend;
@@ -14,7 +16,9 @@ export class Backend {
     return new Community(this.repo);
   }
 
-  public get ranking(): Ranking {
-    return new Ranking(this.repo);
+  public async ranking(): Promise<Ranking> {
+    const data = await this.repo.retrieve("ranking.network") as NetworkData;
+    const model = Model.import(data);
+    return new Ranking(model);
   }
 }

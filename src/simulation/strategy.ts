@@ -65,7 +65,7 @@ export class RandomStrategy extends Strategy {
     order = this.parent?.order(portfolio, date, order) || order;
     if (this.investors.length > 0) {
       const investor: Investor = any(this.investors);
-      const amount = 1000;
+      const amount = this.amount;
       order.buy([{ investor, amount, date }]);
     }
     return order;

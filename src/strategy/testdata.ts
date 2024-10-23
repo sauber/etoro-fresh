@@ -2,7 +2,7 @@ import { repo } from "📚/repository/testdata.ts";
 import { Community } from "📚/repository/mod.ts";
 import type { Investors } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
-import { Position } from "./position.ts";
+import { Position } from "📚/portfolio/position.ts";
 
 // Investors
 const community = new Community(repo);
