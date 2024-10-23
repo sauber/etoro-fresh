@@ -1,17 +1,14 @@
 {
   "lock": false,
   "tasks": {
-    "build": "deno run -A dev.ts build",
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx",
     "community": "deno run --allow-read=testdata,../etoro-data/data src/repository/community_bin.ts ../etoro-data/data",
     "config": "deno run --allow-read=../etoro-data/data --allow-write=/workspaces/etoro-data/data src/config/config_bin.ts ../etoro-data/data",
-    "manifest": "deno task cli manifest $(pwd)",
     "profile": "deno run --allow-read=testdata,../etoro-data/data --v8-flags=--prof src/repository/community_bin.ts ../etoro-data/data",
-    "rank": "deno run --allow-read=testdata,../etoro-data/data --allow-write=testdata,../etoro-data/data src/ranking/train_bin.ts",
+    "train": "deno run --allow-read=testdata,../etoro-data/data --allow-write=testdata,../etoro-data/data src/ranking/train_bin.ts",
     "scrape": "deno run --allow-read=../etoro-data/data --allow-write=/workspaces/etoro-data/data --allow-net=www.etoro.com src/repository/refresh_bin.ts ../etoro-data/data",
-    "test": "deno test --allow-write=tmp,testdata --allow-read=tmp,testdata,src/neural --allow-net=www.etoro.com,jsonplaceholder.typicode.com,github.com,objects.githubusercontent.com,deno.com",
+    "test": "deno test --allow-write=tmp,testdata --allow-read=tmp,testdata,src/neural --allow-net=www.etoro.com,jsonplaceholder.typicode.com,github.com,objects.githubusercontent.com,deno.com"
   },
-  "lint": { "rules": { "tags": ["fresh", "recommended"] } },
   "nodeModulesDir": true,
   "imports": {
     "$std/": "https://deno.land/std@0.211.0/",
@@ -28,8 +25,6 @@
     "nanoid": "https://deno.land/x/nanoid@v3.0.0/mod.ts",
     "semaphore": "https://deno.land/x/semaphore@v1.1.2/semaphore.ts",
     "table": "jsr:@sauber/table@^0.0.3",
-    "terminal_images": "https://deno.land/x/terminal_images@3.1.0/mod.ts",
-    "📚/": "./src/",
-  },
-  "compilerOptions": { "jsx": "react-jsx", "jsxImportSource": "preact" },
+    "📚/": "./src/"
+  }
 }
