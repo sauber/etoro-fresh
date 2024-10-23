@@ -20,3 +20,4 @@ export const community = new Community(repo);
 - Replace chart with older implementation
 - Detect NaN in machine learning input and output. If detected, the model is unusable.
 - For machine learning, remove features the features that are have no variance or are the least correlated to output.
+- Make progressbar an external module. Perhaps use from @sauber/ml-dashboard module.

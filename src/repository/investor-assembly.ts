@@ -30,12 +30,12 @@ export class InvestorAssembly {
     this.chartAsset = new Asset<ChartData>(this.UserName + ".chart", repo);
     this.portfolioAsset = new Asset<PortfolioData>(
       this.UserName + ".portfolio",
-      repo
+      repo,
     );
     this.statsAsset = new Asset<StatsData>(this.UserName + ".stats", repo);
     this.compiledAsset = new Asset<InvestorExport>(
       this.UserName + ".compiled",
-      repo
+      repo,
     );
   }
 
@@ -66,12 +66,10 @@ export class InvestorAssembly {
     return this.chartAsset.end();
   }
 
-  /** 
-   * Combination of as few charts as possible from start to end 
-   * TODO: Truncate ends with 6000
-   */
+  /** Combination of as few charts as possible from start to end */
   private _chart: number[] | null = null;
   public async chart(): Promise<number[]> {
+    // Caching
     if (this._chart) return this._chart;
 
     // All dates having a chart
@@ -81,8 +79,9 @@ export class InvestorAssembly {
     const end: DateFormat = dates[dates.length - 1];
     const lastData: ChartData = await this.chartAsset.retrieve(end);
     const lastChart = new Chart(lastData);
-    const values: number[] = lastChart.values;
-    let start: DateFormat = lastChart.start;
+    const compiled = new CompiledChart(lastChart.values, end).trim;
+    const values: number[] = compiled.values;
+    let start: DateFormat = compiled.start;
 
     // Prepend older charts
     // Search backwards to find oldest chart which still overlaps
@@ -92,7 +91,15 @@ export class InvestorAssembly {
       if (i > 0 && dates[i - 1] >= start) continue; // An even older exists and overlaps
 
       // Load older chart
-      const sooner: Chart = new Chart(await this.chartAsset.retrieve(date));
+      const loaded: Chart = new Chart(await this.chartAsset.retrieve(date));
+      const sooner: CompiledChart =
+        new CompiledChart(loaded.values, loaded.end).trim;
+
+      // Confirm even after trimming, there is still overlap
+      if (sooner.end < start) {
+        console.warn(`${this.UserName} sooner chart after trimming no longer overlaps.`);
+        break;
+      }
 
       // Does newer chart fully overlap older?
       if (sooner.start >= start) break;
@@ -135,18 +142,18 @@ export class InvestorAssembly {
     const end: DateFormat = await this.end();
     const dates: DateFormat[] = await this.statsAsset.dates();
     const range: DateFormat[] = dates.filter(
-      (date) => date >= start && date <= end
+      (date) => date >= start && date <= end,
     );
 
     // Load Stats axports for eachd date in range
     const values: StatsExport[] = await Promise.all(
-      range.map((date) => this.statsValues(date))
+      range.map((date) => this.statsValues(date)),
     );
 
     // Zip Dates and Stats
     const zip: StatsByDate = Object.assign(
       {},
-      ...range.map((date, index) => ({ [date]: values[index] }))
+      ...range.map((date, index) => ({ [date]: values[index] })),
     );
     return zip;
   }
@@ -165,19 +172,19 @@ export class InvestorAssembly {
     const end: DateFormat = await this.end();
     const dates: DateFormat[] = await this.portfolioAsset.dates();
     const range: DateFormat[] = dates.filter(
-      (date) => date >= start && date <= end
+      (date) => date >= start && date <= end,
     );
 
     // Load Stats exports for each date in range
     const values: InvestorId[][] = await Promise.all(
-      range.map((date) => this.portfolioValues(date))
+      range.map((date) => this.portfolioValues(date)),
     );
 
     // Zip Dates and Stats
     // TODO: Skip dates with empty list of mirrors
     const zip: MirrorsByDate = Object.assign(
       {},
-      ...range.map((date, index) => ({ [date]: values[index] }))
+      ...range.map((date, index) => ({ [date]: values[index] })),
     );
     return zip;
   }
@@ -192,14 +199,14 @@ export class InvestorAssembly {
     // At least one stats file within range of chart
     const statsDates: DateFormat[] = await this.chartAsset.dates();
     const statsInRange = statsDates.filter(
-      (date) => date >= chartStart && date <= chartEnd
+      (date) => date >= chartStart && date <= chartEnd,
     );
     if (statsInRange.length < 1) return false;
 
     // At least one positions file within range of chart
     const positionsDates: DateFormat[] = await this.chartAsset.dates();
     const positionsInRange = positionsDates.filter(
-      (date) => date >= chartStart && date <= chartEnd
+      (date) => date >= chartStart && date <= chartEnd,
     );
     if (positionsInRange.length < 1) return false;
 
@@ -214,7 +221,7 @@ export class InvestorAssembly {
       await this.FullName(),
       new CompiledChart(await this.chart(), await this.end()),
       new Diary<InvestorId[]>(await this.mirrors()),
-      new Diary<StatsExport>(await this.stats())
+      new Diary<StatsExport>(await this.stats()),
     );
   }
 

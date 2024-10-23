@@ -12,7 +12,7 @@ _fresh/
 node_modules
 
 # Generated files
-ranking.model.json
+ranking.network.json
 *.compiled.json
 
 # V8 profiling output
