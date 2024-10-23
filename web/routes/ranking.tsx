@@ -4,7 +4,7 @@ import Rankgrid from "📦/community/RankGrid.tsx";
 import Feature from "📦/ux/Feature.tsx";
 import { community_all, ranking } from "../data/repo.ts";
 import type { Investors } from "📚/repository/mod.ts";
-import { DataFrame } from "dataframe.ts";
+import { DataFrame } from "dataframe";
 
 export default defineRoute(async (req: Request, ctx: RouteContext) => {
   const investors: Investors = await community_all();
