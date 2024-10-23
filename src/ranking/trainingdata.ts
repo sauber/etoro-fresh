@@ -30,7 +30,7 @@ export class TrainingData {
   private async investor(name: string): Promise<void> {
     const investor: Investor = await this.community.investor(name);
     const dates: DateFormat[] = investor.stats.dates;
-    const chart: Chart = investor.chart;
+    const chart: Chart = investor.chart.trim;
     const end: DateFormat = chart.end;
 
     // Test if each date of where stats are available have
