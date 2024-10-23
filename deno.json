@@ -9,7 +9,7 @@
     "scrape": "deno run --allow-read=../etoro-data/data --allow-write=/workspaces/etoro-data/data --allow-net=www.etoro.com src/repository/refresh_bin.ts ../etoro-data/data",
     "test": "deno test --allow-write=tmp,testdata --allow-read=tmp,testdata,src/neural --allow-net=www.etoro.com,jsonplaceholder.typicode.com,github.com,objects.githubusercontent.com,deno.com"
   },
-  "nodeModulesDir": true,
+  "nodeModulesDir": "auto",
   "imports": {
     "$std/": "https://deno.land/std@0.211.0/",
     "./": "./",

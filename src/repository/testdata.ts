@@ -23,3 +23,5 @@ export const testAssets = {
   portfolio: await new Asset<PortfolioData>(n + ".portfolio", repo).last(),
   stats: await new Asset<StatsData>(n + ".stats", repo).last(),
 };
+
+export const blacklist = {};

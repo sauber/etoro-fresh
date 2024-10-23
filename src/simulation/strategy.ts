@@ -50,14 +50,14 @@ export class NullStrategy extends Strategy {}
 /** Always buy one random, never sell */
 export class RandomStrategy extends Strategy {
   constructor(
-    protected readonly investors: Investors,
+    protected override readonly investors: Investors,
     private amount: number,
-    protected readonly parent?: Strategy,
+    protected override readonly parent?: Strategy,
   ) {
     super(investors, parent);
   }
 
-  public order(
+  public override order(
     portfolio: Portfolio,
     date: DateFormat,
     order: Order = new Order(),
@@ -74,7 +74,7 @@ export class RandomStrategy extends Strategy {
 
 /** Sell all positions */
 export class ExitStrategy extends Strategy {
-  public order(
+  public override order(
     portfolio: Portfolio,
     date: string,
     order: Order = new Order(),
