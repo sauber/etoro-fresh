@@ -1,7 +1,7 @@
 import { diffDate, nextDate } from "📚/time/mod.ts";
 import type { DateFormat } from "📚/time/mod.ts";
 import { std } from "📚/math/statistics.ts";
-import { ema, rsi, sma } from "./indicators.ts";
+import { ema, rsi, sma } from "📚/chart/indicators.ts";
 
 type Numbers = number[];
 
@@ -73,21 +73,20 @@ export class Chart {
     return std(this.values);
   }
 
-  /**
-   * Sharpe Ratio, riskfree is annual riskfree return, for example 0.05
-   * TODO: Research if other similar indicator are better for this project
-   */
+  /** Sharpe Ratio, riskfree is annual riskfree return, for example 0.05 */
   public sharpeRatio(riskfree: number): number {
-    // Daily benchmark and daily average profit
+    // Daily average profit and daily benchmark
     const profit = (this.last / this.first - 1) / (this.length - 1);
     const benchmark = riskfree / 365;
 
-    // std of incrementals
+    // Incrementals are wins > 0
     const incrementals = this.win.values.filter((x) => x > 0);
-    if (incrementals.length == 0) return -riskfree;
-    const volatility = std(incrementals);
+
+    // No wins, only losses
+    if (incrementals.length < 2) return (profit - benchmark) * this.length;
 
     // Sharpe Ratio
+    const volatility = std(incrementals);
     const sharpe = (profit - benchmark) / volatility;
     return sharpe;
   }
@@ -164,12 +163,37 @@ export class Chart {
 
   /** this chart - other chart */
   public subtract(other: Chart): Chart {
-    const start: DateFormat = this.start > other.start ? this.start : other.start;
+    const start: DateFormat = this.start > other.start
+      ? this.start
+      : other.start;
     const end: DateFormat = this.end < other.end ? this.end : other.end;
 
     const parent = this.from(start).until(end).values;
     const child = other.from(start).until(end).values;
-    const diff = parent.map((n, i)=> n-child[i]);
+    const diff = parent.map((n, i) => n - child[i]);
     return new Chart(diff, end);
+  }
+
+  /** Trim leading 10000 (means not started) and trailing 6000 (means copy stopped) */
+  public get trim(): Chart {
+    // No trimming required
+    if (
+      this.value(nextDate(this.start)) != 10000 &&
+      this.value(nextDate(this.end, -1)) != 6000
+    ) return this;
+
+    // Search for start
+    let next: DateFormat = nextDate(this.start);
+    while (this.value(next) == 10000) next = nextDate(next);
+    const start = nextDate(next, -1);
+
+    // Seach for end
+    let prev: DateFormat = nextDate(this.end, -1);
+    while (this.value(prev) == 6000) prev = nextDate(prev, -1);
+    const end = nextDate(prev);
+
+    const values = this.from(start).until(end).values;
+
+    return this.derive(values, "trim", end);
   }
 }
