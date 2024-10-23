@@ -36,9 +36,9 @@ Deno.test("Train", () => {
   const inputs: Inputs = [set(), set(), set(), set()];
   const outputs: Outputs = [[0], [1], [1], [0]];
   const max = 2000;
-  const iterations = m.train(inputs, outputs, max);
-  assertGreater(iterations, 0);
-  assertLessOrEqual(iterations, max);
+  const results = m.train(inputs, outputs, max);
+  assertGreater(results.iterations, 0);
+  assertLessOrEqual(results.iterations, max);
 });
 
 Deno.test("Predict", () => {

@@ -2,6 +2,13 @@ import { Network, Train } from "@sauber/neurons";
 import type { NetworkData } from "@sauber/neurons";
 import type { Input, Inputs, Output, Outputs } from "./mod.ts";
 
+type TrainResults = {
+  iterations: number;
+  loss: number;
+};
+
+export type Dashboard = (x: number, y: number[]) => void;
+
 /** Generate and train a neural network model */
 export class Model {
   constructor(private readonly network: Network) {}
@@ -35,12 +42,13 @@ export class Model {
     outputs: Outputs,
     max_iterations: number = 20000,
     learning_rate: number = 0.001,
-  ): number {
+    callback?: Dashboard
+  ): TrainResults {
     this.network.adapt(inputs);
     const train = new Train(this.network, inputs, outputs);
+    if ( callback ) train.callback = callback;
     const iterations: number = train.run(max_iterations, learning_rate);
-    // const loss = train.loss;
-    return iterations;
+    return { iterations, loss: train.loss };
   }
 
   /** Forward inference of an input set */

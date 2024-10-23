@@ -97,7 +97,8 @@ export class InvestorAssembly {
 
       // Confirm even after trimming, there is still overlap
       if (sooner.end < start) {
-        throw new Error("Sooner chart after trimming no longer overlaps.");
+        console.warn(`${this.UserName} sooner chart after trimming no longer overlaps.`);
+        break;
       }
 
       // Does newer chart fully overlap older?
