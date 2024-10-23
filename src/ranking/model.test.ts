@@ -12,7 +12,7 @@ import { input_labels } from "📚/ranking/mod.ts";
 
 /** Generate a random set of inputs */
 function set(): Input {
-  return Array.from({length: input_labels.length}, Math.random) as Input;
+  return Array.from({ length: input_labels.length }, Math.random) as Input;
 }
 
 /** Number of input features */

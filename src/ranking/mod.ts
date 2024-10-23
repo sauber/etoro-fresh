@@ -1,4 +1,4 @@
-export * from "./ranking.ts";
+export * from "📚/ranking/ranking.ts";
 
 /** Input column names */
 export const input_labels = [

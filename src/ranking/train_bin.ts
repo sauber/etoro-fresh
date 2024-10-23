@@ -1,8 +1,8 @@
 import type { NetworkData } from "@sauber/neurons";
-import { shuffleArray }from "@hugoalh/shuffle-array";
+import { shuffleArray } from "@hugoalh/shuffle-array";
 import { CachingBackend, DiskBackend } from "📚/storage/mod.ts";
-import { Model } from "./model.ts";
-import type { Inputs, Outputs, } from "📚/ranking/mod.ts";
+import { Model } from "📚/ranking/model.ts";
+import type { Inputs, Outputs } from "📚/ranking/mod.ts";
 import { TrainingData } from "📚/ranking/trainingdata.ts";
 import { Community } from "📚/repository/community.ts";
 
@@ -35,7 +35,6 @@ console.log("Training...");
 const iterations = 2000;
 const learning_rate = 0.001;
 model.train(xs, ys, iterations, learning_rate);
-
 
 // Validation
 console.log("Validation");

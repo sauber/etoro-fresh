@@ -1,5 +1,5 @@
-import { DateFormat } from "../time/mod.ts";
-import { Investor } from "/investor/mod.ts";
+import { DateFormat } from "📚/time/mod.ts";
+import { Investor } from "📚/investor/mod.ts";
 import type { StatsExport } from "📚/repository/mod.ts";
 import { Chart } from "📚/chart/mod.ts";
 import { input_labels } from "📚/ranking/mod.ts";
