@@ -19,14 +19,17 @@ const data = new TrainingData(community, 30);
 await data.load();
 const xs: Inputs = data.inputs;
 const ys: Outputs = data.outputs;
+console.log("Data Length:", xs.length);
 
 // Model
 const assetname = "ranking.network";
 let model: Model;
 if (await backend.has(assetname)) {
+  console.log("Loading existing model...");
   const rankingparams = await backend.retrieve(assetname) as NetworkData;
   model = Model.import(rankingparams);
 } else {
+  console.log("Generating new model...");
   model = Model.generate(xs[0].length);
 }
 
@@ -34,11 +37,11 @@ if (await backend.has(assetname)) {
 console.log("Training...");
 const iterations = 2000;
 const learning_rate = 0.001;
-model.train(xs, ys, iterations, learning_rate);
+const i: number = model.train(xs, ys, iterations, learning_rate);
+console.log("Iterations:", i);
 
-// Validation
+// Validation of 5 random inputs
 console.log("Validation");
-// Pick 5 random inputs
 const samples = shuffleArray(Array.from(Array(xs.length).keys()))
   .slice(0, 5)
   .sort((a, b) => a - b);

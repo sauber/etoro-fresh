@@ -27,7 +27,8 @@ export class Features {
     // TODO: Load from config
     const sr: number = chart.sharpeRatio(0.0);
     if (!Number.isFinite(sr)) {
-      console.log({ chart, start, sr });
+      const name = this.investor.UserName;
+      console.log({ chart, name, start, sr });
       throw new Error("Invalid SharpeRatio");
     }
     return [sr];

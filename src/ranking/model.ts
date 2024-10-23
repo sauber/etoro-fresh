@@ -39,6 +39,7 @@ export class Model {
     this.network.adapt(inputs);
     const train = new Train(this.network, inputs, outputs);
     const iterations: number = train.run(max_iterations, learning_rate);
+    // const loss = train.loss;
     return iterations;
   }
 
