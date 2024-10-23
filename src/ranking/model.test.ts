@@ -5,7 +5,7 @@ import {
   assertInstanceOf,
   assertLessOrEqual,
   assertNotEquals,
-} from "$std/assert/mod.ts";
+} from "@std/assert";
 import { Model } from "📚/ranking/model.ts";
 import type { Input, Inputs, Output, Outputs } from "./mod.ts";
 import { input_labels } from "📚/ranking/mod.ts";

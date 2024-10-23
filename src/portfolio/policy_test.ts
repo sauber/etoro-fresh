@@ -2,7 +2,7 @@ import {
   assertAlmostEquals,
   assertEquals,
   assertInstanceOf,
-} from "$std/assert/mod.ts";
+} from "@std/assert";
 import { Portfolio } from "./portfolio.ts";
 import { Position } from "./position.ts";
 import { IPolicy, Policy } from "./policy.ts";

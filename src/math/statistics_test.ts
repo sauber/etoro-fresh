@@ -1,4 +1,4 @@
-import { assertEquals, assertAlmostEquals } from "$std/assert/mod.ts";
+import { assertEquals, assertAlmostEquals } from "@std/assert";
 import { sum, avg, std } from "./statistics.ts";
 
 Deno.test("Sum", () => {

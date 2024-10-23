@@ -1,4 +1,4 @@
-import { format } from "$std/datetime/format.ts";
+import { format } from "@std/datetime/format";
 
 type MS = number;
 

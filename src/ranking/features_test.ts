@@ -2,7 +2,7 @@ import {
   assertAlmostEquals,
   assertEquals,
   assertInstanceOf,
-} from "$std/assert/mod.ts";
+} from "@std/assert";
 import { community } from "📚/ranking/testdata.ts";
 import { Features } from "📚/ranking/features.ts";
 import type { Input, Output } from "./mod.ts";

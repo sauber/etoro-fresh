@@ -1,4 +1,4 @@
-import { assertAlmostEquals } from "$std/assert/mod.ts";
+import { assertAlmostEquals } from "@std/assert";
 import { parabolic } from "./parabolic.ts";
 import type { Point } from "./parabolic.ts";
 

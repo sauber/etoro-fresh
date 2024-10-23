@@ -2,7 +2,7 @@ import {
   assertAlmostEquals,
   assertEquals,
   assertInstanceOf,
-} from "$std/assert/mod.ts";
+} from "@std/assert";
 import type { DateFormat } from "../time/mod.ts";
 import { Book } from "./book.ts";
 import { position, investor } from "./testdata.ts";

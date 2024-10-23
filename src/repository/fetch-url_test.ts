@@ -1,4 +1,4 @@
-import { assertInstanceOf, assertStringIncludes } from "$std/assert/mod.ts";
+import { assertInstanceOf, assertStringIncludes } from "@std/assert";
 import { FetchURL } from "./fetch-url.ts";
 import { discoverFilter, investorId } from "./testdata.ts";
 

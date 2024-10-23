@@ -1,4 +1,4 @@
-import { assertEquals } from "$std/assert/mod.ts";
+import { assertEquals } from "@std/assert";
 import { Chart } from "📚/chart/mod.ts";
 import { today } from "../time/mod.ts";
 import { CrossPath } from "./cross-path.ts";

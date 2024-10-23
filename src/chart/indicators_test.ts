@@ -1,4 +1,4 @@
-import { assertEquals } from "$std/assert/mod.ts";
+import { assertEquals } from "@std/assert";
 import { ema, rsi, sma } from "./indicators.ts";
 
 Deno.test("SMA", () => {

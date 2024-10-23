@@ -1,4 +1,4 @@
-import { assertInstanceOf, assertNotEquals } from "$std/assert/mod.ts";
+import { assertInstanceOf, assertNotEquals } from "@std/assert";
 import { Community } from "📚/repository/mod.ts";
 import { Investor } from "📚/investor/mod.ts";
 import { DateFormat, diffDate } from "📚/time/mod.ts";

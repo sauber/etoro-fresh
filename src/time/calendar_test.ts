@@ -1,4 +1,4 @@
-import { assertEquals } from "$std/assert/mod.ts";
+import { assertEquals } from "@std/assert";
 import { diffDate, nextDate, range, today } from "./calendar.ts";
 
 Deno.test("today", () => {

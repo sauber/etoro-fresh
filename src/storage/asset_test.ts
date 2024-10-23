@@ -1,4 +1,4 @@
-import { assertEquals, assertInstanceOf } from "$std/assert/mod.ts";
+import { assertEquals, assertInstanceOf } from "@std/assert";
 import type { DateFormat } from "../time/mod.ts";
 import { today } from "../time/mod.ts";
 import { HeapBackend } from "./mod.ts";

@@ -2,7 +2,7 @@ import {
   assertEquals,
   assertInstanceOf,
   assertThrows,
-} from "$std/assert/mod.ts";
+} from "@std/assert";
 import { Chart } from "./chart.ts";
 import type { DateFormat } from "../time/mod.ts";
 import { nextDate } from "../time/mod.ts";
