@@ -1,3 +1,5 @@
+/** Train ranking model */
+
 import { avg, correlation } from "jsr:@sauber/statistics";
 import { Dashboard } from "jsr:@sauber/ml-cli-dashboard";
 import type { NetworkData } from "@sauber/neurons";
@@ -12,6 +14,9 @@ import {
 } from "📚/ranking/mod.ts";
 import { TrainingData } from "📚/ranking/trainingdata.ts";
 import { Community } from "📚/repository/community.ts";
+
+type Row = Array<number>;
+type Col = Array<number>;
 
 // Repo
 if (!Deno.args[0]) throw new Error("Path missing");
@@ -41,8 +46,8 @@ if (await backend.has(assetname)) {
 }
 
 // Find the two most correlated columns
-const columns: number[][] = xs[0].map((_, i) => xs.map((r) => r[i]));
-const out: number[] = ys.map((r) => r[0]);
+const columns: number[][] = xs[0].map((_: Row, i: number) => xs.map((r: Row) => r[i]));
+const out: number[] = ys.map((r: Row) => r[0]);
 const correlations: number[] = columns.map((c) => correlation(c, out));
 type CS = [number, number];
 const sorted_index: number[] = correlations
@@ -73,7 +78,7 @@ const xlabel: string = input_labels[sorted_index[0]];
 const ylabel: string = input_labels[sorted_index[1]];
 type Point = [number, number];
 const overlay: Array<Point> = shuffleArray(
-  xs.map((r) => [r[xi], r[yi]] as Point),
+  xs.map((r: Row) => [r[xi], r[yi]] as Point),
 ).slice(0, 100);
 const d = new Dashboard(
   width,
@@ -102,9 +107,9 @@ console.log(results);
 console.log("Validation");
 const samples = shuffleArray(Array.from(Array(xs.length).keys()))
   .slice(0, 5)
-  .sort((a, b) => a - b);
+  .sort((a: number, b: number) => a - b);
 // Compare training output with predicted output
-samples.forEach((sample) => {
+samples.forEach((sample: Row) => {
   console.log("sample n:", sample);
   console.log("  xs:", xs[sample]);
   console.log("  ys:", ys[sample]);
